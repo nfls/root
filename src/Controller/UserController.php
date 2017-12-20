@@ -5,11 +5,21 @@ namespace App\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\User;
 
 class UserController extends Controller
 {
+
+    private $user;
+
+    function __construct()
+    {
+
+    }
+
     /**
      * @Route("/user", name="user")
      */
@@ -20,15 +30,30 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/login", name="login")
+     * @Route("/user/register", name="register", methods="POST")
      */
-    public function login()
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $em = $this->getDoctrine()->getManager();
         $user = new User();
-        //$user->get
+        $user->setUsername($request->request->get("username"));
+        $password = $passwordEncoder->encodePassword($user,$request->request->get("password"));
+        $user->setPassword($password);
+        $user->setEmail($request->request->get("email"));
+        $validator = $this->get('validator');
+        $errors = $validator->validate($user);
         $response = new JsonResponse();
-        $response->setData(array('data' => 123));
+        if(count($errors) > 0){
+            $response->setData(array("error"=>(string)$errors));
+        } else {
+            $em->persist($user);
+            $em->flush();
+            $response->setData(array('data' => 123));
+        }
+
+        //$user->get
+
+
         return $response;
     }
 }

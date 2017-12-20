@@ -3,16 +3,20 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User
+class User implements UserInterface
 {
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", unique=true)
      */
     private $id;
 
@@ -20,6 +24,9 @@ class User
      * @var string
      *
      * @ORM\Column(type="string", unique=true)
+     * @Assert\NotBlank(
+     *     message = "Your username is not correct."
+     * )
      */
     private $username;
 
@@ -27,22 +34,21 @@ class User
      * @var string
      *
      * @ORM\Column(type="string", unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Email(
+     *     message = "Your email is not correct.",
+     *     checkMX = true,
+     *     checkHost = true
+     * )
      */
     private $email;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string")
      */
     private $password;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", unique=true)
-     */
-    private $token;
 
     /**
      * @var integer
@@ -54,14 +60,7 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(type="string", unique=true)
-     */
-    private $identifier;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, nullable = true)
      */
     private $fa;
 
@@ -70,23 +69,16 @@ class User
      *
      * @ORM\Column(type="integer", options={"unsigned":true, "default":0})
      */
-    private $rename;
+    private $card = 0;
+
 
     /**
-     * @return mixed
+     * @var integer
+     *
+     * @ORM\Column(type="bigint", options={"unsigned":true, "default":1})
      */
-    public function getId()
-    {
-        return $this->id;
-    }
+    private $permission = 1;
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
 
     /**
      * @return string
@@ -137,14 +129,6 @@ class User
     }
 
     /**
-     * @return string
-     */
-    public function getToken()
-    {
-        return $this->token;
-    }
-
-    /**
      * @param string $token
      */
     public function setToken($token)
@@ -168,51 +152,23 @@ class User
         $this->phone = $phone;
     }
 
-    /**
-     * @return string
-     */
-    public function getIdentifier()
+
+    public function getSalt()
     {
-        return $this->identifier;
+        // The bcrypt algorithm doesn't require a separate salt.
+        // You *may* need a real salt if you choose a different encoder.
+        return null;
     }
 
-    /**
-     * @param string $identifier
-     */
-    public function setIdentifier($identifier)
+    public function eraseCredentials()
     {
-        $this->identifier = $identifier;
+        // TODO: Implement eraseCredentials() method.
     }
 
-    /**
-     * @return string
-     */
-    public function getFa()
+    public function getRoles()
     {
-        return $this->fa;
+        // TODO: Implement getRoles() method.
     }
 
-    /**
-     * @param string $fa
-     */
-    public function setFa($fa)
-    {
-        $this->fa = $fa;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRename()
-    {
-        return $this->rename;
-    }
-
-    /**
-     * @param int $rename
-     */
-    public function setRename($rename)
-    {
-        $this->rename = $rename;
-    }
 }
+

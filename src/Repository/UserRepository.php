@@ -5,6 +5,10 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
+
 
 class UserRepository extends ServiceEntityRepository
 {
@@ -12,6 +16,13 @@ class UserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, User::class);
     }
+
+    public function register($username,$password,$email)
+    {
+
+
+    }
+    //static function getRepos
 
 
     /*
