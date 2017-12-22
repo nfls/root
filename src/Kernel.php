@@ -14,6 +14,11 @@ class Kernel extends BaseKernel
 
     const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+    }
+
     public function getCacheDir()
     {
         return $this->getProjectDir().'/var/cache/'.$this->environment;

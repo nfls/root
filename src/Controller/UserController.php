@@ -50,10 +50,19 @@ class UserController extends Controller
             $em->flush();
             $response->setData(array('data' => 123));
         }
-
-        //$user->get
-
-
         return $response;
+    }
+
+    /**
+     * @Route("/user/login", name="login", methods="POST")
+     */
+    public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder){
+
+        $user = $this->getDoctrine()->getRepository(User::class)->findByUsername($request->request->get("username"));
+        $respone = new JsonResponse();
+        if ($passwordEncoder->isPasswordValid($user,$request->request->get("password",$user->getSalt()))){
+
+        }
+
     }
 }

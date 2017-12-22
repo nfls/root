@@ -58,6 +58,13 @@ class User implements UserInterface
     private $phone;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(type="string", unique=true)
+     */
+    private $token;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string", unique=true, nullable = true)
@@ -126,6 +133,7 @@ class User implements UserInterface
     public function setPassword($password)
     {
         $this->password = $password;
+        $this->token = uniqid("nfls_",true);
     }
 
     /**
@@ -167,7 +175,7 @@ class User implements UserInterface
 
     public function getRoles()
     {
-        // TODO: Implement getRoles() method.
+        return ["ROLES_USER"];
     }
 
 }

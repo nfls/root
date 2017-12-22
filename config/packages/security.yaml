@@ -1,14 +1,19 @@
 security:
     # https://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory: { memory: ~ }
+        your:
+            entity:
+                class: App\Entity\User
+                property: token
     firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-        main:
-            anonymous: ~
 
+        main:
+            pattern:    ^/
+            http_basic: ~
+            provider: your
+            guard:
+                authenticators:
+                    - App\Security\Web
             # activate different ways to authenticate
 
             # http_basic: ~
@@ -16,6 +21,13 @@ security:
 
             # form_login: ~
             # https://symfony.com/doc/current/cookbook/security/form_login_setup.html
-
+   
     encoders:
         App\Entity\User: bcrypt
+
+    access_control:
+        - { path: ^/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/user/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY}
+        # symfony starts at the top and stops at first match
+        # The ^ means that urls beginning with the pattern will be matched

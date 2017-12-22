@@ -22,6 +22,24 @@ class UserRepository extends ServiceEntityRepository
 
 
     }
+
+    public function findByUsername($username) {
+        return $this->createQueryBuilder("u")
+            ->where("u.username = :username")
+            ->setParameter("username", $username)
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+    }
+
+    public function fvvindByToken($token) {
+        return $this->createQueryBuilder("u")
+            ->where("u.token = :token")
+            ->setParameter("token", $token)
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+    }
     //static function getRepos
 
 
