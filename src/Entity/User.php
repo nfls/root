@@ -86,7 +86,6 @@ class User implements UserInterface
      */
     private $permission = 1;
 
-
     /**
      * @return string
      */
@@ -163,8 +162,6 @@ class User implements UserInterface
 
     public function getSalt()
     {
-        // The bcrypt algorithm doesn't require a separate salt.
-        // You *may* need a real salt if you choose a different encoder.
         return null;
     }
 

@@ -32,7 +32,7 @@ class UserRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function fvvindByToken($token) {
+    public function findByToken($token) {
         return $this->createQueryBuilder("u")
             ->where("u.token = :token")
             ->setParameter("token", $token)

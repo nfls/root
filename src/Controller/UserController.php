@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Model\ApiResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,19 +15,22 @@ class UserController extends Controller
 {
 
     private $user;
+    private $response;
 
     function __construct()
     {
-
+        $this->response = new ApiResponse();
     }
 
     /**
-     * @Route("/user", name="user")
+     * @Route("/user/code/{action}", methods="POST")
      */
-    public function index()
-    {
-        // replace this line with your own code!
-        return $this->render('@Maker/demoPage.html.twig', [ 'path' => str_replace($this->getParameter('kernel.project_dir').'/', '', __FILE__) ]);
+
+    public function generateCode(Request $request,$action){
+        switch($action){
+
+        }
+
     }
 
     /**
