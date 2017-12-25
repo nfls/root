@@ -1,48 +1,40 @@
 <?php
 
-namespace App\Servce;
+namespace App\Service;
 
-use Aliyun\Core\Config;
-use Aliyun\Core\Profile\DefaultProfile;
-use Aliyun\Core\DefaultAcsClient;
-use Aliyun\Api\Sms\Request\V20170525\SendSmsRequest;
-use Aliyun\Api\Sms\Request\V20170525\QuerySendDetailsRequest;
+use Mrgoon\AliSms\AliSms;
 
-class AlyunSMS {
+class AliyunSMS {
 
     const REGISTER = "SMS_119080912";
     const RECOVER = "SMS_119085891";
     const BIND = "SMS_119085892";
-
-    const PRODUCT = "Dysmsapi";
-    const API_URL = "dysmsapi.aliyuncs.com";
-    const REGION = "cn-hangzhou";
+    const UNBIND = "SMS_119090970";
 
     const KEY_ID = "LTAIP9SuQgddEG0f";
     const KEY_SECRET = "HjWeMlsrGgEXunUSkJ54fBowbIqhf3";
-
     const SIGN_NAME = "南外人";
-
     /**
-     * @var DefaultAcsClient
+     * @var AliSms
      */
-    private $acsClient;
+    private $sms;
+    /**
+     * @var array
+     */
+    private $config;
 
     public function __construct()
     {
-        Config::load();
-        $profile = DefaultProfile::getProfile(self::REGION, self::KEY_ID, self::KEY_SECRET);
-        DefaultProfile::addEndpoint(self::REGION, self::REGION, self::PRODUCT, self::API_URL);
-        $this->acsClient = new DefaultAcsClient($profile);
+        $this->sms = new AliSms();
+        $this->config = [
+            'access_key' => self::KEY_ID,
+            'access_secret' => self::KEY_SECRET,
+            'sign_name' => self::SIGN_NAME
+        ];
     }
 
-    public function sendCode($code,$phone,$type){
-        $request = new SendSmsRequest();
-        $request->setPhoneNumbers($phone);
-        $request->setSignName(self::SIGN_NAME);
-        $request->setTemplateCode($type);
-        $request->setTemplateParam(json_encode(array("code"=>(string)$code), JSON_UNESCAPED_UNICODE));
-        $this->acsClient->getAcsResponse($request);
-        return;
+    function sendCode($phone,$code,$type){
+        $response = $this->sms->sendSms((string)$phone, $type, ['code'=> (string)$code], $this->config);
     }
+
 }

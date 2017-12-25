@@ -53,7 +53,7 @@ class User implements UserInterface
     /**
      * @var integer
      *
-     * @ORM\Column(type="integer", unique=true, nullable = true)
+     * @ORM\Column(type="bigint", unique=true, nullable = true)
      */
     private $phone;
 

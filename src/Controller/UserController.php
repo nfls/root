@@ -22,16 +22,7 @@ class UserController extends Controller
         $this->response = new ApiResponse();
     }
 
-    /**
-     * @Route("/user/code/{action}", methods="POST")
-     */
 
-    public function generateCode(Request $request,$action){
-        switch($action){
-
-        }
-
-    }
 
     /**
      * @Route("/user/register", name="register", methods="POST")

@@ -40,6 +40,15 @@ class UserRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getOneOrNullResult();
     }
+
+    public function findByPhone($phone) {
+        return $this->createQueryBuilder("u")
+            ->where("u.phone = :phone")
+            ->setParameter("phone", $phone)
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+    }
     //static function getRepos
 
 
