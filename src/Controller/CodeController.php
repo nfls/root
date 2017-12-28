@@ -51,17 +51,7 @@ class CodeController extends Controller
     }
 
     /**
-     * @Route("/code", name="code")
-     */
-    public function index()
-    {
-
-        // replace this line with your own code!
-        return $this->render('@Maker/demoPage.html.twig', [ 'path' => str_replace($this->getParameter('kernel.project_dir').'/', '', __FILE__) ]);
-    }
-
-    /**
-     * @Route("/code/phone/register", methods="POST", name="sendRegisterCode")
+     * @Route("/code/domestic/register", methods="POST", name="sendRegisterCode")
      */
     public function sendRegisterCode(Request $request){
         $phone = intval($request->request->get("phone"));
@@ -70,7 +60,7 @@ class CodeController extends Controller
     }
 
     /**
-     * @Route("/code/phone/reset", methods="POST", name="sendResetCode")
+     * @Route("/code/domestic/reset", methods="POST", name="sendResetCode")
      */
     public function sendRecoverCode(Request $request){
         $phone = intval($request->request->get("phone"));
@@ -82,7 +72,7 @@ class CodeController extends Controller
     }
 
     /**
-     * @Route("/code/phone/change", methods="GET", name="sendChangeCode")
+     * @Route("/code/domestic/change", methods="GET", name="sendChangeCode")
      */
     public function sendResetCode(Request $request){
         $phone = $this->getUser()->getPhone();
@@ -95,7 +85,7 @@ class CodeController extends Controller
     }
 
     /**
-     * @Route("/code/phone/bind", methods="GET", name="sendBindCode")
+     * @Route("/code/domestic/bind", methods="GET", name="sendBindCode")
      */
     public function sendBindCode(Request $request){
         $phone = $this->getUser()->getPhone();
@@ -107,7 +97,7 @@ class CodeController extends Controller
     }
 
     /**
-     * @Route("/code/phone/unbind", methods="GET", name="sendUnBindCode")
+     * @Route("/code/domestic/unbind", methods="GET", name="sendUnBindCode")
      */
     public function sendUnBindCode(Request $request){
         $phone = $this->getUser()->getPhone();

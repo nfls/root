@@ -34,7 +34,20 @@ class UserController extends Controller
         $user->setUsername($request->request->get("username"));
         $password = $passwordEncoder->encodePassword($user,$request->request->get("password"));
         $user->setPassword($password);
-        $user->setEmail($request->request->get("email"));
+        if($request->request->has("code")){
+            $code = $request->request->get("code");
+            $phone = $request->request->get("phone");
+            $codes = $em->getRepository(Code::class)->verifyDomesticCode($phone,$code,"register");
+            if ($codes === false){
+                return $this->response->response("短信验证码不正确",400);
+            } else {
+                $em->remove($codes);
+                $em->flush();
+                $user->setPhone($phone);
+            }
+        }else{
+            $user->setEmail($request->request->get("email"));
+        }
         $validator = $this->get('validator');
         $errors = $validator->validate($user);
         $response = new JsonResponse();
@@ -58,6 +71,5 @@ class UserController extends Controller
         if ($passwordEncoder->isPasswordValid($user,$request->request->get("password",$user->getSalt()))){
 
         }
-
     }
 }

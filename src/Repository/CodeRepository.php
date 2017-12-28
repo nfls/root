@@ -13,6 +13,22 @@ class CodeRepository extends ServiceEntityRepository
         parent::__construct($registry, Code::class);
     }
 
+    public function verifyDomesticCode($phone,$code,$action){
+        $match = $this->createQueryBuilder('c')
+            ->where('c.phone = :phone')
+            ->setParameter("phone", $phone)
+            ->andWhere('c.code = :code')
+            ->setParameter("code",$code)
+            ->andWhere('c.action = :action')
+            ->setParameter("action", $action)
+            ->getQuery()
+            ->getArrayResult();
+        if(count($match) > 0){
+            return $match;
+        }else{
+            return false;
+        }
+    }
     /*
     public function findBySomething($value)
     {
