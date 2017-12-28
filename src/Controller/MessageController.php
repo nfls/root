@@ -34,7 +34,7 @@ class MessageController extends Controller
      * @Route("/message/news", name="Message(News List)", methods="GET")
      */
     public function getNews(Request $request){
-        $page = $request->query->get("page") ?? 0;
+        $page = $request->query->get("page") ?? 1;
         return $this->response->response($this->getMessages(MessageConstant::NEWS,$page));
     }
 
@@ -44,7 +44,7 @@ class MessageController extends Controller
      * @Route("/message/system", name="Message(System List)", methods="GET")
      */
     public function getSystemMessages(Request $request){
-        $page = $request->query->get("page") ?? 0;
+        $page = $request->query->get("page") ?? 1;
         return $this->response->response($this->getMessages(MessageConstant::SYSTEM_MESSAGE,$page));
     }
 
@@ -57,6 +57,16 @@ class MessageController extends Controller
     private function getMessages($section,$page){
         $em = $this->getDoctrine()->getManager()->getRepository(Message::class);
         $data = $em->getMessages($this->getUser(),$section,$page);
-        return $data;
+        return array_map([$this,"mapMessage"],$data);
+    }
+
+    /**
+     * @param $message array
+     * @return array
+     */
+
+    function mapMessage($message){
+        unset($message["group"]);
+        return $message;
     }
 }

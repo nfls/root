@@ -13,6 +13,32 @@ class LaunchScreenRepository extends ServiceEntityRepository
         parent::__construct($registry, LaunchScreen::class);
     }
 
+    public function getLatestImage(){
+        return $this->createQueryBuilder("l")
+            ->where("l.time <= :time")
+            ->setParameter("time", new \DateTime())
+            ->orderBy("l.id","DESC")
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function getLatestImageForAdmin(){
+        return $this->createQueryBuilder("l")
+            ->orderBy("l.id","DESC")
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function getImageList($page){
+        return $this->createQueryBuilder("l")
+            ->setMaxResults(10)
+            ->setFirstResult(($page - 1)*10)
+            ->orderBy("l.time","DESC")
+            ->getQuery()
+            ->getResult();
+    }
     /*
     public function findBySomething($value)
     {

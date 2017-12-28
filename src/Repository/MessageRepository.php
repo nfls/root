@@ -22,13 +22,13 @@ class MessageRepository extends ServiceEntityRepository
     public function getMessages(User $user,$section,$page){
         //TODO: Check a user's group
         return $this->createQueryBuilder("u")
-            ->where("u.type",":type")
+            ->where("u.type = :type")
             ->setParameter("type",$section)
             ->orderBy("u.priority","DESC")
             ->addOrderBy("u.time","DESC")
             ->setFirstResult(($page - 1) * 10)
             ->setMaxResults(10)
             ->getQuery()
-            ->getResult();
+            ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
     }
 }
