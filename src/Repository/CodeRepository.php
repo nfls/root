@@ -13,28 +13,15 @@ class CodeRepository extends ServiceEntityRepository
         parent::__construct($registry, Code::class);
     }
 
-    public function getPhoneWithCodeAndAction($phone,$code,$action){
+    public function verifyDomestic($phone,$code,$action){
         return $this->createQueryBuilder('c')
-            ->where('c.phone = :phone')
-            ->setParameter("phone", $phone)
+            ->where('c.destination = :destination')
+            ->setParameter("destination", $phone)
             ->andWhere('c.code = :code')
             ->setParameter("code",$code)
             ->andWhere('c.action = :action')
             ->setParameter("action", $action)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
-
-    /*
-    public function findBySomething($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->where('c.something = :value')->setParameter('value', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 }

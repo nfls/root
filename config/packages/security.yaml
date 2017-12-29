@@ -1,7 +1,7 @@
 security:
     # https://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
-        your:
+        user:
             entity:
                 class: App\Entity\User
                 property: token
@@ -12,7 +12,8 @@ security:
         main:
             pattern:    ^/
             http_basic: ~
-            provider: your
+            provider: user
+            security: false
             guard:
                 authenticators:
                     - App\Security\Web
@@ -30,6 +31,7 @@ security:
     access_control:
         - { path: ^/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/user/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/code/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY}
         # symfony starts at the top and stops at first match
         # The ^ means that urls beginning with the pattern will be matched

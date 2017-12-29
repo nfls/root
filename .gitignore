@@ -1,4 +1,4 @@
-
+bower_components
 ###> symfony/framework-bundle ###
 .env
 /public/bundles/

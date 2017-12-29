@@ -28,7 +28,6 @@ class UserRepository extends ServiceEntityRepository
             ->where("u.username = :username")
             ->setParameter("username", $username)
             ->getQuery()
-            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 
@@ -37,7 +36,6 @@ class UserRepository extends ServiceEntityRepository
             ->where("u.token = :token")
             ->setParameter("token", $token)
             ->getQuery()
-            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 
@@ -46,9 +44,29 @@ class UserRepository extends ServiceEntityRepository
             ->where("u.phone = :phone")
             ->setParameter("phone", $phone)
             ->getQuery()
-            ->setMaxResults(1)
             ->getOneOrNullResult();
     }
+
+    public function findByEmail($email){
+        return $this->createQueryBuilder("u")
+            ->where("u.email = :email")
+            ->setParameter("email",$email)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function search($info){
+        return $this->createQueryBuilder("u")
+            ->where("u.phone = :phone")
+            ->setParameter("phone",$info)
+            ->orWhere("u.email = :email")
+            ->setParameter("email",$info)
+            ->orWhere("u.username = :username")
+            ->setParameter("username",$info)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     //static function getRepos
 
 

@@ -6,8 +6,10 @@ use App\Entity\Code;
 use App\Entity\User;
 use App\Model\ApiResponse;
 use App\Service\AliyunSMS;
+use App\Service\NexmoSMS;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -16,7 +18,12 @@ class CodeController extends Controller
     /**
      * @var AliyunSMS
      */
-    private $smsService;
+    private $aliyunService;
+
+    /**
+     * @var NexmoSMS
+     */
+    private $nexmoService;
 
     /**
      * @var ApiResponse
@@ -35,44 +42,48 @@ class CodeController extends Controller
     private $code;
 
     /**
-     * @var string
+     * @var ApiResponse
      */
-    private $string;
+    private $response;
 
     /**
      * CodeController constructor.
      */
     public function __construct()
     {
-        $this->smsService = new AliyunSMS();
+        $this->aliyunService = new AliyunSMS();
+        $this->nexmoService = new NexmoSMS();
         $this->api = new ApiResponse();
-
         $this->code = mt_rand(100000, 999999);
+        $this->response = new ApiResponse();
     }
 
     /**
-     * @Route("/code/domestic/register", methods="POST", name="sendRegisterCode")
+     * @Route("/code/register", methods="POST", name="sendRegisterCode")
      */
     public function sendRegisterCode(Request $request){
         $phone = intval($request->request->get("phone"));
-        $this->sendSMS($phone,"register",AliyunSMS::REGISTER);
-        return $this->api->response(null,200);
+        $country = $request->request->get("country");
+        return $this->send($country,$phone,"register",AliyunSMS::REGISTER);
     }
 
     /**
-     * @Route("/code/domestic/reset", methods="POST", name="sendResetCode")
+     * @Route("/code/recover", methods="GET", name="sendResetCode")
      */
     public function sendRecoverCode(Request $request){
-        $phone = intval($request->request->get("phone"));
-        $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findByPhone($phone);
-        if(is_null($user))
+        $em = $this->getDoctrine()->getManager()->getRepository(User::class);
+        $user = $em->search($request->query->get("info"));
+        if(@is_null($user))
+            return $this->response->response("用户不存在",400);
+        $phone = $user->getPhone();
+        if(is_null($phone)){
             return $this->api->response(null,400);
-        $this->sendSMS($phone,"reset",AliyunSMS::RECOVER);
-        return $this->api->response(null,200);
+        }
+        return $this->directlySend($phone,"reset",AliyunSMS::RECOVER);
     }
 
     /**
-     * @Route("/code/domestic/change", methods="GET", name="sendChangeCode")
+     * @Route("/code/change", methods="GET", name="sendChangeCode")
      */
     public function sendResetCode(Request $request){
         $phone = $this->getUser()->getPhone();
@@ -80,57 +91,88 @@ class CodeController extends Controller
             return $this->api->response(null,400);
         }
         $phone = intval($request->request->get("phone"));
-        $this->sendSMS($phone,"change",AliyunSMS::RECOVER);
-        return $this->api->response(null,200);
+        return $this->send(null,$phone,"unbind",AliyunSMS::RECOVER);
     }
 
     /**
-     * @Route("/code/domestic/bind", methods="POST", name="sendBindCode")
+     * @Route("/code/bind", methods="GET", name="sendBindCode")
      */
     public function sendBindCode(Request $request){
-        $phone = $request->request->get("phone");
-        if(is_null($phone)){
+        $phone = $request->query->get("phone");
+        if(!is_null($phone)){
             return $this->api->response(null,400);
         }
-        $this->sendSMS($phone,"bind",AliyunSMS::BIND);
-        return $this->api->response(null,200);
+        return $this->send(null,$phone,"bind",AliyunSMS::BIND);
     }
 
     /**
-     * @Route("/code/domestic/unbind", methods="GET", name="sendUnBindCode")
+     * @Route("/code/unbind", methods="GET", name="sendUnBindCode")
      */
     public function sendUnBindCode(Request $request){
         $phone = $this->getUser()->getPhone();
         if(is_null($phone)){
             return $this->api->response(null,400);
         }
-        $this->sendSMS($phone,"bind",AliyunSMS::UNBIND);
-        return $this->api->response(null,200);
+        return $this->directlySend($phone,"unbind",AliyunSMS::UNBIND);
     }
 
-    private function send($country,$phone,$action){
+    /**
+     * @param $phoneObject \libphonenumber\PhoneNumber
+     * @param $action
+     * @param $type
+     * @return JsonResponse
+     */
+    private function directlySend($phoneObject,$action,$type){
+        $util = \libphonenumber\PhoneNumberUtil::getInstance();
+        if($phoneObject->getCountryCode() == 86){
+            $this->sendDomestic($phoneObject->getNationalNumber(),$action,$type);
+        }else{
+            $this->sendInternational($util->format($phoneObject,\libphonenumber\PhoneNumberFormat::E164),$action);
+        }
+        return $this->response->response(null,200);
+    }
+
+    private function send($country,$phone,$action,$type){
         $util = \libphonenumber\PhoneNumberUtil::getInstance();
         try {
             $phoneObject = $util->parse($phone,$country);
-            if($phoneObject->getCountryCode() == 86){
-
-            }else{
-                //$client = N
+            $phoneE164 = $util->format($phoneObject,\libphonenumber\PhoneNumberFormat::E164);
+            $em = $this->getDoctrine()->getManager()->getRepository(User::class);
+            if(@!is_null($em->findByPhone($phoneE164))){
+                return $this->response->response("手机号已使用",403);
             }
+            if($phoneObject->getCountryCode() == 86){
+                $this->sendDomestic($phone,$action,$type);
+            }else{
+                $this->sendInternational($phoneE164,$action);
+            }
+            return $this->response->response(null,200);
         }catch(\libphonenumber\NumberParseException $e){
-
+            return $this->response->response($e->getMessage(),403);
         }
     }
-    private function sendSMS($phone,$action){
-        $type = "";
+
+    private function sendInternational($phone,$action){
+        $code = new Code();
+        $code->setAction($action);
+        $code->setCode("000000");
+        $code->setDestination($phone);
+        $code->setType("phone.international");
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($code);
+        $em->flush();
+        $this->nexmoService->send($phone,"NFLS.IO");
+    }
+
+    private function sendDomestic($phone,$action,$type){
         $code = new Code();
         $code->setAction($action);
         $code->setCode((string)$this->code);
         $code->setDestination($phone);
-        $code->setType("phone");
+        $code->setType("phone.domestic");
         $em = $this->getDoctrine()->getManager();
         $em->persist($code);
         $em->flush();
-        $this->smsService->sendCode($phone,$this->code,$type);
+        $this->aliyunService->sendCode($phone,$this->code,$type);
     }
 }

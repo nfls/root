@@ -51,13 +51,6 @@ class User implements UserInterface
     /**
      * @var integer
      *
-     * @ORM\Column(type="bigint", unique=true, nullable = true)
-     */
-    private $backupPhone;
-
-    /**
-     * @var integer
-     *
      * @ORM\Column(type="string", unique=true)
      */
     private $token;
@@ -135,6 +128,30 @@ class User implements UserInterface
     {
         return $this->password;
     }
+
+    /**
+     * @return \libphonenumber\PhoneNumber
+     */
+    public function getPhone()
+    {
+        $util = \libphonenumber\PhoneNumberUtil::getInstance();
+        try {
+            $phoneObject = $util->parse($this->phone);
+            return $phoneObject;
+        }catch(\libphonenumber\NumberParseException $e){
+            return null;
+        }
+    }
+
+    /**
+     * @param int $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+
 
     /**
      * @param string $password

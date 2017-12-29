@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Code;
 use App\Model\ApiResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,9 +32,25 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = new User();
 
-        //$phone = $request->request->get("phone");
-        //$country = $request->request->get("country");
-        //$util = \libphonenumber\PhoneNumberUtil::getInstance();
+        $phone = $request->request->get("phone");
+        $country = $request->request->get("country");
+        $util = \libphonenumber\PhoneNumberUtil::getInstance();
+        try {
+            $phoneObject = $util->parse($phone,$country);
+            $phoneE164 = $util->format($phoneObject,\libphonenumber\PhoneNumberFormat::E164);
+            $em = $this->getDoctrine()->getManager();
+            if($phoneObject->getCountryCode() == 86){
+                $code = $em->getRepository(Code::class)->verifyDomestic($phone,$request->request->get("code"),"register");
+                if(is_null($code))
+                    return $this->response->response("验证码不正确",400);
+                $em->remove($code);
+            }else{
+                //TODO
+            }
+            $user->setPhone($phoneE164);
+        }catch(\libphonenumber\NumberParseException $e){
+            return $this->response->response($e->getMessage(),400);
+        }
 
         $username = $request->request->get("username");
         if ($this->verifyUsername($username)) {
