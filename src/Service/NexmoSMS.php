@@ -10,10 +10,29 @@ class NexmoSMS {
     {
         $this->client = new Nexmo\Client(new Nexmo\Client\Credentials\Basic(self::API_KEY, self::API_SECRET));
     }
-    public function send($phone){
-        $this->client->verify([
-            'number' => (string)$phone
-            //'bran'
+    public function send($phone,$brand){
+        $verification = $this->client->verify()->start([
+            'number' => (string)$phone,
+            'code_length' => 6,
+            'brand' => $brand
         ]);
+        return $verification->getRequestId();
+    }
+    public function verify($id,$code){
+        $verification = new Nexmo\Verify\Verification($id);
+        $result = $this->client->verify()->check($verification,$code);
+        if($result->getStatus() == 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public function cancel($id){
+        $verification = new Nexmo\Verify\Verification($id);
+        $this->client->verify()->cancel($verification);
+    }
+    public function trigger($id){
+        $verification = new Nexmo\Verify\Verification($id);
+        $this->client->verify()->trigger($verification);
     }
 }
