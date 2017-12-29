@@ -24,9 +24,6 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string", unique=true)
-     * @Assert\NotBlank(
-     *     message = "Your username is not correct."
-     * )
      */
     private $username;
 
@@ -34,12 +31,6 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string", unique=true)
-     * @Assert\NotBlank()
-     * @Assert\Email(
-     *     message = "Your email is not correct.",
-     *     checkMX = true,
-     *     checkHost = true
-     * )
      */
     private $email;
 
@@ -56,6 +47,13 @@ class User implements UserInterface
      * @ORM\Column(type="bigint", unique=true, nullable = true)
      */
     private $phone;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="bigint", unique=true, nullable = true)
+     */
+    private $backupPhone;
 
     /**
      * @var integer
@@ -85,6 +83,18 @@ class User implements UserInterface
      * @ORM\Column(type="bigint", options={"unsigned":true, "default":1})
      */
     private $permission = 1;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetimetz", options={"default":"CURRENT_TIMESTAMP"})
+     */
+    private $joinTime;
+
+    public function __construct()
+    {
+        $this->joinTime = new \DateTime();
+    }
 
     /**
      * @return string
@@ -134,31 +144,6 @@ class User implements UserInterface
         $this->password = $password;
         $this->token = uniqid("nfls_",true);
     }
-
-    /**
-     * @param string $token
-     */
-    public function setToken($token)
-    {
-        $this->token = $token;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPhone()
-    {
-        return $this->phone;
-    }
-
-    /**
-     * @param int $phone
-     */
-    public function setPhone($phone)
-    {
-        $this->phone = $phone;
-    }
-
 
     public function getSalt()
     {

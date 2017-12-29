@@ -85,10 +85,10 @@ class CodeController extends Controller
     }
 
     /**
-     * @Route("/code/domestic/bind", methods="GET", name="sendBindCode")
+     * @Route("/code/domestic/bind", methods="POST", name="sendBindCode")
      */
     public function sendBindCode(Request $request){
-        $phone = $this->getUser()->getPhone();
+        $phone = $request->request->get("phone");
         if(is_null($phone)){
             return $this->api->response(null,400);
         }
@@ -108,7 +108,21 @@ class CodeController extends Controller
         return $this->api->response(null,200);
     }
 
-    private function sendSMS($phone,$action,$type){
+    private function send($country,$phone,$action){
+        $util = \libphonenumber\PhoneNumberUtil::getInstance();
+        try {
+            $phoneObject = $util->parse($phone,$country);
+            if($phoneObject->getCountryCode() == 86){
+
+            }else{
+                //$client = N
+            }
+        }catch(\libphonenumber\NumberParseException $e){
+
+        }
+    }
+    private function sendSMS($phone,$action){
+        $type = "";
         $code = new Code();
         $code->setAction($action);
         $code->setCode((string)$this->code);

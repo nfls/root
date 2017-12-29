@@ -20,7 +20,7 @@ class LaunchScreenRepository extends ServiceEntityRepository
             ->orderBy("l.id","DESC")
             ->setMaxResults(1)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getOneOrNullResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
     }
 
     public function getLatestImageForAdmin(){
