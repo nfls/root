@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\User;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 
 class UserController extends Controller
 {
@@ -100,12 +103,16 @@ class UserController extends Controller
      */
     public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
+        $session = new Session();
 
         $user = $this->getDoctrine()->getRepository(User::class)->findByUsername($request->request->get("username"));
-        $respone = new JsonResponse();
         if ($passwordEncoder->isPasswordValid($user, $request->request->get("password", $user->getSalt()))) {
-
+            $session->set("user_token",$user->getToken());
+            return $this->response->response(null,200);
+        }else{
+            return $this->response->response(null,401);
         }
+
     }
 
     private function verifyEmail($email)

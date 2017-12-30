@@ -151,6 +151,14 @@ class User implements UserInterface
         $this->phone = $phone;
     }
 
+    /**
+     * @return int
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
 
 
     /**

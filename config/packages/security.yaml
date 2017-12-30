@@ -13,10 +13,17 @@ security:
             pattern:    ^/
             http_basic: ~
             provider: user
-            security: false
+            security: true
             guard:
                 authenticators:
-                    - App\Security\Web
+                    - App\Security\SessionAuthenticator
+                    - App\Security\CookieAuthenticator
+                    - App\Security\TokenAuthenticator
+                entry_point: App\Security\SessionAuthenticator
+
+            stateless: false
+
+            anonymous: true
             # activate different ways to authenticate
 
             # http_basic: ~
