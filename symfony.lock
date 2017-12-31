@@ -1,4 +1,7 @@
 {
+    "defuse/php-encryption": {
+        "version": "v2.1.0"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -76,6 +79,12 @@
     },
     "lcobucci/jwt": {
         "version": "3.2.2"
+    },
+    "league/event": {
+        "version": "2.1.2"
+    },
+    "league/oauth2-server": {
+        "version": "6.1.1"
     },
     "mrgoon/aliyun-sms": {
         "version": "dev-master"

@@ -59,7 +59,6 @@ class Code
      * @ORM\Column(type="string")
      */
     private $type;
-    // add your own fields
 
     public function __construct()
     {
