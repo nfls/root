@@ -1,50 +1,61 @@
 <?php
 namespace App\Model;
 
+use App\Entity\Client;
+use App\Repository\ClientRepository;
+use Doctrine\ORM\EntityManager;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\TokenInterface;
+use Doctrine\ORM\Mapping as ORM;
 
 abstract class Token implements TokenInterface {
 
     /**
      * @var string
      *
+     * @ORM\Id
      * @ORM\Column(type="string", unique=true)
      */
-    private $token;
+    protected $token;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetimetz")
      */
-    private $expiryTime;
+    protected $expiryTime;
 
     /**
      * @var integer
      *
      * @ORM\Column(type="integer")
      */
-    private $uid;
+    protected $uid;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=128)
      */
-    private $clientId;
+    protected $clientId;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=1024)
      */
-    private $scopes;
+    protected $scopes;
 
-    public function  __construct()
+    /**
+     * @var ClientRepository
+     */
+    protected $clientRepo;
+
+    public function  __construct(EntityManager $entityManager)
     {
-        $this->scopes = json_decode([]);
+        $this->scopes = json_encode([]);
+        $this->clientRepo = $entityManager->getRepository(Client::class);
     }
 
     public function getIdentifier()
@@ -79,12 +90,12 @@ abstract class Token implements TokenInterface {
 
     public function getClient()
     {
-        // TODO: Implement getClient() method.
+        return $this->clientRepo->getClientById($this->clientId);
     }
 
     public function setClient(ClientEntityInterface $client)
     {
-        // TODO: Implement setClient() method.
+        $this->clientId = $client->getIdentifier();
     }
 
     public function addScope(ScopeEntityInterface $scope)

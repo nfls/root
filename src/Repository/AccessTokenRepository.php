@@ -18,36 +18,42 @@ class AccessTokenRepository extends ServiceEntityRepository implements AccessTok
         parent::__construct($registry, AccessToken::class);
     }
 
-    /*
-    public function findBySomething($value)
-    {
-        return $this->createQueryBuilder('a')
-            ->where('a.something = :value')->setParameter('value', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    public function getTokenById($tokenId){
+        return $this->findOneBy(["token"=>$tokenId]);
     }
-    */
+
+
     public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
     {
-        // TODO: Implement getNewToken() method.
+        $accessToken = new AccessToken($this->getEntityManager());
+        $accessToken->setClient($clientEntity);
+        foreach ($scopes as $scope){
+            $accessToken->addScope($scope);
+        }
+        $accessToken->setUserIdentifier($userIdentifier);
+        return $accessToken;
+
     }
 
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
-        // TODO: Implement persistNewAccessToken() method.
+        $this->getEntityManager()->persist($accessTokenEntity);
     }
 
     public function revokeAccessToken($tokenId)
     {
-        // TODO: Implement revokeAccessToken() method.
+        $token = $this->findOneBy(["token" => $tokenId]);
+        $this->getEntityManager()->remove($token);
+        $this->getEntityManager()->flush();
     }
 
     public function isAccessTokenRevoked($tokenId)
     {
-        // TODO: Implement isAccessTokenRevoked() method.
+        $token = $this->findOneBy(["token" => $tokenId]);
+        if(@null === $token)
+            return true;
+        else
+            return false;
     }
 
 

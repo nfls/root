@@ -16,11 +16,7 @@ class ClientRepository extends ServiceEntityRepository implements ClientReposito
 
     public function getClientEntity($clientIdentifier, $grantType, $clientSecret = null, $mustValidateSecret = true)
     {
-        $client = $this->createQueryBuilder("u")
-            ->where("u.clientId: id")
-            ->setParameter("id",$clientIdentifier)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $client = $this->getClientById($clientIdentifier);
         if(@null === $client)
             return null;
         if($grantType != $client->getGrantType())
@@ -32,16 +28,9 @@ class ClientRepository extends ServiceEntityRepository implements ClientReposito
 
         // TODO: Implement getClientEntity() method.
     }
-    /*
-    public function findBySomething($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->where('c.something = :value')->setParameter('value', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+
+    public function getClientById($id){
+        return $this->findOneBy(["clientId"=>$id]);
     }
-    */
+
 }
