@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\AccessToken;
 use App\Entity\RefreshToken;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
@@ -18,22 +19,31 @@ class RefreshTokenRepository extends ServiceEntityRepository implements RefreshT
 
     public function getNewRefreshToken()
     {
-        // TODO: Implement getNewRefreshToken() method.
+        $token = new RefreshToken();
+        return $token;
     }
 
     public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
     {
-        // TODO: Implement persistNewRefreshToken() method.
+        $em = $this->getEntityManager();
+        $em->persist($refreshTokenEntity);
+        $em->flush();
     }
 
     public function revokeRefreshToken($tokenId)
     {
-        // TODO: Implement revokeRefreshToken() method.
+        $em = $this->getEntityManager();
+        $em->remove($this->findOneBy(["token"=>$tokenId]));
+        $em->flush();
     }
 
     public function isRefreshTokenRevoked($tokenId)
     {
-        // TODO: Implement isRefreshTokenRevoked() method.
+        $token = $this->findOneBy(["token"=>$tokenId]);
+        if(@null === $token)
+            return true;
+        else
+            return false;
     }
 
 

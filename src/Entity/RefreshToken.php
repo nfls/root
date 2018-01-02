@@ -12,8 +12,23 @@ use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RefreshTokenRepository")
  */
-class RefreshToken extends Token implements RefreshTokenEntityInterface
+class RefreshToken implements RefreshTokenEntityInterface
 {
+
+    /**
+     * @var string
+     *
+     * @ORM\Id
+     * @ORM\Column(type="string", unique=true)
+     */
+    protected $token;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetimetz")
+     */
+    protected $expiryTime;
 
     /**
      * @var AccessTokenEntityInterface
@@ -34,4 +49,23 @@ class RefreshToken extends Token implements RefreshTokenEntityInterface
     }
 
 
+    public function getIdentifier()
+    {
+        return $this->token;
+    }
+
+    public function setIdentifier($identifier)
+    {
+        $this->token = $identifier;
+    }
+
+    public function getExpiryDateTime()
+    {
+        return $this->expiryTime;
+    }
+
+    public function setExpiryDateTime(\DateTime $dateTime)
+    {
+        $this->expiryTime = $dateTime;
+    }
 }

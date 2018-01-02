@@ -18,7 +18,7 @@ class ScopeRepository extends ServiceEntityRepository implements ScopeRepository
 
     public function getScopeEntityByIdentifier($identifier)
     {
-        // TODO: Implement getScopeEntityByIdentifier() method.
+        return $this->findOneBy(["token"=>$identifier]);
     }
 
     public function finalizeScopes(
@@ -28,7 +28,7 @@ class ScopeRepository extends ServiceEntityRepository implements ScopeRepository
         $userIdentifier = null
     )
     {
-        // TODO: Implement finalizeScopes() method.
+        return $scopes;
     }
 
 

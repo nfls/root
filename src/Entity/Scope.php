@@ -11,20 +11,28 @@ use League\OAuth2\Server\Entities\ScopeEntityInterface;
 class Scope implements ScopeEntityInterface
 {
     /**
+     * @var string
+     *
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", unique=true)
      */
-    private $id;
+    private $token;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    private $role;
 
     public function getIdentifier()
     {
-        // TODO: Implement getIdentifier() method.
+       return $this->token;
     }
 
     function jsonSerialize()
     {
-        // TODO: Implement jsonSerialize() method.
+        return $this->getIdentifier();
     }
 
 

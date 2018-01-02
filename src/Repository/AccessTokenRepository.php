@@ -25,7 +25,7 @@ class AccessTokenRepository extends ServiceEntityRepository implements AccessTok
 
     public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
     {
-        $accessToken = new AccessToken($this->getEntityManager());
+        $accessToken = new AccessToken();
         $accessToken->setClient($clientEntity);
         foreach ($scopes as $scope){
             $accessToken->addScope($scope);

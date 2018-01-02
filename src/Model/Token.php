@@ -1,15 +1,10 @@
 <?php
 namespace App\Model;
-
+use League\OAuth2\Server\Entities\TokenInterface;
 use App\Entity\Client;
-use App\Repository\ClientRepository;
-use Doctrine\ORM\EntityManager;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
-use League\OAuth2\Server\Entities\TokenInterface;
-use Doctrine\ORM\Mapping as ORM;
-
-abstract class Token implements TokenInterface {
+abstract class Token implements TokenInterface{
 
     /**
      * @var string
@@ -106,6 +101,5 @@ abstract class Token implements TokenInterface {
     {
         //TODO
     }
-
 
 }
