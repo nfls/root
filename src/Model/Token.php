@@ -1,5 +1,6 @@
 <?php
 namespace App\Model;
+use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\TokenInterface;
 use App\Entity\Client;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
