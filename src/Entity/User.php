@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use League\OAuth2\Server\Entities\UserEntityInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -10,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface
+class User implements UserInterface,UserEntityInterface
 {
 
     /**
@@ -184,6 +185,12 @@ class User implements UserInterface
     {
         return ["ROLES_USER"];
     }
+
+    public function getIdentifier()
+    {
+        return $this->id;
+    }
+
 
 }
 

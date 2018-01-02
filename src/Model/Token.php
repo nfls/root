@@ -34,11 +34,11 @@ abstract class Token implements TokenInterface {
     protected $uid;
 
     /**
-     * @var string
+     * @var Client
      *
-     * @ORM\Column(type="string", length=128)
+     * @ORM\OneToOne(targetEntity="App\Entity\Client")
      */
-    protected $clientId;
+    protected $client;
 
     /**
      * @var string
@@ -47,25 +47,20 @@ abstract class Token implements TokenInterface {
      */
     protected $scopes;
 
-    /**
-     * @var ClientRepository
-     */
-    protected $clientRepo;
 
-    public function  __construct(EntityManager $entityManager)
+    public function  __construct()
     {
         $this->scopes = json_encode([]);
-        $this->clientRepo = $entityManager->getRepository(Client::class);
     }
 
     public function getIdentifier()
     {
-        return $this->clientId;
+        return $this->token;
     }
 
     public function setIdentifier($identifier)
     {
-        $this->clientId = $identifier;
+        $this->token = $identifier;
     }
 
     public function getExpiryDateTime()
@@ -90,12 +85,12 @@ abstract class Token implements TokenInterface {
 
     public function getClient()
     {
-        return $this->clientRepo->getClientById($this->clientId);
+        return $this->client;
     }
 
     public function setClient(ClientEntityInterface $client)
     {
-        $this->clientId = $client->getIdentifier();
+        $this->client = $client;
     }
 
     public function addScope(ScopeEntityInterface $scope)

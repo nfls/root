@@ -4,25 +4,37 @@ namespace App\Repository;
 
 use App\Entity\RefreshToken;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
+use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
+use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class RefreshTokenRepository extends ServiceEntityRepository
+class RefreshTokenRepository extends ServiceEntityRepository implements RefreshTokenRepositoryInterface
 {
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, RefreshToken::class);
     }
 
-    /*
-    public function findBySomething($value)
+    public function getNewRefreshToken()
     {
-        return $this->createQueryBuilder('r')
-            ->where('r.something = :value')->setParameter('value', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        // TODO: Implement getNewRefreshToken() method.
     }
-    */
+
+    public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
+    {
+        // TODO: Implement persistNewRefreshToken() method.
+    }
+
+    public function revokeRefreshToken($tokenId)
+    {
+        // TODO: Implement revokeRefreshToken() method.
+    }
+
+    public function isRefreshTokenRevoked($tokenId)
+    {
+        // TODO: Implement isRefreshTokenRevoked() method.
+    }
+
+
 }

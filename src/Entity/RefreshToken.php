@@ -16,31 +16,21 @@ class RefreshToken extends Token implements RefreshTokenEntityInterface
 {
 
     /**
-     * @var string
+     * @var AccessTokenEntityInterface
      *
-     * @ORM\Column(type="string",length=128)
+     * @ORM\OneToOne(targetEntity="App\Entity\AccessToken", mappedBy="token")
      */
     protected $accessToken;
 
-    /**
-     * @var AccessTokenRepository
-     */
-    private $accessRepo;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        parent::__construct($entityManager);
-        $this->accessRepo = $entityManager->getRepository(AccessToken::class);
-    }
 
     public function setAccessToken(AccessTokenEntityInterface $accessToken)
     {
-        $this->token = $accessToken->getIdentifier();
+        $this->token = $accessToken;
     }
 
     public function getAccessToken()
     {
-        return $this->accessRepo->getTokenById($this->accessToken);
+        return $this->accessToken;
     }
 
 
