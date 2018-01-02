@@ -25,14 +25,16 @@ abstract class Token implements TokenInterface{
     /**
      * @var \App\Entity\User
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
 
     /**
      * @var Client
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\Client")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client")
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
     protected $client;
 

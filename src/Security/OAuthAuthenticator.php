@@ -3,8 +3,12 @@
 namespace App\Security;
 
 use App\Controller\OAuthController;
+use App\Service\OAuthService;
 use Doctrine\ORM\EntityManager;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\ResourceServer;
+use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -14,14 +18,14 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
 class OAuthAuthenticator extends AbstractGuardAuthenticator
 {
-
+    /**
+     * @var ResourceServer
+     */
     private $server;
 
-    public function __construct()
+    public function __construct(OAuthService $service)
     {
-        $controller = new OAuthController();
-        $controller->init();
-        $server = $controller->server;
+        $this->server = $service->getValidator();
     }
 
     public function supports(Request $request)
@@ -31,29 +35,30 @@ class OAuthAuthenticator extends AbstractGuardAuthenticator
 
     public function getCredentials(Request $request)
     {
-
-
-        // todo
+        $factory = new DiactorosFactory();
+        return $factory->createRequest($request);
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        // todo
+        $auth = $this->server->validateAuthenticatedRequest($credentials);
+        $id = $auth->getAttribute("oauth_user_id");
+        return $userProvider->loadUserByUsername($id);
     }
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        // todo
+        return true;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        // todo
+        return new JsonResponse(array("code"=>400,"message"=>$exception->getMessage()),400);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        // todo
+        return;
     }
 
     public function start(Request $request, AuthenticationException $authException = null)
@@ -63,6 +68,6 @@ class OAuthAuthenticator extends AbstractGuardAuthenticator
 
     public function supportsRememberMe()
     {
-        // todo
+        return false;
     }
 }

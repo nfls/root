@@ -1,36 +1,38 @@
 security:
     # https://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
-        user:
+        token:
             entity:
                 class: App\Entity\User
                 property: token
+        username:
+            entity:
+                class: App\Entity\User
+                property: username
+        user:
+            chain:
+                providers: [token, username]
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        public:
+            pattern: (accessToken|login|register|reset)
             security: false
         main:
             pattern:    ^/
             http_basic: ~
             provider: user
-            security: false
+            anonymous: true
+            security: true
             guard:
                 authenticators:
                     - App\Security\SessionAuthenticator
+                    - App\Security\OAuthAuthenticator
                     - App\Security\CookieAuthenticator
                     - App\Security\TokenAuthenticator
                 entry_point: App\Security\SessionAuthenticator
-
             stateless: false
-
-            anonymous: true
-            # activate different ways to authenticate
-
-            # http_basic: ~
-            # https://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: ~
-            # https://symfony.com/doc/current/cookbook/security/form_login_setup.html
    
     encoders:
         App\Entity\User: bcrypt
@@ -39,6 +41,7 @@ security:
         - { path: ^/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/user/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/code/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/oauth/authorize, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY}
         # symfony starts at the top and stops at first match
         # The ^ means that urls beginning with the pattern will be matched
