@@ -242,6 +242,9 @@
     "symfony/property-access": {
         "version": "v4.0.2"
     },
+    "symfony/psr-http-message-bridge": {
+        "version": "v1.0.2"
+    },
     "symfony/routing": {
         "version": "3.3",
         "recipe": {

@@ -21,7 +21,7 @@ class ClientRepository extends ServiceEntityRepository implements ClientReposito
             return null;
         if($grantType != $client->getGrantType())
             return null;
-        if($mustValidateSecret && $clientSecret != $client->getClientSecret())
+        if($mustValidateSecret && $clientSecret != $client->getSecret())
             return null;
 
         return $client;

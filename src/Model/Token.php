@@ -23,11 +23,11 @@ abstract class Token implements TokenInterface{
     protected $expiryTime;
 
     /**
-     * @var integer
+     * @var \App\Entity\User
      *
-     * @ORM\Column(type="integer")
+     * @ORM\OneToOne(targetEntity="App\Entity\User")
      */
-    protected $uid;
+    protected $user;
 
     /**
      * @var Client
@@ -71,12 +71,12 @@ abstract class Token implements TokenInterface{
 
     public function setUserIdentifier($identifier)
     {
-        $this->uid = $identifier;
+        $this->user = $identifier;
     }
 
     public function getUserIdentifier()
     {
-        return $this->uid;
+        return $this->user;
     }
 
     public function getClient()

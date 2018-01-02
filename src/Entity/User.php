@@ -130,6 +130,7 @@ class User implements UserInterface,UserEntityInterface
         return $this->password;
     }
 
+
     /**
      * @return \libphonenumber\PhoneNumber
      */
@@ -160,8 +161,6 @@ class User implements UserInterface,UserEntityInterface
         return $this->token;
     }
 
-
-
     /**
      * @param string $password
      */
@@ -188,7 +187,7 @@ class User implements UserInterface,UserEntityInterface
 
     public function getIdentifier()
     {
-        return $this->id;
+        return $this;
     }
 
 

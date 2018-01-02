@@ -13,7 +13,7 @@ security:
             pattern:    ^/
             http_basic: ~
             provider: user
-            security: true
+            security: false
             guard:
                 authenticators:
                     - App\Security\SessionAuthenticator
