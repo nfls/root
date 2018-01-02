@@ -13,7 +13,7 @@ use League\OAuth2\Server\Entities\Traits\AccessTokenTrait;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AccessTokenRepository")
  */
-class AccessToken implements AccessTokenEntityInterface
+class AccessToken extends Token implements AccessTokenEntityInterface
 {
     use AccessTokenTrait;
 
