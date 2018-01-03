@@ -37,6 +37,7 @@ class UserController extends Controller
 
         $phone = $request->request->get("phone");
         $country = $request->request->get("country");
+        //TODO : Detect whether the user use the phone or the email.
         $util = \libphonenumber\PhoneNumberUtil::getInstance();
         try {
             $phoneObject = $util->parse($phone,$country);
@@ -76,22 +77,6 @@ class UserController extends Controller
             return $this->response->response("密码不合法", 400);
         }
 
-
-        /*
-        if($request->request->has("code")){
-            $code = $request->request->get("code");
-            $phone = $request->request->get("phone");
-            $codes = $em->getRepository(Code::class)->verifyDomesticCode($phone,$code,"register");
-            if ($codes === false){
-                return $this->response->response("短信验证码不正确",400);
-            } else {
-                $em->remove($codes);
-                $em->flush();
-                $user->setPhone($phone);
-            }
-        }
-        */
-
         $em->persist($user);
         $em->flush();
 
@@ -112,8 +97,28 @@ class UserController extends Controller
         }else{
             return $this->response->response(null,401);
         }
-
     }
+
+    /**
+     * @Route("/user/current", name="User(Current)", methods="GET")
+     */
+    public function current(){
+        return $this->response->response($this->getUser()->getInfoArray(true),200);
+    }
+
+    /**
+     * @Route("user/info", name="User(Info)", methods="GET")
+     */
+    public function info(Request $request){
+        $info = $request->query->get("info") ?? "";
+        $repo = $this->getDoctrine()->getManager()->getRepository(User::class);
+        $user = $repo->search($info);
+        if(@null === $user){
+            return $this->response->response(null,Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        return $this->response->response($user->getInfoArray($user->getUsername() == $this->getUser()->getUsername()),200);
+    }
+
 
     private function verifyEmail($email)
     {

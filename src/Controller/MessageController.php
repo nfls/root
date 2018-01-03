@@ -49,12 +49,27 @@ class MessageController extends Controller
     }
 
     /**
+     * @Route("message/count", name="Message(Count)", methods="GET")
+     */
+    public function getUnreadCount(){
+        $em = $this->getDoctrine()->getManager()->getRepository(Message::class);
+        return $this->response->response($em->getUnreadCount($this->getUser()->getReadTime()),200);
+    }
+
+    /**
      * @param $section MessageConstant
      * @param $page int
      * @return mixed
      */
 
     private function getMessages($section,$page){
+        if($section == MessageConstant::SYSTEM_MESSAGE){
+            $user = $this->getUser();
+            $user->setReadTime(new \DateTime());
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+        }
         $em = $this->getDoctrine()->getManager()->getRepository(Message::class);
         $data = $em->getMessages($this->getUser(),$section,$page);
         return array_map([$this,"mapMessage"],$data);

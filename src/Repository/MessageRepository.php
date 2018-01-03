@@ -31,4 +31,20 @@ class MessageRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
     }
+
+    public function getUnreadCount(\DateTime $time){
+        //TODO: Check a user's group
+        return count(
+            $this->createQueryBuilder("u")
+            ->where("u.type = :type")
+            ->setParameter("type",MessageConstant::SYSTEM_MESSAGE)
+            ->andWhere("u.time >= :time")
+            ->setParameter("time",$time)
+            ->orderBy("u.priority","DESC")
+            ->addOrderBy("u.time","DESC")
+            ->getQuery()
+            ->getResult()
+        );
+
+    }
 }

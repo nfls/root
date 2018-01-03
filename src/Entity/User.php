@@ -45,7 +45,7 @@ class User implements UserInterface,UserEntityInterface
     /**
      * @var integer
      *
-     * @ORM\Column(type="bigint", unique=true, nullable = true)
+     * @ORM\Column(type="bigint", unique=true)
      */
     private $phone;
 
@@ -83,11 +83,19 @@ class User implements UserInterface,UserEntityInterface
      *
      * @ORM\Column(type="datetimetz", options={"default":"CURRENT_TIMESTAMP"})
      */
+    private $readTime;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetimetz", options={"default":"CURRENT_TIMESTAMP"})
+     */
     private $joinTime;
 
     public function __construct()
     {
         $this->joinTime = new \DateTime();
+        $this->readTime = new \DateTime();
     }
 
     /**
@@ -168,6 +176,42 @@ class User implements UserInterface,UserEntityInterface
     {
         $this->password = $password;
         $this->token = uniqid("nfls_",true);
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getReadTime()
+    {
+        return $this->readTime;
+    }
+
+    /**
+     * @param \DateTime $readTime
+     */
+    public function setReadTime($readTime)
+    {
+        $this->readTime = $readTime;
+    }
+
+
+
+    public function getInfoArray($detail = false)
+    {
+        if($detail){
+            return array(
+                "id" => $this->id,
+                "username" => $this->username,
+                "email" => $this->email,
+                "phone" => $this->phone,
+                "joinTime" => $this->joinTime
+            );
+        }else{
+            return array(
+                "id" => $this->id,
+                "joinTime" => $this->joinTime
+            );
+        }
     }
 
     public function getSalt()
