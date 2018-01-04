@@ -57,4 +57,38 @@ class Gallery
         $this->photos = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @param ArrayCollection $photo
+     */
+    public function addPhotos($photo)
+    {
+        $this->photos->add($photo);
+    }
+
+    /**
+     * @param ArrayCollection $comment
+     */
+    public function addComments($comment)
+    {
+        $this->comments->add($comment);
+    }
+
+
 }

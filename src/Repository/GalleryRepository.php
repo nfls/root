@@ -13,8 +13,12 @@ class GalleryRepository extends ServiceEntityRepository
         parent::__construct($registry, Gallery::class);
     }
 
-   public function getList(){
-        //return $this->createQueryBuilder("u")
-
-   }
+    public function getList($page)
+    {
+        return $this->createQueryBuilder("u")
+            ->setMaxResults(10)
+            ->setFirstResult(($page - 1) * 10)
+            ->getQuery()
+            ->getResult();
+    }
 }
