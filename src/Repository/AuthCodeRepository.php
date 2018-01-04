@@ -18,12 +18,13 @@ class AuthCodeRepository extends ServiceEntityRepository implements AuthCodeRepo
 
     public function getNewAuthCode()
     {
-        // TODO: Implement getNewAuthCode() method.
+        return new AuthCode();
     }
 
     public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity)
     {
         // TODO: Implement persistNewAuthCode() method.
+
     }
 
     public function revokeAuthCode($codeId)
