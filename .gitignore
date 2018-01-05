@@ -1,5 +1,6 @@
 bower_components
 .idea/
+storage/
 ###> symfony/framework-bundle ###
 .env
 /public/bundles/
