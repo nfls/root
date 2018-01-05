@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1ce7cc7b-a482-444b-909c-be26dac887ed" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Controller/GalleryController.php" afterPath="$PROJECT_DIR$/src/Controller/GalleryController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Entity/Photo.php" afterPath="$PROJECT_DIR$/src/Entity/Photo.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/upload.photos.html" afterPath="$PROJECT_DIR$/templates/upload.photos.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -40,8 +38,8 @@
       <file leaf-file-name="upload.photos.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/upload.photos.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="403">
-              <caret line="43" column="41" lean-forward="true" selection-start-line="43" selection-start-column="41" selection-end-line="43" selection-end-column="41" />
+            <state relative-caret-position="468">
+              <caret line="52" column="13" lean-forward="true" selection-start-line="52" selection-start-column="13" selection-end-line="52" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -358,12 +356,12 @@
       <workItem from="1515023815274" duration="890000" />
       <workItem from="1515038603757" duration="1991000" />
       <workItem from="1515073203209" duration="3560000" />
-      <workItem from="1515114225115" duration="7618000" />
+      <workItem from="1515114225115" duration="8089000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="127925000" />
+    <option name="totallyTimeSpent" value="128396000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -803,8 +801,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/upload.photos.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
-          <caret line="43" column="41" lean-forward="true" selection-start-line="43" selection-start-column="41" selection-end-line="43" selection-end-column="41" />
+        <state relative-caret-position="468">
+          <caret line="52" column="13" lean-forward="true" selection-start-line="52" selection-start-column="13" selection-end-line="52" selection-end-column="13" />
           <folding />
         </state>
       </provider>
