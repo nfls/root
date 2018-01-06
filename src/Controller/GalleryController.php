@@ -38,7 +38,7 @@ class GalleryController extends Controller
      * @Route("/media/admin/upload", methods="GET")
      */
     public function uploadPage(){
-        return $this->render("admin/media/upload.html.twig");
+        return $this->render("admin/media/upload.html");
     }
 
     /**

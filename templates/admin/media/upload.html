@@ -44,10 +44,10 @@
     <div>
         选择照片：
         <input id="upload" class="easyui-filebox" accept="image/*" style="width:300px" multiple >
-        并发数：
+        并发数（尚未支持）：
         <input id="ss" class="easyui-numberspinner" style="width:80px;"
-               required="required" data-options="min:1,max:4,editable:false">
-        <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="upload(0)">开始上传</a>
+               required="required" data-options="min:1,max:4,editable:false" disabled>
+        <a id="submit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="upload(0)">开始上传</a>
     </div>
     <br/>
 
@@ -80,13 +80,14 @@
     console.log("ok2");
     $('#upload').filebox({
         onChange: function () {
+            data = new Array();
             var files = $('#upload').filebox("files");
             $.each(files, function (index, value) {
                 data.push({
                     filename: value["name"],
                     size: humanFileSize(value["size"]),
                     status: "等待上传",
-                    progress: '20%'
+                    progress: '0%'
                 });
             });
             console.log(data);
@@ -110,6 +111,15 @@
         return bytes.toFixed(1) + ' ' + units[u];
     }
     function upload(i){
+        if(i>=$('#upload').filebox("files").length){
+            $("#upload").filebox('readonly',false);
+            //$("#submit").linkbutton("disabled",false);
+            $.messager.alert('提示','所有照片已上传完毕','info');
+            return;
+        }else{
+            $("#upload").filebox('readonly',true);
+            //$("#submit").linkbutton("disabled",true);
+        }
         var formData = new FormData();
         formData.append('photo', $('#upload').filebox("files")[i]);
         data[i].status = "上传中";
