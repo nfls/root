@@ -38,16 +38,8 @@ class GalleryController extends Controller
      * @Route("/media/admin/upload", methods="GET")
      */
     public function uploadPage(){
-        return $this->render("upload.photos.html");
-    }
-
-    /**
-     * @Route("/media/admin/new", methods="GET")
-     */
-    public function uploadPhoto(){
         return $this->render("admin/media/upload.html.twig");
     }
-
 
     /**
      * @Route("/media/gallery/add", methods="POST")
@@ -89,7 +81,7 @@ class GalleryController extends Controller
         exec("cwebp -q 90 ".$path.".hd.png -o ".$path.".hd.webp ");
         exec("cwebp -q 100 ".$path." -o ".$path.".webp ");
 
-        $thumbPhoto = new File($path.".thumb.webpbin");
+        $thumbPhoto = new File($path.".thumb.webp");
         $hdPhoto = new File($path.".hd.webp");
 
         unlink($path.".thumb.png");

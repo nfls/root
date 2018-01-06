@@ -47,7 +47,7 @@
         并发数：
         <input id="ss" class="easyui-numberspinner" style="width:80px;"
                required="required" data-options="min:1,max:4,editable:false">
-        <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">开始上传</a>
+        <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="upload(0)">开始上传</a>
     </div>
     <br/>
 
@@ -55,9 +55,16 @@
     </table>
 </div>
 <script type="application/javascript">
+    var data = new Array();
     function progressFormatter(value, rowData, rowIndex) {
         var htmlstr = '<div id="p" class="easyui-progressbar progressbar" style="width: 398px; height: 20px;"><div class="progressbar-text" style="width: 398px; height: 20px; line-height: 20px;">' + value + '</div><div class="progressbar-value" style="width: ' + value + '; height: 20px; line-height: 20px;"><div class="progressbar-text" style="width: 398px; height: 20px; line-height: 20px;">' + value + '</div></div></div>';
         return htmlstr;
+    }
+    function reloadData(){
+        $('#dg').datagrid({
+            data: data
+        });
+        $('#dg').datagrid('reload');
     }
     $('#dg').datagrid({
             columns:
@@ -74,7 +81,6 @@
     $('#upload').filebox({
         onChange: function () {
             var files = $('#upload').filebox("files");
-            var data = new Array();
             $.each(files, function (index, value) {
                 data.push({
                     filename: value["name"],
@@ -84,10 +90,7 @@
                 });
             });
             console.log(data);
-            $('#dg').datagrid({
-                data: data
-            });
-            $('#dg').datagrid('reload');
+            reloadData();
         }
     });
 
@@ -105,6 +108,47 @@
             ++u;
         } while (Math.abs(bytes) >= thresh && u < units.length - 1);
         return bytes.toFixed(1) + ' ' + units[u];
+    }
+    function upload(i){
+        var formData = new FormData();
+        formData.append('photo', $('#upload').filebox("files")[i]);
+        data[i].status = "上传中";
+        $.ajax({
+            url: '/media/gallery/upload',
+            type: 'POST',
+            cache: false,
+            data: formData,
+            processData: false,
+            contentType: false,
+            async: true,
+            xhr: function()
+            {
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener("progress", function(evt){
+                    if (evt.lengthComputable) {
+                        var percentComplete = Math.floor(evt.loaded / evt.total *100);
+                        data[i].progress = percentComplete + "%";
+                        reloadData();
+                    }
+                }, false);
+                xhr.upload.addEventListener("load", function(evt){
+                    data[i].progress = "100%";
+                    data[i].status = "处理中";
+                    reloadData();
+                }, false);
+                return xhr;
+            },
+            success: function(res) {
+                data[i].status = "上传成功";
+                reloadData();
+                upload(i+1);
+            },
+            error: function(res) {
+                data[i].status = "上传失败";
+                reloadData();
+                upload(i+1);
+            }
+        });
     }
 
 
