@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1ce7cc7b-a482-444b-909c-be26dac887ed" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Controller/GalleryController.php" afterPath="$PROJECT_DIR$/src/Controller/GalleryController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/admin/media/upload.html.twig" afterPath="$PROJECT_DIR$/templates/admin/media/upload.html.twig" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -76,7 +75,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GalleryController.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GalleryController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Controller/GalleryController.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="374">
@@ -99,11 +98,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="upload.html.twig" pinned="false" current-in-tab="false">
+      <file leaf-file-name="upload.html.twig" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/admin/media/upload.html.twig">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-203">
-              <caret line="111" column="23" lean-forward="false" selection-start-line="111" selection-start-column="23" selection-end-line="111" selection-end-column="23" />
+            <state relative-caret-position="105">
+              <caret line="8" column="54" lean-forward="false" selection-start-line="8" selection-start-column="54" selection-end-line="8" selection-end-column="54" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -111,10 +110,10 @@
                 <element signature="n#style#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#input#0;n#div#1;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#input#1;n#div#1;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <marker date="1515207882000" expanded="true" signature="2681:2708" ph="..." />
-                <marker date="1515207882000" expanded="true" signature="2747:2793" ph="..." />
-                <marker date="1515207882000" expanded="true" signature="2852:2906" ph="..." />
-                <marker date="1515207882000" expanded="true" signature="2945:2991" ph="..." />
+                <marker date="1515208086000" expanded="true" signature="2685:2712" ph="..." />
+                <marker date="1515208086000" expanded="true" signature="2751:2797" ph="..." />
+                <marker date="1515208086000" expanded="true" signature="2856:2910" ph="..." />
+                <marker date="1515208086000" expanded="true" signature="2949:2995" ph="..." />
               </folding>
             </state>
           </provider>
@@ -212,8 +211,8 @@
         <option value="$PROJECT_DIR$/src/Entity/Photo.php" />
         <option value="$PROJECT_DIR$/templates/upload.photos.html" />
         <option value="$PROJECT_DIR$/templates/admin/media/upload.html" />
-        <option value="$PROJECT_DIR$/templates/admin/media/upload.html.twig" />
         <option value="$PROJECT_DIR$/src/Controller/GalleryController.php" />
+        <option value="$PROJECT_DIR$/templates/admin/media/upload.html.twig" />
       </list>
     </option>
   </component>
@@ -380,12 +379,12 @@
       <workItem from="1515073203209" duration="3560000" />
       <workItem from="1515114225115" duration="8815000" />
       <workItem from="1515144684819" duration="619000" />
-      <workItem from="1515198950692" duration="6098000" />
+      <workItem from="1515198950692" duration="6155000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="135839000" />
+    <option name="totallyTimeSpent" value="135896000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -807,14 +806,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/base.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/login.html.twig">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -831,25 +822,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/admin/media/upload.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-203">
-          <caret line="111" column="23" lean-forward="false" selection-start-line="111" selection-start-column="23" selection-end-line="111" selection-end-column="23" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#div#1;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#1;n#div#1;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1515207882000" expanded="true" signature="2681:2708" ph="..." />
-            <marker date="1515207882000" expanded="true" signature="2747:2793" ph="..." />
-            <marker date="1515207882000" expanded="true" signature="2852:2906" ph="..." />
-            <marker date="1515207882000" expanded="true" signature="2945:2991" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Controller/GalleryController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
@@ -857,6 +829,33 @@
           <folding>
             <element signature="e#34#57#0#PHP" expanded="true" />
             <element signature="e#950#980#1#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/base.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/admin/media/upload.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="8" column="54" lean-forward="false" selection-start-line="8" selection-start-column="54" selection-end-line="8" selection-end-column="54" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#1;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#1;n#div#1;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <marker date="1515208086000" expanded="true" signature="2685:2712" ph="..." />
+            <marker date="1515208086000" expanded="true" signature="2751:2797" ph="..." />
+            <marker date="1515208086000" expanded="true" signature="2856:2910" ph="..." />
+            <marker date="1515208086000" expanded="true" signature="2949:2995" ph="..." />
           </folding>
         </state>
       </provider>
