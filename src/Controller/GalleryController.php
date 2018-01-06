@@ -42,6 +42,14 @@ class GalleryController extends Controller
     }
 
     /**
+     * @Route("/media/admin/new", methods="GET")
+     */
+    public function uploadPhoto(){
+        return $this->render("admin/media/upload.html.twig");
+    }
+
+
+    /**
      * @Route("/media/gallery/add", methods="POST")
      */
     public function addGallery(Request $request){
@@ -81,7 +89,7 @@ class GalleryController extends Controller
         exec("cwebp -q 90 ".$path.".hd.png -o ".$path.".hd.webp ");
         exec("cwebp -q 100 ".$path." -o ".$path.".webp ");
 
-        $thumbPhoto = new File($path.".thumb.webp");
+        $thumbPhoto = new File($path.".thumb.webpbin");
         $hdPhoto = new File($path.".hd.webp");
 
         unlink($path.".thumb.png");
@@ -95,13 +103,13 @@ class GalleryController extends Controller
         $hdPhoto->move(self::HD_FOLDER, $hdName);
 
         $photo = new Photo();
-        $photo->setHd($hdPhoto->getPath());
-        $photo->setThumb($thumbPhoto->getPath());
+        $photo->setHd($hdName);
+        $photo->setThumb($thumbName);
 
         if($allowOrigin){
             $originPhoto = new File($path.".webp");
             $originPhoto->move(self::ORIGIN_FOLDER, $originName);
-            $photo->setOrigin($originPhoto->getPath());
+            $photo->setOrigin($originName);
         }
 
         $em = $this->getDoctrine()->getManager();
