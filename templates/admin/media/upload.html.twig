@@ -1,34 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="keywords" content="jquery,ui,easy,easyui,web">
-    <meta name="description" content="easyui help you build your web page easily!">
-    <title>NFLS.IO 管理中心</title>
-    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/themes/default/easyui.css">
-    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/themes/icon.css">
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.6.1.min.js"></script>
-    <script type="text/javascript" src="https://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript">
-        function showcontent(language) {
-            $('#content').html('Introduction to ' + language + ' language');
-        }
-
-        $(function () {
-            showcontent('java');
-        });
-    </script>
-</head>
-<body class="easyui-layout">
-<div data-options="region:'north',title:'NFLS.IO管理中心',split:true" style="height:100px;">
-    <h4>欢迎您，test！</h4>
-    这里应该是公告。
-</div>
-<div data-options="region:'west',title:'模块',split:true" style="width:100px;"></div>
-<div data-options="region:'center',title:'相册照片上传'" style="padding:5px;background:#eee;">
+{% extends 'admin/base.html.twig' %}
+{% block content %}
+<div data-options="region:'center',title:'照片上传'" style="padding:5px;background:#eee;width:100%">
     <div id="p" class="easyui-panel" title="上传须知"
-         style="padding:10px;background:#fafafa;"
+         style="padding:10px;background:#fafafa;width:100%"
          data-options="iconCls:'icon-tip',closable:false,
                 collapsible:false,minimizable:false,maximizable:false">
         <p>
@@ -41,7 +15,7 @@
         </p>
     </div>
     <br/>
-    <div>
+    <div style="width:100%">
         选择照片：
         <input id="upload" class="easyui-filebox" accept="image/*" style="width:300px" multiple >
         并发数（尚未支持）：
@@ -51,20 +25,25 @@
     </div>
     <br/>
 
-    <table id="dg" class="easyui-datagrid">
+    <table id="dg" class="easyui-datagrid" style="width:100%">
     </table>
 </div>
 <script type="application/javascript">
     var data = new Array();
+    var passed = true;
     function progressFormatter(value, rowData, rowIndex) {
         var htmlstr = '<div id="p" class="easyui-progressbar progressbar" style="width: 398px; height: 20px;"><div class="progressbar-text" style="width: 398px; height: 20px; line-height: 20px;">' + value + '</div><div class="progressbar-value" style="width: ' + value + '; height: 20px; line-height: 20px;"><div class="progressbar-text" style="width: 398px; height: 20px; line-height: 20px;">' + value + '</div></div></div>';
         return htmlstr;
     }
     function reloadData(){
+        var rows = $('#dg').datagrid("getChecked");
         $('#dg').datagrid({
             data: data
         });
         $('#dg').datagrid('reload');
+        $.each(rows,function(index,value){
+            $('#dg').datagrid('checkRow',value.index);
+        });
     }
     $('#dg').datagrid({
             columns:
@@ -77,20 +56,19 @@
                 ]]
         }
     );
-    console.log("ok2");
     $('#upload').filebox({
         onChange: function () {
             data = new Array();
             var files = $('#upload').filebox("files");
             $.each(files, function (index, value) {
                 data.push({
+                    index: index,
                     filename: value["name"],
                     size: humanFileSize(value["size"]),
                     status: "等待上传",
                     progress: '0%'
                 });
             });
-            console.log(data);
             reloadData();
         }
     });
@@ -110,7 +88,18 @@
         } while (Math.abs(bytes) >= thresh && u < units.length - 1);
         return bytes.toFixed(1) + ' ' + units[u];
     }
+    function getChecked(i){
+        passed = false;
+        $.each($('#dg').datagrid('getChecked'),function(index,value){
+            if(value.index == i) {
+                console.log("find");
+                passed = true;
+            }
+        });
+
+    }
     function upload(i){
+
         if(i>=$('#upload').filebox("files").length){
             $("#upload").filebox('readonly',false);
             //$("#submit").linkbutton("disabled",false);
@@ -120,8 +109,10 @@
             $("#upload").filebox('readonly',true);
             //$("#submit").linkbutton("disabled",true);
         }
+        getChecked(i);
         var formData = new FormData();
         formData.append('photo', $('#upload').filebox("files")[i]);
+        formData.append('allowOrigin',passed);
         data[i].status = "上传中";
         $.ajax({
             url: '/media/gallery/upload',
@@ -163,5 +154,4 @@
 
 
 </script>
-</body>
-</html>
+{% endblock %}

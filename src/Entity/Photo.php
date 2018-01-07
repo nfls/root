@@ -45,11 +45,18 @@ class Photo
     private $origin;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetimetz", options={"default":"CURRENT_TIMESTAMP"})
+     */
+    private $time;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(type="boolean")
      */
-    private $isVisible = true;
+    private $isVisible = false;
 
     /**
      * @var boolean
@@ -57,6 +64,11 @@ class Photo
      * @ORM\Column(type="boolean")
      */
     private $isPublic = false;
+
+    public function __construct()
+    {
+        $this->time = new \DateTime();
+    }
 
     /**
      * @return Gallery
@@ -152,6 +164,22 @@ class Photo
     public function setIsPublic($isPublic)
     {
         $this->isPublic = $isPublic;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * @param mixed $time
+     */
+    public function setTime($time)
+    {
+        $this->time = $time;
     }
 
 

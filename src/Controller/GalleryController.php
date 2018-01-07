@@ -10,6 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class GalleryController extends Controller
 {
@@ -35,10 +38,17 @@ class GalleryController extends Controller
     }
 
     /**
-     * @Route("/media/admin/upload", methods="GET")
+     * @Route("/admin/media/upload", methods="GET")
      */
     public function uploadPage(){
-        return $this->render("admin/media/upload.html");
+        return $this->render("admin/media/upload.html.twig");
+    }
+
+    /**
+     * @Route("/admin/media/photo", methods="GET")
+     */
+    public function managePhotos(){
+        return $this->render("admin/media/photo.html.twig");
     }
 
     /**
@@ -55,11 +65,22 @@ class GalleryController extends Controller
     }
 
     /**
+     * @Route("/admin/media/photo/edit", methods="GET")
+     */
+    public function editPhotos(Request $request){
+        if($request->request->has("operation")){
+
+        }
+        $repo = $this->getDoctrine()->getRepository(Photo::class);
+        $list = $repo->getList(1,50);
+        return $this->response->responseEntity($list,200);
+    }
+
+    /**
      * @Route("media/gallery/upload", methods="POST")
      */
     publiC function addPhoto(Request $request){
-        //if($this->getUser()->)
-        //TODO ROLE CHECK
+        //todo role check
         $allowOrigin = $request->request->get("allowOrigin");
         $originalPhoto = $request->files->get("photo");
         $path = $originalPhoto->getRealPath();
@@ -79,7 +100,6 @@ class GalleryController extends Controller
 
         exec("cwebp -q 80 ".$path.".thumb.png -o ".$path.".thumb.webp ");
         exec("cwebp -q 90 ".$path.".hd.png -o ".$path.".hd.webp ");
-        exec("cwebp -q 100 ".$path." -o ".$path.".webp ");
 
         $thumbPhoto = new File($path.".thumb.webp");
         $hdPhoto = new File($path.".hd.webp");
@@ -89,7 +109,6 @@ class GalleryController extends Controller
 
         $thumbName = bin2hex(random_bytes(64)).".webp";
         $hdName = bin2hex(random_bytes(64)).".webp";
-        $originName = bin2hex(random_bytes(64)).".webp";
 
         $thumbPhoto->move(self::THUMB_FOLDER, $thumbName);
         $hdPhoto->move(self::HD_FOLDER, $hdName);
@@ -98,7 +117,9 @@ class GalleryController extends Controller
         $photo->setHd($hdName);
         $photo->setThumb($thumbName);
 
-        if($allowOrigin){
+        if($allowOrigin == "true"){
+            exec("cwebp -q 100 ".$path." -o ".$path.".webp ");
+            $originName = bin2hex(random_bytes(64)).".webp";
             $originPhoto = new File($path.".webp");
             $originPhoto->move(self::ORIGIN_FOLDER, $originName);
             $photo->setOrigin($originName);

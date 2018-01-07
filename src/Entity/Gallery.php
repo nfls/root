@@ -46,6 +46,20 @@ class Gallery
     private $comments;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetimetz", options={"default":"CURRENT_TIMESTAMP"})
+     */
+    private $time;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $isVisible = false;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="boolean")
@@ -56,6 +70,7 @@ class Gallery
     {
         $this->photos = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->time = new \DateTime();
     }
 
     /**

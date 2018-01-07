@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="keywords" content="jquery,ui,easy,easyui,web">
+    <meta name="description" content="easyui help you build your web page easily!">
+    <title>NFLS.IO 管理中心</title>
+    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="https://www.jeasyui.com/easyui/themes/icon.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="https://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript">
+        function showcontent(language) {
+            $('#content').html('Introduction to ' + language + ' language');
+        }
+
+        $(function () {
+            showcontent('java');
+        });
+    </script>
+</head>
+<body class="easyui-layout">
+<div data-options="region:'north',title:'NFLS.IO管理中心',split:true" style="height:100px;">
+    <h4>欢迎您，test！</h4>
+    这里应该是公告。
+</div>
+<div data-options="region:'west',title:'模块',split:true" style="width:250px;">
+    <div class="easyui-panel" style="padding:5px;width:100%">
+        <ul class="easyui-tree">
+            <li>
+                <span>管理中心</span>
+                <ul>
+                    <li data-options="state:'open'">
+                        <span>影音</span>
+                        <ul>
+                            <li>
+                                <a href="/admin/media/upload"><span>照片上传</span></a>
+                            </li>
+                            <li>
+                                <a href="/admin/media/photo"><span>照片管理</span></a>
+                            </li>
+                            <li>
+                                <span>相册管理</span>
+                            </li>
+                            <li>
+                                <span>直播管理</span>
+                            </li>
+                            <li>
+                                <span>视频管理</span>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+</div>
+{% block content %}
+{% endblock %}
+</body>
+</html>
