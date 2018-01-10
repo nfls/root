@@ -105,5 +105,88 @@ class Gallery
         $this->comments->add($comment);
     }
 
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getPhotoCount(){
+        return count($this->photos);
+    }
+
+    /**
+     * @return integer
+     */
+    public function getOriginCount(){
+        return count($this->photos->filter(function($val){
+            return null === $val->getOrigin();
+        }));
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function GetPhotos()
+    {
+        return $this->photos;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * @return string
+     */
+    public function getisVisible()
+    {
+        return $this->isVisible;
+    }
+
+    /**
+     * @return string
+     */
+    public function getisPublic()
+    {
+        return $this->isPublic;
+    }
+
+
+
+
 
 }

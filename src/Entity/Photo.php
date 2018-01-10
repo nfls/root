@@ -24,21 +24,21 @@ class Photo
     private $gallery;
 
     /**
-     * @var boolean
+     * @var string
      *
      * @ORM\Column(type="string", length=256)
      */
     private $thumb;
 
     /**
-     * @var boolean
+     * @var string
      *
      * @ORM\Column(type="string", length=256)
      */
     private $hd;
 
     /**
-     * @var boolean
+     * @var string
      *
      * @ORM\Column(type="string", length=256, nullable=true)
      */
@@ -73,9 +73,20 @@ class Photo
     /**
      * @return Gallery
      */
+    //public function getGalleryEntity()
+    //{
+    //    return $this->gallery;
+    //}
+
+    /**
+     * @return string
+     */
     public function getGallery()
     {
-        return $this->gallery;
+        if(@is_null(@$this->gallery))
+            return null;
+        else
+            return $this->gallery->getTitle();
     }
 
     /**
@@ -87,15 +98,15 @@ class Photo
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isThumb()
+    public function getThumb()
     {
         return $this->thumb;
     }
 
     /**
-     * @param bool $thumb
+     * @param string $thumb
      */
     public function setThumb($thumb)
     {
@@ -103,15 +114,15 @@ class Photo
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isHd()
+    public function getHd()
     {
         return $this->hd;
     }
 
     /**
-     * @param bool $hd
+     * @param string $hd
      */
     public function setHd($hd)
     {
@@ -119,20 +130,21 @@ class Photo
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isOrigin()
+    public function getOrigin()
     {
         return $this->origin;
     }
 
     /**
-     * @param bool $origin
+     * @param string $origin
      */
     public function setOrigin($origin)
     {
         $this->origin = $origin;
     }
+
 
     /**
      * @return bool
@@ -180,6 +192,14 @@ class Photo
     public function setTime($time)
     {
         $this->time = $time;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
 

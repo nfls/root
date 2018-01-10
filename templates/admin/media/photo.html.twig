@@ -1,6 +1,142 @@
 {% extends 'admin/base.html.twig' %}
 {% block content %}
 <div data-options="region:'center',title:'照片管理'" style="padding:5px;background:#eee;width:100%">
+    <div id="p" class="easyui-panel" title="前排提醒"
+         style="padding:10px;background:#fafafa;width:100%"
+         data-options="iconCls:'icon-tip',closable:false,
+                collapsible:false,minimizable:false,pagination:true,maximizable:false">
+        <p>
+            请不要作死加载过多的照片！
+        </p>
+    </div>
+    <br/>
+    <table class="easyui-datagrid" title="照片列表" id="dg" style="width:100%"
+           data-options="rownumbers:true,singleSelect:false,pagination:true,toolbar:'#tb'" url="/admin/media/photo/edit" method='post'>
+        <thead>
+        <tr>
+            <th data-options="field:'checkbox'" checkbox=true></th>
+            <th data-options="field:'id'">ID</th>
+            <th data-options="field:'gallery'" formatter="nameFormatter">相册</th>
+            <th data-options="field:'time'" formatter="dateFormatter">上传日期</th>
+            <th data-options="field:'origin'" formatter="boolFormatter">精选</th>
+            <th data-options="field:'public'" formatter="boolFormatter">公开</th>
+            <th data-options="field:'visible'" formatter="boolFormatter">可见</th>
+        </tr>
+        </thead>
+    </table>
+    <div id="tb" style="padding:2px 5px;">
+        Date From: <input class="easyui-datebox" style="width:110px">
+        To: <input class="easyui-datebox" style="width:110px">
+        相册:
+        <select id="combobox" class="easyui-combobox" panelHeight="auto" style="width:100px">
+            <option value="null">未分配</option>
+            <option value="all">所有</option>
+        </select>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search">Search</a>
+    </div>
+    <div id="dd" hidden>
+        <form id="ff" method="post" style="padding: 5px;width: 100%">
+            <div>
+                <label for="name">相册：</label>
+                <input id="gallery" class="easyui-validatebox" type="text" name="name" data-options="required:true" />
+            </div>
+            <div>
+                <label for="public">公开： </label>
+                <input id="public" name="public" type="checkbox" />
+            </div>
+            <div>
+                <label for="visible">可见： </label>
+                <input id="visible" name="visible" type="checkbox" />
+            </div>
+            <div>
+                <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="editPhotos()">提交</a>
+            </div>
+        </form>
+    </div>
 
 </div>
+<script>
+    function editPhotos(){
+        var selected = $("#dg").datagrid("getChecked");
+        var a = $.map(selected, function(val,i){
+            return val.id;
+        });
+        var data = {};
+        data["id"] = a;
+        data["gallery"] = $("#gallery").val();
+        data["visible"] = $("#visible").is(":checked");
+        data["public"] = $("#public").is(":checked");
+        $.post("/admin/media/photo/edit",JSON.stringify(data), function(message){
+            $("#dg").datagrid("reload");
+        },"json");
+    }
+    window.onload = function(){
+        var pager = $('#dg').datagrid('getPager');
+        pager.pagination({
+            showPageList:true,
+            buttons:[{
+                iconCls:'icon-search',
+                handler:function(){
+                    $('#dd').dialog({
+                        title: '修改属性',
+                        width: 400,
+                        height: 200,
+                        closed: true
+                    });
+                    $('#dd').dialog("open");
+                    //$('#dd').dialog('refresh', 'new_content.php');
+                }
+            },{
+                iconCls:'icon-add',
+                handler:function(){
+                    alert('add');
+                }
+            },{
+                iconCls:'icon-edit',
+                handler:function(){
+                    alert('edit');
+                }
+            }]
+        });
+    };
+
+
+    $('#combobox').combobox({
+        onSelect:function(record){
+            $('#dg').datagrid({
+                url:"/admin/media/photo/edit?filter="+record.value
+            });
+        }
+    });
+    function nameFormatter(val,row){
+        if(val === null){
+            return "未指定";
+        }else{
+            return val;
+        }
+    }
+    function boolFormatter(val,row){
+        if(val)
+            return "是";
+        else
+            return "否";
+    }
+    function dateFormatter(val,row){
+        var d = new Date(val.timestamp * 1000);
+        return (
+            [
+                d.getFullYear(),d.getMonth()+1,d.getDate()].join('/')+' '+
+            [d.getHours(),
+                d.getMinutes(),
+                d.getSeconds()].join(':'));
+    }
+    function loadData(){
+        $.post( "/admin/media/photo/edit", function( data ) {
+            console.log(data.data);
+            $('#dg').datagrid({
+                data: data.data
+            });
+        });
+    }
+</script>
 {% endblock %}

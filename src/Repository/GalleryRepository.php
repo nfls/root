@@ -21,4 +21,15 @@ class GalleryRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
     }
+
+    public function getAllList(){
+        return $this->createQueryBuilder("u")
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getGallery($id){
+        return $this->findOneBy(["id"=>$id]);
+    }
 }

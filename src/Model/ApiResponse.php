@@ -12,11 +12,28 @@ class ApiResponse {
         $json->setData($array);
         return $json;
     }
+    function responseRowEntity($data,$count,$code){
+        $encoder = new JsonEncoder();
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setCircularReferenceLimit(2);
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return null;
+        });
+        $serializer = new Serializer([$normalizer],[$encoder]);
+        $data = json_decode($serializer->serialize($data,"json"),TRUE);
+        $json = new JsonResponse();
+        //$array = array("code"=>$code,"data"=>$data);
+        $json->setData(array("rows"=>$data,"total"=>$count));
+        return $json;
+    }
     function responseEntity($data,$code = 200){
         $encoder = new JsonEncoder();
-        $nomalizer = new ObjectNormalizer();
-        $nomalizer->setCircularReferenceLimit(2);
-        $serializer = new Serializer([$nomalizer],[$encoder]);
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setCircularReferenceLimit(2);
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return null;
+        });
+        $serializer = new Serializer([$normalizer],[$encoder]);
         $data = json_decode($serializer->serialize($data,"json"),TRUE);
         $json = new JsonResponse();
         $array = array("code"=>$code,"data"=>$data);

@@ -1,0 +1,107 @@
+{% extends 'admin/base.html.twig' %}
+{% block content %}
+    <div data-options="region:'center',title:'相册管理'" style="padding:5px;background:#eee;width:100%">
+        <div id="p" class="easyui-panel" title="新建相册"
+             style="padding:10px;background:#fafafa;width:100%"
+             data-options="iconCls:'icon-tip',closable:false,
+                collapsible:false,minimizable:false,maximizable:false">
+            标题：
+            <input class="easyui-textbox" style="width:300px">
+            <a id="submit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="new">新建</a>
+        </div>
+        <br/>
+
+        <table class="easyui-datagrid" title="相册列表" id="dg" style="width:100%"
+               data-options="rownumbers:true,singleSelect:true">
+            <thead>
+            <tr>
+                <th data-options="field:'id'">ID</th>
+                <th data-options="field:'title'">标题</th>
+                <th data-options="field:'time'" formatter="dateFormatter">上传日期</th>
+                <th data-options="field:'photoCount'">照片数</th>
+                <th data-options="field:'originCount'">精选数</th>
+                <th data-options="field:'public'" formatter="boolFormatter">公开</th>
+                <th data-options="field:'visible'" formatter="boolFormatter">可见</th>
+            </tr>
+            </thead>
+        </table>
+        <div id="dd" hidden>
+            <form id="ff" method="post" style="padding: 5px;width: 100%">
+                <div>
+                    <label for="name">相册：</label>
+                    <input id="gallery" class="easyui-validatebox" type="text" name="name" data-options="required:true" />
+                </div>
+                <div>
+                    <label for="public">公开： </label>
+                    <input id="public" name="public" type="checkbox" />
+                </div>
+                <div>
+                    <label for="visible">可见： </label>
+                    <input id="visible" name="visible" type="checkbox" />
+                </div>
+                <div>
+                    <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="editPhotos()">提交</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    <script>
+        loadData();
+        function edit(row,val){
+            console.log(val);
+        }
+        window.onload = function () {
+            $("#dg").datagrid({
+                onClickRow: function(row,val){
+                    console.log(row);
+                }
+            });
+
+        };
+        function editPhotos(){
+            var selected = $("#dg").datagrid("getChecked");
+            var a = $.map(selected, function(val,i){
+                return val.id;
+            });
+            var data = {};
+            data["id"] = a;
+            data["gallery"] = $("#gallery").val();
+            data["visible"] = $("#visible").is(":checked");
+            data["public"] = $("#public").is(":checked");
+            $.post("/admin/media/photo/edit",JSON.stringify(data), function(message){
+                //$("#dg").datagrid("reload");
+            },"json");
+        }
+        function nameFormatter(val,row){
+            if(val === null){
+                return "未指定";
+            }else{
+                return val;
+            }
+        }
+        function boolFormatter(val,row){
+            if(val)
+                return "是";
+            else
+                return "否";
+        }
+        function dateFormatter(val,row){
+            var d = new Date(val.timestamp * 1000);
+            return (
+                [
+                    d.getFullYear(),d.getMonth()+1,d.getDate()].join('/')+' '+
+                [d.getHours(),
+                    d.getMinutes(),
+                    d.getSeconds()].join(':'));
+        }
+        function loadData(){
+            $.post( "/admin/media/gallery/edit", function( data ) {
+                console.log(data.data);
+                $('#dg').datagrid({
+                    data: data.data
+                });
+            });
+        }
+    </script>
+{% endblock %}
