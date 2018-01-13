@@ -89,11 +89,15 @@ class UserController extends Controller
     public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $session = new Session();
-
         $user = $this->getDoctrine()->getRepository(User::class)->findByUsername($request->request->get("username"));
+        if (null === $user)
+            return $this->response->response(null,401);
         if ($passwordEncoder->isPasswordValid($user, $request->request->get("password", $user->getSalt()))) {
             $session->set("user_token",$user->getToken());
-            return $this->response->response(null,200);
+            if($request->get("remember") == "true")
+                return $this->response->response($user->getToken());
+            else
+                return $this->response->response(null);
         }else{
             return $this->response->response(null,401);
         }
