@@ -94,10 +94,10 @@ class UserController extends Controller
             return $this->response->response(null,401);
         if ($passwordEncoder->isPasswordValid($user, $request->request->get("password", $user->getSalt()))) {
             $session->set("user_token",$user->getToken());
-            if($request->get("remember") == "true")
-                return $this->response->response($user->getToken());
-            else
-                return $this->response->response(null);
+            if($request->request->get("remember") == "true"){
+                //add cookie
+            }
+            return $this->response->response(null);
         }else{
             return $this->response->response(null,401);
         }
