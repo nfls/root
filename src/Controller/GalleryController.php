@@ -67,13 +67,21 @@ class GalleryController extends Controller
         $repo = $em->getRepository(Gallery::class);
         if($request->request->has("id")){
             $gallery = $repo->getGallery($request->request->get("id")) ?? new Gallery();
-            $title = $request->request->get("title") ?? "";
-            $description = $request->request->get("description") ?? "";
-            $gallery->setTitle($title);
-            $gallery->setDescription($description);
-            $gallery->setIsPublic($request->request->get("public") == "true");
-            $gallery->setIsVisible($request->request->get("visible") == "true");
-            $em->persist($gallery);
+            if($request->request->get("delete") == "true"){
+                foreach ($gallery->GetPhotos() as $photo){
+                    $photo->setGallery(null);
+                    $em->remove($photo);
+                }
+                $em->remove($gallery);
+            }else{
+                $title = $request->request->get("title") ?? "";
+                $description = $request->request->get("description") ?? "";
+                $gallery->setTitle($title);
+                $gallery->setDescription($description);
+                $gallery->setIsPublic($request->request->get("public") == "true");
+                $gallery->setIsVisible($request->request->get("visible") == "true");
+                $em->persist($gallery);
+            }
             $em->flush();
         }
         $list = $repo->getAllList();

@@ -46,15 +46,18 @@ class Client implements ClientEntityInterface
     private $grantType;
 
     /**
-     * @var integer
+     * @var string
      *
      * @ORM\Column(type="string",length=1024)
      */
     private $redirectUrl;
 
-
-
-    // add your own fields
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string",length=1024)
+     */
+    private $version;
 
     /**
      * @return string
@@ -95,5 +98,23 @@ class Client implements ClientEntityInterface
     {
         return $this->grantType;
     }
+
+    /**
+     * @return string
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param string $version
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+    }
+
+
 
 }

@@ -29,11 +29,11 @@
             <form id="ff" method="post" style="padding: 5px;width: 100%">
                 <div>
                     <label for="name">标题：</label>
-                    <input id="title" class="easyui-validatebox" type="text" name="title" data-options="required:true" style="width:90%"/>
+                    <input id="title" class="easyui-validatebox" type="text" name="title" style="width:90%"/>
                 </div>
                 <div>
                     <label for="name">介绍：</label>
-                    <textarea id="description" class="easyui-validatebox" name="description" data-options="required:true" style="width:90%"></textarea>
+                    <textarea id="description" class="easyui-validatebox" name="description"  style="width:90%"></textarea>
                 </div>
                 <div>
                     <label for="public">公开： </label>
@@ -54,6 +54,10 @@
     <script>
         loadData();
         function edit(row,val){
+            $("#title").val(val.title).change();
+            $("#description").val(val.description).change();
+            $('#public').prop('checked', val.public);
+            $('#visible').prop('checked', val.visible);
             $('#dd').dialog({
                 title: '修改属性',
                 width: 250,
@@ -61,7 +65,6 @@
                 closed: true
             });
             $('#dd').dialog("open");
-            console.log(val);
         }
         window.onload = function () {
             $("#dg").datagrid({
@@ -77,6 +80,17 @@
             data["visible"] = $("#visible").is(":checked");
             data["public"] = $("#public").is(":checked");
             $.post("/admin/media/gallery/edit",data, function(message){
+                $('#dd').dialog("close");
+                loadData();
+            },"json");
+        }
+        function removePhotos(){
+            var selected = $("#dg").datagrid("getSelected");
+            var data = {};
+            data["id"] = selected.id;
+            data["delete"] = "true";
+            $.post("/admin/media/gallery/edit",data, function(message){
+                $('#dd').dialog("close");
                 loadData();
             },"json");
         }

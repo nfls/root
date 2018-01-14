@@ -17,7 +17,7 @@
             <th data-options="field:'checkbox'" checkbox=true></th>
             <th data-options="field:'id'">ID</th>
             <th data-options="field:'gallery'" formatter="nameFormatter">相册</th>
-            <th data-options="field:'time'" formatter="dateFormatter">上传日期</th>
+            <th data-options="field:'time'" formatter="dateFormatter">创建日期</th>
             <th data-options="field:'origin'" formatter="boolFormatter">精选</th>
             <th data-options="field:'public'" formatter="boolFormatter">公开</th>
             <th data-options="field:'visible'" formatter="boolFormatter">可见</th>
@@ -68,6 +68,7 @@
         data["visible"] = $("#visible").is(":checked");
         data["public"] = $("#public").is(":checked");
         $.post("/admin/media/photo/edit",JSON.stringify(data), function(message){
+            $('#dd').dialog("close");
             $("#dg").datagrid("reload");
         },"json");
     }
@@ -80,6 +81,7 @@
         data["id"] = a;
         data["delete"] = "true";
         $.post("/admin/media/photo/edit",JSON.stringify(data), function(message){
+            $('#dd').dialog("close");
             $("#dg").datagrid("reload");
         },"json");
     }
