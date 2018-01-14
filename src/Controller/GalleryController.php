@@ -71,6 +71,8 @@ class GalleryController extends Controller
             $description = $request->request->get("description") ?? "";
             $gallery->setTitle($title);
             $gallery->setDescription($description);
+            $gallery->setIsPublic($request->request->get("public") == "true");
+            $gallery->setIsVisible($request->request->get("visible") == "true");
             $em->persist($gallery);
             $em->flush();
         }
@@ -92,11 +94,16 @@ class GalleryController extends Controller
         if(@!is_null($content)){
             foreach($content["id"] as $id){
                 $photo = $photoRepo->getPhoto($id);
-                $gallery = $galleryRepo->getGallery($content["gallery"]);
-                $photo->setGallery($gallery);
-                $photo->setIsPublic($content["public"]);
-                $photo->setIsVisible($content["visible"]);
-                $em->persist($photo);
+                if($content["delete"] == "true"){
+                    $em->remove($photo);
+                }else{
+                    $gallery = $galleryRepo->getGallery($content["gallery"]);
+                    $photo->setGallery($gallery);
+                    $photo->setIsPublic($content["public"]);
+                    $photo->setIsVisible($content["visible"]);
+                    $em->persist($photo);
+                }
+
             }
             $em->flush();
         }

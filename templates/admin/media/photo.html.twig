@@ -50,6 +50,7 @@
             </div>
             <div>
                 <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="editPhotos()">提交</a>
+                <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="removePhotos()">删除</a>
             </div>
         </form>
     </div>
@@ -70,7 +71,20 @@
             $("#dg").datagrid("reload");
         },"json");
     }
-    window.onload = function(){
+    function removePhotos(){
+        var selected = $("#dg").datagrid("getChecked");
+        var a = $.map(selected, function(val,i){
+            return val.id;
+        });
+        var data = {};
+        data["id"] = a;
+        data["delete"] = "true";
+        $.post("/admin/media/photo/edit",JSON.stringify(data), function(message){
+            $("#dg").datagrid("reload");
+        },"json");
+    }
+    window.onload = addPager;
+    function addPager(){
         var pager = $('#dg').datagrid('getPager');
         pager.pagination({
             showPageList:true,
@@ -79,26 +93,16 @@
                 handler:function(){
                     $('#dd').dialog({
                         title: '修改属性',
-                        width: 400,
-                        height: 200,
+                        width: 200,
+                        height: 130,
                         closed: true
                     });
                     $('#dd').dialog("open");
                     //$('#dd').dialog('refresh', 'new_content.php');
                 }
-            },{
-                iconCls:'icon-add',
-                handler:function(){
-                    alert('add');
-                }
-            },{
-                iconCls:'icon-edit',
-                handler:function(){
-                    alert('edit');
-                }
             }]
         });
-    };
+    }
 
 
     $('#combobox').combobox({
@@ -106,6 +110,7 @@
             $('#dg').datagrid({
                 url:"/admin/media/photo/edit?filter="+record.value
             });
+            addPager();
         }
     });
     function nameFormatter(val,row){
@@ -132,10 +137,11 @@
     }
     function loadData(){
         $.post( "/admin/media/photo/edit", function( data ) {
-            console.log(data.data);
+            //console.log(data.data);
             $('#dg').datagrid({
                 data: data.data
             });
+
         });
     }
 </script>

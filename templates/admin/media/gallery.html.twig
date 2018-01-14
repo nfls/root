@@ -6,8 +6,8 @@
              data-options="iconCls:'icon-tip',closable:false,
                 collapsible:false,minimizable:false,maximizable:false">
             标题：
-            <input class="easyui-textbox" style="width:300px">
-            <a id="submit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="new1">新建</a>
+            <input class="easyui-textbox" style="width:300px" type="text" id="name">
+            <a id="submit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="new1()">新建</a>
         </div>
         <br/>
 
@@ -28,8 +28,12 @@
         <div id="dd" hidden>
             <form id="ff" method="post" style="padding: 5px;width: 100%">
                 <div>
-                    <label for="name">相册：</label>
-                    <input id="gallery" class="easyui-validatebox" type="text" name="name" data-options="required:true" />
+                    <label for="name">标题：</label>
+                    <input id="title" class="easyui-validatebox" type="text" name="title" data-options="required:true" style="width:90%"/>
+                </div>
+                <div>
+                    <label for="name">介绍：</label>
+                    <textarea id="description" class="easyui-validatebox" name="description" data-options="required:true" style="width:90%"></textarea>
                 </div>
                 <div>
                     <label for="public">公开： </label>
@@ -41,6 +45,7 @@
                 </div>
                 <div>
                     <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="editPhotos()">提交</a>
+                    <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="removePhotos()">删除</a>
                 </div>
             </form>
         </div>
@@ -49,28 +54,30 @@
     <script>
         loadData();
         function edit(row,val){
+            $('#dd').dialog({
+                title: '修改属性',
+                width: 250,
+                height: 300,
+                closed: true
+            });
+            $('#dd').dialog("open");
             console.log(val);
         }
         window.onload = function () {
             $("#dg").datagrid({
-                onClickRow: function(row,val){
-                    console.log(row);
-                }
+                onClickRow: edit
             });
-
         };
         function editPhotos(){
-            var selected = $("#dg").datagrid("getChecked");
-            var a = $.map(selected, function(val,i){
-                return val.id;
-            });
+            var selected = $("#dg").datagrid("getSelected");
             var data = {};
-            data["id"] = a;
-            data["gallery"] = $("#gallery").val();
+            data["id"] = selected.id;
+            data["title"] = $("#title").val();
+            data["description"] = $("#description").val();
             data["visible"] = $("#visible").is(":checked");
             data["public"] = $("#public").is(":checked");
-            $.post("/admin/media/photo/edit",JSON.stringify(data), function(message){
-                //$("#dg").datagrid("reload");
+            $.post("/admin/media/gallery/edit",data, function(message){
+                loadData();
             },"json");
         }
         function nameFormatter(val,row){
@@ -104,7 +111,7 @@
             });
         }
         function new1(){
-            console.log(1);
+            $.post("/admin/media/gallery/edit", {id:-1,title:$("#name").val()}, function(data){loadData();});
         }
     </script>
 {% endblock %}

@@ -53,14 +53,14 @@ class Gallery
     private $time;
 
     /**
-     * @var string
+     * @var boolean
      *
      * @ORM\Column(type="boolean")
      */
     private $isVisible = false;
 
     /**
-     * @var string
+     * @var boolean
      *
      * @ORM\Column(type="boolean")
      */
@@ -170,19 +170,37 @@ class Gallery
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getisVisible()
+    public function isVisible()
     {
         return $this->isVisible;
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getisPublic()
+    public function isPublic()
     {
         return $this->isPublic;
+    }
+
+
+
+    /**
+     * @param bool $isVisible
+     */
+    public function setIsVisible($isVisible)
+    {
+        $this->isVisible = $isVisible;
+    }
+
+    /**
+     * @param bool $isPublic
+     */
+    public function setIsPublic($isPublic)
+    {
+        $this->isPublic = $isPublic;
     }
 
 
