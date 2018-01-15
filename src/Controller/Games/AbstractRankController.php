@@ -2,6 +2,8 @@
 
 namespace App\Controller\Games;
 
+use App\Entity\Game;
+use App\Entity\Rank;
 use App\Model\ApiResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -28,7 +30,13 @@ class AbstractRankController extends Controller
         $user = $this->getUser();
         $identifier = $request->query->get("identifier");
         if($request->request->has("score")){
-            
+            $em = $this->getDoctrine()->getManager();
+            $gameRepo = $this->getDoctrine()->getManager()->getRepository(Game::class);
+            $game = $gameRepo->findGame($request->request->get("game"));
+            $score = new Rank();
+            $score->setGame($game);
+            $score->setScore($request->request->get("score"));
+            $score->setUser($this->getUser());
         }
 
     }

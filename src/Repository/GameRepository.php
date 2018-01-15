@@ -18,5 +18,9 @@ class GameRepository extends ServiceEntityRepository
         //return $this->findAll();
     }
 
+    public function findGame($id){
+        return $this->findOneBy(["id"=>$id]);
+    }
+
 
 }
