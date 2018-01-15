@@ -49,6 +49,7 @@ class MessageController extends Controller
     }
 
     /**
+     * @return JsonResponse
      * @Route("message/count", name="Message(Count)", methods="GET")
      */
     public function getUnreadCount(){
@@ -56,12 +57,33 @@ class MessageController extends Controller
         return $this->response->response($em->getUnreadCount($this->getUser()->getReadTime()),200);
     }
 
+    // Below is for admin part.
+
+    /**
+     * @Route("admin/basic/message")
+     */
+    public function renderMessage(){
+        return $this->render("admin/basic/message.html.twig");
+    }
+
+    /**
+     * @Route("admin/basic/message/edit")
+     */
+    public function getAllMesssages(Request $request){
+        $repo = $this->getDoctrine()->getManager()->getRepository(Message::class);
+        $page = $request->request->get("page") ?? 1;
+        $rows = $request->request->get("rows") ?? 10;
+        $data = $repo->getAllMessages($page,$rows,null,null);
+        $count = $repo->getAllMessagesCount($page,$rows,null,null);
+        return $this->response->responseRowEntity($data,$count,200);
+    }
+
+
     /**
      * @param $section MessageConstant
      * @param $page int
      * @return mixed
      */
-
     private function getMessages($section,$page){
         if($section == MessageConstant::SYSTEM_MESSAGE){
             $user = $this->getUser();
@@ -79,7 +101,6 @@ class MessageController extends Controller
      * @param $message array
      * @return array
      */
-
     function mapMessage($message){
         unset($message["group"]);
         return $message;

@@ -45,6 +45,34 @@ class MessageRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         );
+    }
 
+    public function getAllMessages($pages,$pagesize,$type,$group){
+        $query = $this->createQueryBuilder("u");
+        if(@!is_null($type)){
+            $query = $query->where("u.type = :type")
+                ->setParameter("type",$type);
+        }
+        if(@!is_null($group)){
+            $query = $query->andWhere("u.group = :group")
+                ->setParameter("group",$group);
+        }
+        return $query->setMaxResults($pagesize)
+            ->setFirstResult(($pages - 1)*$pagesize)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getAllMessagesCount($pages,$pagesize,$type,$group){
+        $query = $this->createQueryBuilder("u");
+        if(@!is_null($type)){
+            $query = $query->where("u.type = :type")
+                ->setParameter("type",$type);
+        }
+        if(@!is_null($group)){
+            $query = $query->andWhere("u.group = :group")
+                ->setParameter("group",$group);
+        }
+        return intval($query->select("count(u)")->getQuery()->getSingleScalarResult());
     }
 }
