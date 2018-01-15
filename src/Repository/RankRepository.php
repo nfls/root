@@ -13,16 +13,25 @@ class RankRepository extends ServiceEntityRepository
         parent::__construct($registry, Rank::class);
     }
 
-    /*
-    public function findBySomething($value)
-    {
-        return $this->createQueryBuilder('r')
-            ->where('r.something = :value')->setParameter('value', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
+    public function getRankByGame($game){
+        return $this->createQueryBuilder("u")
+            ->where("u.game = :game")
+            ->setParameter("game",$game)
+            ->orderBy("u.score", "DESC")
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
+
+    public function getCurrentRankByGame($game,$user){
+        return $this->createQueryBuilder("u")
+            ->where("u.game = :game")
+            ->setParameter("game",$game)
+            ->andWhere("u.user = :user")
+            ->setParameter("user",$user)
+            ->andWhere("u.score > :score")
+            ->setParameter("score",0)
+            ->orderBy("u.score","DESC")
+            ->getQuery()
+            ->getResult();
+    }
 }

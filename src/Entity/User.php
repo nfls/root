@@ -194,6 +194,15 @@ class User implements UserInterface,UserEntityInterface
         $this->readTime = $readTime;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+
 
 
     public function getInfoArray($detail = false)
@@ -209,7 +218,7 @@ class User implements UserInterface,UserEntityInterface
         }else{
             return array(
                 "id" => $this->id,
-                "joinTime" => $this->joinTime
+                "username" => $this->username
             );
         }
     }

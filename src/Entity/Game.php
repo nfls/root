@@ -44,12 +44,6 @@ class Game
      */
     private $url;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=1024)
-     */
-    private $identifier;
 
     /**
      * @return mixed
@@ -57,14 +51,6 @@ class Game
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**
@@ -130,23 +116,5 @@ class Game
     {
         $this->url = $url;
     }
-
-    /**
-     * @return string
-     */
-    public function getIdentifier()
-    {
-        return $this->identifier;
-    }
-
-    /**
-     * @param string $identifier
-     */
-    public function setIdentifier($identifier)
-    {
-        $this->identifier = $identifier;
-    }
-
-
 
 }

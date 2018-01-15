@@ -26,17 +26,39 @@ class AbstractRankController extends Controller
      * @Route("/game/rank")
      */
     public function rank(Request $request){
-        //TODO Score Encryption
-        $user = $this->getUser();
-        $identifier = $request->query->get("identifier");
+        $em = $this->getDoctrine()->getManager();
+        $gameRepo = $this->getDoctrine()->getManager()->getRepository(Game::class);
+        $rankRepo = $this->getDoctrine()->getManager()->getRepository(Rank::class);
+        $game = $gameRepo->findGame($request->query->get("game"));
         if($request->request->has("score")){
-            $em = $this->getDoctrine()->getManager();
-            $gameRepo = $this->getDoctrine()->getManager()->getRepository(Game::class);
-            $game = $gameRepo->findGame($request->request->get("game"));
-            $score = new Rank();
-            $score->setGame($game);
-            $score->setScore($request->request->get("score"));
-            $score->setUser($this->getUser());
+            $current = $rankRepo->getCurrentRankByGame($game,$this->getUser());
+            $score = $request->request->get("score");
+            if(count($current) == 0){
+                $this->updateScore($game,$this->getUser(),$score);
+            }else{
+                if($current[0]->getScore() <= $score){
+                    foreach($current as $rank){
+                        $em->remove($rank);
+                    }
+                    $em->flush();
+                    $this->updateScore($game,$this->getUser(),$score);
+                }
+            }
+        }
+
+        $result = $rankRepo->getRankByGame($game);
+        return $this->reponse->responseEntity($result);
+    }
+
+    private function updateScore($game,$user,$score){
+        $em = $this->getDoctrine()->getManager();
+        if(@!is_null($score)){
+            $rank = new Rank();
+            $rank->setGame($game);
+            $rank->setScore($score);
+            $rank->setUser($user);
+            $em->persist($rank);
+            $em->flush();
         }
 
     }

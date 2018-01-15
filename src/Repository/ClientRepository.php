@@ -25,12 +25,11 @@ class ClientRepository extends ServiceEntityRepository implements ClientReposito
             return null;
 
         return $client;
-
-        // TODO: Implement getClientEntity() method.
     }
 
     public function getClientById($id){
         return $this->findOneBy(["clientId"=>$id]);
     }
+
 
 }
