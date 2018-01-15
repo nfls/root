@@ -4,27 +4,28 @@
         <div id="p" class="easyui-panel" title="消息编辑"
              style="padding:10px;background:#fafafa;width:100%"
              data-options="iconCls:'icon-tip',closable:false,
-                collapsible:false,minimizable:false,maximizable:false">
+                collapsible:false,minimizable:false,maximizable:false" >
             类型：
             <select id="type" class="easyui-combobox" name="type" style="width:90%;">
-                <option value="news">新闻</option>
-                <option value="push">推送</option>
-                <option value="system">消息</option>
+                <option value="1">新闻</option>
+                <option value="2">推送</option>
+                <option value="3">消息</option>
             </select><br/><br/>
             标题：
-            <input class="easyui-textbox" style="width:90%" type="text" id="name"><br/><br/>
+            <input class="easyui-textbox" style="width:90%" type="text" id="title"><br/><br/>
             内容：
-            <input class="easyui-textbox" style="width:90%" type="text" id="name"><br/><br/>
+            <input class="easyui-textbox" style="width:90%" type="text" id="detail"><br/><br/>
             图片：
-            <input class="easyui-textbox" style="width:90%" type="text" id="name"><br/><br/>
+            <input class="easyui-textbox" style="width:90%" type="text" id="image"><br/><br/>
             接收：
-            <select id="receiver" class="easyui-combobox" name="receiver" style="width:90%;">
-                <option value="all">所有人</option>
-                <option value="admin">管理员</option>
-                <option value="personal">个人</option>
+            <select id="group" class="easyui-combobox" name="receiver" style="width:90%;">
+                <option value="-1">所有人</option>
+                <option value="0">管理员</option>
+                <option value="1">个人</option>
             </select><br/><br/>
             <a id="submit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="saveMessage()">保存</a>
-            <a id="remove" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="saveMessage()">删除</a>
+            <a id="remove" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="removeMessage()">删除</a>
+            <a id="back" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-back'" onclick="messageBack()">返回</a>
         </div>
         <br/>
 
@@ -51,7 +52,24 @@
                 [d.getHours(),
                     d.getMinutes(),
                     d.getSeconds()].join(':');
-
+        }
+        window.onload = function () {
+            $("#dg").datagrid({
+                onClickRow: edit
+            });
+            $("#p").hide();
+        };
+        function edit(row,val){
+            $("#title").textbox("setValue",val.title);
+            $("#detail").textbox("setValue",val.detail);
+            $("#image").textbox("setValue",val.image);
+            $('#type').combobox("select",val.type);
+            $('#group').combobox("select",val.group);
+            $('#visible').prop('checked', val.visible);
+            $('#p').show(500);
+        }
+        function messageBack(){
+            $("#p").hide(500);
         }
     </script>
 {% endblock %}

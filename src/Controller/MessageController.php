@@ -73,6 +73,16 @@ class MessageController extends Controller
         $repo = $this->getDoctrine()->getManager()->getRepository(Message::class);
         $page = $request->request->get("page") ?? 1;
         $rows = $request->request->get("rows") ?? 10;
+        if($request->request->has("id")){
+            $id = $request->request->get("id");
+            $repo = $this->getDoctrine()->getManager()->getRepository(Message::class);
+            $message = $repo->findOneBy(["id"=>$id]) ?? new Message();
+            $message->setImage($request->request->get("image"));
+            $message->setDetail($request->request->get("detail"));
+            $message->setTitle($request->request->get("title"));
+            $message->setGroup($request->request->get("group"));
+            $message->setPlace($request->request->get("place"))
+        }
         $data = $repo->getAllMessages($page,$rows,null,null);
         $count = $repo->getAllMessagesCount($page,$rows,null,null);
         return $this->response->responseRowEntity($data,$count,200);
