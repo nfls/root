@@ -4,8 +4,55 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "efea36552e3c20796b8d503776c62abf",
+    "content-hash": "6498d1a91aa9c00e9397772febcc6e6a",
     "packages": [
+        {
+            "name": "aliyunsts/aliyun-sts",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dying318/aliyun-sts.git",
+                "reference": "903f4a95b8465102a8e706e465224e4d346b2ec5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dying318/aliyun-sts/zipball/903f4a95b8465102a8e706e465224e4d346b2ec5",
+                "reference": "903f4a95b8465102a8e706e465224e4d346b2ec5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Sts\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Yukun",
+                    "email": "dying318@gmail.com"
+                }
+            ],
+            "description": "Aliyun-STS SDK",
+            "homepage": "http://github.com/dying318/aliyun-sts",
+            "keywords": [
+                "aliyun",
+                "oss",
+                "sts"
+            ],
+            "time": "2017-02-15T03:23:30+00:00"
+        },
         {
             "name": "defuse/php-encryption",
             "version": "v2.1.0",

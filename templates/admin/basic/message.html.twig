@@ -53,7 +53,7 @@
     </div>
     <script>
         function dateFormatter(val,row) {
-            console.log(val);
+            //console.log(val);
             var d = new Date(val);
             return [d.getMonth()+1,
                     d.getDate(),
@@ -105,12 +105,12 @@
             try{
                 $('#receiver').textbox("setValue",val.receiver.id);
             }catch(error){
-                console.log(error);
+                //console.log(error);
             }
             try{
                 $('#url').textbox("setValue",val.url);
             }catch(error){
-                console.log(error);
+                //console.log(error);
             }
             $('#p').show(500);
         }
