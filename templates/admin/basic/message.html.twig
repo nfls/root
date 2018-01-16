@@ -5,11 +5,12 @@
              style="padding:10px;background:#fafafa;width:100%"
              data-options="iconCls:'icon-tip',closable:false,
                 collapsible:false,minimizable:false,maximizable:false" >
+            <p id="id" hidden></p>
             类型：
             <select id="type" class="easyui-combobox" name="type" style="width:90%;">
-                <option value="1">新闻</option>
+                <option value="1">消息</option>
                 <option value="2">推送</option>
-                <option value="3">消息</option>
+                <option value="3">新闻</option>
             </select><br/><br/>
             标题：
             <input class="easyui-textbox" style="width:90%" type="text" id="title"><br/><br/>
@@ -17,30 +18,38 @@
             <input class="easyui-textbox" style="width:90%" type="text" id="detail"><br/><br/>
             图片：
             <input class="easyui-textbox" style="width:90%" type="text" id="image"><br/><br/>
+            转跳：
+            <input class="easyui-textbox" style="width:90%" type="text" id="url"><br/><br/>
             接收：
-            <select id="group" class="easyui-combobox" name="receiver" style="width:90%;">
-                <option value="-1">所有人</option>
-                <option value="0">管理员</option>
-                <option value="1">个人</option>
-            </select><br/><br/>
-            <a id="submit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="saveMessage()">保存</a>
-            <a id="remove" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="removeMessage()">删除</a>
+            <input class="easyui-textbox" style="width:90%" type="text" id="receiver" placeholder="ID"><br/><br/>
+            <a id="submit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="messageSave()">保存</a>
+            <a id="remove" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="messageDelete()">删除</a>
             <a id="back" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-back'" onclick="messageBack()">返回</a>
         </div>
+
         <br/>
 
         <table class="easyui-datagrid" title="历史消息列表" id="dg" style="width:100%"
-               data-options="rownumbers:true,singleSelect:true,pagination:true" url="/admin/basic/message/edit" method='post'>
+               data-options="rownumbers:true,singleSelect:true,pagination:true,toolbar:'#tb'" url="/admin/basic/message/edit" method='post'>
             <thead>
             <tr>
                 <th data-options="field:'id'">ID</th>
                 <th data-options="field:'title'">标题</th>
                 <th data-options="field:'time'" formatter="dateFormatter">发送日期</th>
-                <th data-options="field:'type'">类型</th>
-                <th data-options="field:'group'">接收人</th>
+                <th data-options="field:'type'" formatter="typeFormatter">类型</th>
+                <th data-options="field:'receiver'" formatter="nameFormatter">接收人</th>
             </tr>
             </thead>
         </table>
+        <div id="tb" style="padding:2px 5px;">
+            类型：
+            <select id="combobox" class="easyui-combobox" name="type" style="width:90%;">
+                <option value="0">所有人</option>
+                <option value="1">消息</option>
+                <option value="2">推送</option>
+                <option value="3">新闻</option>
+            </select><br/><br/>
+        </div>
     </div>
     <script>
         function dateFormatter(val,row) {
@@ -53,23 +62,105 @@
                     d.getMinutes(),
                     d.getSeconds()].join(':');
         }
+        function nameFormatter(val,row){
+            try{
+                return row.receiver.username;
+            }catch(error){
+                return "所有人";
+            }
+        }
+        function typeFormatter(val,row){
+            switch(row.type){
+                case 1:
+                    return "消息";
+                case 2:
+                    return "推送";
+                case 3:
+                    return "新闻";
+            }
+        }
         window.onload = function () {
             $("#dg").datagrid({
                 onClickRow: edit
             });
             $("#p").hide();
+            addPager()
         };
+        function addPager(){
+            var pager = $('#dg').datagrid('getPager');
+            pager.pagination({
+                showPageList:true,
+                buttons:[{
+                    iconCls:'icon-edit',
+                    handler:messageNew
+                }]
+            });
+        }
         function edit(row,val){
+            $("#id").text(val.id);
             $("#title").textbox("setValue",val.title);
             $("#detail").textbox("setValue",val.detail);
             $("#image").textbox("setValue",val.image);
             $('#type').combobox("select",val.type);
-            $('#group').combobox("select",val.group);
-            $('#visible').prop('checked', val.visible);
+            try{
+                $('#receiver').textbox("setValue",val.receiver.id);
+            }catch(error){
+                console.log(error);
+            }
+            try{
+                $('#url').textbox("setValue",val.url);
+            }catch(error){
+                console.log(error);
+            }
             $('#p').show(500);
         }
         function messageBack(){
             $("#p").hide(500);
         }
+        function messageNew(){
+            $("#id").text("-1");
+            $("#title").textbox("setValue","");
+            $("#detail").textbox("setValue","");
+            $("#image").textbox("setValue","");
+            $("#url").textbox("setValue","");
+            $('#type').combobox("select","1");
+            $('#receiver').textbox("setValue","");
+            $('#p').show(500);
+        }
+        function messageSave(){
+            var data = {
+                "id":$("#id").text(),
+                "title":$("#title").textbox("getValue"),
+                "detail":$("#detail").textbox("getValue"),
+                "image":$("#image").textbox("getValue"),
+                "url":$("#url").textbox("getValue"),
+                "type":$("#type").combobox("getValue")
+            };
+            if($("#receiver").textbox("getValue") != ""){
+                data["receiver"]=$("#receiver").textbox("getValue");
+            }
+            $.post("/admin/basic/message/edit",data,function(data){
+                messageBack();
+                $("#dg").datagrid("reload");
+            })
+        }
+        function messageDelete(){
+            var data = {
+                "id":$("#id").text(),
+                "delete":"true"
+            };
+            $.post("/admin/basic/message/edit",data,function(data){
+                messageBack();
+                $("#dg").datagrid("reload");
+            })
+        }
+        $('#combobox').combobox({
+            onSelect:function(record){
+                $('#dg').datagrid({
+                    url:"/admin/basic/message/edit?filter="+record.value
+                });
+                addPager();
+            }
+        });
     </script>
 {% endblock %}

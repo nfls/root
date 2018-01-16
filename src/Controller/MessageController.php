@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Message;
+use App\Entity\User;
 use App\Model\ApiResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -70,22 +71,39 @@ class MessageController extends Controller
      * @Route("admin/basic/message/edit")
      */
     public function getAllMesssages(Request $request){
-        $repo = $this->getDoctrine()->getManager()->getRepository(Message::class);
+        $messageRepo = $this->getDoctrine()->getManager()->getRepository(Message::class);
         $page = $request->request->get("page") ?? 1;
         $rows = $request->request->get("rows") ?? 10;
+
         if($request->request->has("id")){
+            $em = $this->getDoctrine()->getManager();
             $id = $request->request->get("id");
-            $repo = $this->getDoctrine()->getManager()->getRepository(Message::class);
-            $message = $repo->findOneBy(["id"=>$id]) ?? new Message();
-            $message->setImage($request->request->get("image"));
-            $message->setDetail($request->request->get("detail"));
-            $message->setTitle($request->request->get("title"));
-            $message->setGroup($request->request->get("group"));
-            $message->setPlace($request->request->get("place"))
+            $message = $messageRepo->findOneBy(["id"=>$id]) ?? new Message();
+            if($request->request->get("delete") == "true"){
+                $em->remove($message);
+            }else{
+                $userRepo = $this->getDoctrine()->getManager()->getRepository(User::class);
+                $receiver = $userRepo->findOneBy(["id"=>$request->request->get("receiver")]);
+                $message->setImage($request->request->get("image"));
+                $message->setDetail($request->request->get("detail"));
+                $message->setTitle($request->request->get("title"));
+                $message->setType($request->request->get("type"));
+                $message->setUrl($request->request->get("url"));
+                $message->setReceiver($receiver);
+                $em->persist($message);
+            }
+            $em->flush();
+            return $this->response->response(null,200);
+        }else{
+            if($request->query->get("filter") > 0){
+                $type = $request->query->get("filter");
+            }else{
+                $type = null;
+            }
+            $data = $messageRepo->getAllMessages($page,$rows,$type,null);
+            $count = $messageRepo->getAllMessagesCount($page,$rows,$type,null);
+            return $this->response->responseRowEntity($data,$count,200);
         }
-        $data = $repo->getAllMessages($page,$rows,null,null);
-        $count = $repo->getAllMessagesCount($page,$rows,null,null);
-        return $this->response->responseRowEntity($data,$count,200);
     }
 
 

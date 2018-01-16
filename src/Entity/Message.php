@@ -24,17 +24,7 @@ class Message
     /**
      * @ORM\Column(type="integer")
      */
-    private $group;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
     private $type;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $place;
 
     /**
      * @ORM\Column(type="string", length=1024)
@@ -61,6 +51,11 @@ class Message
      */
     private $priority;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     */
+    private $receiver;
+
     public function __construct()
     {
         $this->priority = 1;
@@ -78,25 +73,9 @@ class Message
     /**
      * @return mixed
      */
-    public function getGroup()
-    {
-        return $this->group;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPlace()
-    {
-        return $this->place;
     }
 
     /**
@@ -139,29 +118,6 @@ class Message
         return $this->priority;
     }
 
-    /**
-     * @param mixed $group
-     */
-    public function setGroup($group)
-    {
-        $this->group = $group;
-    }
-
-    /**
-     * @param mixed $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * @param mixed $place
-     */
-    public function setPlace($place)
-    {
-        $this->place = $place;
-    }
 
     /**
      * @param mixed $title
@@ -218,6 +174,32 @@ class Message
     {
         $this->id = $id;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getReceiver()
+    {
+        return $this->receiver;
+    }
+
+    /**
+     * @param mixed $receiver
+     */
+    public function setReceiver($receiver)
+    {
+        $this->receiver = $receiver;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+
 
 
 
