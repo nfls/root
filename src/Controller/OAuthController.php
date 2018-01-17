@@ -17,8 +17,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OAuthController extends Controller
 {
-
+    /**
+     * @var \League\OAuth2\Server\AuthorizationServer
+     */
     private $server;
+    /**
+     * @var ApiResponse
+     */
     private $response;
 
     public function __construct(OAuthService $service)
@@ -72,6 +77,13 @@ class OAuthController extends Controller
      */
     public function uploadSts(Request $request,AliyunOSS $oss){
         return $this->response->response($oss->getUploadToken($this->getUser()->getUsername()),200);
+    }
+
+    /**
+     * @Route("oauth/uploadSignature", methods="GET")
+     */
+    public function uploadSignature(Request $request,AliyunOSS $oss){
+        return $this->response->response($oss->getUploadToken("aa"),200);
     }
 
 }
