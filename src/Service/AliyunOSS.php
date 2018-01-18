@@ -35,7 +35,7 @@ class AliyunOSS {
         $request->setDurationSeconds(3600);
         try{
             $response = $this->client->doAction($request);
-            return json_decode($response->getBody(),true)["Credentials"]["SecurityToken"];
+            return json_decode($response->getBody(),true)["Credentials"];
         }catch(ClientException $e){
             return false;
         }
