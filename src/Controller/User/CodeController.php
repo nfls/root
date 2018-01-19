@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\User;
 
-use App\Entity\Code;
-use App\Entity\User;
+use App\Entity\User\Code;
+use App\Entity\User\User;
 use App\Model\ApiResponse;
 use App\Service\AliyunSMS;
 use App\Service\NexmoSMS;

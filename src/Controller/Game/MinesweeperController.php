@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Games;
+namespace App\Controller\Game;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

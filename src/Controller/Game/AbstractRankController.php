@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Games;
+namespace App\Controller\Game;
 
 use App\Entity\Game;
 use App\Entity\Rank;

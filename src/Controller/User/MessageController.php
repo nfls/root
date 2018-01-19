@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\User;
 
-use App\Entity\Message;
-use App\Entity\User;
+use App\Entity\User\Message;
+use App\Entity\User\User;
 use App\Model\ApiResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
