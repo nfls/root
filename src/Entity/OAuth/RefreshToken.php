@@ -2,9 +2,6 @@
 
 namespace App\Entity\OAuth;
 
-use App\Model\Token;
-use App\Repository\AccessTokenRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;

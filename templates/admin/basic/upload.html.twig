@@ -1,0 +1,227 @@
+{% extends 'admin/base.html.twig' %}
+{% block content %}
+<div data-options="region:'center',title:'文件上传'" style="padding:5px;background:#eee;width:100%">
+    <div id="p" class="easyui-panel" title="上传须知"
+         style="padding:10px;background:#fafafa;width:100%"
+         data-options="iconCls:'icon-tip',closable:false,
+                collapsible:false,minimizable:false,maximizable:false">
+        <p>
+            1. 阿里云OSS位于上海，自建服务器HK2位于香港，EU0位于荷兰的阿姆斯特丹<br/>
+            2. 阿里云支持批量上传，在选择文件时多选即可，如果选错了，刷新页面即可清除，最大文件大小为1GB。EU0及HK2一次性只能上传一个文件
+        </p>
+    </div>
+    <br/>
+    <div id="p" class="easyui-panel" title="阿里云直传"
+         style="padding:10px;background:#fafafa;width:100%"
+         data-options="iconCls:'icon-search',closable:false,
+                collapsible:false,minimizable:false,maximizable:false">
+        <div id="container">
+            <a id="selectfiles" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-save'">选择文件</a>
+            <a id="postfiles" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">开始上传</a>
+        </div>
+        <h4>您所选择的文件列表：</h4>
+        <div id="ossfile">你的浏览器不支持flash,Silverlight或者HTML5！</div>
+    </div>
+    <br/>
+    <div id="p" class="easyui-panel" title="自建服务器"
+         style="padding:10px;background:#fafafa;width:100%"
+         data-options="iconCls:'icon-search',closable:false,
+                collapsible:false,minimizable:false,maximizable:false">
+        尚未支持
+    </div>
+</div>
+<script type="text/javascript" src="https://nfls.io/resources/plupload-2.3.6/js/plupload.full.min.js"></script>
+<script type="application/javascript">
+
+    accessid = '';
+    accesskey = '';
+    host = 'https://nflsio.oss-cn-shanghai.aliyuncs.com';
+    policyBase64 = '';
+    signature = '';
+    callbackbody = '';
+    filename = '';
+    key = '';
+    expire = 0;
+    g_object_name = '';
+    g_object_name_type = '';
+    now = timestamp = Date.parse(new Date()) / 1000;
+
+    function send_request()
+    {
+        var xmlhttp = null;
+        if (window.XMLHttpRequest)
+        {
+            xmlhttp=new XMLHttpRequest();
+        }
+        else if (window.ActiveXObject)
+        {
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        if (xmlhttp!=null)
+        {
+            serverUrl = 'http://127.0.0.1:8000/oauth/uploadSignature';
+            xmlhttp.open( "GET", serverUrl, false );
+            xmlhttp.send( null );
+            return xmlhttp.responseText
+        }
+        else
+        {
+            alert("Your browser does not support XMLHTTP.");
+        }
+    }
+
+    function check_object_radio() {
+        var tt = document.getElementsByName('myradio');
+        for (var i = 0; i < tt.length ; i++ )
+        {
+            if(tt[i].checked)
+            {
+                g_object_name_type = tt[i].value;
+                break;
+            }
+        }
+    }
+
+    function get_signature()
+    {
+        now = timestamp = Date.parse(new Date()) / 1000;
+        if (expire < now + 3)
+        {
+            body = send_request();
+            var obj = (eval ("(" + body + ")"))['data'];
+            host = obj['host'];
+            policyBase64 = obj['policy'];
+            accessid = obj['accessid'];
+            signature = obj['signature'];
+            expire = parseInt(obj['expire']);
+            callbackbody = obj['callback'];
+            key = obj['dir'];
+            return true;
+        }
+        return false;
+    };
+
+    function random_string(len) {
+        len = len || 32;
+        var chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+        var maxPos = chars.length;
+        var pwd = '';
+        for (i = 0; i < len; i++) {
+            pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+        }
+        return pwd;
+    }
+
+    function get_suffix(filename) {
+        pos = filename.lastIndexOf('.');
+        suffix = '';
+        if (pos != -1) {
+            suffix = filename.substring(pos)
+        }
+        return suffix;
+    }
+
+    function calculate_object_name(filename)
+    {
+        suffix = get_suffix(filename);
+        g_object_name = key + random_string(32) + suffix;
+    }
+
+    function get_uploaded_object_name(filename)
+    {
+        return g_object_name
+    }
+
+    function set_upload_param(up, filename, ret)
+    {
+        if (ret == false)
+        {
+            ret = get_signature()
+        }
+        g_object_name = key;
+        if (filename != '') {
+            suffix = get_suffix(filename)
+            calculate_object_name(filename)
+        }
+        new_multipart_params = {
+            'key' : g_object_name,
+            'policy': policyBase64,
+            'OSSAccessKeyId': accessid,
+            'success_action_status' : '200', //让服务端返回200,不然，默认会返回204
+            'callback' : callbackbody,
+            'signature': signature,
+        };
+
+        up.setOption({
+            'url': host,
+            'multipart_params': new_multipart_params
+        });
+
+        up.start();
+    }
+
+    var uploader = new plupload.Uploader({
+        runtimes : 'html5,flash,silverlight,html4',
+        browse_button : 'selectfiles',
+        //multi_selection: false,
+        container: document.getElementById('container'),
+        flash_swf_url : 'https://nfls.io/resources/plupload-2.3.6/js/Moxie.swf',
+        silverlight_xap_url : 'https://nfls.io/resources/plupload-2.3.6/js/Moxie.xap',
+        url : 'http://oss.aliyuncs.com',
+        filters: {
+            prevent_duplicates : true
+        },
+
+        init: {
+            PostInit: function() {
+                document.getElementById('ossfile').innerHTML = '';
+                document.getElementById('postfiles').onclick = function() {
+                    set_upload_param(uploader, '', false);
+                    return false;
+                };
+            },
+
+            FilesAdded: function(up, files) {
+                plupload.each(files, function(file) {
+                    document.getElementById('ossfile').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ')<b></b>'
+                        +'<div class="progress"><div class="progress-bar" style="width: 0%"></div></div>'
+                        +'</div>';
+                });
+            },
+
+            BeforeUpload: function(up, file) {
+                check_object_radio();
+                set_upload_param(up, file.name, true);
+            },
+
+            UploadProgress: function(up, file) {
+                var d = document.getElementById(file.id);
+                d.getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+                var prog = d.getElementsByTagName('div')[0];
+                var progBar = prog.getElementsByTagName('div')[0]
+                progBar.style.width= 2*file.percent+'px';
+                progBar.setAttribute('aria-valuenow', file.percent);
+            },
+
+            FileUploaded: function(up, file, info) {
+                if (info.status == 200)
+                {
+                    document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '   https://nflsio.oss-cn-shanghai.aliyuncs.com/' + get_uploaded_object_name(file.name);
+                }
+                else
+                {
+                    document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = info.response;
+                }
+            },
+
+            Error: function(up, err) {
+                alert("发送了错误，请刷新重试。");
+            }
+        }
+    });
+
+    uploader.init();
+
+</script>
+{% endblock %}

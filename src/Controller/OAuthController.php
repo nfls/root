@@ -83,7 +83,15 @@ class OAuthController extends Controller
      * @Route("oauth/uploadSignature", methods="GET")
      */
     public function uploadSignature(Request $request,AliyunOSS $oss){
-        return $this->response->response($oss->getUploadToken("aa"),200);
+
+        return $this->response->response($oss->getSignature());
+    }
+
+    /**
+     * @Route("admin/basic/upload", methods="GET")
+     */
+    public function renderUploadPage(){
+        return $this->render("admin/basic/upload.html.twig");
     }
 
 }
