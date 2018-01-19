@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1ce7cc7b-a482-444b-909c-be26dac887ed" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/Controller/Game/AbstractRankController.php" afterPath="$PROJECT_DIR$/src/Controller/Game/AbstractRankController.php" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Game/Game.php" afterPath="$PROJECT_DIR$/src/Entity/Game/Game.php" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Media/Comment.php" afterPath="$PROJECT_DIR$/src/Entity/Media/Comment.php" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/User/User.php" afterPath="$PROJECT_DIR$/src/Entity/User/User.php" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Normalizer/UserNormalizer.php" afterPath="$PROJECT_DIR$/src/Model/Normalizer/UserNormalizer.php" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/Game/RankRepository.php" afterPath="$PROJECT_DIR$/src/Repository/Game/RankRepository.php" />
+      <change beforePath="$PROJECT_DIR$/src/Service/OAuthService.php" afterPath="$PROJECT_DIR$/src/Service/OAuthService.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -33,26 +28,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="User.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Entity/User/User.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="584">
-              <caret line="114" column="5" lean-forward="false" selection-start-line="114" selection-start-column="5" selection-end-line="114" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Comment.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Entity/Media/Comment.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="347">
-              <caret line="34" column="21" lean-forward="false" selection-start-line="34" selection-start-column="21" selection-end-line="34" selection-end-column="21" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Rank.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Entity/Game/Rank.php">
           <provider selected="true" editor-type-id="text-editor">
@@ -77,7 +52,7 @@
         <entry file="file://$PROJECT_DIR$/src/Controller/Game/AbstractRankController.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="133">
-              <caret line="22" column="5" lean-forward="true" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
+              <caret line="22" column="5" lean-forward="false" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
               <folding>
                 <element signature="e#39#64#0#PHP" expanded="true" />
               </folding>
@@ -105,6 +80,16 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="OAuthService.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Service/OAuthService.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="780">
+              <caret line="67" column="49" lean-forward="false" selection-start-line="67" selection-start-column="49" selection-end-line="67" selection-end-column="49" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="RankRepository.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Repository/Game/RankRepository.php">
           <provider selected="true" editor-type-id="text-editor">
@@ -113,6 +98,16 @@
               <folding>
                 <element signature="e#39#64#0#PHP" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="OAuthController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Controller/User/OAuthController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="28">
+              <caret line="2" column="29" lean-forward="false" selection-start-line="2" selection-start-column="29" selection-end-line="2" selection-end-column="29" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -127,7 +122,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DateTimeNormalizer.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DateTimeNormalizer.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Model/Normalizer/DateTimeNormalizer.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
@@ -195,7 +190,6 @@
         <option value="$PROJECT_DIR$/src/Repository/Media/GalleryRepository.php" />
         <option value="$PROJECT_DIR$/src/Repository/Media/CommentRepository.php" />
         <option value="$PROJECT_DIR$/src/Repository/Game/GameRepository.php" />
-        <option value="$PROJECT_DIR$/src/Service/OAuthService.php" />
         <option value="$PROJECT_DIR$/src/Entity/Game/Rank.php" />
         <option value="$PROJECT_DIR$/src/Entity/Media/Gallery.php" />
         <option value="$PROJECT_DIR$/src/Entity/Media/Photo.php" />
@@ -222,6 +216,7 @@
         <option value="$PROJECT_DIR$/src/Controller/Game/AbstractRankController.php" />
         <option value="$PROJECT_DIR$/src/Repository/Game/RankRepository.php" />
         <option value="$PROJECT_DIR$/src/Model/Normalizer/UserNormalizer.php" />
+        <option value="$PROJECT_DIR$/src/Service/OAuthService.php" />
       </list>
     </option>
   </component>
@@ -526,12 +521,12 @@
       <workItem from="1516288601281" duration="889000" />
       <workItem from="1516319292071" duration="73000" />
       <workItem from="1516320213084" duration="376000" />
-      <workItem from="1516334147499" duration="7942000" />
+      <workItem from="1516334147499" duration="8450000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="232093000" />
+    <option name="totallyTimeSpent" value="232601000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -651,16 +646,6 @@
           <caret line="52" column="0" lean-forward="true" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
           <folding>
             <element signature="e#32#67#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Service/OAuthService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="28" column="5" lean-forward="true" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
-          <folding>
-            <element signature="e#30#61#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -909,14 +894,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Controller/User/OAuthController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="29" lean-forward="false" selection-start-line="2" selection-start-column="29" selection-end-line="2" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Controller/User/UserController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -1012,7 +989,7 @@
     <entry file="file://$PROJECT_DIR$/src/Controller/Game/AbstractRankController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
-          <caret line="22" column="5" lean-forward="true" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
+          <caret line="22" column="5" lean-forward="false" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
           <folding>
             <element signature="e#39#64#0#PHP" expanded="true" />
           </folding>
@@ -1042,6 +1019,22 @@
           <folding>
             <element signature="e#41#111#0#PHP" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Controller/User/OAuthController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="28">
+          <caret line="2" column="29" lean-forward="false" selection-start-line="2" selection-start-column="29" selection-end-line="2" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Service/OAuthService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="780">
+          <caret line="67" column="49" lean-forward="false" selection-start-line="67" selection-start-column="49" selection-end-line="67" selection-end-column="49" />
+          <folding />
         </state>
       </provider>
     </entry>

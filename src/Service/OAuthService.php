@@ -3,6 +3,7 @@ namespace App\Service;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use League\OAuth2\Server\Grant\RefreshTokenGrant;
 use League\OAuth2\Server\ResourceServer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Entity\OAuth\AccessToken;
@@ -50,10 +51,14 @@ class OAuthService extends Controller{
 
         $implicitGrant = new ImplicitGrant($accessTokenExpiry);
 
+        $refreshTokenGrant = new RefreshTokenGrant($refreshTokenRepo);
+        $refreshTokenGrant->setRefreshTokenTTL($refreshTokenExpiry);
+
         $server = new AuthorizationServer($clientRepo,$accessTokenRepo,$scopeRepo,self::PrivateKey,self::EncryptionKey);
         $server->enableGrantType($passwordGrant,$accessTokenExpiry);
         $server->enableGrantType($authCodeGrant,$accessTokenExpiry);
         $server->enableGrantType($implicitGrant,$accessTokenExpiry);
+        $server->enableGrantType($refreshTokenGrant,$accessTokenExpiry);
 
         return $server;
     }
