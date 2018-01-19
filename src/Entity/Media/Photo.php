@@ -1,0 +1,208 @@
+<?php
+
+namespace App\Entity\Media;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\Media\PhotoRepository")
+ */
+class Photo
+{
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @var Gallery
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Media\Gallery", inversedBy="photos")
+     */
+    private $gallery;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=256)
+     */
+    private $thumb;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=256)
+     */
+    private $hd;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=256, nullable=true)
+     */
+    private $origin;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetimetz", options={"default":"CURRENT_TIMESTAMP"})
+     */
+    private $time;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $isVisible = false;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $isPublic = false;
+
+    public function __construct()
+    {
+        $this->time = new \DateTime();
+    }
+
+    /**
+     * @return Gallery
+     */
+    //public function getGalleryEntity()
+    //{
+    //    return $this->gallery;
+    //}
+
+    /**
+     * @return string
+     */
+    public function getGallery()
+    {
+        if(@is_null(@$this->gallery))
+            return null;
+        else
+            return $this->gallery->getTitle();
+    }
+
+    /**
+     * @param Gallery $gallery
+     */
+    public function setGallery($gallery)
+    {
+        $this->gallery = $gallery;
+    }
+
+    /**
+     * @return string
+     */
+    public function getThumb()
+    {
+        return $this->thumb;
+    }
+
+    /**
+     * @param string $thumb
+     */
+    public function setThumb($thumb)
+    {
+        $this->thumb = $thumb;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHd()
+    {
+        return $this->hd;
+    }
+
+    /**
+     * @param string $hd
+     */
+    public function setHd($hd)
+    {
+        $this->hd = $hd;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrigin()
+    {
+        return $this->origin;
+    }
+
+    /**
+     * @param string $origin
+     */
+    public function setOrigin($origin)
+    {
+        $this->origin = $origin;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isVisible()
+    {
+        return $this->isVisible;
+    }
+
+    /**
+     * @param bool $isVisible
+     */
+    public function setIsVisible($isVisible)
+    {
+        $this->isVisible = $isVisible;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublic()
+    {
+        return $this->isPublic;
+    }
+
+    /**
+     * @param bool $isPublic
+     */
+    public function setIsPublic($isPublic)
+    {
+        $this->isPublic = $isPublic;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * @param mixed $time
+     */
+    public function setTime($time)
+    {
+        $this->time = $time;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+
+
+    // add your own fields
+}

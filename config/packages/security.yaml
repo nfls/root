@@ -3,11 +3,11 @@ security:
     providers:
         token:
             entity:
-                class: App\Entity\User
+                class: App\Entity\User\User
                 property: token
         username:
             entity:
-                class: App\Entity\User
+                class: App\Entity\User\User
                 property: username
         user:
             chain:

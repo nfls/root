@@ -2,9 +2,11 @@
 namespace App\Model;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\TokenInterface;
-use App\Entity\Client;
+use App\Entity\OAuth\Client;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
+use Mrgoon\AliyunSmsSdk\Exception\ClientException;
+
 abstract class Token implements TokenInterface{
 
     /**
@@ -23,9 +25,9 @@ abstract class Token implements TokenInterface{
     protected $expiryTime;
 
     /**
-     * @var \App\Entity\User
+     * @var \App\Entity\User\User
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
@@ -33,7 +35,7 @@ abstract class Token implements TokenInterface{
     /**
      * @var Client
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client")
+     * @ORM\ManyToOne(targetEntity="App\Entity\OAuth\Client")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
     protected $client;
