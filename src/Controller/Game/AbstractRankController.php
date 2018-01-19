@@ -2,8 +2,8 @@
 
 namespace App\Controller\Game;
 
-use App\Entity\Game;
-use App\Entity\Rank;
+use App\Entity\Game\Game;
+use App\Entity\Game\Rank;
 use App\Model\ApiResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -36,12 +36,22 @@ class AbstractRankController extends Controller
             if(count($current) == 0){
                 $this->updateScore($game,$this->getUser(),$score);
             }else{
-                if($current[0]->getScore() <= $score){
-                    foreach($current as $rank){
-                        $em->remove($rank);
+                if($game->isPreferBigger()){
+                    if($current[0]->getScore() <= $score){
+                        foreach($current as $rank){
+                            $em->remove($rank);
+                        }
+                        $em->flush();
+                        $this->updateScore($game,$this->getUser(),$score);
                     }
-                    $em->flush();
-                    $this->updateScore($game,$this->getUser(),$score);
+                }else{
+                    if($current[0]->getScore() >= $score){
+                        foreach($current as $rank) {
+                            $em->remove($rank);
+                        }
+                        $em->flush();
+                        $this->updateScore($game,$this->getUser(),$score);
+                    }
                 }
             }
         }

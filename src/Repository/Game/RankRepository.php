@@ -14,24 +14,48 @@ class RankRepository extends ServiceEntityRepository
     }
 
     public function getRankByGame($game){
-        return $this->createQueryBuilder("u")
-            ->where("u.game = :game")
-            ->setParameter("game",$game)
-            ->orderBy("u.score", "DESC")
-            ->getQuery()
-            ->getResult();
+        if($game->isPreferBigger()){
+            return $this->createQueryBuilder("u")
+                ->where("u.game = :game")
+                ->setParameter("game",$game)
+                ->orderBy("u.score", "DESC")
+                ->getQuery()
+                ->getResult();
+        }else{
+            return $this->createQueryBuilder("u")
+                ->where("u.game = :game")
+                ->setParameter("game",$game)
+                ->orderBy("u.score", "ASC")
+                ->getQuery()
+                ->getResult();
+        }
+
     }
 
     public function getCurrentRankByGame($game,$user){
-        return $this->createQueryBuilder("u")
-            ->where("u.game = :game")
-            ->setParameter("game",$game)
-            ->andWhere("u.user = :user")
-            ->setParameter("user",$user)
-            ->andWhere("u.score > :score")
-            ->setParameter("score",0)
-            ->orderBy("u.score","DESC")
-            ->getQuery()
-            ->getResult();
+        if($game->isPreferBigger()){
+            return $this->createQueryBuilder("u")
+                ->where("u.game = :game")
+                ->setParameter("game",$game)
+                ->andWhere("u.user = :user")
+                ->setParameter("user",$user)
+                ->andWhere("u.score > :score")
+                ->setParameter("score",0)
+                ->orderBy("u.score","DESC")
+                ->getQuery()
+                ->getResult();
+        }else{
+            return $this->createQueryBuilder("u")
+                ->where("u.game = :game")
+                ->setParameter("game",$game)
+                ->andWhere("u.user = :user")
+                ->setParameter("user",$user)
+                ->andWhere("u.score > :score")
+                ->setParameter("score",0)
+                ->orderBy("u.score","ASC")
+                ->getQuery()
+                ->getResult();
+        }
+
     }
 }

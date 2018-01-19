@@ -37,7 +37,7 @@ class Comment
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User\User")
      */
     private $postUser;
 
@@ -51,7 +51,7 @@ class Comment
     /**
      * @var Comment
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Meida\Comment", inversedBy="replies")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Media\Comment", inversedBy="replies")
      */
     private $replyTo;
 

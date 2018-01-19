@@ -44,6 +44,13 @@ class Game
      */
     private $url;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $preferBigger;
+
 
     /**
      * @return mixed
@@ -116,5 +123,15 @@ class Game
     {
         $this->url = $url;
     }
+
+    /**
+     * @return bool
+     */
+    public function isPreferBigger()
+    {
+        return $this->preferBigger;
+    }
+
+
 
 }

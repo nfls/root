@@ -1,7 +1,7 @@
 <?php
 namespace App\Model\Normalizer;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use Symfony\Component\Serializer\Exception\CircularReferenceException;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Exception\LogicException;

@@ -68,7 +68,7 @@ class User implements UserInterface,UserEntityInterface
      *
      * @ORM\Column(type="integer", options={"unsigned":true, "default":0})
      */
-    private $card = 0;
+    private $point = 0;
 
 
     /**
@@ -221,6 +221,22 @@ class User implements UserInterface,UserEntityInterface
                 "username" => $this->username
             );
         }
+    }
+
+    /**
+     * @return int
+     */
+    public function getPoint()
+    {
+        return $this->point;
+    }
+
+    /**
+     * @param int $point
+     */
+    public function setPoint($point)
+    {
+        $this->point = $point;
     }
 
     public function getSalt()
