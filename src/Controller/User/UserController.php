@@ -2,6 +2,7 @@
 
 namespace App\Controller\User;
 
+use App\Controller\AbstractController;
 use App\Entity\User\Code;
 use App\Model\ApiResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -10,22 +11,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Entity\User;
+use App\Entity\User\User;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 
-class UserController extends Controller
+class UserController extends AbstractController
 {
-
-    private $user;
-    private $response;
-
-    function __construct()
-    {
-        $this->response = new ApiResponse();
-    }
-
 
     /**
      * @Route("/user/register", name="register", methods="POST")
@@ -46,41 +38,41 @@ class UserController extends Controller
             if($phoneObject->getCountryCode() == 86){
                 $code = $em->getRepository(Code::class)->verifyDomestic($phone,$request->request->get("code"),"register");
                 if(is_null($code))
-                    return $this->response->response("验证码不正确",400);
+                    return $this->response->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
                 $em->remove($code);
             }else{
                 //TODO
             }
             $user->setPhone($phoneE164);
         }catch(\libphonenumber\NumberParseException $e){
-            return $this->response->response($e->getMessage(),400);
+            return $this->response->response($e->getMessage(),Response::HTTP_UNAUTHORIZED);
         }
 
         $username = $request->request->get("username");
         if ($this->verifyUsername($username)) {
             $user->setUsername($username);
         } else {
-            return $this->response->response("用户名不正确", 400);
+            return $this->response->response("用户名不正确", Response::HTTP_UNAUTHORIZED);
         }
 
         $email = $request->request->get("email");
         if ($this->verifyEmail($email)) {
             $user->setEmail($email);
         } else {
-            return $this->response->response("邮箱不正确", 400);
+            return $this->response->response("邮箱不正确", Response::HTTP_UNAUTHORIZED);
         }
 
         $password = $request->request->get("password");
         if ($this->verifyPassword($user, $password)) {
             $user->setPassword($passwordEncoder->encodePassword($user, $password));
         } else {
-            return $this->response->response("密码不合法", 400);
+            return $this->response->response("密码不合法", Response::HTTP_UNAUTHORIZED);
         }
 
         $em->persist($user);
         $em->flush();
 
-        return $this->response->response(null, 200);
+        return $this->response->response(null);
     }
 
     /**
@@ -99,7 +91,7 @@ class UserController extends Controller
             }
             return $this->response->response(null);
         }else{
-            return $this->response->response(null,401);
+            return $this->response->response(null,Response::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -107,7 +99,7 @@ class UserController extends Controller
      * @Route("/user/current", name="User(Current)", methods="GET")
      */
     public function current(){
-        return $this->response->response($this->getUser()->getInfoArray(true),200);
+        return $this->response->responseUser($this->getUser()->getInfoArray());
     }
 
     /**
@@ -120,7 +112,7 @@ class UserController extends Controller
         if(@null === $user){
             return $this->response->response(null,Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        return $this->response->response($user->getInfoArray($user->getUsername() == $this->getUser()->getUsername()),200);
+        return $this->response->responseEntity($user);
     }
 
 

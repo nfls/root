@@ -9,6 +9,7 @@ use Symfony\Component\Serializer\Serializer;
 
 class ApiResponse {
     private $serializer;
+    private $userSerializer;
     public function __construct()
     {
         $encoder = new JsonEncoder();
@@ -20,6 +21,7 @@ class ApiResponse {
         $dateNormalizer = new DateTimeNormalizer();
         $userNormalizer = new UserNormalizer();
         $this->serializer = new Serializer([$dateNormalizer,$userNormalizer,$normalizer],[$encoder]);
+        $this->userSerializer = new Serializer([$dateNormalizer,$normalizer],[$encoder]);
     }
 
     public function response($data,$code = 200){
@@ -42,17 +44,12 @@ class ApiResponse {
         $json->setData($array);
         return $json;
     }
-    function isSerializable ($value) {
-        $return = true;
-        $arr = array($value);
-
-        array_walk_recursive($arr, function ($element) use (&$return) {
-            if (is_object($element) && get_class($element) == 'Closure') {
-                $return = false;
-            }
-        });
-
-        return $return;
+    function responseUser($data,$code = 200){
+        $data = json_decode($this->userSerializer->serialize($data,"json"),TRUE);
+        $json = new JsonResponse();
+        $array = array("code"=>$code,"data"=>$data);
+        $json->setData($array);
+        return $json;
     }
 
 }

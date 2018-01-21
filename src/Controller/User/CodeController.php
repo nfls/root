@@ -2,6 +2,7 @@
 
 namespace App\Controller\User;
 
+use App\Controller\AbstractController;
 use App\Entity\User\Code;
 use App\Entity\User\User;
 use App\Model\ApiResponse;
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
-class CodeController extends Controller
+class CodeController extends AbstractController
 {
     /**
      * @var AliyunSMS
@@ -41,10 +42,6 @@ class CodeController extends Controller
      */
     private $code;
 
-    /**
-     * @var ApiResponse
-     */
-    private $response;
 
     /**
      * CodeController constructor.
@@ -55,7 +52,7 @@ class CodeController extends Controller
         $this->nexmoService = new NexmoSMS();
         $this->api = new ApiResponse();
         $this->code = mt_rand(100000, 999999);
-        $this->response = new ApiResponse();
+        parent::__construct();
     }
 
     /**

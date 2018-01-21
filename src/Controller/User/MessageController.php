@@ -2,6 +2,7 @@
 
 namespace App\Controller\User;
 
+use App\Controller\AbstractController;
 use App\Entity\User\Message;
 use App\Entity\User\User;
 use App\Model\ApiResponse;
@@ -12,13 +13,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
-class MessageController extends Controller
+class MessageController extends AbstractController
 {
-    private $response;
-    public function __construct()
-    {
-        $this->response = new ApiResponse();
-    }
 
     /**
      * @Route("/message", name="message")

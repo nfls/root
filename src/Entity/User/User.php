@@ -205,22 +205,17 @@ class User implements UserInterface,UserEntityInterface
 
 
 
-    public function getInfoArray($detail = false)
+    public function getInfoArray()
     {
-        if($detail){
-            return array(
-                "id" => $this->id,
-                "username" => $this->username,
-                "email" => $this->email,
-                "phone" => $this->phone,
-                "joinTime" => $this->joinTime
-            );
-        }else{
-            return array(
-                "id" => $this->id,
-                "username" => $this->username
-            );
-        }
+        return array(
+            "id" => $this->id,
+            "point" => $this->point,
+            "username" => $this->username,
+            "email" => $this->email,
+            "phone" => $this->phone,
+            "joinTime" => $this->joinTime,
+            "admin" => false
+        );
     }
 
     /**

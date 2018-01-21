@@ -2,6 +2,7 @@
 
 namespace App\Controller\Game;
 
+use App\Controller\AbstractController;
 use App\Entity\Game\Game;
 use App\Entity\Game\Rank;
 use App\Model\ApiResponse;
@@ -10,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class AbstractRankController extends Controller
+class AbstractRankController extends AbstractController
 {
     /**
      * @var ApiResponse

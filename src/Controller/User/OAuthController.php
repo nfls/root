@@ -2,7 +2,8 @@
 
 namespace App\Controller\User;
 
-use App\Entity\Client;
+use App\Controller\AbstractController;
+use App\Entity\OAuth\Client;
 use App\Model\ApiResponse;
 use App\Service\AliyunOSS;
 use App\Service\OAuthService;
@@ -15,21 +16,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class OAuthController extends Controller
+class OAuthController extends AbstractController
 {
     /**
      * @var \League\OAuth2\Server\AuthorizationServer
      */
     private $server;
-    /**
-     * @var ApiResponse
-     */
-    private $response;
 
     public function __construct(OAuthService $service)
     {
         $this->server = $service->getServer();
-        $this->response = new ApiResponse();
+        parent::__construct();
     }
 
 

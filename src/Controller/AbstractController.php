@@ -12,7 +12,7 @@ class AbstractController extends Controller
     /**
      * @var ApiResponse
      */
-    private $response;
+    protected $response;
 
     public function __construct()
     {

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Media;
 
+use App\Controller\AbstractController;
 use App\Entity\Media\Gallery;
 use App\Entity\Media\Photo;
 use App\Model\ApiResponse;
@@ -14,21 +15,12 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
-class GalleryController extends Controller
+class GalleryController extends AbstractController
 {
-    /**
-     * @var ApiResponse
-     */
-    private $response;
 
     CONST THUMB_FOLDER = "storage/photos/thumb";
     CONST HD_FOLDER = "storage/photos/hd";
     const ORIGIN_FOLDER = "storage/photos/origin";
-
-    public function __construct()
-    {
-        $this->response = new ApiResponse();
-    }
 
     /**
      * @Route("/media/gallery/list", methods="GET")
