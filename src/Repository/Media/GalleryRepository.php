@@ -19,7 +19,7 @@ class GalleryRepository extends ServiceEntityRepository
             ->setMaxResults(10)
             ->setFirstResult(($page - 1) * 10)
             ->getQuery()
-            ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+            ->getResult();
     }
 
     public function getAllList(){

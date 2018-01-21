@@ -2,8 +2,8 @@
 
 namespace App\Controller\Media;
 
-use App\Entity\Gallery;
-use App\Entity\Photo;
+use App\Entity\Media\Gallery;
+use App\Entity\Media\Photo;
 use App\Model\ApiResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -33,8 +33,10 @@ class GalleryController extends Controller
     /**
      * @Route("/media/gallery/list", methods="GET")
      */
-    public function getList(){
-
+    public function getList(Request $request){
+        $page = $request->query->get("page") ?? 1;
+        $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
+        return $this->response->responseEntity($repo->getList($page),Response::HTTP_OK);
     }
 
     /**
@@ -102,7 +104,7 @@ class GalleryController extends Controller
         if(@!is_null($content)){
             foreach($content["id"] as $id){
                 $photo = $photoRepo->getPhoto($id);
-                if($content["delete"] == "true"){
+                if(isset($content["delete"])){
                     $em->remove($photo);
                 }else{
                     $gallery = $galleryRepo->getGallery($content["gallery"]);

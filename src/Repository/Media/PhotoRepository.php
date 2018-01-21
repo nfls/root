@@ -45,7 +45,6 @@ class PhotoRepository extends ServiceEntityRepository
         return intval($query->select("count(u)")->getQuery()->getSingleScalarResult());
     }
 
-
     public function getPhoto($id){
         return $this->findOneBy(["id"=>$id]);
     }

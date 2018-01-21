@@ -148,7 +148,7 @@ class Gallery
     /**
      * @return ArrayCollection
      */
-    public function GetPhotos()
+    public function getPhotos()
     {
         return $this->photos;
     }

@@ -42,22 +42,51 @@ class Comment
     private $postUser;
 
     /**
-     * @var ArrayCollection
+     * @var \DateTime
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Media\Comment", mappedBy="replyTo")
+     * @ORM\Column(type="datetimetz")
      */
-    private $replies;
+    private $time;
 
-    /**
-     * @var Comment
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Media\Comment", inversedBy="replies")
-     */
-    private $replyTo;
+
 
     public function __construct()
     {
-        $this->replies = new ArrayCollection();
+        $time = new \DateTime();
     }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @return User
+     */
+    public function getPostUser()
+    {
+        return $this->postUser;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+
     // add your own fields
 }

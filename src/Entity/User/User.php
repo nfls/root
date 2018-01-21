@@ -239,6 +239,16 @@ class User implements UserInterface,UserEntityInterface
         $this->point = $point;
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getJoinTime()
+    {
+        return $this->joinTime;
+    }
+
+
+
     public function getSalt()
     {
         return null;
