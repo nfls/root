@@ -19,7 +19,12 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHa
 
 class UserController extends AbstractController
 {
-
+    /**
+     * @Route("/",name="index",methods="GET")
+     */
+    public function index(){
+        return $this->render("index.html.twig");
+    }
     /**
      * @Route("/user/register", name="register", methods="POST")
      */

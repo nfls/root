@@ -42,6 +42,6 @@ security:
         - { path: ^/user/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/code/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/oauth/authorize, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         # symfony starts at the top and stops at first match
         # The ^ means that urls beginning with the pattern will be matched

@@ -12,5 +12,25 @@
     "vue-template-compiler": "^2.5.13",
     "vuelidate": "^0.6.1",
     "webpack-notifier": "^1.5.1"
-  }
+  },
+  "dependencies": {
+    "vue-material": "^1.0.0-beta-7"
+  },
+  "name": "api_v3",
+  "version": "1.0.0",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nfls/api_v3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nfls/api_v3/issues"
+  },
+  "homepage": "https://github.com/nfls/api_v3#readme",
+  "description": ""
 }
