@@ -3,6 +3,7 @@
 namespace App\Entity\OAuth;
 
 use App\Model\Token;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Key;
@@ -16,9 +17,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OAuth\AccessTokenRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class AccessToken extends Token implements AccessTokenEntityInterface,UserInterface
 {
+
     public function convertToJWT(CryptKey $privateKey)
     {
         return (new Builder())
@@ -58,6 +61,5 @@ class AccessToken extends Token implements AccessTokenEntityInterface,UserInterf
     {
         // TODO: Implement eraseCredentials() method.
     }
-
 
 }

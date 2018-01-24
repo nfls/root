@@ -7,6 +7,7 @@ use App\Entity\User\Code;
 use App\Model\ApiResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -76,7 +77,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/login", name="login", methods="POST")
+     * @Route("/user/login", name="login")
      */
     public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -87,7 +88,11 @@ class UserController extends AbstractController
         if ($passwordEncoder->isPasswordValid($user, $request->request->get("password", $user->getSalt()))) {
             $session->set("user_token",$user->getToken());
             if($request->request->get("remember") == "true"){
-                //add cookie
+                $response = $this->response->response(null);
+                $time = new \DateTime();
+                $time->add(new \DateInterval("P1M"));
+                $response->headers->setCookie(new Cookie("remember_token",$user->getToken(),$time,"/",null,false,true));
+                return $response;
             }
             return $this->response->response(null);
         }else{

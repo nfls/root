@@ -1,5 +1,13 @@
 <?php
 namespace App\Model;
+use App\Entity\OAuth\Scope;
+use App\Service\ScopeService;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectManagerAware;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\TokenInterface;
 use App\Entity\OAuth\Client;
@@ -7,7 +15,7 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use Mrgoon\AliyunSmsSdk\Exception\ClientException;
 
-abstract class Token implements TokenInterface{
+abstract class Token implements TokenInterface {
 
     /**
      * @var string
@@ -43,12 +51,25 @@ abstract class Token implements TokenInterface{
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=1024)
+     * @ORM\Column(type="json",length=1024)
      */
     protected $scopes;
 
+    /**
+     * @var ObjectManager
+     */
+    protected $em;
 
-    public function  __construct()
+    /**
+     * @ORM\PostLoad
+     * @ORM\PostPersist
+     */
+    public function fetchEntityManager(LifecycleEventArgs $args)
+    {
+        $this->em = $args->getEntityManager();
+    }
+
+    public function __construct()
     {
         $this->scopes = json_encode([]);
     }
@@ -75,6 +96,7 @@ abstract class Token implements TokenInterface{
 
     public function setUserIdentifier($identifier)
     {
+        //var_dump($identifier);
         $this->user = $identifier;
     }
 
@@ -99,12 +121,15 @@ abstract class Token implements TokenInterface{
         if(!in_array($scope->getIdentifier(),$scopes)){
             array_push($scopes,$scope->getIdentifier());
         }
-        return json_encode($scopes);
+        $this->scopes = json_encode($scopes);
     }
 
     public function getScopes()
     {
-        //TODO
+        $scopes = json_decode($this->scopes,true);
+        $repo = $this->em->getRepository(Scope::class);
+        return array_map(function($scope)use($repo){
+            return $repo->findOneBy(["token"=>$scope]);
+        },$scopes);
     }
-
 }

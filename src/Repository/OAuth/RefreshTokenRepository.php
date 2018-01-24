@@ -25,6 +25,7 @@ class RefreshTokenRepository extends ServiceEntityRepository implements RefreshT
 
     public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
     {
+
         $em = $this->getEntityManager();
         $em->persist($refreshTokenEntity);
         $em->flush();
@@ -33,7 +34,7 @@ class RefreshTokenRepository extends ServiceEntityRepository implements RefreshT
     public function revokeRefreshToken($tokenId)
     {
         $em = $this->getEntityManager();
-        $em->remove($this->findOneBy(["token"=>$tokenId]));
+        //$em->remove($this->findOneBy(["token"=>$tokenId]));
         $em->flush();
     }
 

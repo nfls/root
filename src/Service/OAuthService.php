@@ -53,7 +53,7 @@ class OAuthService extends Controller{
 
         $refreshTokenGrant = new RefreshTokenGrant($refreshTokenRepo);
         $refreshTokenGrant->setRefreshTokenTTL($refreshTokenExpiry);
-
+        //$refreshTokenGrant->canRespondToAccessTokenRequest();
         $server = new AuthorizationServer($clientRepo,$accessTokenRepo,$scopeRepo,self::PrivateKey,self::EncryptionKey);
         $server->enableGrantType($passwordGrant,$accessTokenExpiry);
         $server->enableGrantType($authCodeGrant,$accessTokenExpiry);

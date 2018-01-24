@@ -3,11 +3,14 @@
 namespace App\Entity\OAuth;
 
 use App\Model\Token;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
+use League\OAuth2\Server\Entities\ScopeEntityInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OAuth\AuthCodeRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class AuthCode extends Token implements AuthCodeEntityInterface
 {
@@ -18,6 +21,11 @@ class AuthCode extends Token implements AuthCodeEntityInterface
      */
     private $redirectUri;
 
+    public function __construct()
+    {
+        $this->scopes = new ArrayCollection();
+    }
+
     public function getRedirectUri()
     {
         return $this->redirectUri;
@@ -27,5 +35,4 @@ class AuthCode extends Token implements AuthCodeEntityInterface
     {
         $this->redirectUri = $uri;
     }
-
 }

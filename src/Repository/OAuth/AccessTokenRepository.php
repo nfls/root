@@ -38,13 +38,18 @@ class AccessTokenRepository extends ServiceEntityRepository implements AccessTok
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
         $this->getEntityManager()->persist($accessTokenEntity);
+        //var_dump($accessTokenEntity);
+        $this->getEntityManager()->flush();
     }
 
     public function revokeAccessToken($tokenId)
     {
         $token = $this->findOneBy(["token" => $tokenId]);
-        $this->getEntityManager()->remove($token);
-        $this->getEntityManager()->flush();
+        if(null !== $token) {
+            $this->getEntityManager()->remove($token);
+            $this->getEntityManager()->flush();
+        }
+
     }
 
     public function isAccessTokenRevoked($tokenId)
