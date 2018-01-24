@@ -43,7 +43,7 @@
                         <md-list slot="md-expand">
                             <md-list-item class="md-inset" to="/games/list"><md-icon>gamepad</md-icon><span class="md-list-item-text">List</span></md-list-item>
                             <md-list-item class="md-inset" to="/games/rank"><md-icon>list</md-icon><span class="md-list-item-text">Rank</span></md-list-item>
-                            <md-list-item class="md-inset" to="/games/purchase"><md-icon>shopping_car</md-icon><span class="md-list-item-text">Purchase</span></md-list-item>
+                            <md-list-item class="md-inset" to="/games/purchase"><md-icon>shopping_cart</md-icon><span class="md-list-item-text">Purchase</span></md-list-item>
                         </md-list>
                     </md-list-item>
 
@@ -52,7 +52,7 @@
                         <span class="md-list-item-text">Media</span>
                         <md-list slot="md-expand">
                             <md-list-item class="md-inset" to="/media/gallery"><md-icon>photo_library</md-icon><span class="md-list-item-text">Gallery</span></md-list-item>
-                            <md-list-item class="md-inset" to="/media/video"><md-icon>vide_library</md-icon><span class="md-list-item-text">Video</span></md-list-item>
+                            <md-list-item class="md-inset" to="/media/video"><md-icon>video_library</md-icon><span class="md-list-item-text">Video</span></md-list-item>
                         </md-list>
                     </md-list-item>
 

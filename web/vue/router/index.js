@@ -13,7 +13,7 @@ export default new Router({
             path: '/user/login',
             component: Login
         }, {
-            path: '/user',
+            path: '/user/*',
             component: App,
             subRoutes: {
                 'dashboard': {
