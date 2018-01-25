@@ -203,6 +203,8 @@ class Gallery
         $this->isPublic = $isPublic;
     }
 
-
+    public function removeAllComments(){
+        $this->comments = new ArrayCollection();
+    }
 
 }

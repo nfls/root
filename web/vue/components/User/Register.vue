@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
     <div class="login">
         <form novalidate class="md-layout-row md-gutter" @submit.prevent="login">
@@ -55,65 +56,65 @@
         name: 'Login',
         mixins: [validationMixin],
         data: () => ({
-        form: {
-            username: null,
-            remember: true,
-            password: null
-        },
-        sending: false,
-        userSaved: false,
-        lastUser: '',
-        message: ''
-    }),
-    validations: {
-        form: {
-            username: {
-                required
+            form: {
+                username: null,
+                remember: true,
+                password: null
             },
-            password: {
-                required
-            }
-        }
-    },
-    methods: {
-        getValidationClass (fieldName) {
-            const field = this.$v.form[fieldName]
-            if (field) {
-                return {
-                    'md-invalid': field.$invalid && field.$dirty
+            sending: false,
+            userSaved: false,
+            lastUser: '',
+            message: ''
+        }),
+        validations: {
+            form: {
+                username: {
+                    required
+                },
+                password: {
+                    required
                 }
             }
         },
-        login () {
-            this.$v.$touch()
-            if (!this.$v.$invalid) {
-                this.sending = true
-                this.axios.post('/user/login', {
-                    username: this.form.username,
-                    password: this.form.password,
-                    remember: this.form.remember
-                }).then((response) => {
-                    if (response.data.code === 200) {
-                    window.location.href = "#/user/dashboard"
-                    } else {
-                        this.userSaved = true
-                        this.message = 'Invalid Username or Password.'
-                        window.setTimeout(() => {
-                            this.userSaved = false
-                    }, 3000)
+        methods: {
+            getValidationClass (fieldName) {
+                const field = this.$v.form[fieldName]
+                if (field) {
+                    return {
+                        'md-invalid': field.$invalid && field.$dirty
+                    }
                 }
-                console.log(response.data)
-                this.sending = false
-            })
+            },
+            login () {
+                this.$v.$touch()
+                if (!this.$v.$invalid) {
+                    this.sending = true
+                    this.axios.post('/user/login', {
+                        username: this.form.username,
+                        password: this.form.password,
+                        remember: this.form.remember
+                    }).then((response) => {
+                        if (response.data.code === 200) {
+                            window.location.href = "#/user/dashboard"
+                        } else {
+                            this.userSaved = true
+                            this.message = 'Invalid Username or Password.'
+                            window.setTimeout(() => {
+                                this.userSaved = false
+                            }, 3000)
+                        }
+                        console.log(response.data)
+                        this.sending = false
+                    })
+                }
+            },
+            reset () {
+
+            },
+            register () {
+
             }
-        },
-        reset () {
-
-        },
-        register () {
-
         }
-    }
     }
 </script>
 

@@ -13,7 +13,11 @@
 
 <script>
     export default {
-        name: "Dashboard"
+        name: "Dashboard",
+        props: ["name"],
+        mounted: function () {
+            this.$emit('input', "Dashboard")
+        }
     }
 </script>
 

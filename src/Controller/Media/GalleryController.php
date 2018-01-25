@@ -62,10 +62,16 @@ class GalleryController extends AbstractController
         if($request->request->has("id")){
             $gallery = $repo->getGallery($request->request->get("id")) ?? new Gallery();
             if($request->request->get("delete") == "true"){
-                foreach ($gallery->GetPhotos() as $photo){
+                //var_dump($gallery->getPhotos());
+                foreach ($gallery->getPhotos() as $photo){
                     $photo->setGallery(null);
                     $em->remove($photo);
                 }
+                foreach ($gallery->getComments() as $comment){
+                    $em->remove($comment);
+                }
+                $gallery->removeAllComments();
+                $em->flush();
                 $em->remove($gallery);
             }else{
                 $title = $request->request->get("title") ?? "";

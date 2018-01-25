@@ -1,11 +1,39 @@
 <template>
-    <div class="page-container" style="height:100%">
-        <md-app md-waterfall md-mode="fixed" style="min-height: 100vh;">
+    <div class="page-container">
+        <md-app md-waterfall md-mode="fixed">
             <md-app-toolbar class="md-primary">
-                <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
-                    <md-icon>menu</md-icon>
-                </md-button>
-                <span class="md-title">Dashboard</span>
+                <div class="md-toolbar-section-start">
+                    <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
+                        <md-icon>menu</md-icon>
+                    </md-button>
+                    <span class="md-title">{{name}}</span>
+                </div>
+                <div class="md-toolbar-section-end">
+                    <md-menu md-size="big" md-direction="bottom-start">
+                        <md-button md-menu-trigger class="md-icon-button">
+                            <md-icon>more_vert</md-icon>
+                        </md-button>
+                        <md-menu-content>
+                            <md-list>
+                                <md-list-item>
+                                    <md-avatar>
+                                        <img src="https://placeimg.com/40/40/people/5" alt="People">
+                                    </md-avatar>
+                                    <span class="md-list-item-text">这是用户名</span>
+                                </md-list-item>
+                                <md-divider class="md-inset"></md-divider>
+                                <md-list-item>
+                                    <md-icon>settings</md-icon>
+                                    <span class="md-list-item-text">Settings</span>
+                                </md-list-item>
+                                <md-list-item>
+                                    <md-icon>exit_to_app</md-icon>
+                                    <span class="md-list-item-text">Logout</span>
+                                </md-list-item>
+                            </md-list>
+                        </md-menu-content>
+                    </md-menu>
+                </div>
             </md-app-toolbar>
 
             <md-app-drawer :md-active.sync="menuVisible">
@@ -33,7 +61,7 @@
                         <span class="md-list-item-text">Alumni</span>
                         <md-list slot="md-expand">
                             <md-list-item class="md-inset" to="/alumni/auth"><md-icon>perm_identity</md-icon><span class="md-list-item-text">Realname</span></md-list-item>
-                            <md-list-item class="md-inset" to="/alumni/dir"><md-icon>info</md-icon><span class="md-list-item-text">Directory</span>y</md-list-item>
+                            <md-list-item class="md-inset" to="/alumni/dir"><md-icon>info</md-icon><span class="md-list-item-text">Directory</span></md-list-item>
                         </md-list>
                     </md-list-item>
 
@@ -66,11 +94,16 @@
                             <md-list-item class="md-inset" to="/user/announcement"><md-icon>announcement</md-icon><span class="md-list-item-text">Announcement</span></md-list-item>
                         </md-list>
                     </md-list-item>
+
+                    <md-list-item to="/app">
+                        <md-icon>apps</md-icon>
+                        <span class="md-list-item-text">App</span>
+                    </md-list-item>
                 </md-list>
             </md-app-drawer>
 
             <md-app-content>
-                <router-view/>
+                <router-view v-model="name"/>
             </md-app-content>
         </md-app>
     </div>
@@ -80,20 +113,31 @@
     export default {
         name: "Dashboard",
         data: () => ({
-            menuVisible: false
+            menuVisible: false,
+            name: "Unknown Region",
+            toggleCard: false
         })
     }
 </script>
 
 <style scoped>
     .md-app {
-        min-height: 100%;
+        min-height: 100vh;
+        max-height: 100vh;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    .md-drawer {
+        width: 230px;
+        max-width: calc(100vw - 125px);
+    }
+
+    .md-list {
+        width: 320px;
+        max-width: 100%;
+        display: inline-block;
+        vertical-align: top;
         border: 1px solid rgba(#000, .12);
     }
 
-    // Demo purposes only
-   .md-drawer {
-       width: 230px;
-       max-width: calc(100vw - 125px);
-    }
 </style>

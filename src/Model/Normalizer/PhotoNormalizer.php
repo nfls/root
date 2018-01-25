@@ -21,7 +21,7 @@ class PhotoNormalizer implements NormalizerInterface{
         return array(
             "id" => $object->getId(),
             "thumb" => $object->getThumb(),
-            "hd" => $object->getHd(),
+            "hd" => "storage/photos/hd/".$object->getHd(),
             "origin" => $object->getOrigin(),
             "gallery" => $object->getGallery()
         );
