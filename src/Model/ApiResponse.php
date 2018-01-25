@@ -23,8 +23,8 @@ class ApiResponse {
         $dateNormalizer = new DateTimeNormalizer();
         $photoNormalizer = new PhotoNormalizer();
         $userNormalizer = new UserNormalizer();
-        $this->serializer = new Serializer([$dateNormalizer,$photoNormalizer,$userNormalizer,$normalizer],[$encoder]);
-        $this->rawSerializer = new Serializer([$dateNormalizer,$photoNormalizer,$normalizer],[$encoder]);
+        $this->rawSerializer = new Serializer([$dateNormalizer,$normalizer],[$encoder]);
+        $this->serializer = new Serializer([$photoNormalizer,$dateNormalizer,$userNormalizer,$normalizer],[$encoder]);
     }
 
     public function response($data,$code = 200){

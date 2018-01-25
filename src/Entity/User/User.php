@@ -2,6 +2,9 @@
 
 namespace App\Entity\User;
 
+use App\Entity\Media\Gallery;
+use App\Entity\Media\Photo;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -91,6 +94,7 @@ class User implements UserInterface,UserEntityInterface
      * @ORM\Column(type="datetimetz", options={"default":"CURRENT_TIMESTAMP"})
      */
     private $joinTime;
+
 
     public function __construct()
     {
@@ -241,8 +245,6 @@ class User implements UserInterface,UserEntityInterface
     {
         return $this->joinTime;
     }
-
-
 
     public function getSalt()
     {

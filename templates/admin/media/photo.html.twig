@@ -128,14 +128,15 @@
         else
             return "否";
     }
-    function dateFormatter(val,row){
-        var d = new Date(val.timestamp * 1000);
-        return (
-            [
-                d.getFullYear(),d.getMonth()+1,d.getDate()].join('/')+' '+
+    function dateFormatter(val,row) {
+        //console.log(val);
+        var d = new Date(val);
+        return [d.getMonth()+1,
+                d.getDate(),
+                d.getFullYear()].join('/')+' '+
             [d.getHours(),
                 d.getMinutes(),
-                d.getSeconds()].join(':'));
+                d.getSeconds()].join(':');
     }
     function loadData(){
         $.post( "/admin/media/photo/edit", function( data ) {

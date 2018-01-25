@@ -3,6 +3,7 @@
 namespace App\Controller\Media;
 
 use App\Controller\AbstractController;
+use App\Entity\Media\Comment;
 use App\Entity\Media\Gallery;
 use App\Entity\Media\Photo;
 use App\Model\ApiResponse;
@@ -39,6 +40,44 @@ class GalleryController extends AbstractController
         return $this->response->responseEntity($repo->getGallery($request->query->get("id")));
     }
 
+    /**
+     * @Route("/media/gallery/comment", methods="POST")
+     */
+    public function getComment(Request $request){
+        $content = $request->request->get("content");
+        $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
+        $comment = new Comment();
+        $comment->setContent($content);
+        $comment->setPostUser($this->getUser());
+        $comment->setGallery($repo->getGallery($request->request->get("id")));
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($comment);
+        $em->flush();
+        return $this->response->response(null);
+    }
+
+    /**
+     * @Route("media/gallery/like", methods="POST")
+     */
+    public function like(Request $request){
+        $repo = $this->getDoctrine()->getManager()->getRepository( Gallery::class);
+        $gallery = $repo->getGallery($request->request->get("id"));
+        $gallery->like($this->getUser());
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($this->getUser());
+        $em->flush();
+        return $this->response->response(null);
+    }
+
+    /**
+     * @Route("media/gallery/like", methods="GET")
+     */
+    public function likeStatus(Request $request){
+        $repo = $this->getDoctrine()->getManager()->getRepository( Gallery::class);
+        $gallery = $repo->getGallery($request->query->get("id"));
+        return $this->response->response($gallery->likeStatus($this->getUser()));
+    }
+
 
     /**
      * @Route("/admin/media/upload", methods="GET")
@@ -68,6 +107,7 @@ class GalleryController extends AbstractController
     public function editGallery(Request $request){
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Gallery::class);
+        $photoRepo = $em->getRepository(Photo::class);
         if($request->request->has("id")){
             $gallery = $repo->getGallery($request->request->get("id")) ?? new Gallery();
             if($request->request->get("delete") == "true"){
@@ -85,6 +125,8 @@ class GalleryController extends AbstractController
             }else{
                 $title = $request->request->get("title") ?? "";
                 $description = $request->request->get("description") ?? "";
+                $photo = $photoRepo->getPhoto($request->request->get("cover"));
+                $gallery->setCover($photo);
                 $gallery->setTitle($title);
                 $gallery->setDescription($description);
                 $gallery->setIsPublic($request->request->get("public") == "true");

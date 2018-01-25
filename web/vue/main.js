@@ -7,9 +7,12 @@ import VueMaterial from 'vue-material'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VuePreview from 'vue-preview'
+
+
 Vue.use(VuePreview)
 Vue.use(VueAxios, axios)
 Vue.use(VueMaterial)
+Vue.use(require('vue-moment'));
 
 Vue.config.productionTip = false
 

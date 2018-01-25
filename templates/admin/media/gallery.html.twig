@@ -36,6 +36,10 @@
                     <textarea id="description" class="easyui-validatebox" name="description"  style="width:90%"></textarea>
                 </div>
                 <div>
+                    <label for="name">封面：</label>
+                    <input id="cover" class="easyui-validatebox" type="text" name="cover" style="width:90%"/>
+                </div>
+                <div>
                     <label for="public">公开： </label>
                     <input id="public" name="public" type="checkbox" />
                 </div>
@@ -77,6 +81,7 @@
             data["id"] = selected.id;
             data["title"] = $("#title").val();
             data["description"] = $("#description").val();
+            data["cover"] = $("#cover").val();
             data["visible"] = $("#visible").is(":checked");
             data["public"] = $("#public").is(":checked");
             $.post("/admin/media/gallery/edit",data, function(message){
@@ -107,14 +112,15 @@
             else
                 return "否";
         }
-        function dateFormatter(val,row){
-            var d = new Date(val.timestamp * 1000);
-            return (
-                [
-                    d.getFullYear(),d.getMonth()+1,d.getDate()].join('/')+' '+
+        function dateFormatter(val,row) {
+            //console.log(val);
+            var d = new Date(val);
+            return [d.getMonth()+1,
+                    d.getDate(),
+                    d.getFullYear()].join('/')+' '+
                 [d.getHours(),
                     d.getMinutes(),
-                    d.getSeconds()].join(':'));
+                    d.getSeconds()].join(':');
         }
         function loadData(){
             $.post( "/admin/media/gallery/edit", function( data ) {

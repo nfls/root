@@ -1,10 +1,10 @@
 <template>
     <div class="md-layout md-gutter md-alignment-center">
         <div class="md-layout-item md-medium-size-33 md-small-size-50 md-xsmall-size-100 gallery-card" v-for="item in items" :key="item.id">
-            <md-card @click.native="onclick(item.id)">
+            <md-card @click.native="onclick(item.id)" v-if="item.cover !== null">
                 <md-card-media-cover md-solid>
                     <md-card-media md-ratio="4:3">
-                        <img :src=item.photos[0].hd alt="Skyscraper">
+                        <img :src="item.cover.src" alt="Skyscraper">
                     </md-card-media>
 
                     <md-card-area>
@@ -29,8 +29,13 @@
         }),
         mounted: function () {
             this.axios.get("/media/gallery/list").then((response) => {
-                this.items = response.data["data"]
-                console.log(this.items)
+                var items = response.data["data"]
+                this.items = items.filter(function(val){
+                    if (val.cover !== null){
+                        val.cover.src = "/storage/photos/hd/" + val.cover.src
+                    }
+                    return val
+                })
             })
             this.$emit('input', "Gallery")
         },

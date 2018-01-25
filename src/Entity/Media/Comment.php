@@ -52,7 +52,7 @@ class Comment
 
     public function __construct()
     {
-        $time = new \DateTime();
+        $this->time = new \DateTime();
     }
 
     /**
@@ -86,6 +86,31 @@ class Comment
     {
         return $this->time;
     }
+
+    /**
+     * @param string $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
+    /**
+     * @param Gallery $gallery
+     */
+    public function setGallery($gallery)
+    {
+        $this->gallery = $gallery;
+    }
+
+    /**
+     * @param User $postUser
+     */
+    public function setPostUser($postUser)
+    {
+        $this->postUser = $postUser;
+    }
+
 
 
     // add your own fields

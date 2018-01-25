@@ -8,6 +8,7 @@ import Gallery from '../components/Media/Gallery'
 import Jump from '../components/Jump'
 import Album from '../components/Media/Album'
 
+
 Vue.use(Router)
 
 export default new Router({

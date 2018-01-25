@@ -2,11 +2,15 @@
 
 namespace App\Entity\Media;
 
+use App\Entity\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Media\GalleryRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Gallery
 {
@@ -42,8 +46,16 @@ class Gallery
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Media\Comment", mappedBy="gallery")
+     * @ORM\OrderBy({"time" = "DESC"})
      */
     private $comments;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="json")
+     */
+    private $likes;
 
     /**
      * @var \DateTime
@@ -73,11 +85,26 @@ class Gallery
      */
     private $isPublic = false;
 
+    /**
+     * @var EntityManager;
+     */
+    private $em;
+
+    /**
+     * @ORM\PostLoad
+     * @ORM\PostPersist
+     */
+    public function fetchEntityManager(LifecycleEventArgs $args)
+    {
+        $this->em = $args->getEntityManager();
+    }
+
     public function __construct()
     {
         $this->photos = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->time = new \DateTime();
+        $this->likes = json_encode([]);
     }
 
     /**
@@ -148,7 +175,7 @@ class Gallery
      */
     public function getOriginCount(){
         return count($this->photos->filter(function($val){
-            return null === $val->getOrigin();
+            return !(null === $val->getOrigin());
         }));
     }
 
@@ -216,6 +243,59 @@ class Gallery
     public function getCover()
     {
         return $this->cover;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLikes()
+    {
+        if(null === $this->likes){
+            $this->likes = json_encode([]);
+        }
+        $repo = $this->em->getRepository(User::class);
+        return array_map(function($id)use($repo){
+            return $repo->findOneBy(["id"=>$id]);
+        },json_decode($this->likes,true));
+    }
+
+
+    /**
+     * @param User $user
+     *
+     * @return boolean
+     */
+    public function likeStatus($user){
+        $repo = $this->em->getRepository(User::class);
+        if(null === $this->likes){
+            $this->likes = json_encode([]);
+        }
+        $likes = array_map(function($id)use($repo){
+            return $repo->findOneBy(["id"=>$id]);
+        },json_decode($this->likes,true));
+        if(null === $user){
+            $status = false;
+        }else if(in_array($user,$likes)){
+            $status = true;
+        }else{
+            $status = false;
+        }
+        return $status;
+    }
+    /**
+     * @param User $user
+     */
+    public function like($user){
+        if(null === $this->likes){
+            $this->likes = json_encode([]);
+        }
+        $likes = json_decode($this->likes);
+        if (($key = array_search($user->getId(), $likes)) !== false) {
+            unset($likes[$key]);
+        }else{
+            array_push($likes,$user->getId());
+        }
+        $this->likes = json_encode($likes);
     }
 
     /**
