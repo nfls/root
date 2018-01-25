@@ -20,10 +20,10 @@ class PhotoNormalizer implements NormalizerInterface{
     {
         return array(
             "id" => $object->getId(),
-            "thumb" => $object->getThumb(),
-            "hd" => "storage/photos/hd/".$object->getHd(),
-            "origin" => $object->getOrigin(),
-            "gallery" => $object->getGallery()
+            "msrc" => "storage/photos/thumb/".$object->getThumb(),
+            "src" => "storage/photos/hd/".$object->getHd(),
+            "h" => $object->getHeight(),
+            "w" => $object->getWidth()
         );
     }
 

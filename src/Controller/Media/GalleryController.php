@@ -32,6 +32,15 @@ class GalleryController extends AbstractController
     }
 
     /**
+     * @Route("/media/gallery/detail", methods="GET")
+     */
+    public function getDetail(Request $request){
+        $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
+        return $this->response->responseEntity($repo->getGallery($request->query->get("id")));
+    }
+
+
+    /**
      * @Route("/admin/media/upload", methods="GET")
      */
     public function uploadPage(){
@@ -172,6 +181,9 @@ class GalleryController extends AbstractController
         $photo = new Photo();
         $photo->setHd($hdName);
         $photo->setThumb($thumbName);
+
+        $photo->setHeight($hd->getImageHeight());
+        $photo->setWidth($hd->getImageWidth());
 
         if($allowOrigin == "true"){
             exec("cwebp -q 100 ".$path." -o ".$path.".webp ");

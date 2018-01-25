@@ -38,6 +38,20 @@ class Photo
     private $hd;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $width;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $height;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string", length=256, nullable=true)
@@ -52,6 +66,12 @@ class Photo
     private $time;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+
+    /**
      * @var boolean
      *
      * @ORM\Column(type="boolean")
@@ -64,6 +84,8 @@ class Photo
      * @ORM\Column(type="boolean")
      */
     private $isPublic = false;
+
+
 
     public function __construct()
     {
@@ -201,6 +223,40 @@ class Photo
     {
         return $this->id;
     }
+
+    /**
+     * @return int
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    /**
+     * @param int $width
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    /**
+     * @param int $height
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+    }
+
+
 
 
 

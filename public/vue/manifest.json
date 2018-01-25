@@ -1,4 +1,7 @@
 {
   "vue/vue.css": "/vue/vue.css",
-  "vue/vue.js": "/vue/vue.js"
+  "vue/vue.js": "/vue/vue.js",
+  "vue/images/default-skin.png": "/vue/images/default-skin.e3f799c6.png",
+  "vue/images/default-skin.svg": "/vue/images/default-skin.b257fa9c.svg",
+  "vue/images/preloader.gif": "/vue/images/preloader.e34aafbb.gif"
 }

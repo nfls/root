@@ -53,6 +53,13 @@ class Gallery
     private $time;
 
     /**
+     * @var Photo
+     *
+     * @ORM\OneToOne(targetEntity="App\Entity\Media\Photo")
+     */
+    private $cover;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(type="boolean")
@@ -201,6 +208,22 @@ class Gallery
     public function setIsPublic($isPublic)
     {
         $this->isPublic = $isPublic;
+    }
+
+    /**
+     * @return Photo
+     */
+    public function getCover()
+    {
+        return $this->cover;
+    }
+
+    /**
+     * @param Photo $cover
+     */
+    public function setCover($cover)
+    {
+        $this->cover = $cover;
     }
 
     public function removeAllComments(){

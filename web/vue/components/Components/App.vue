@@ -2,6 +2,7 @@
     <div class="page-container">
         <md-app md-waterfall md-mode="fixed">
             <md-app-toolbar class="md-primary">
+
                 <div class="md-toolbar-section-start">
                     <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
                         <md-icon>menu</md-icon>
