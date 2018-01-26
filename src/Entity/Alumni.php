@@ -89,7 +89,7 @@ class Alumni
     /**
      * @var string
      *
-     * @ORM\Column(type="json", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $university;
 

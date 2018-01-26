@@ -4,7 +4,7 @@
             <md-app-toolbar class="md-primary">
 
                 <div class="md-toolbar-section-start">
-                    <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
+                    <md-button class="md-icon-button" @click="menuVisible = !menuVisible" v-if="!menuVisible">
                         <md-icon>menu</md-icon>
                     </md-button>
                     <span class="md-title">{{name}}</span>
@@ -37,9 +37,14 @@
                 </div>
             </md-app-toolbar>
 
-            <md-app-drawer :md-active.sync="menuVisible">
+            <md-app-drawer :md-active.sync="menuVisible" md-persistent="mini">
                 <md-toolbar class="md-transparent" md-elevation="0">
                     NFLS.IO
+                    <div class="md-toolbar-section-end">
+                        <md-button class="md-icon-button md-dense" @click="menuVisible = !menuVisible">
+                            <md-icon>keyboard_arrow_left</md-icon>
+                        </md-button>
+                    </div>
                 </md-toolbar>
 
                 <md-list>
@@ -54,6 +59,8 @@
                             <md-list-item class="md-inset" to="/school/pastpaper"><md-icon>book</md-icon><span class="md-list-item-text">Past Paper</span></md-list-item>
                             <md-list-item class="md-inset" to="/school/blackboard"><md-icon>speaker_notes</md-icon><span class="md-list-item-text">Blackboard</span></md-list-item>
                             <md-list-item class="md-inset" to="/school/assignment"><md-icon>assignment</md-icon><span class="md-list-item-text">Assignment</span></md-list-item>
+                            <md-list-item class="md-inset" to="/school/lunch"><md-icon>credit_card</md-icon><span class="md-list-item-text">Lunch</span></md-list-item>
+                            <md-list-item class="md-inset" to="/school/vote"><md-icon>plus_one</md-icon><span class="md-list-item-text">Vote</span></md-list-item>
                         </md-list>
                     </md-list-item>
 

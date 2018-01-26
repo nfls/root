@@ -1,66 +1,213 @@
 [
-	{
-		"name": "状态",
-		"key": "status",
-		"type": "select",
-		"values": [
-			{
-				"name":"初中在读",
-				"value":"junior"
-			},{
-				"name":"高中在读",
-				"value":"senior"
-			},{
-				"name":"已毕业",
-				"value":"graduated"
-			}
-		],
-		"validate": {
-			"required": true
-		}
-	},{
-		"name": "中文名",
-		"key": "chineseName",
-		"type": "input",
-		"validate": {
-			"required": true,
-			"minLength": 2,
-			"maxLength": 4
-		}
-	},{
-		"name": "英文名",
-		"key": "englishName",
-		"type": "input",
-		"validate": {
-			"required": true,
-			"minLength": 2,
-			"maxLength": 20
-		}
-	},{
-		"name": "生日",
-		"key": "birthday",
-		"type": "date",
-		"validate": {
-			"required": true
-		}
-	},{
-		"name": "性别",
-		"key": "gender",
-		"type": "select",
-		"values": [
-			{
-				"name":"其他",
-				"value":"other"
-			},{
-				"name":"男",
-				"value":"male"
-			},{
-				"name":"女",
-				"value":"female"
-			}
-		],
-		"validate": {
-			"required": true
-		}
-	}
+  {
+    "name": "学位状态",
+    "key": "status",
+    "type": "select",
+    "values": [
+      {
+        "name": "初中在读",
+        "value": "junior"
+      },
+      {
+        "name": "高中在读",
+        "value": "senior"
+      },
+      {
+        "name": "高中已毕业",
+        "value": "graduated"
+      }
+    ],
+    "validate": {
+      "required": true
+    }
+  },
+  {
+    "name": "中文名",
+    "key": "chineseName",
+    "type": "input",
+    "validate": {
+      "required": true,
+      "minLength": 2,
+      "maxLength": 4
+    }
+  },
+  {
+    "name": "英文名",
+    "key": "englishName",
+    "type": "input",
+    "validate": {
+      "required": true,
+      "minLength": 2,
+      "maxLength": 20
+    }
+  },
+  {
+    "name": "生日",
+    "key": "birthday",
+    "type": "date",
+    "validate": {
+      "required": true
+    }
+  },
+  {
+    "name": "性别",
+    "key": "gender",
+    "type": "select",
+    "values": [
+      {
+        "name": "其他",
+        "value": "other"
+      },
+      {
+        "name": "男",
+        "value": "male"
+      },
+      {
+        "name": "女",
+        "value": "female"
+      }
+    ],
+    "validate": {
+      "required": true
+    }
+  },
+  {
+    "name": "初中学校",
+    "key": "juniorSchool",
+    "type": "select",
+    "values": [
+      {
+        "name": "南外初中",
+        "value": "nfls"
+      },
+      {
+        "name": "其他学校",
+        "value": "other"
+      }
+    ],
+    "validate": {
+      "required": true
+    }
+  },
+  {
+    "name": "初中毕业年份",
+    "key": "juniorRegistration",
+    "type": "input",
+    "validate": {
+      "required": true,
+      "minValue": 1963,
+      "maxValue": 2017
+    }
+  },
+  {
+    "name": "初中入学班级",
+    "key": "juniorClass",
+    "type": "input",
+    "validate": {
+      "required": true,
+      "minValue": 1,
+      "maxValue": 12
+    }
+  },
+  {
+    "name": "高中学校",
+    "key": "seniorSchool",
+    "type": "select",
+    "values": [
+      {
+        "name": "南外普高",
+        "value": "nfls_senior"
+      },
+      {
+        "name": "南外中加国际部",
+        "value": "nfls_bca"
+      },
+      {
+        "name": "南外剑桥国际部",
+        "value": "nfls_alevel"
+      },
+      {
+        "name": "南外IB国际部",
+        "value": "nfls_ib"
+      },
+      {
+        "name": "南外中澳国际部",
+        "value": "nfls_australia"
+      },
+      {
+        "name": "其他学校",
+        "value": "other"
+      }
+    ],
+    "validate": {
+      "required": true
+    }
+  },
+  {
+    "name": "高中毕业年份",
+    "key": "seniorRegistration",
+    "type": "input",
+    "validate": {
+      "required": true,
+      "minValue": 1963,
+      "maxValue": 2017
+    }
+  },
+  {
+    "name": "高中入学班级",
+    "key": "seniorClass",
+    "type": "input",
+    "validate": {
+      "required": true,
+      "minValue": 1,
+      "maxValue": 8
+    }
+  },
+  {
+    "name": "大学信息",
+    "key": "university",
+    "type": "textarea",
+    "validate": {
+      "required": true
+    }
+  },
+  {
+    "name": "专业方向",
+    "key": "major",
+    "type": "textarea",
+    "validate": {
+      "required": true
+    }
+  },
+  {
+    "name": "工作信息",
+    "key": "workInfo",
+    "type": "textarea",
+    "validate": {
+      "required": true
+    }
+  },
+  {
+    "name": "个人信息",
+    "key": "personalInfo",
+    "type": "textarea",
+    "validate": {
+      "required": true
+    }
+  },
+  {
+    "name": "在线联系方式",
+    "key": "onlineContact",
+    "type": "textarea",
+    "validate": {
+      "required": true
+    }
+  },
+  {
+    "name": "备注",
+    "key": "remark",
+    "type": "textarea",
+    "validate": {
+    }
+  }
 ]

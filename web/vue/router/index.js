@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import App from '../components/Components/App'
 import Login from '../components/User/Login'
 import Dashboard from '../components/User/Dashboard'
+import Vote from '../components/School/Vote'
 import Realname from '../components/Alumni/Realname'
 import Gallery from '../components/Media/Gallery'
 import Jump from '../components/Jump'
@@ -23,6 +24,9 @@ export default new Router({
                 {
                     path: 'user/dashboard',
                     component: Dashboard
+                }, {
+                    path: 'school/vote',
+                    component: Vote
                 }, {
                     path: 'alumni/auth',
                     component: Realname
