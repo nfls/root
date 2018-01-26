@@ -14,7 +14,10 @@
 				"name":"已毕业",
 				"value":"graduated"
 			}
-		]
+		],
+		"validate": {
+			"required": true
+		}
 	},{
 		"name": "中文名",
 		"key": "chineseName",
@@ -55,6 +58,9 @@
 				"name":"女",
 				"value":"female"
 			}
-		]
+		],
+		"validate": {
+			"required": true
+		}
 	}
 ]
