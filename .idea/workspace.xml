@@ -3,22 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="1ce7cc7b-a482-444b-909c-be26dac887ed" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change beforePath="$PROJECT_DIR$/public/vue/manifest.json" afterPath="$PROJECT_DIR$/public/vue/manifest.json" />
       <change beforePath="$PROJECT_DIR$/public/vue/vue.css" afterPath="$PROJECT_DIR$/public/vue/vue.css" />
       <change beforePath="$PROJECT_DIR$/public/vue/vue.js" afterPath="$PROJECT_DIR$/public/vue/vue.js" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/Media/GalleryController.php" afterPath="$PROJECT_DIR$/src/Controller/Media/GalleryController.php" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Media/Comment.php" afterPath="$PROJECT_DIR$/src/Entity/Media/Comment.php" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Media/Gallery.php" afterPath="$PROJECT_DIR$/src/Entity/Media/Gallery.php" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/User/User.php" afterPath="$PROJECT_DIR$/src/Entity/User/User.php" />
-      <change beforePath="$PROJECT_DIR$/src/Model/ApiResponse.php" afterPath="$PROJECT_DIR$/src/Model/ApiResponse.php" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Normalizer/PhotoNormalizer.php" afterPath="$PROJECT_DIR$/src/Model/Normalizer/PhotoNormalizer.php" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/media/gallery.html.twig" afterPath="$PROJECT_DIR$/templates/admin/media/gallery.html.twig" />
-      <change beforePath="$PROJECT_DIR$/templates/admin/media/photo.html.twig" afterPath="$PROJECT_DIR$/templates/admin/media/photo.html.twig" />
-      <change beforePath="$PROJECT_DIR$/web/vue/components/Media/Album.vue" afterPath="$PROJECT_DIR$/web/vue/components/Media/Album.vue" />
-      <change beforePath="$PROJECT_DIR$/web/vue/components/Media/Gallery.vue" afterPath="$PROJECT_DIR$/web/vue/components/Media/Gallery.vue" />
-      <change beforePath="$PROJECT_DIR$/web/vue/main.js" afterPath="$PROJECT_DIR$/web/vue/main.js" />
-      <change beforePath="$PROJECT_DIR$/web/vue/router/index.js" afterPath="$PROJECT_DIR$/web/vue/router/index.js" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Alumni.php" afterPath="$PROJECT_DIR$/src/Entity/Alumni.php" />
+      <change beforePath="$PROJECT_DIR$/web/vue/components/Alumni/Realname.vue" afterPath="$PROJECT_DIR$/web/vue/components/Alumni/Realname.vue" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -44,133 +32,43 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="GalleryController.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GalleryController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Controller/Media/GalleryController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
+            <state relative-caret-position="1620">
               <caret line="120" column="17" lean-forward="false" selection-start-line="120" selection-start-column="17" selection-end-line="120" selection-end-column="17" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ApiResponse.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Model/ApiResponse.php">
+      <file leaf-file-name="Alumni.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Entity/Alumni.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="24" column="47" lean-forward="false" selection-start-line="24" selection-start-column="47" selection-end-line="24" selection-end-column="47" />
+            <state relative-caret-position="195">
+              <caret line="13" column="26" lean-forward="false" selection-start-line="13" selection-start-column="26" selection-end-line="13" selection-end-column="26" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="message.html.twig" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/admin/basic/message.html.twig">
+      <file leaf-file-name="Form.json" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Controller/Alumni/Form.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="249">
-              <caret line="63" column="9" lean-forward="false" selection-start-line="54" selection-start-column="8" selection-end-line="63" selection-end-column="9" />
-              <folding>
-                <element signature="e#12#32#0#Twig" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gallery.html.twig" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/admin/media/gallery.html.twig">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="86" column="26" lean-forward="false" selection-start-line="86" selection-start-column="26" selection-end-line="86" selection-end-column="26" />
-              <folding>
-                <element signature="e#12#32#0#Twig" expanded="true" />
-                <element signature="e#2077#2094#0#HTML" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="photo.html.twig" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/admin/media/photo.html.twig">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="452">
-              <caret line="129" column="5" lean-forward="false" selection-start-line="129" selection-start-column="5" selection-end-line="129" selection-end-column="5" />
-              <folding>
-                <element signature="e#12#32#0#Twig" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Gallery.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Entity/Media/Gallery.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="335">
-              <caret line="177" column="48" lean-forward="false" selection-start-line="177" selection-start-column="48" selection-end-line="177" selection-end-column="48" />
-              <folding>
-                <element signature="e#36#61#0#PHP" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PhotoNormalizer.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Model/Normalizer/PhotoNormalizer.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="23" column="32" lean-forward="false" selection-start-line="23" selection-start-column="32" selection-end-line="23" selection-end-column="32" />
+            <state relative-caret-position="373">
+              <caret line="29" column="24" lean-forward="true" selection-start-line="29" selection-start-column="24" selection-end-line="29" selection-end-column="24" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PhotoRepository.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Repository/Media/PhotoRepository.php">
+      <file leaf-file-name="AlumniController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Controller/Alumni/AlumniController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="45" column="5" lean-forward="false" selection-start-line="45" selection-start-column="5" selection-end-line="45" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Version20180125170308.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Migrations/Version20180125170308.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="531">
-              <caret line="39" column="13" lean-forward="false" selection-start-line="39" selection-start-column="13" selection-end-line="39" selection-end-column="13" />
+            <state relative-caret-position="345">
+              <caret line="23" column="107" lean-forward="false" selection-start-line="23" selection-start-column="107" selection-end-line="23" selection-end-column="107" />
               <folding>
-                <marker date="1516899855882" expanded="true" signature="563:637" ph="ALTER TABLE refresh_token... " />
-                <marker date="1516899855882" expanded="true" signature="664:737" ph="ALTER TABLE access_token... " />
-                <marker date="1516899855882" expanded="true" signature="764:834" ph="ALTER TABLE auth_code... " />
-                <marker date="1516899855882" expanded="true" signature="861:954" ph="ALTER TABLE code... " />
-                <marker date="1516899855882" expanded="true" signature="981:1140" ph="ALTER TABLE user... " />
-                <marker date="1516899855882" expanded="true" signature="1167:1221" ph="ALTER TABLE message... " />
-                <marker date="1516899855882" expanded="true" signature="1248:1299" ph="ALTER TABLE rank... " />
-                <marker date="1516899855882" expanded="true" signature="1326:1431" ph="ALTER TABLE gallery... " />
-                <marker date="1516899855882" expanded="true" signature="1458:1536" ph="ALTER TABLE photo... " />
-                <marker date="1516899855882" expanded="true" signature="1563:1617" ph="ALTER TABLE comment... " />
-                <marker date="1516899855882" expanded="true" signature="1926:1999" ph="ALTER TABLE access_token... " />
-                <marker date="1516899855882" expanded="true" signature="2026:2096" ph="ALTER TABLE auth_code... " />
-                <marker date="1516899855882" expanded="true" signature="2123:2216" ph="ALTER TABLE code... " />
-                <marker date="1516899855882" expanded="true" signature="2243:2297" ph="ALTER TABLE comment... " />
-                <marker date="1516899855882" expanded="true" signature="2324:2416" ph="ALTER TABLE gallery... " />
-                <marker date="1516899855882" expanded="true" signature="2443:2497" ph="ALTER TABLE message... " />
-                <marker date="1516899855882" expanded="true" signature="2524:2602" ph="ALTER TABLE photo... " />
-                <marker date="1516899855882" expanded="true" signature="2629:2680" ph="ALTER TABLE rank... " />
-                <marker date="1516899855882" expanded="true" signature="2707:2781" ph="ALTER TABLE refresh_token... " />
-                <marker date="1516899855882" expanded="true" signature="2808:2967" ph="ALTER TABLE user... " />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="User.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Entity/User/User.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1103">
-              <caret line="246" column="5" lean-forward="false" selection-start-line="246" selection-start-column="5" selection-end-line="246" selection-end-column="5" />
-              <folding>
-                <element signature="e#35#64#0#PHP" expanded="true" />
+                <element signature="e#41#79#0#PHP" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -210,8 +108,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/Repository/User/ChatRepository.php" />
-        <option value="$PROJECT_DIR$/src/Repository/OAuth/ScopeRepository.php" />
         <option value="$PROJECT_DIR$/src/Repository/OAuth/ClientRepository.php" />
         <option value="$PROJECT_DIR$/src/Repository/OAuth/AuthCodeRepository.php" />
         <option value="$PROJECT_DIR$/src/Repository/Media/MediaRepository.php" />
@@ -261,6 +157,8 @@
         <option value="$PROJECT_DIR$/src/Entity/Media/Gallery.php" />
         <option value="$PROJECT_DIR$/templates/admin/media/gallery.html.twig" />
         <option value="$PROJECT_DIR$/src/Controller/Media/GalleryController.php" />
+        <option value="$PROJECT_DIR$/src/Entity/Alumni.php" />
+        <option value="$PROJECT_DIR$/src/Controller/Alumni/AlumniController.php" />
       </list>
     </option>
   </component>
@@ -274,9 +172,9 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
-  <component name="ProjectFrameBounds">
-    <option name="x" value="266" />
-    <option name="y" value="23" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="15" />
+    <option name="y" value="22" />
     <option name="width" value="1920" />
     <option name="height" value="978" />
   </component>
@@ -295,7 +193,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -313,6 +210,13 @@
               <item name="api_v3" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="Controller" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="api_v3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="api_v3" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Controller" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Alumni" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
             <path>
               <item name="api_v3" type="b2602c69:ProjectViewProjectNode" />
@@ -456,6 +360,7 @@
         </subPane>
       </pane>
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -467,15 +372,15 @@
     <property name="SearchEverywhereHistoryKey" value="id&#9;ACTION&#9;com.chrisrm.idea.actions.accents.MTAcidLimeAccentAction" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/templates/admin/basic" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/Controller/Alumni" />
       <recent name="$PROJECT_DIR$/web/vue/components/User" />
       <recent name="$PROJECT_DIR$/src/Controller/User" />
       <recent name="$PROJECT_DIR$/src/Controller/Media" />
       <recent name="$PROJECT_DIR$/src/Controller/Game" />
-      <recent name="$PROJECT_DIR$/src/Repository/User" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/templates/admin/basic" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -581,12 +486,13 @@
       <workItem from="1516847649404" duration="4118000" />
       <workItem from="1516858898311" duration="61000" />
       <workItem from="1516864200288" duration="3067000" />
-      <workItem from="1516874768823" duration="8183000" />
+      <workItem from="1516874768823" duration="10065000" />
+      <workItem from="1516954247953" duration="197000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="289365000" />
+    <option name="totallyTimeSpent" value="291444000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -598,10 +504,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="266" y="23" width="1920" height="978" extended-state="0" />
+    <frame x="15" y="22" width="1920" height="978" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.246875" sideWeight="0.49518073" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.246875" sideWeight="0.49518073" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.111235954" sideWeight="0.5228967" order="7" side_tool="true" content_ui="tabs" />
@@ -654,27 +560,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Service/AliyunOSS.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="840">
-          <caret line="61" column="35" lean-forward="false" selection-start-line="61" selection-start-column="35" selection-end-line="61" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Model/Normalizer/DateTimeNormalizer.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Controller/AbstractController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="14" column="14" lean-forward="false" selection-start-line="14" selection-start-column="14" selection-end-line="14" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Controller/User/MessageController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="217">
@@ -900,7 +785,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="21" column="24" lean-forward="false" selection-start-line="21" selection-start-column="24" selection-end-line="21" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -952,42 +836,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Entity/User/User.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1103">
-          <caret line="246" column="5" lean-forward="false" selection-start-line="246" selection-start-column="5" selection-end-line="246" selection-end-column="5" />
-          <folding>
-            <element signature="e#35#64#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Migrations/Version20180125170308.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="531">
           <caret line="39" column="13" lean-forward="false" selection-start-line="39" selection-start-column="13" selection-end-line="39" selection-end-column="13" />
-          <folding>
-            <marker date="1516899855882" expanded="true" signature="563:637" ph="ALTER TABLE refresh_token... " />
-            <marker date="1516899855882" expanded="true" signature="664:737" ph="ALTER TABLE access_token... " />
-            <marker date="1516899855882" expanded="true" signature="764:834" ph="ALTER TABLE auth_code... " />
-            <marker date="1516899855882" expanded="true" signature="861:954" ph="ALTER TABLE code... " />
-            <marker date="1516899855882" expanded="true" signature="981:1140" ph="ALTER TABLE user... " />
-            <marker date="1516899855882" expanded="true" signature="1167:1221" ph="ALTER TABLE message... " />
-            <marker date="1516899855882" expanded="true" signature="1248:1299" ph="ALTER TABLE rank... " />
-            <marker date="1516899855882" expanded="true" signature="1326:1431" ph="ALTER TABLE gallery... " />
-            <marker date="1516899855882" expanded="true" signature="1458:1536" ph="ALTER TABLE photo... " />
-            <marker date="1516899855882" expanded="true" signature="1563:1617" ph="ALTER TABLE comment... " />
-            <marker date="1516899855882" expanded="true" signature="1926:1999" ph="ALTER TABLE access_token... " />
-            <marker date="1516899855882" expanded="true" signature="2026:2096" ph="ALTER TABLE auth_code... " />
-            <marker date="1516899855882" expanded="true" signature="2123:2216" ph="ALTER TABLE code... " />
-            <marker date="1516899855882" expanded="true" signature="2243:2297" ph="ALTER TABLE comment... " />
-            <marker date="1516899855882" expanded="true" signature="2324:2416" ph="ALTER TABLE gallery... " />
-            <marker date="1516899855882" expanded="true" signature="2443:2497" ph="ALTER TABLE message... " />
-            <marker date="1516899855882" expanded="true" signature="2524:2602" ph="ALTER TABLE photo... " />
-            <marker date="1516899855882" expanded="true" signature="2629:2680" ph="ALTER TABLE rank... " />
-            <marker date="1516899855882" expanded="true" signature="2707:2781" ph="ALTER TABLE refresh_token... " />
-            <marker date="1516899855882" expanded="true" signature="2808:2967" ph="ALTER TABLE user... " />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -995,7 +847,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="630">
           <caret line="45" column="5" lean-forward="false" selection-start-line="45" selection-start-column="5" selection-end-line="45" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1019,9 +870,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="249">
           <caret line="63" column="9" lean-forward="false" selection-start-line="54" selection-start-column="8" selection-end-line="63" selection-end-column="9" />
-          <folding>
-            <element signature="e#12#32#0#Twig" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1029,9 +877,21 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="452">
           <caret line="129" column="5" lean-forward="false" selection-start-line="129" selection-start-column="5" selection-end-line="129" selection-end-column="5" />
-          <folding>
-            <element signature="e#12#32#0#Twig" expanded="true" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/admin/media/gallery.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="86" column="26" lean-forward="false" selection-start-line="86" selection-start-column="26" selection-end-line="86" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Controller/Media/GalleryController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1620">
+          <caret line="120" column="17" lean-forward="false" selection-start-line="120" selection-start-column="17" selection-end-line="120" selection-end-column="17" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1040,26 +900,41 @@
         <state relative-caret-position="335">
           <caret line="177" column="48" lean-forward="false" selection-start-line="177" selection-start-column="48" selection-end-line="177" selection-end-column="48" />
           <folding>
-            <element signature="e#36#61#0#PHP" expanded="true" />
+            <element signature="e#36#61#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/admin/media/gallery.html.twig">
+    <entry file="file://$PROJECT_DIR$/src/Entity/User/User.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="86" column="26" lean-forward="false" selection-start-line="86" selection-start-column="26" selection-end-line="86" selection-end-column="26" />
+        <state relative-caret-position="385">
+          <caret line="246" column="5" lean-forward="false" selection-start-line="246" selection-start-column="5" selection-end-line="246" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Entity/Alumni.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="26" lean-forward="false" selection-start-line="13" selection-start-column="26" selection-end-line="13" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Controller/Alumni/AlumniController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="23" column="107" lean-forward="false" selection-start-line="23" selection-start-column="107" selection-end-line="23" selection-end-column="107" />
           <folding>
-            <element signature="e#12#32#0#Twig" expanded="true" />
-            <element signature="e#2077#2094#0#HTML" expanded="true" />
+            <element signature="e#41#79#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Controller/Media/GalleryController.php">
+    <entry file="file://$PROJECT_DIR$/src/Controller/Alumni/Form.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="120" column="17" lean-forward="false" selection-start-line="120" selection-start-column="17" selection-end-line="120" selection-end-column="17" />
+        <state relative-caret-position="373">
+          <caret line="29" column="24" lean-forward="true" selection-start-line="29" selection-start-column="24" selection-end-line="29" selection-end-column="24" />
           <folding />
         </state>
       </provider>

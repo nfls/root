@@ -1,0 +1,60 @@
+[
+	{
+		"name": "状态",
+		"key": "status",
+		"type": "select",
+		"values": [
+			{
+				"name":"初中在读",
+				"value":"junior"
+			},{
+				"name":"高中在读",
+				"value":"senior"
+			},{
+				"name":"已毕业",
+				"value":"graduated"
+			}
+		]
+	},{
+		"name": "中文名",
+		"key": "chineseName",
+		"type": "input",
+		"validate": {
+			"required": true,
+			"minLength": 2,
+			"maxLength": 4
+		}
+	},{
+		"name": "英文名",
+		"key": "englishName",
+		"type": "input",
+		"validate": {
+			"required": true,
+			"minLength": 2,
+			"maxLength": 20
+		}
+	},{
+		"name": "生日",
+		"key": "birthday",
+		"type": "date",
+		"validate": {
+			"required": true
+		}
+	},{
+		"name": "性别",
+		"key": "gender",
+		"type": "select",
+		"values": [
+			{
+				"name":"其他",
+				"value":"other"
+			},{
+				"name":"男",
+				"value":"male"
+			},{
+				"name":"女",
+				"value":"female"
+			}
+		]
+	}
+]

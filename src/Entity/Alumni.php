@@ -65,13 +65,6 @@ class Alumni
      */
     private $juniorClass;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=150, nullable=true)
-     */
-    private $juniorRemark;
-
      /**
       * @var integer
       *
@@ -92,13 +85,6 @@ class Alumni
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $seniorClass;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=150, nullable=true)
-     */
-    private $seniorRemark;
 
     /**
      * @var string
@@ -141,6 +127,13 @@ class Alumni
      * @ORM\Column(type="json",length=256)
      */
     private $location;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=300, nullable=true)
+     */
+    private $remark;
 
     // add your own fields
 }
