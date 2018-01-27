@@ -56,6 +56,13 @@ class CodeController extends AbstractController
     }
 
     /**
+     * @Route("/code/available", methods="GET")
+     */
+    public function getAvailableRegion(Request $request){
+        return $this->response->response(json_decode(file_get_contents($this->get('kernel')->getRootDir()."/Controller/User/Phone.json")));
+    }
+
+    /**
      * @Route("/code/register", methods="POST", name="sendRegisterCode")
      */
     public function sendRegisterCode(Request $request){

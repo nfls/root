@@ -142,7 +142,7 @@
             this.axios.get("/alumni/countries").then((response) => {
                 this.countries = response.data["data"]
             })
-            this.$emit('input', "实名认证")
+            this.$emit('input', "实名认证 - 表格填写")
         },
         methods: {
             getValidationClass (fieldName) {

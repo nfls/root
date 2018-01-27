@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import App from '../components/Components/App'
 import Login from '../components/User/Login'
+import Register from '../components/User/Register'
 import Dashboard from '../components/User/Dashboard'
 import Vote from '../components/School/Vote'
 import Realname from '../components/Alumni/Realname'
@@ -18,6 +19,9 @@ export default new Router({
         {
             path: '/user/login',
             component: Login
+        },{
+            path: '/user/register',
+            component: Register
         }, {
             path: '/',
             component: App,
