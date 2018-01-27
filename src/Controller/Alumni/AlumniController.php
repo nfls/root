@@ -20,6 +20,13 @@ class AlumniController extends AbstractController
     }
 
     /**
+     * @Route("alumni/countries", methods="GET")
+     */
+    public function getCountries(){
+        return $this->response->response(json_decode(file_get_contents($this->get('kernel')->getRootDir()."/Model/Countries.json")));
+    }
+
+    /**
      * @Route("alumni/new", methods="POST")
      */
     public function newForm(Request $request){
@@ -36,9 +43,18 @@ class AlumniController extends AbstractController
     }
 
     /**
-     * @Route("alumni/submit",methods="POST")
+     * @Route("alumni/save",methods="POST")
      */
     public function submitForm(Request $request){
+        $id = $request->request->get("id");
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository(Alumni::class);
+        /**
+         * @var Alumni $form
+         */
+        $form = $repo->findOneBy(["id"=>$id,"status"=>Alumni::STATUS_NOT_SUBMITTED]);
+        $form->setChineseName($request->request->get("chineseName"));
+        $form->setEnglishName($request->request->get("englishName"));
 
     }
 }

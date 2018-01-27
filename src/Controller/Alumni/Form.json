@@ -1,5 +1,9 @@
 [
   {
+    "type": "divider",
+    "name": "那我们先从最基础的开始吧！"
+  },
+  {
     "name": "学位状态",
     "key": "status",
     "type": "select",
@@ -72,6 +76,10 @@
     }
   },
   {
+    "type": "divider",
+    "name": "下面是你在南外的经历，请认真填写！"
+  },
+  {
     "name": "初中学校",
     "key": "juniorSchool",
     "type": "select",
@@ -82,7 +90,11 @@
       },
       {
         "name": "其他学校",
-        "value": "other"
+        "value": "other",
+        "hidden": [
+          "juniorRegistration",
+          "juniorClass"
+        ]
       }
     ],
     "validate": {
@@ -136,7 +148,11 @@
       },
       {
         "name": "其他学校",
-        "value": "other"
+        "value": "other",
+        "hidden": [
+          "seniorRegistration",
+          "seniorClass"
+        ]
       }
     ],
     "validate": {
@@ -162,6 +178,10 @@
       "minValue": 1,
       "maxValue": 8
     }
+  },
+  {
+    "type": "divider",
+    "name": "下面是你毕业后的状态，一定范围内的校友们都可以看到的哦"
   },
   {
     "name": "大学信息",
@@ -196,12 +216,32 @@
     }
   },
   {
+    "name": "常驻国家或地区",
+    "key": "country",
+    "type": "country",
+    "validate": {
+      "required": true
+    }
+  },
+  {
+    "name": "常驻地点",
+    "key": "location",
+    "type": "input",
+    "validate": {
+      "required": true
+    }
+  },
+  {
     "name": "在线联系方式",
     "key": "onlineContact",
     "type": "textarea",
     "validate": {
       "required": true
     }
+  },
+  {
+    "type": "divider",
+    "name": "有什么需要我们注意的吗？"
   },
   {
     "name": "备注",

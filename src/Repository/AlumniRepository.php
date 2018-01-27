@@ -12,4 +12,5 @@ class AlumniRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Alumni::class);
     }
+
 }
