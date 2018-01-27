@@ -5,6 +5,7 @@ import Login from '../components/User/Login'
 import Dashboard from '../components/User/Dashboard'
 import Vote from '../components/School/Vote'
 import Realname from '../components/Alumni/Realname'
+import Form from '../components/Alumni/Form'
 import Gallery from '../components/Media/Gallery'
 import Jump from '../components/Jump'
 import Album from '../components/Media/Album'
@@ -30,6 +31,9 @@ export default new Router({
                 }, {
                     path: 'alumni/auth',
                     component: Realname
+                }, {
+                    path: 'alumni/auth/:id',
+                    component: Form
                 }, {
                     path: 'media/gallery',
                     component: Gallery

@@ -5,20 +5,42 @@
   },
   {
     "name": "学位状态",
-    "key": "status",
+    "key": "userStatus",
     "type": "select",
     "values": [
       {
         "name": "初中在读",
-        "value": "junior"
+        "value": "0",
+        "hidden": [
+          "seniorSchool",
+          "seniorClass",
+          "seniorRegistration",
+          "university",
+          "major",
+          "workInfo"
+        ]
       },
       {
         "name": "高中在读",
-        "value": "senior"
+        "value": "1",
+        "hidden": [
+          "university",
+          "major",
+          "workInfo"
+        ]
       },
       {
-        "name": "高中已毕业",
-        "value": "graduated"
+        "name": "大学在读",
+        "value": "2",
+        "hidden": [
+          "workInfo"
+        ]
+      },
+      {
+        "name": "已工作",
+        "value": "3",
+        "hidden": [
+        ]
       }
     ],
     "validate": {
@@ -60,15 +82,15 @@
     "values": [
       {
         "name": "其他",
-        "value": "other"
+        "value": "0"
       },
       {
         "name": "男",
-        "value": "male"
+        "value": "1"
       },
       {
         "name": "女",
-        "value": "female"
+        "value": "2"
       }
     ],
     "validate": {
@@ -77,7 +99,7 @@
   },
   {
     "type": "divider",
-    "name": "下面是你在南外的经历，请认真填写！"
+    "name": "你在南外的经历，请认真填写！"
   },
   {
     "name": "初中学校",
@@ -86,11 +108,11 @@
     "values": [
       {
         "name": "南外初中",
-        "value": "nfls"
+        "value": "1"
       },
       {
         "name": "其他学校",
-        "value": "other",
+        "value": "0",
         "hidden": [
           "juniorRegistration",
           "juniorClass"
@@ -107,8 +129,7 @@
     "type": "input",
     "validate": {
       "required": true,
-      "minValue": 1963,
-      "maxValue": 2017
+      "minValue": 1963
     }
   },
   {
@@ -128,27 +149,27 @@
     "values": [
       {
         "name": "南外普高",
-        "value": "nfls_senior"
+        "value": "5"
       },
       {
         "name": "南外中加国际部",
-        "value": "nfls_bca"
+        "value": "4"
       },
       {
         "name": "南外剑桥国际部",
-        "value": "nfls_alevel"
+        "value": "3"
       },
       {
         "name": "南外IB国际部",
-        "value": "nfls_ib"
+        "value": "2"
       },
       {
         "name": "南外中澳国际部",
-        "value": "nfls_australia"
+        "value": "1"
       },
       {
         "name": "其他学校",
-        "value": "other",
+        "value": "0",
         "hidden": [
           "seniorRegistration",
           "seniorClass"
@@ -165,8 +186,7 @@
     "type": "input",
     "validate": {
       "required": true,
-      "minValue": 1963,
-      "maxValue": 2017
+      "minValue": 1963
     }
   },
   {
@@ -181,7 +201,7 @@
   },
   {
     "type": "divider",
-    "name": "下面是你毕业后的状态，一定范围内的校友们都可以看到的哦"
+    "name": "你现在的状态，你指定范围内的校友们都可以看到的哦"
   },
   {
     "name": "大学信息",

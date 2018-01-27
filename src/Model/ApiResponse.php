@@ -2,6 +2,7 @@
 namespace App\Model;
 use App\Model\Normalizer\PhotoNormalizer;
 use App\Model\Normalizer\UserNormalizer;
+use App\Model\Normalizer\UuidNormalizer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
@@ -23,8 +24,9 @@ class ApiResponse {
         $dateNormalizer = new DateTimeNormalizer();
         $photoNormalizer = new PhotoNormalizer();
         $userNormalizer = new UserNormalizer();
-        $this->rawSerializer = new Serializer([$dateNormalizer,$normalizer],[$encoder]);
-        $this->serializer = new Serializer([$photoNormalizer,$dateNormalizer,$userNormalizer,$normalizer],[$encoder]);
+        $uuidNormalizer = new UuidNormalizer();
+        $this->rawSerializer = new Serializer([$uuidNormalizer,$dateNormalizer,$normalizer],[$encoder]);
+        $this->serializer = new Serializer([$photoNormalizer,$uuidNormalizer,$dateNormalizer,$userNormalizer,$normalizer],[$encoder]);
     }
 
     public function response($data,$code = 200){

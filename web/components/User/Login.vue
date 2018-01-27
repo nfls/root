@@ -19,7 +19,6 @@
                                 <span class="md-error" v-if="!$v.form.username.required">Username is required.</span>
                             </md-field>
                         </div>
-
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('password')">
                                 <label for="password">Password</label>

@@ -13,4 +13,12 @@ class AlumniRepository extends ServiceEntityRepository
         parent::__construct($registry, Alumni::class);
     }
 
+    public function getAuths($user){
+        return $this->createQueryBuilder("u")
+            ->where("u.user = :user")
+            ->setParameter("user",$user)
+            ->orderBy("u.submitTime","DESC")
+            ->getQuery()
+            ->getResult();
+    }
 }

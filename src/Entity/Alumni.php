@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Entity\User\User;
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Doctrine\UuidType;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Alumni
 {
     /**
-     * @var UuidType
+     * @var Uuid
      *
      * @ORM\Id
      * @ORM\Column(type="uuid", unique=true)
@@ -30,16 +30,16 @@ class Alumni
     private $user;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      *
      * @ORM\Column(type="datetimetz", nullable=true)
      */
     private $submitTime;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(type="smallint")
      */
     private $status;
 
@@ -51,112 +51,119 @@ class Alumni
     const STATUS_PASSED = 5;
 
     /**
-     * @var string
+     * @var integer
+     *
+     * @ORM\Column(type="smallint")
+     */
+    private $userStatus;
+
+    /**
+     * @var string|null
      * @Assert\NotBlank(message="alumni.error.incomplete")
      * @ORM\Column(type="string", nullable=true)
      */
     private $chineseName;
 
     /**
-     * @var string
+     * @var string|null
      * @Assert\NotBlank(message="alumni.error.incomplete")
      * @ORM\Column(type="string", nullable=true)
      */
     private $englishName;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      * @Assert\NotBlank(message="alumni.error.incomplete")
      * @ORM\Column(type="date", nullable=true)
      */
     private $birthday;
 
     /**
-     * @var integer
+     * @var integer|null
      * @Assert\NotBlank(message="alumni.error.incomplete")
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $gender;
 
     /**
-     * @var integer
+     * @var integer|null
      * @Assert\NotBlank(message="alumni.error.incomplete")
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $juniorSchool;
 
     /**
-     * @var integer
+     * @var integer|null
      *
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $juniorRegistration;
 
     /**
-     * @var integer
+     * @var integer|null
      *
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $juniorClass;
 
     /**
-     * @var integer
+     * @var integer|null
      * @Assert\NotBlank(message="alumni.error.incomplete")
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $seniorSchool;
 
     /**
-     * @var integer
+     * @var integer|null
      *
      * @ORM\Column(type="integer", nullable=true)
      */
     private $seniorRegistration;
 
     /**
-     * @var integer
+     * @var integer|null
      *
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $seniorClass;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string", nullable=true)
      */
     private $university;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string", nullable=true)
      */
     private $major;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string",length=500, nullable=true)
      */
     private $workInfo;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string",length=500, nullable=true)
      */
     private $personalInfo;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string",length=100, nullable=true)
      */
     private $onlineContact;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string",length=2, nullable=true)
      */
@@ -164,28 +171,23 @@ class Alumni
     private $country;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string",length=256, nullable=true)
      */
     private $location;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string", length=300, nullable=true)
      */
     private $remark;
 
-    public function __construct()
-    {
-        $this->status = 0;
-    }
-
     /**
-     * @return UuidType
+     * @return Uuid
      */
-    public function getId(): UuidType
+    public function getId(): Uuid
     {
         return $this->id;
     }
@@ -207,315 +209,334 @@ class Alumni
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getSubmitTime(): \DateTime
+    public function getSubmitTime(): ?\DateTime
     {
         return $this->submitTime;
     }
 
     /**
-     * @return bool
+     * @return int
      */
-    public function isStatus(): bool
+    public function isStatus(): int
     {
         return $this->status;
     }
 
     /**
-     * @param bool $status
+     * @param int $status
      */
-    public function setStatus(bool $status): void
+    public function setStatus(int $status): void
     {
         $this->status = $status;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getChineseName(): string
+    public function getChineseName(): ?string
     {
         return $this->chineseName;
     }
 
     /**
-     * @param string $chineseName
+     * @param null|string $chineseName
      */
-    public function setChineseName(string $chineseName): void
+    public function setChineseName(?string $chineseName): void
     {
         $this->chineseName = $chineseName;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getEnglishName(): string
+    public function getEnglishName(): ?string
     {
         return $this->englishName;
     }
 
     /**
-     * @param string $englishName
+     * @param null|string $englishName
      */
-    public function setEnglishName(string $englishName): void
+    public function setEnglishName(?string $englishName): void
     {
         $this->englishName = $englishName;
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getBirthday(): \DateTime
+    public function getBirthday(): ?\DateTime
     {
         return $this->birthday;
     }
 
     /**
-     * @param \DateTime $birthday
+     * @param \DateTime|null $birthday
      */
-    public function setBirthday(\DateTime $birthday): void
+    public function setBirthday(?\DateTime $birthday): void
     {
         $this->birthday = $birthday;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getGender(): int
+    public function getGender(): ?int
     {
         return $this->gender;
     }
 
     /**
-     * @param int $gender
+     * @param int|null $gender
      */
-    public function setGender(int $gender): void
+    public function setGender(?int $gender): void
     {
         $this->gender = $gender;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getJuniorSchool(): int
+    public function getJuniorSchool(): ?int
     {
         return $this->juniorSchool;
     }
 
     /**
-     * @param int $juniorSchool
+     * @param int|null $juniorSchool
      */
-    public function setJuniorSchool(int $juniorSchool): void
+    public function setJuniorSchool(?int $juniorSchool): void
     {
         $this->juniorSchool = $juniorSchool;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getJuniorRegistration(): int
+    public function getJuniorRegistration(): ?int
     {
         return $this->juniorRegistration;
     }
 
     /**
-     * @param int $juniorRegistration
+     * @param int|null $juniorRegistration
      */
-    public function setJuniorRegistration(int $juniorRegistration): void
+    public function setJuniorRegistration(?int $juniorRegistration): void
     {
         $this->juniorRegistration = $juniorRegistration;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getJuniorClass(): int
+    public function getJuniorClass(): ?int
     {
         return $this->juniorClass;
     }
 
     /**
-     * @param int $juniorClass
+     * @param int|null $juniorClass
      */
-    public function setJuniorClass(int $juniorClass): void
+    public function setJuniorClass(?int $juniorClass): void
     {
         $this->juniorClass = $juniorClass;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getSeniorSchool(): int
+    public function getSeniorSchool(): ?int
     {
         return $this->seniorSchool;
     }
 
     /**
-     * @param int $seniorSchool
+     * @param int|null $seniorSchool
      */
-    public function setSeniorSchool(int $seniorSchool): void
+    public function setSeniorSchool(?int $seniorSchool): void
     {
         $this->seniorSchool = $seniorSchool;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getSeniorRegistration(): int
+    public function getSeniorRegistration(): ?int
     {
         return $this->seniorRegistration;
     }
 
     /**
-     * @param int $seniorRegistration
+     * @param int|null $seniorRegistration
      */
-    public function setSeniorRegistration(int $seniorRegistration): void
+    public function setSeniorRegistration(?int $seniorRegistration): void
     {
         $this->seniorRegistration = $seniorRegistration;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getSeniorClass(): int
+    public function getSeniorClass(): ?int
     {
         return $this->seniorClass;
     }
 
     /**
-     * @param int $seniorClass
+     * @param int|null $seniorClass
      */
-    public function setSeniorClass(int $seniorClass): void
+    public function setSeniorClass(?int $seniorClass): void
     {
         $this->seniorClass = $seniorClass;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getUniversity(): string
+    public function getUniversity(): ?string
     {
         return $this->university;
     }
 
     /**
-     * @param string $university
+     * @param null|string $university
      */
-    public function setUniversity(string $university): void
+    public function setUniversity(?string $university): void
     {
         $this->university = $university;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getMajor(): string
+    public function getMajor(): ?string
     {
         return $this->major;
     }
 
     /**
-     * @param string $major
+     * @param null|string $major
      */
-    public function setMajor(string $major): void
+    public function setMajor(?string $major): void
     {
         $this->major = $major;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getWorkInfo(): string
+    public function getWorkInfo(): ?string
     {
         return $this->workInfo;
     }
 
     /**
-     * @param string $workInfo
+     * @param null|string $workInfo
      */
-    public function setWorkInfo(string $workInfo): void
+    public function setWorkInfo(?string $workInfo): void
     {
         $this->workInfo = $workInfo;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getPersonalInfo(): string
+    public function getPersonalInfo(): ?string
     {
         return $this->personalInfo;
     }
 
     /**
-     * @param string $personalInfo
+     * @param null|string $personalInfo
      */
-    public function setPersonalInfo(string $personalInfo): void
+    public function setPersonalInfo(?string $personalInfo): void
     {
         $this->personalInfo = $personalInfo;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getOnlineContact(): string
+    public function getOnlineContact(): ?string
     {
         return $this->onlineContact;
     }
 
     /**
-     * @param string $onlineContact
+     * @param null|string $onlineContact
      */
-    public function setOnlineContact(string $onlineContact): void
+    public function setOnlineContact(?string $onlineContact): void
     {
         $this->onlineContact = $onlineContact;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getCountry(): string
+    public function getCountry(): ?string
     {
         return $this->country;
     }
 
     /**
-     * @param string $country
+     * @param null|string $country
      */
-    public function setCountry(string $country): void
+    public function setCountry(?string $country): void
     {
         $this->country = $country;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getLocation(): string
+    public function getLocation(): ?string
     {
         return $this->location;
     }
 
     /**
-     * @param string $location
+     * @param null|string $location
      */
-    public function setLocation(string $location): void
+    public function setLocation(?string $location): void
     {
         $this->location = $location;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getRemark(): string
+    public function getRemark(): ?string
     {
         return $this->remark;
     }
 
     /**
-     * @param string $remark
+     * @param null|string $remark
      */
-    public function setRemark(string $remark): void
+    public function setRemark(?string $remark): void
     {
         $this->remark = $remark;
     }
+
+    /**
+     * @return int
+     */
+    public function getUserStatus(): int
+    {
+        return $this->userStatus;
+    }
+
+    /**
+     * @param int $userStatus
+     */
+    public function setUserStatus(int $userStatus): void
+    {
+        $this->userStatus = $userStatus;
+    }
+
+
+
 
 }
