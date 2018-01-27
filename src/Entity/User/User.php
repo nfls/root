@@ -95,11 +95,19 @@ class User implements UserInterface,UserEntityInterface
      */
     private $joinTime;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\Alumni", mappedBy="user")
+     */
+    private $authTickets;
+
 
     public function __construct()
     {
         $this->joinTime = new \DateTime();
         $this->readTime = new \DateTime();
+        $this->authTickets = new ArrayCollection();
     }
 
     /**

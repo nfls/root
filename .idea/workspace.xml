@@ -2,14 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1ce7cc7b-a482-444b-909c-be26dac887ed" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/public/vue/vue.css" afterPath="$PROJECT_DIR$/public/vue/vue.css" />
-      <change beforePath="$PROJECT_DIR$/public/vue/vue.js" afterPath="$PROJECT_DIR$/public/vue/vue.js" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/Alumni/Form.json" afterPath="$PROJECT_DIR$/src/Controller/Alumni/Form.json" />
+      <change beforePath="$PROJECT_DIR$/public/README.md" afterPath="" />
       <change beforePath="$PROJECT_DIR$/src/Entity/Alumni.php" afterPath="$PROJECT_DIR$/src/Entity/Alumni.php" />
-      <change beforePath="$PROJECT_DIR$/web/vue/components/Alumni/Realname.vue" afterPath="$PROJECT_DIR$/web/vue/components/Alumni/Realname.vue" />
-      <change beforePath="$PROJECT_DIR$/web/vue/components/Components/App.vue" afterPath="$PROJECT_DIR$/web/vue/components/Components/App.vue" />
-      <change beforePath="$PROJECT_DIR$/web/vue/router/index.js" afterPath="$PROJECT_DIR$/web/vue/router/index.js" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/User/User.php" afterPath="$PROJECT_DIR$/src/Entity/User/User.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -68,8 +65,20 @@
       <file leaf-file-name="Alumni.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Entity/Alumni.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="348">
-              <caret line="118" column="6" lean-forward="false" selection-start-line="118" selection-start-column="6" selection-end-line="118" selection-end-column="6" />
+            <state relative-caret-position="651">
+              <caret line="168" column="0" lean-forward="true" selection-start-line="168" selection-start-column="0" selection-end-line="168" selection-end-column="0" />
+              <folding>
+                <element signature="e#30#55#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="User.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Entity/User/User.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="683">
+              <caret line="109" column="51" lean-forward="false" selection-start-line="109" selection-start-column="51" selection-end-line="109" selection-end-column="51" />
               <folding />
             </state>
           </provider>
@@ -161,7 +170,6 @@
         <option value="$PROJECT_DIR$/templates/index.html.twig" />
         <option value="$PROJECT_DIR$/src/Entity/Media/Photo.php" />
         <option value="$PROJECT_DIR$/src/Entity/Media/Comment.php" />
-        <option value="$PROJECT_DIR$/src/Entity/User/User.php" />
         <option value="$PROJECT_DIR$/src/Migrations/Version20180125170308.php" />
         <option value="$PROJECT_DIR$/src/Model/Normalizer/PhotoNormalizer.php" />
         <option value="$PROJECT_DIR$/src/Model/ApiResponse.php" />
@@ -170,8 +178,9 @@
         <option value="$PROJECT_DIR$/templates/admin/media/gallery.html.twig" />
         <option value="$PROJECT_DIR$/src/Controller/Media/GalleryController.php" />
         <option value="$PROJECT_DIR$/src/Controller/Alumni/AlumniController.php" />
-        <option value="$PROJECT_DIR$/src/Entity/Alumni.php" />
         <option value="$PROJECT_DIR$/src/Controller/Alumni/Form.json" />
+        <option value="$PROJECT_DIR$/src/Entity/User/User.php" />
+        <option value="$PROJECT_DIR$/src/Entity/Alumni.php" />
       </list>
     </option>
   </component>
@@ -185,9 +194,9 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
-  <component name="ProjectFrameBounds">
-    <option name="x" value="1010" />
-    <option name="y" value="72" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="20" />
+    <option name="y" value="22" />
     <option name="width" value="1920" />
     <option name="height" value="978" />
   </component>
@@ -500,12 +509,12 @@
       <workItem from="1516858898311" duration="61000" />
       <workItem from="1516864200288" duration="3067000" />
       <workItem from="1516874768823" duration="10065000" />
-      <workItem from="1516954247953" duration="5871000" />
+      <workItem from="1516954247953" duration="7585000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="297118000" />
+    <option name="totallyTimeSpent" value="298832000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -517,7 +526,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1010" y="72" width="1920" height="978" extended-state="0" />
+    <frame x="0" y="22" width="1920" height="978" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.246875" sideWeight="0.49518073" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="combo" />
@@ -911,14 +921,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Entity/User/User.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="246" column="5" lean-forward="false" selection-start-line="246" selection-start-column="5" selection-end-line="246" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Controller/Alumni/AlumniController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
@@ -937,19 +939,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Entity/Alumni.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="118" column="6" lean-forward="false" selection-start-line="118" selection-start-column="6" selection-end-line="118" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Controller/Alumni/Form.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="561">
           <caret line="207" column="18" lean-forward="false" selection-start-line="207" selection-start-column="18" selection-end-line="207" selection-end-column="18" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Entity/User/User.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="683">
+          <caret line="109" column="51" lean-forward="false" selection-start-line="109" selection-start-column="51" selection-end-line="109" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Entity/Alumni.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="651">
+          <caret line="168" column="0" lean-forward="true" selection-start-line="168" selection-start-column="0" selection-end-line="168" selection-end-column="0" />
+          <folding>
+            <element signature="e#30#55#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

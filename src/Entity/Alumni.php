@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\User\User;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidType;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AlumniRepository")
@@ -10,11 +12,35 @@ use Doctrine\ORM\Mapping as ORM;
 class Alumni
 {
     /**
+     * @var UuidType
+     *
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private $id;
+
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\User\User",inversedBy="authTickets")
+     */
+    private $user;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetimetz")
+     */
+    private $submitTime;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(type="smallint")
+     */
+    private $status;
 
     /**
      * @var string
@@ -135,5 +161,8 @@ class Alumni
      */
     private $remark;
 
-    // add your own fields
+    public function __construct()
+    {
+        $this->status = 0;
+    }
 }
