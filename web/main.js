@@ -7,6 +7,8 @@ import VueMaterial from 'vue-material'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VuePreview from 'vue-preview'
+import 'vue-material/dist/vue-material.min.css'
+
 
 
 Vue.use(VuePreview)

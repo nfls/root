@@ -6,6 +6,7 @@
     "moment": "^2.20.1",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",
+    "uglifyjs-webpack-plugin": "^1.1.6",
     "vue": "^2.5.13",
     "vue-axios": "^2.0.2",
     "vue-loader": "^13.7.0",
