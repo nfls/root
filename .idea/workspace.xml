@@ -1,33 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1ce7cc7b-a482-444b-909c-be26dac887ed" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/Alumni/AlumniController.php" afterPath="$PROJECT_DIR$/src/Controller/Alumni/AlumniController.php" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Alumni.php" afterPath="$PROJECT_DIR$/src/Entity/Alumni.php" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180102152523.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180102164721.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180103043545.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180104161306.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180106104245.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180106104304.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180114151255.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180115064108.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180116015432.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180116020641.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180119070243.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180120155656.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180123154242.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180123161153.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180124000858.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180124040717.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180124040757.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180125073551.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180125162638.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Migrations/Version20180125170308.php" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/AlumniRepository.php" afterPath="$PROJECT_DIR$/src/Repository/AlumniRepository.php" />
-      <change beforePath="$PROJECT_DIR$/web/components/Alumni/Realname.vue" afterPath="$PROJECT_DIR$/web/components/Alumni/Realname.vue" />
-    </list>
+    <list default="true" id="1ce7cc7b-a482-444b-909c-be26dac887ed" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -107,8 +81,8 @@
       <file leaf-file-name="AlumniController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Controller/Alumni/AlumniController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="570">
-              <caret line="38" column="45" lean-forward="false" selection-start-line="38" selection-start-column="45" selection-end-line="38" selection-end-column="45" />
+            <state relative-caret-position="405">
+              <caret line="27" column="41" lean-forward="true" selection-start-line="27" selection-start-column="41" selection-end-line="27" selection-end-column="41" />
               <folding>
                 <element signature="e#41#79#0#PHP" expanded="true" />
               </folding>
@@ -453,12 +427,12 @@
       <workItem from="1516858898311" duration="61000" />
       <workItem from="1516864200288" duration="3067000" />
       <workItem from="1516874768823" duration="10065000" />
-      <workItem from="1516954247953" duration="10087000" />
+      <workItem from="1516954247953" duration="10116000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="301334000" />
+    <option name="totallyTimeSpent" value="301363000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -471,8 +445,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1920" height="978" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.246875" sideWeight="0.49518073" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.246875" sideWeight="0.49518073" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.111235954" sideWeight="0.5228967" order="7" side_tool="true" content_ui="tabs" />
@@ -904,8 +879,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Controller/Alumni/AlumniController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="38" column="45" lean-forward="false" selection-start-line="38" selection-start-column="45" selection-end-line="38" selection-end-column="45" />
+        <state relative-caret-position="405">
+          <caret line="27" column="41" lean-forward="true" selection-start-line="27" selection-start-column="41" selection-end-line="27" selection-end-column="41" />
           <folding>
             <element signature="e#41#79#0#PHP" expanded="true" />
           </folding>
