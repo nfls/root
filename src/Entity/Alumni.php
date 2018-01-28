@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AlumniRepository")
@@ -60,112 +61,120 @@ class Alumni
 
     /**
      * @var string|null
-     *
+     * @Assert\NotBlank(message="alumni.auth.error.chineseName")
      * @ORM\Column(type="string", nullable=true)
      */
     private $chineseName;
 
     /**
      * @var string|null
-     *
+     * @Assert\NotBlank(message="alumni.auth.error.englishName")
      * @ORM\Column(type="string", nullable=true)
      */
     private $englishName;
 
     /**
      * @var \DateTime|null
-     *
+     * @Assert\Date(message="alumni.auth.error.birthday")
      * @ORM\Column(type="date", nullable=true)
      */
     private $birthday;
 
     /**
      * @var integer|null
-     *
+     * @Assert\Choice(choices={0,1},message="alumni.auth.error.gender.invalid")
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $gender;
 
     /**
      * @var integer|null
-     *
+     * @Assert\Choice(choices={0,1,2},message="alumni.auth.error.juniorSchool.invalid")
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $juniorSchool;
 
     /**
      * @var integer|null
-     *
+     * @Assert\GreaterThanOrEqual(value=1963,message="alumni.auth.error.juniorRegistration.lowerBound")
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $juniorRegistration;
 
     /**
      * @var integer|null
-     *
+     * @Assert\Range(min=1,
+     *     max=12,
+     *     minMessage="alumni.auth.error.juniorClass.lowerBound",
+     *     maxMessage="alumni.auth.error.juniorClass.upperBound",
+     *     invalidMessage="alumni.auth.error.juniorClass.invalid")
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $juniorClass;
 
     /**
      * @var integer|null
-     *
+     * @Assert\Choice(choices={0,1,2,3,4,5},message="alumni.auth.error.seniorSchool.invalid")
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $seniorSchool;
 
     /**
      * @var integer|null
-     *
+     * @Assert\GreaterThanOrEqual(value=1963,message="alumni.auth.error.juniorRegistration.lowerBound")
      * @ORM\Column(type="integer", nullable=true)
      */
     private $seniorRegistration;
 
     /**
      * @var integer|null
-     *
+     * @Assert\Range(min=1,
+     *     max=8,
+     *     minMessage="alumni.auth.error.juniorClass.lowerBound",
+     *     maxMessage="alumni.auth.error.juniorClass.upperBound",
+     *     invalidMessage="alumni.auth.error.juniorClass.invalid")
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $seniorClass;
 
     /**
      * @var string|null
-     *
+     * @Assert\NotBlank(message="alumni.auth.error.university.blank")
      * @ORM\Column(type="string", nullable=true)
      */
     private $university;
 
     /**
      * @var string|null
-     *
+     * @Assert\NotBlank(message="alumni.auth.error.major.blank")
      * @ORM\Column(type="string", nullable=true)
      */
     private $major;
 
     /**
      * @var string|null
-     *
+     * @Assert\NotBlank(message="alumni.auth.error.workInfo.blank")
      * @ORM\Column(type="string",length=500, nullable=true)
      */
     private $workInfo;
 
     /**
      * @var string|null
-     *
+     *  @Assert\NotBlank(message="alumni.auth.error.personalInfo.blank")
      * @ORM\Column(type="string",length=500, nullable=true)
      */
     private $personalInfo;
 
     /**
      * @var string|null
-     *
+     * @Assert\NotBlank(message="alumni.auth.error.onlineContact.blank")
      * @ORM\Column(type="string",length=100, nullable=true)
      */
     private $onlineContact;
 
     /**
      * @var string|null
-     *
+     * //TODO country
      * @ORM\Column(type="string",length=2, nullable=true)
      */
 
@@ -173,7 +182,7 @@ class Alumni
 
     /**
      * @var string|null
-     *
+     * @Assert\NotBlank(message="alumni.auth.error.location.blank")
      * @ORM\Column(type="string",length=256, nullable=true)
      */
     private $location;
@@ -537,11 +546,17 @@ class Alumni
         $this->userStatus = $userStatus;
     }
 
-    public function validate(){
-        $errorMessages = [];
-        if()
+    /**
+     * @Assert\IsTrue(message="alumni.auth.error.notInNfls")
+     */
+    public function isAtNflsOnce(){
+        if($this->juniorSchool > 0)
+            return true;
+        if(null != $this->seniorSchool && $this->seniorSchool > 0)
+            return true;
+        else
+            return false;
     }
-
 
 
 }

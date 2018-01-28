@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AlumniController extends AbstractController
 {
@@ -98,6 +99,25 @@ class AlumniController extends AbstractController
         $em->flush();
 
         return $this->response->response(null);
+    }
+
+    /**
+     * @Route("alumni/submit", methods="POST")
+     */
+    public function submitForm(Request $request,ValidatorInterface $validator){
+        $id = $request->query->get("id");
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository(Alumni::class);
+        /**
+         * @var Alumni $form
+         */
+        $form = $repo->findOneBy(["id"=>$id,"status"=>Alumni::STATUS_NOT_SUBMITTED,"user"=>$this->getUser()]);
+        $errors = $validator->validate($form);
+        $error_ids = [];
+        foreach($errors as $error){
+            array_push($error_ids,$error->getMessage());
+        }
+        return $this->response->responseEntity($error_ids);
     }
 
 
