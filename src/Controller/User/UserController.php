@@ -97,6 +97,8 @@ class UserController extends AbstractController
      * @Route("/user/current", name="User(Current)", methods="GET")
      */
     public function current(){
+        if(null === $this->getUser())
+            return $this->response->response(null,Response::HTTP_NO_CONTENT);
         return $this->response->responseUser($this->getUser()->getInfoArray());
     }
 

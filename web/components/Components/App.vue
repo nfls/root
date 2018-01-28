@@ -15,12 +15,12 @@
                             <md-icon>more_vert</md-icon>
                         </md-button>
                         <md-menu-content>
-                            <md-list>
+                            <md-list v-if="loggedIn">
                                 <md-list-item>
                                     <md-avatar>
                                         <img src="https://placeimg.com/40/40/people/5" alt="People">
                                     </md-avatar>
-                                    <span class="md-list-item-text">这是用户名</span>
+                                    <span class="md-list-item-text">{{username}}</span>
                                 </md-list-item>
                                 <md-divider class="md-inset"></md-divider>
                                 <md-list-item>
@@ -30,6 +30,12 @@
                                 <md-list-item>
                                     <md-icon>exit_to_app</md-icon>
                                     <span class="md-list-item-text">Logout</span>
+                                </md-list-item>
+                            </md-list>
+                            <md-list v-else>
+                                <md-list-item to="/user/login">
+                                    <md-icon>flight_land</md-icon>
+                                    <span class="md-list-item-text">Login</span>
                                 </md-list-item>
                             </md-list>
                         </md-menu-content>
@@ -123,8 +129,20 @@
         data: () => ({
             menuVisible: false,
             name: "Unknown Region",
-            toggleCard: false
-        })
+            toggleCard: false,
+            loggedIn: false,
+            username: "加载中",
+            admin: false
+        }),
+        mounted: function (){
+            this.axios.get("/user/current").then((response) =>{
+                if(response.data["code"] == 200){
+                    this.username = response.data["data"]["username"];
+                    this.admin = response.data["data"]["admin"];
+                    this.loggedIn = true
+                }
+            })
+        }
     }
 </script>
 
@@ -148,4 +166,15 @@
         border: 1px solid rgba(#000, .12);
     }
 
+
+</style>
+<style lang="scss">
+    @import "~vue-material/dist/theme/engine"; // Import the theme engine
+
+    @include md-register-theme("default", (
+            primary: #DD9CDF,
+            accent: md-get-palette-color(pink, 500)
+    ));
+
+    @import "~vue-material/dist/theme/all"; // Apply the theme
 </style>

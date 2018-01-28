@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\User\User;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -59,35 +60,35 @@ class Alumni
 
     /**
      * @var string|null
-     * @Assert\NotBlank(message="alumni.error.incomplete")
+     *
      * @ORM\Column(type="string", nullable=true)
      */
     private $chineseName;
 
     /**
      * @var string|null
-     * @Assert\NotBlank(message="alumni.error.incomplete")
+     *
      * @ORM\Column(type="string", nullable=true)
      */
     private $englishName;
 
     /**
      * @var \DateTime|null
-     * @Assert\NotBlank(message="alumni.error.incomplete")
+     *
      * @ORM\Column(type="date", nullable=true)
      */
     private $birthday;
 
     /**
      * @var integer|null
-     * @Assert\NotBlank(message="alumni.error.incomplete")
+     *
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $gender;
 
     /**
      * @var integer|null
-     * @Assert\NotBlank(message="alumni.error.incomplete")
+     *
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $juniorSchool;
@@ -108,7 +109,7 @@ class Alumni
 
     /**
      * @var integer|null
-     * @Assert\NotBlank(message="alumni.error.incomplete")
+     *
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $seniorSchool;
@@ -536,6 +537,10 @@ class Alumni
         $this->userStatus = $userStatus;
     }
 
+    public function validate(){
+        $errorMessages = [];
+        if()
+    }
 
 
 

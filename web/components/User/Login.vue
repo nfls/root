@@ -36,9 +36,9 @@
 
                 </md-card-content>
                 <md-divider></md-divider>
-                <md-card-actions>
-                    <md-button to="/user/register">Create an account</md-button>
-                    <md-button to="/user/reset">Reset your password</md-button>
+                <md-card-actions md-alignment="left">
+                    <md-button to="/user/register">Register</md-button>
+                    <md-button to="/user/reset">Reset Password</md-button>
                 </md-card-actions>
 
                 <md-progress-bar md-mode="indeterminate" v-if="sending" />

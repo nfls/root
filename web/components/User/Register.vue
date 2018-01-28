@@ -92,7 +92,7 @@
 
                 </md-card-content>
                 <md-divider></md-divider>
-                <md-card-actions>
+                <md-card-actions md-alignment="left">
                     <md-button to="/user/login">Login</md-button>
                 </md-card-actions>
 
@@ -106,7 +106,9 @@
                     md-confirm-text="OK" />
         </form>
         <div id="recaptcha" class="g-recaptcha"></div>
+
     </div>
+
 </template>
 
 <script>
@@ -293,7 +295,7 @@
                     else {
                         //var callback = this.ct()
                         //console.log(callback)
-                        grecaptcha.render('recaptcha', {
+                        grecaptcha.render("recaptcha", {
                             sitekey: '6Le32kIUAAAAAGZa00irP5FPovXsk1qZdpnx15H9',
                             size: 'invisible',
                             callback: self.ct
