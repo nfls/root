@@ -30,11 +30,16 @@
                             <md-checkbox v-model="form.remember" :disabled="sending" style="width:100%" class="md-primary">Remember Me</md-checkbox>
                         </div>
                         <div class="md-flex md-flex-small-100">
-                            <md-button type="submit" class="md-raised md-primary" style="width:90%">Login</md-button>
+                            <md-button type="submit" class="md-raised md-primary">L o g i n</md-button>
                         </div>
                     </div>
 
                 </md-card-content>
+                <md-divider></md-divider>
+                <md-card-actions>
+                    <md-button to="/user/register">Create an account</md-button>
+                    <md-button to="/user/reset">Reset your password</md-button>
+                </md-card-actions>
 
                 <md-progress-bar md-mode="indeterminate" v-if="sending" />
             </md-card>

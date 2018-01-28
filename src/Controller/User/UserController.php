@@ -6,7 +6,7 @@ use App\Controller\AbstractController;
 use App\Entity\User\Code;
 use App\Model\ApiResponse;
 use App\Service\NexmoSMS;
-use App\Service\SMSService;
+use App\Service\CodeVerificationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -34,7 +34,7 @@ class UserController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $user = new User();
-        $sms = new SMSService($this->getDoctrine()->getManager());
+        $sms = new CodeVerificationService($this->getDoctrine()->getManager());
         $phone = $request->request->get("phone");
         $country = $request->request->get("country");
         $code = $request->request->get("code");
@@ -57,10 +57,10 @@ class UserController extends AbstractController
             $user->setPhone($phoneE164);
         }else{
             $email = $request->request->get("email");
-            if ($this->verifyEmail($email)) {
+            if ($sms->verify($email,$code,"register")) {
                 $user->setEmail($email);
             } else {
-                return $this->response->response("邮箱不正确", Response::HTTP_UNAUTHORIZED);
+                return $this->response->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
             }
         }
         $em->persist($user);
@@ -111,16 +111,6 @@ class UserController extends AbstractController
             return $this->response->response(null,Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         return $this->response->responseEntity($user);
-    }
-
-
-    private function verifyEmail($email)
-    {
-        if (preg_match("/^[a-zA-Z0-9_+.-]+\@([a-zA-Z0-9-]+\.)+[a-zA-Z0-9]{2,4}$/", $email)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     private function verifyUsername($username)

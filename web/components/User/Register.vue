@@ -86,11 +86,15 @@
                             <md-checkbox v-model="form.privacy" :disabled="sending" style="width:100%" class="md-primary">NFLS.IO プライバシーポリシー</md-checkbox>
                         </div>
                         <div class="md-flex md-flex-small-100">
-                            <md-button type="submit" class="md-raised md-primary" style="width:90%" @click="register" :disabled="sending">登録</md-button>
+                            <md-button type="submit" class="md-raised md-primary" @click="register" :disabled="sending">登録</md-button>
                         </div>
                     </div>
 
                 </md-card-content>
+                <md-divider></md-divider>
+                <md-card-actions>
+                    <md-button to="/user/login">Login</md-button>
+                </md-card-actions>
 
                 <md-progress-bar md-mode="indeterminate" v-if="sending" />
             </md-card>
@@ -176,9 +180,9 @@
                                 this.showMsg("正常に登録")
                                 window.setTimeout(() => {
                                     this.$router.push("/user/login");
-                                },1500)
+                                },3000)
                             }else{
-                                this.showMsg(response.data["info"])
+                                this.showMsg(response.data["data"])
                                 this.sending = false
                             }
                         })
@@ -193,7 +197,7 @@
                             if(response.data["code"] == 200){
                                 this.showMsg("正常に送信")
                             }else{
-                                this.showMsg(response.data["info"])
+                                this.showMsg(response.data["data"])
                             }
                         })
                         break
@@ -206,7 +210,7 @@
                             if (response.data["code"] == 200) {
                                 this.showMsg("送信成功")
                             } else {
-                                this.showMsg(response.data["info"])
+                                this.showMsg(response.data["data"])
                             }
                         })
                         break

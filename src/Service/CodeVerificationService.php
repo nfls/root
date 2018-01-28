@@ -6,7 +6,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
 
-class SMSService {
+class CodeVerificationService {
     private $nexmoService;
     private $aliyunService;
     private $em;
@@ -39,11 +39,17 @@ class SMSService {
                 }
                 $this->em->remove($codeId);
             }
-            $this->em->flush();
             return $phoneE164;
-
         }catch(\libphonenumber\NumberParseException $e){
             return false;
         }
+    }
+
+    public function verify($target,$code,$action){
+        $code = $this->em->getRepository(Code::class)->verifyCode($target,$code,$action);
+        if(is_null($code))
+            return false;
+        $this->em->remove($code);
+        return true;
     }
 }

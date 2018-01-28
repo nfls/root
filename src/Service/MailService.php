@@ -30,6 +30,6 @@ class MailService {
             return $e->getMessage();
         }
         return null;
-
     }
+
 }
