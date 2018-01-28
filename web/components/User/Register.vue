@@ -18,13 +18,16 @@
                                     <md-field  :class="getValidationClass('country')">
                                         <label for="country">国家</label>
                                         <md-select name="country" id="country" v-model="form.country">
-                                            <md-option v-for="country in countries" :key="country.code" :value="country.prefix">{{country.name}} +{{country.prefix}}</md-option>
+                                            <md-option v-for="country in countries" :key="country.code" :value="country.code">{{country.name}} +{{country.prefix}}</md-option>
                                         </md-select>
+                                        <span class="md-error" v-if="$v.form.country && !$v.form.country.required">入力必須項目です。</span>
                                     </md-field>
-                                    <md-field :class="getValidationClass('username')">
-                                        <label for="username">携帯電話番号</label>
+                                    <md-field :class="getValidationClass('phone')">
+                                        <label for="phone">携帯電話番号</label>
                                         <md-input name="phone" id="phone" autocomplete="phone" v-model="form.phone" :disabled="sending"  />
-                                        <md-button class="md-accent">センド</md-button>
+                                        <span class="md-error" v-if="$v.form.phone && !$v.form.phone.required">入力必須項目です。</span>
+                                        <span class="md-error" v-else-if="$v.form.phone && !$v.form.phone.numeric">無効な携帯電話番号</span>
+                                        <md-button class="md-accent" @click="sendSMS">センド</md-button>
                                     </md-field>
                                 </div>
                             </md-tab>
@@ -42,14 +45,17 @@
                             <md-field :class="getValidationClass('code')">
                                 <label for="username">認証コード</label>
                                 <md-input name="code" id="code" autocomplete="code" v-model="form.code" :disabled="sending"  />
-                                <span class="md-error" v-if="!$v.form.username.required">Username is required.</span>
+                                <span class="md-error" v-if="$v.form.code && !$v.form.code.required">入力必須項目です。</span>
+                                <span class="md-error" v-else-if="$v.form.code && !$v.form.code.numeric">無効なコードです</span>
                             </md-field>
                         </div>
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('username')">
                                 <label for="username">ニックネーム</label>
                                 <md-input name="username" id="username" autocomplete="username" v-model="form.username" :disabled="sending"  />
-                                <span class="md-error" v-if="!$v.form.username.required">Username is required.</span>
+                                <span class="md-error" v-if="$v.form.username && !$v.form.username.required">入力必須項目です。</span>
+                                <span class="md-error" v-else-if="$v.form.code && !$v.form.username.maxLength">ニックネームが長</span>
+                                <span class="md-error" v-else-if="$v.form.code && !$v.form.username.minLength">ニックネームが短</span>
                             </md-field>
                         </div>
 
@@ -57,19 +63,22 @@
                             <md-field :class="getValidationClass('password')">
                                 <label for="password">パスワード</label>
                                 <md-input name="password" id="password" autocomplete="password" v-model="form.password" :disabled="sending" type="password" />
-                                <span class="md-error" v-if="!$v.form.password.required">Password is required</span>
+                                <span class="md-error" v-if="$v.form.password && !$v.form.password.required">入力必須項目です。</span>
+                                <span class="md-error" v-else-if="$v.form.code && !$v.form.password.maxLength">パスワードの最大長20</span>
+                                <span class="md-error" v-else-if="$v.form.code && !$v.form.password.minLength">パスワードの最小長8</span>
                             </md-field>
                         </div>
 
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('repass')">
                                 <label for="password">パスワードの再入力</label>
-                                <md-input name="repass" id="repass" autocomplete="repass" v-model="form.repass" :disabled="sending" type="repass" />
-                                <span class="md-error" v-if="!$v.form.repass.required">Password is required</span>
+                                <md-input name="repass" id="repass" autocomplete="repass" v-model="form.repass" :disabled="sending" type="password" />
+                                <span class="md-error" v-if="$v.form.repass && !$v.form.repass.required">入力必須項目です。</span>
+                                <span class="md-error" v-else-if="passwordMismatch">パスワードが一致しません。もう一度入力してください。</span>
                             </md-field>
                         </div>
                         下記の規約に同意：
-                        <div class="md-flex md-flex-small-100">
+                        <div class="md-flex md-flex-small-100" >
                             <md-checkbox v-model="form.tos" :disabled="sending" style="width:100%" class="md-primary">NFLS.IO 利用規約</md-checkbox>
                         </div>
                         <div class="md-flex md-flex-small-100">
@@ -85,7 +94,7 @@
                 <md-progress-bar md-mode="indeterminate" v-if="sending" />
             </md-card>
 
-            <md-snackbar :md-active.sync="userSaved">{{message}}</md-snackbar>
+            <md-snackbar :md-active.sync="showMessage">{{message}}</md-snackbar>
         </form>
         <div id="recaptcha" class="g-recaptcha"></div>
     </div>
@@ -98,7 +107,8 @@
         email,
         minLength,
         maxLength,
-        numerics
+        numeric,
+        sameAs
     } from 'vuelidate/lib/validators'
 
     export default {
@@ -109,45 +119,32 @@
                 phone: null,
                 email: null,
                 code: null,
-                country: "86",
+                country: null,
                 username: null,
                 password: null,
                 repass: null,
                 privacy: false,
                 tos: false
             },
+            validateItems: {
+                phone: {},
+                email: {},
+                code: {},
+                country: {},
+                username: {},
+                password: {},
+                repass: {}
+            },
             countries: [],
             sending: false,
-            userSaved: false,
+            showMessage: false,
             lastUser: '',
+            passwordMismatch: false,
             message: ''
         }),
-        validations: {
-            form: {
-                username: {
-                    required
-                },
-                password: {
-                    required
-                },
-                email: {
-                    email
-                },
-                phone: {
-                    numerics
-                },
-                username: {
-                    minLength: minLength(3),
-                    maxLength: maxLength(20)
-                },
-                password: {
-                    minLength: minLength(3),
-                    maxLength: maxLength(20)
-                },
-                repass: {
-                    minLength: minLength(3),
-                        maxLength: maxLength(20)
-                }
+        validations() {
+            return {
+                form: this.validateItems
             }
         },
         methods: {
@@ -175,16 +172,74 @@
                 }
             },
             register () {
+                this.validateItems = {
+                    code: {
+                        required,
+                        numeric
+                    },
+                    username: {
+                        required,
+                        minLength: minLength(3),
+                        maxLength: maxLength(20)
+                    },
+                    password: {
+                        required,
+                        minLength: minLength(8),
+                        maxLength: maxLength(20)
+                    },
+                    repass: {
+                        required
+                    }
+                }
+                console.log(this.form.privacy)
+                if (this.form.password != this.form.repass)
+                    this.passwordMismatch = true
+                else
+                    this.passwordMismatch = false
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
+                    //TODO Checkbox confirms
+                    this.axios.post("")
+                }
+            },
+            sendSMS() {
+                this.validateItems = {
+                    phone: {
+                        required,
+                        numeric
+                    },
+                    country: {
+                        required
+                    }
+                }
+                this.$v.$touch()
+                if (!this.$v.$invalid) {
+                    this.sending = true
+                    this.axios.post("/code/register",{
+                        "country": this.form.country,
+                        "phone": this.form.phone
+                    }).then((response) => {
+                        this.sending = false
+                        if(response.data["code"] == 200){
+                            this.showMsg("送信成功")
+                        }else{
+                            this.showMsg("送信に失敗しました")
+                        }
+                    })
 
                 }
             },
+            sendEmail() {
+
+            },
             validate() {
-                this.$v.$touch()
-                if (!this.$v.$invalid) {
-                    grecaptcha.execute();
-                }
+                //this.$v.$touch()
+                //if (!this.$v.$invalid) {
+                    //grecaptcha.execute();
+                //}
+            },showMsg(msg){
+                this.message = msg
+                this.showMessage = true
             }
         },
         mounted: function(){

@@ -11,7 +11,7 @@
                 </md-card-header>
 
                 <md-card-content>
-                    <div class="md-layout-row md-layout-wrap md-gutter">
+                   <div class="md-layout-row md-layout-wrap md-gutter">
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('username')">
                                 <label for="username">Username</label>
