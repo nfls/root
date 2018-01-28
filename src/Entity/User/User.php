@@ -34,7 +34,7 @@ class User implements UserInterface,UserEntityInterface
     /**
      * @var string
      *
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, nullable = true)
      */
     private $email;
 
@@ -48,7 +48,7 @@ class User implements UserInterface,UserEntityInterface
     /**
      * @var integer
      *
-     * @ORM\Column(type="bigint", unique=true)
+     * @ORM\Column(type="bigint", unique=true, nullable = true)
      */
     private $phone;
 

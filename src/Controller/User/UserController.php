@@ -5,6 +5,8 @@ namespace App\Controller\User;
 use App\Controller\AbstractController;
 use App\Entity\User\Code;
 use App\Model\ApiResponse;
+use App\Service\NexmoSMS;
+use App\Service\SMSService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -32,49 +34,35 @@ class UserController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $user = new User();
-
+        $sms = new SMSService($this->getDoctrine()->getManager());
         $phone = $request->request->get("phone");
         $country = $request->request->get("country");
-        //TODO : Detect whether the user use the phone or the email.
-        $util = \libphonenumber\PhoneNumberUtil::getInstance();
-        try {
-            $phoneObject = $util->parse($phone,$country);
-            $phoneE164 = $util->format($phoneObject,\libphonenumber\PhoneNumberFormat::E164);
-            $em = $this->getDoctrine()->getManager();
-            if($phoneObject->getCountryCode() == 86){
-                $code = $em->getRepository(Code::class)->verifyDomestic($phone,$request->request->get("code"),"register");
-                if(is_null($code))
-                    return $this->response->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
-                $em->remove($code);
-            }else{
-                //TODO
-            }
-            $user->setPhone($phoneE164);
-        }catch(\libphonenumber\NumberParseException $e){
-            return $this->response->response($e->getMessage(),Response::HTTP_UNAUTHORIZED);
-        }
-
+        $code = $request->request->get("code");
         $username = $request->request->get("username");
         if ($this->verifyUsername($username)) {
             $user->setUsername($username);
         } else {
             return $this->response->response("用户名不正确", Response::HTTP_UNAUTHORIZED);
         }
-
-        $email = $request->request->get("email");
-        if ($this->verifyEmail($email)) {
-            $user->setEmail($email);
-        } else {
-            return $this->response->response("邮箱不正确", Response::HTTP_UNAUTHORIZED);
-        }
-
         $password = $request->request->get("password");
         if ($this->verifyPassword($user, $password)) {
             $user->setPassword($passwordEncoder->encodePassword($user, $password));
         } else {
             return $this->response->response("密码不合法", Response::HTTP_UNAUTHORIZED);
         }
-
+        if(intval($phone) > 0){
+            $phoneE164 = $sms->validate($country,$phone,$code,"register");
+            if($phoneE164 === false)
+                return $this->response->response("手机验证码不正确",Response::HTTP_UNAUTHORIZED);
+            $user->setPhone($phoneE164);
+        }else{
+            $email = $request->request->get("email");
+            if ($this->verifyEmail($email)) {
+                $user->setEmail($email);
+            } else {
+                return $this->response->response("邮箱不正确", Response::HTTP_UNAUTHORIZED);
+            }
+        }
         $em->persist($user);
         $em->flush();
 
@@ -149,11 +137,11 @@ class UserController extends AbstractController
     private function verifyPassword(User $user, $password)
     {
         //Strength
-        $re = '/^((?=\S*?[a-zA-Z])(?=\S*?[0-9]).{6,})\S$/';
+        $re = '/^((?!.*[\s])(?=\S*?[a-zA-Z])(?=\S*?[0-9]).{6,})$/';
         if (!preg_match($re, $password))
             return false;
         //Email
-        if (preg_match('/' . $user->getEmail() . '/', $password))
+        if (null !== $user->getEmail() && preg_match('/' . $user->getEmail() . '/', $password))
             return false;
         //Username
         if (preg_match('/' . $user->getUsername() . '/', $password))

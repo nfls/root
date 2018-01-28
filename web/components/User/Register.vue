@@ -27,7 +27,7 @@
                                         <md-input name="phone" id="phone" autocomplete="phone" v-model="form.phone" :disabled="sending"  />
                                         <span class="md-error" v-if="$v.form.phone && !$v.form.phone.required">入力必須項目です。</span>
                                         <span class="md-error" v-else-if="$v.form.phone && !$v.form.phone.numeric">無効な携帯電話番号</span>
-                                        <md-button class="md-accent" @click="sendSMS">センド</md-button>
+                                        <md-button class="md-primary" @click="sendSMS">センド</md-button>
                                     </md-field>
                                 </div>
                             </md-tab>
@@ -36,7 +36,9 @@
                                     <md-field :class="getValidationClass('email')">
                                         <label for="">メールアドレス</label>
                                         <md-input name="email" id="email" autocomplete="email" v-model="form.email" :disabled="sending"  />
-                                        <md-button class="md-accent">センド</md-button>
+                                        <md-button class="md-primary" @click="sendEmail">センド</md-button>
+                                        <span class="md-error" v-if="$v.form.email && !$v.form.email.required">入力必須項目です。</span>
+                                        <span class="md-error" v-else-if="$v.form.email && !$v.form.email.email">無効なメールアドレスです</span>
                                     </md-field>
                                 </div>
                             </md-tab>
@@ -46,7 +48,6 @@
                                 <label for="username">認証コード</label>
                                 <md-input name="code" id="code" autocomplete="code" v-model="form.code" :disabled="sending"  />
                                 <span class="md-error" v-if="$v.form.code && !$v.form.code.required">入力必須項目です。</span>
-                                <span class="md-error" v-else-if="$v.form.code && !$v.form.code.numeric">無効なコードです</span>
                             </md-field>
                         </div>
                         <div class="md-flex md-flex-small-100">
@@ -85,7 +86,7 @@
                             <md-checkbox v-model="form.privacy" :disabled="sending" style="width:100%" class="md-primary">NFLS.IO プライバシーポリシー</md-checkbox>
                         </div>
                         <div class="md-flex md-flex-small-100">
-                            <md-button type="submit" class="md-raised md-primary" style="width:90%" @click="validate">登録</md-button>
+                            <md-button type="submit" class="md-raised md-primary" style="width:90%" @click="register" :disabled="sending">登録</md-button>
                         </div>
                     </div>
 
@@ -95,6 +96,10 @@
             </md-card>
 
             <md-snackbar :md-active.sync="showMessage">{{message}}</md-snackbar>
+            <md-dialog-alert
+                    :md-active.sync="warning"
+                    :md-content="text"
+                    md-confirm-text="OK" />
         </form>
         <div id="recaptcha" class="g-recaptcha"></div>
     </div>
@@ -140,7 +145,10 @@
             showMessage: false,
             lastUser: '',
             passwordMismatch: false,
-            message: ''
+            message: '',
+            text: '',
+            warning: false,
+            task: ''
         }),
         validations() {
             return {
@@ -148,21 +156,6 @@
             }
         },
         methods: {
-            initReCaptcha: function() {
-                var self = this;
-                setTimeout(function() {
-                    if(typeof grecaptcha === 'undefined') {
-                        self.initReCaptcha();
-                    }
-                    else {
-                        grecaptcha.render('recaptcha', {
-                            sitekey: '6Le32kIUAAAAAGZa00irP5FPovXsk1qZdpnx15H9',
-                            size: 'invisible',
-                            callback: this.register
-                        });
-                    }
-                }, 100);
-            },
             getValidationClass (fieldName) {
                 const field = this.$v.form[fieldName]
                 if (field) {
@@ -171,11 +164,60 @@
                     }
                 }
             },
+            ct() {
+                console.log(111)
+                console.log(this.task)
+                this.sending = true
+                switch(this.task){
+                    case "register":
+                        this.form["recaptcha"] = grecaptcha.getResponse()
+                        this.axios.post("/user/register",this.form).then((response) => {
+                            if(response.data["code"] == 200){
+                                this.showMsg("正常に登録")
+                                window.setTimeout(() => {
+                                    this.$router.push("/user/login");
+                                },1500)
+                            }else{
+                                this.showMsg(response.data["info"])
+                                this.sending = false
+                            }
+                        })
+                        break
+                    case "phone":
+                        this.axios.post("/code/register",{
+                            "country": this.form.country,
+                            "phone": this.form.phone,
+                            "captcha": grecaptcha.getResponse()
+                        }).then((response) => {
+                            this.sending = false
+                            if(response.data["code"] == 200){
+                                this.showMsg("正常に送信")
+                            }else{
+                                this.showMsg(response.data["info"])
+                            }
+                        })
+                        break
+                    case "email":
+                        this.axios.post("/code/register", {
+                            "email": this.form.email,
+                            "captcha": grecaptcha.getResponse()
+                        }).then((response) => {
+                            this.sending = false
+                            if (response.data["code"] == 200) {
+                                this.showMsg("送信成功")
+                            } else {
+                                this.showMsg(response.data["info"])
+                            }
+                        })
+                        break
+                }
+                this.task = ""
+                grecaptcha.reset()
+            },
             register () {
                 this.validateItems = {
                     code: {
-                        required,
-                        numeric
+                        required
                     },
                     username: {
                         required,
@@ -191,15 +233,18 @@
                         required
                     }
                 }
-                console.log(this.form.privacy)
-                if (this.form.password != this.form.repass)
-                    this.passwordMismatch = true
-                else
-                    this.passwordMismatch = false
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
-                    //TODO Checkbox confirms
-                    this.axios.post("")
+                    if(!this.form.tos || !this.form.privacy){
+                        this.text = "あなたは条件に同意する必要があります。"
+                        this.warning = true
+                    }else if(this.form.password != this.form.repass){
+                        this.text = "パスワードが一致している必要があります"
+                        this.warning = true
+                    }else{
+                        this.task = "register"
+                        grecaptcha.execute()
+                    }
                 }
             },
             sendSMS() {
@@ -214,32 +259,43 @@
                 }
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
-                    this.sending = true
-                    this.axios.post("/code/register",{
-                        "country": this.form.country,
-                        "phone": this.form.phone
-                    }).then((response) => {
-                        this.sending = false
-                        if(response.data["code"] == 200){
-                            this.showMsg("送信成功")
-                        }else{
-                            this.showMsg("送信に失敗しました")
-                        }
-                    })
-
+                    this.task = "phone"
+                    grecaptcha.execute()
                 }
             },
             sendEmail() {
-
+                this.validateItems = {
+                    email: {
+                        required,
+                        email
+                    }
+                }
+                this.$v.$touch()
+                if (!this.$v.$invalid) {
+                    this.task = "email"
+                    grecaptcha.execute()
+                }
             },
-            validate() {
-                //this.$v.$touch()
-                //if (!this.$v.$invalid) {
-                    //grecaptcha.execute();
-                //}
-            },showMsg(msg){
+            showMsg(msg){
                 this.message = msg
                 this.showMessage = true
+            },
+            initReCaptcha: function() {
+                var self = this;
+                setTimeout(function() {
+                    if(typeof grecaptcha === 'undefined') {
+                        self.initReCaptcha();
+                    }
+                    else {
+                        //var callback = this.ct()
+                        //console.log(callback)
+                        grecaptcha.render('recaptcha', {
+                            sitekey: '6Le32kIUAAAAAGZa00irP5FPovXsk1qZdpnx15H9',
+                            size: 'invisible',
+                            callback: self.ct
+                        });
+                    }
+                }, 100);
             }
         },
         mounted: function(){

@@ -116,6 +116,9 @@
     "php-http/promise": {
         "version": "v1.0.0"
     },
+    "phpmailer/phpmailer": {
+        "version": "v6.0.3"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },

@@ -93,13 +93,17 @@
                     remember: this.form.remember
                 }).then((response) => {
                     if (response.data.code === 200) {
-                    window.location.href = "#/user/dashboard"
+                        this.userSaved = true
+                        this.message = 'Login succeeded.'
+                        window.setTimeout(() => {
+                            this.$router.push("/user/dashboard");
+                        },1500)
                     } else {
                         this.userSaved = true
                         this.message = 'Invalid Username or Password.'
                         window.setTimeout(() => {
                             this.userSaved = false
-                    }, 3000)
+                        }, 3000)
                 }
                 console.log(response.data)
                 this.sending = false
