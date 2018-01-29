@@ -21,4 +21,16 @@ class AlumniRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getLastSuccessfulAuth($user) {
+        return $this->createQueryBuilder("u")
+            ->where("u.user = :user")
+            ->setParameter("user",$user)
+            ->andWhere("u.status = :status")
+            ->setParameter("status",Alumni::STATUS_PASSED)
+            ->orderBy("u.submitTime","DESC")
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

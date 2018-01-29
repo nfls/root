@@ -43,11 +43,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="md-flex md-flex-small-100" v-if="changed" :disabled="isDisabled">
-                        <md-button type="save" class="md-raised md-primary" style="width:90%">保存</md-button>
+                    <div v-if="!isDisabled">
+                        <div class="md-flex md-flex-small-100" v-if="changed">
+                            <md-button type="save" class="md-raised md-primary" style="width:90%">保存</md-button>
+                        </div>
+                        <div class="md-flex md-flex-small-100" v-if="!changed">
+                            <md-button type="save" class="md-raised md-primary" style="width:90%">提交</md-button>
+                        </div>
                     </div>
-                    <div class="md-flex md-flex-small-100" v-if="!changed" :disabled="isDisabled">
-                        <md-button type="save" class="md-raised md-primary" style="width:90%">提交</md-button>
+                    <div class="md-flex md-flex-small-100" v-else-if="status == 1" >
+                        <md-button type="button" class="md-raised md-accent" style="width:90%" @click="cancel">取消本次申请</md-button>
+                    </div>
+                    <div v-else>
+                        <md-button type="button" class="md-raised md-primary" style="width:90%" disabled>此验证只读</md-button>
                     </div>
                     <md-progress-bar md-mode="indeterminate" v-if="sending" />
                     <md-snackbar :md-active.sync="showMessage">{{message}}</md-snackbar>
@@ -57,7 +65,7 @@
         <md-dialog-confirm
                 :md-active.sync="active"
                 md-title="您确定要提交吗"
-                md-content="一旦提交，在审核之前，您将<strong>无法</strong>编辑您填写的任何信息！"
+                md-content="除了取消审核，审核期间您将无法修改您所提交的内容。"
                 md-confirm-text="提交"
                 md-cancel-text="取消"
                 @md-confirm="submit" />
@@ -86,7 +94,8 @@
             reactor: [],
             countries: [],
             showForm: false,
-            isDisabled: false,
+            isDisabled: true,
+            status: 0,
             sending: false,
             changed: false,
             showMessage: false,
@@ -105,16 +114,11 @@
                 }
             }).then((response) => {
                 var formData = response.data["data"]
-                if(formData.status > 0)
-                    this.isDisable = true
+                this.isDisabled = (formData.status != 0)
+                console.log(this.isDisabled)
+                this.status = formData.status
                 this.axios.get("/alumni/form").then((response) => {
                     var objects = response.data["data"]
-                    this.form = Object.keys(objects).reduce(function (previous, key) {
-                        if(objects[key].type != "divider"){
-                            previous[objects[key].key] = formData[objects[key].key]
-                        }
-                        return previous
-                    }, {})
                     this.hide = Object.keys(objects).reduce(function (previous, key) {
                         previous[objects[key].key] = true
                         return previous
@@ -130,6 +134,15 @@
                                 }
                                 return prev
                             }, {})
+                        }
+                        return previous
+                    }, {})
+                    this.form = Object.keys(objects).reduce(function (previous, key) {
+                        if(objects[key].type != "divider"){
+                            if(formData[objects[key].key] !== null)
+                                previous[objects[key].key] = String(formData[objects[key].key])
+                            else
+                                previous[objects[key].key] = null
                         }
                         return previous
                     }, {})
@@ -175,17 +188,34 @@
                 this.isDisabled = true
                 this.sending = true
                 this.axios.post("alumni/submit?id="+this.$route.params["id"],this.form).then((response) => {
-                    var data = response.data["data"]
+                    var self = this
+                    var data = response.data
                     this.sending = false
                     this.isDisabled = true
                     if(data.code == 200){
-                        this.message = "提交成功，请等待审核。您可以返回上个页面查询实名认证的状态"
+                        this.message = "提交成功，请等待审核！"
+                        var self = this
+                        setTimeout(function(){
+                            self.$router.push("/alumni/auth")
+                        },3000)
                     }else{
-                        this.message = "提交失败，请检查您填写的内容是否正确！"
+                        self.message = ""
+                        response.data["data"].forEach(function(val){
+                            self.message += val
+                        })
                         this.isDisabled = false
                     }
                     this.showMessage = true
 
+                })
+            }, cancel(){
+                this.axios.post("alumni/cancel?id="+this.$route.params["id"],this.form).then((response) => {
+                    this.message = "本次验证已被取消，您可以重新提交了。"
+                    this.showMessage = true
+                    var self = this
+                    setTimeout(function(){
+                        self.$router.push("/alumni/auth")
+                    },3000)
                 })
             }, getModel(key) {
                 return this.form[key]
@@ -234,6 +264,7 @@
                     this.changed = true
                     var reactor = this.reactor
                     var hide = this.hide
+                    var form = this.form
                     Object.keys(hide).reduce(function (previous, key){
                         hide[key] = true
                     })
@@ -241,10 +272,12 @@
                         if(reactor[key] && newVal[key]){
                             reactor[key][newVal[key]].reduce(function (previous, val){
                                 hide[val] = false
+                                form[val] = null
                             },{})
                         }
                     },{})
                     this.hide = hide
+                    this.form = form
                     this.refreshValidator(this.formItems)
                 },
                 deep: true

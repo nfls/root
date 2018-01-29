@@ -4,10 +4,15 @@ namespace App\Controller\Alumni;
 
 use App\Controller\AbstractController;
 use App\Entity\Alumni;
+use App\Model\Normalizer\UuidNormalizer;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AlumniController extends AbstractController
@@ -28,6 +33,15 @@ class AlumniController extends AbstractController
     }
 
     /**
+     * @Route("alumni/current", methods="GET")
+     */
+    public function getCurrentStatus(){
+        $repo =  $this->getDoctrine()->getManager()->getRepository(Alumni::class);
+        $auths = $repo->getLastSuccessfulAuth($this->getUser());
+        return $this->response->responseEntity($auths);
+    }
+
+    /**
      * @Route("alumni/info", methods="GET")
      */
     public function getInfo(){
@@ -40,7 +54,7 @@ class AlumniController extends AbstractController
      */
     public function newForm(Request $request){
         $repo =  $this->getDoctrine()->getManager()->getRepository(Alumni::class);
-        if(count($repo->findBy(["user"=>$this->getUser(),"status"=>Alumni::STATUS_NOT_SUBMITTED]))>0){
+        if((count($repo->findBy(["user"=>$this->getUser(),"status"=>Alumni::STATUS_NOT_SUBMITTED])) + count($repo->findBy(["user"=>$this->getUser(),"status"=>Alumni::STATUS_SUBMITTED])))>0){
             return $this->response->response("alumni.already.new",403);
         }
         $alumni = new Alumni();
@@ -117,7 +131,56 @@ class AlumniController extends AbstractController
         foreach($errors as $error){
             array_push($error_ids,$error->getMessage());
         }
-        return $this->response->responseEntity($error_ids);
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setCircularReferenceLimit(2);
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return null;
+        });
+        $serializer = new Serializer([new UuidNormalizer(),$normalizer],[new JsonEncoder()]);
+        $formArray = json_decode($serializer->serialize($form,"json"),true);
+        $content = json_decode(file_get_contents($this->get('kernel')->getRootDir()."/Controller/Alumni/Form.json"),true);
+        foreach($content as $item){
+            if($item["type"] == "select" && null !== $formArray[$item["key"]]){
+                $values = $item["values"][(int)$formArray[$item["key"]]];
+                if(isset($values["hidden"])){
+                    foreach ($values["hidden"] as $hidden){
+                        foreach ($error_ids as $key => $error){
+                            if (strpos($error,$hidden) !== false){
+                                unset($error_ids[$key]);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+        if(count($error_ids)>0)
+            return $this->response->responseEntity($error_ids,400);
+
+        $form->setStatus(1);
+        $form->setSubmitTime(new \DateTime());
+        $em->persist($form);
+        $em->flush();
+        return $this->response->responseEntity(null,200);
+    }
+
+    /**
+     * @Route("alumni/cancel", methods="POST")
+     */
+    public function cancelForm(Request $request){
+        $id = $request->query->get("id");
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository(Alumni::class);
+        /**
+         * @var Alumni $form
+         */
+        $form = $repo->findOneBy(["id"=>$id,"status"=>Alumni::STATUS_SUBMITTED,"user"=>$this->getUser()]);
+        if(!$form)
+            return $this->response->response(null,403);
+        $form->setStatus(Alumni::STATUS_CANCELED);
+        $em->persist($form);
+        $em->flush();
+        return $this->response->responseEntity(null,200);
     }
 
 

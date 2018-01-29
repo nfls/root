@@ -41,9 +41,9 @@ class Alumni
     /**
      * @var integer
      *
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $status;
+    private $status = 0;
 
     const STATUS_NOT_SUBMITTED = 0;
     const STATUS_SUBMITTED = 1;
@@ -55,7 +55,7 @@ class Alumni
     /**
      * @var integer
      *
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $userStatus;
 
@@ -229,7 +229,7 @@ class Alumni
     /**
      * @return int
      */
-    public function isStatus(): int
+    public function getStatus(): int
     {
         return $this->status;
     }
@@ -531,20 +531,30 @@ class Alumni
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getUserStatus(): int
+    public function getUserStatus(): ?int
     {
         return $this->userStatus;
     }
 
     /**
-     * @param int $userStatus
+     * @param int|null $userStatus
      */
-    public function setUserStatus(int $userStatus): void
+    public function setUserStatus(?int $userStatus): void
     {
         $this->userStatus = $userStatus;
     }
+
+    /**
+     * @param \DateTime|null $submitTime
+     */
+    public function setSubmitTime(?\DateTime $submitTime): void
+    {
+        $this->submitTime = $submitTime;
+    }
+
+
 
     /**
      * @Assert\IsTrue(message="alumni.auth.error.notInNfls")

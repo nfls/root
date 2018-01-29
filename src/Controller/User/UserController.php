@@ -99,6 +99,21 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/user/logout", methods="GET")
+     */
+    public function logout(Request $request){
+        $session = $request->getSession();
+        $session->start();
+        $session->remove("user_token");
+        $session->invalidate();
+        $response = $this->response->response(null,200);
+        $time = new \DateTime();
+        $time->sub(new \DateInterval("P1M"));
+        $response->headers->setCookie(new Cookie("remember_token","deleted",$time,"/",null,false,true));
+        return $response;
+    }
+
+    /**
      * @Route("/user/current", name="User(Current)", methods="GET")
      */
     public function current(){
