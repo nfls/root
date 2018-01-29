@@ -17,16 +17,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHa
 class CookieAuthenticator extends AbstractGuardAuthenticator
 {
 
-    /**
-     * @var Session
-     */
-    private $session;
-
-    public function __construct()
-    {
-        $this->session = new Session();
-    }
-
     public function supports(Request $request)
     {
         return $request->cookies->has("remember_token");
@@ -56,7 +46,9 @@ class CookieAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        $this->session->set("user_token",$request->cookies->get("remember_token"));
+        $session = $request->getSession() ?? new Session();
+        $session->start();
+        $session->set("user_token",$request->cookies->get("remember_token"));
         return;
     }
 

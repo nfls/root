@@ -170,11 +170,5 @@
 </style>
 <style lang="scss">
     @import "~vue-material/dist/theme/engine"; // Import the theme engine
-
-    @include md-register-theme("default", (
-            primary: #DD9CDF,
-            accent: md-get-palette-color(pink, 500)
-    ));
-
     @import "~vue-material/dist/theme/all"; // Apply the theme
 </style>

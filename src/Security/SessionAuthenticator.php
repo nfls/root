@@ -17,25 +17,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class SessionAuthenticator extends AbstractGuardAuthenticator
 {
-    /**
-     * @var Session
-     */
-    private $session;
-
-
-    public function __construct()
-    {
-        $this->session = new Session();
-    }
 
     public function supports(Request $request)
     {
-        return $this->session->has("user_token");
+        return /*$request->getSession() && */$request->getSession()->has("user_token");
     }
 
     public function getCredentials(Request $request)
     {
-        return $this->session->get("user_token");
+        $request->getSession()->start();
+        return $request->getSession()->get("user_token");
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
@@ -50,7 +41,7 @@ class SessionAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        $this->session->invalidate();
+        $request->getSession()->invalidate();
         return new JsonResponse(array("code"=>400,"message"=>"Login required with Session."),Response::HTTP_UNAUTHORIZED);
     }
 

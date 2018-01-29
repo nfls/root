@@ -18,6 +18,7 @@ use App\Entity\User\User;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
+use Zend\Diactoros\Request\Serializer;
 
 class UserController extends AbstractController
 {
@@ -74,12 +75,16 @@ class UserController extends AbstractController
      */
     public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-        $session = new Session();
+        $session = $request->getSession();
+        if(!$session)
+            $session = new Session();
+        $session->start();
         $user = $this->getDoctrine()->getRepository(User::class)->findByUsername($request->request->get("username"));
         if (null === $user)
             return $this->response->response(null,401);
         if ($passwordEncoder->isPasswordValid($user, $request->request->get("password", $user->getSalt()))) {
             $session->set("user_token",$user->getToken());
+
             if($request->request->get("remember") == "true"){
                 $response = $this->response->response(null);
                 $time = new \DateTime();
