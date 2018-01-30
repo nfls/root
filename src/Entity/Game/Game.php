@@ -33,16 +33,23 @@ class Game
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=1024)
+     * @ORM\Column(type="string", length=128)
      */
-    private $content;
+    private $subTitle;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=1024)
      */
-    private $url;
+    private $description;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(type="json", length=1024)
+     */
+    private $content;
 
     /**
      * @var boolean
@@ -50,7 +57,6 @@ class Game
      * @ORM\Column(type="boolean")
      */
     private $preferBigger;
-
 
     /**
      * @return mixed
@@ -63,71 +69,47 @@ class Game
     /**
      * @return string
      */
-    public function getThumb()
+    public function getThumb(): string
     {
         return $this->thumb;
     }
 
     /**
-     * @param string $thumb
-     */
-    public function setThumb($thumb)
-    {
-        $this->thumb = $thumb;
-    }
-
-    /**
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
     /**
-     * @param string $title
+     * @return string
      */
-    public function setTitle($title)
+    public function getSubTitle(): string
     {
-        $this->title = $title;
+        return $this->subTitle;
     }
 
     /**
      * @return string
      */
-    public function getContent()
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return array
+     */
+    public function getContent(): array
     {
         return $this->content;
     }
 
     /**
-     * @param string $content
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param string $url
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-    }
-
-    /**
      * @return bool
      */
-    public function isPreferBigger()
+    public function isPreferBigger(): bool
     {
         return $this->preferBigger;
     }
