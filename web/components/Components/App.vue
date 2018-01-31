@@ -75,7 +75,7 @@
                         <span class="md-list-item-text">Alumni</span>
                         <md-list slot="md-expand">
                             <md-list-item class="md-inset" to="/alumni/auth"><md-icon>perm_identity</md-icon><span class="md-list-item-text">Realname</span></md-list-item>
-                            <md-list-item class="md-inset" to="/alumni/dir"><md-icon>info</md-icon><span class="md-list-item-text">Directory</span></md-list-item>
+                            <md-list-item class="md-inset" to="/alumni/directory"><md-icon>info</md-icon><span class="md-list-item-text">Directory</span></md-list-item>
                         </md-list>
                     </md-list-item>
 

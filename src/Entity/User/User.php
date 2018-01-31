@@ -2,8 +2,10 @@
 
 namespace App\Entity\User;
 
+use App\Entity\Alumni;
 use App\Entity\Media\Gallery;
 use App\Entity\Media\Photo;
+use App\Model\Permission;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\UserEntityInterface;
@@ -266,7 +268,38 @@ class User implements UserInterface,UserEntityInterface
 
     public function getRoles()
     {
-        return ["ROLES_USER"];
+        $permissions = [];
+        $array = Permission::PERMISSION_ARRAY;
+        foreach ($array as $key => $value) {
+            if($this->permission & (1<<$key))
+                array_push($permissions,$value);
+        }
+        //Dynamic calc
+        $valid = array_filter([$this,"checkValid"],$this->authTickets->toArray());
+        if(count($valid) > 0){
+            array_push($permissions,Permission::IS_AUTHENTICATED);
+            array_push($permissions,$this->getAlumniPermission($valid[0]));
+        }
+        return $permissions;
+    }
+
+    /**
+     * @param $val Alumni
+     * @return bool
+     */
+    public function getValid($val){
+        if($val->getStatus() == Alumni::STATUS_PASSED)
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * @param $val Alumni
+     * @return bool
+     */
+    public function getAlumniPermission($val){
+        //$val->getStatus() ==
     }
 
     public function getIdentifier()

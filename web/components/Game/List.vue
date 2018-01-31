@@ -15,9 +15,8 @@
                     <md-card-expand>
                         <md-card-actions md-alignment="space-between">
                             <div>
-                                <md-button class="md-icon-button" v-for="button in item.content" :key="button.displayName"><md-icon>{{getIcon(button.displayName)}}</md-icon></md-button>
+                                <md-button class="md-icon-button" v-for="button in item.content" :key="button.name" :href="button.key"><md-icon>{{getIcon(button.name)}}</md-icon></md-button>
                             </div>
-
                             <md-card-expand-trigger>
                                 <md-button class="md-icon-button">
                                     <md-icon>keyboard_arrow_down</md-icon>
@@ -41,8 +40,11 @@
     export default {
         name: "List",
         data: () => ({
-
-            list: []
+            list: [],
+            dialogContent: {
+                name: "",
+                donwloadUrl: ""
+            }
         }),
         mounted: function() {
             this.axios.get("/game/list").then((response) => {
@@ -50,7 +52,32 @@
             })
         },methods:{
             getIcon(name){
-                return "android"
+                switch(name) {
+                    case "android":
+                        return "android"
+                    case "ios":
+                        return "phone_iphone"
+                    case "windows":
+                        return "desktop_windows"
+                    case "mac":
+                        return "desktop_mac"
+                    case "web":
+                        return "web"
+                }
+            },getHref(item,button) {
+                switch(button.displayName) {
+                    case "android":
+                        return "android"
+                    case "ios":
+                        return "phone_iphone"
+                    case "windows":
+                        this.getJenkins(button.key)
+                        return "desktop_windows"
+                    case "mac":
+                        return "desktop_mac"
+                    case "web":
+                        return "web"
+                }
             }
         }
     }

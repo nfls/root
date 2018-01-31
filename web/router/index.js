@@ -11,6 +11,7 @@ import Gallery from '../components/Media/Gallery'
 import Jump from '../components/Jump'
 import Album from '../components/Media/Album'
 import List from '../components/Game/List'
+import Directory from '../components/Alumni/Directory'
 
 
 Vue.use(Router)
@@ -39,6 +40,9 @@ export default new Router({
                 }, {
                     path: 'alumni/auth/:id',
                     component: Form
+                }, {
+                    path: 'alumni/directory',
+                    component: Directory
                 }, {
                     path: 'media/gallery',
                     component: Gallery
