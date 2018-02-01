@@ -41,6 +41,21 @@
         "value": "3",
         "hidden": [
         ]
+      },
+      {
+        "name": "在校老师",
+        "value": "4",
+        "hidden": [
+          "juniorSchool",
+          "juniorClass",
+          "juniorRegistration",
+          "seniorSchool",
+          "seniorClass",
+          "seniorRegistration",
+          "university",
+          "major",
+          "workInfo"
+        ]
       }
     ],
     "validate": {

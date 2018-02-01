@@ -268,17 +268,16 @@ class User implements UserInterface,UserEntityInterface
 
     public function getRoles()
     {
-        $permissions = [];
+        $permissions = array();
         $array = Permission::PERMISSION_ARRAY;
         foreach ($array as $key => $value) {
             if($this->permission & (1<<$key))
                 array_push($permissions,$value);
         }
-        //Dynamic calc
-        $valid = array_filter([$this,"checkValid"],$this->authTickets->toArray());
+        $valid = array_filter($this->authTickets->toArray(),array($this,"getValid"));
         if(count($valid) > 0){
             array_push($permissions,Permission::IS_AUTHENTICATED);
-            array_push($permissions,$this->getAlumniPermission($valid[0]));
+            array_push($permissions,$this->getAlumniPermission(array_values($valid)[0]));
         }
         return $permissions;
     }
@@ -299,7 +298,15 @@ class User implements UserInterface,UserEntityInterface
      * @return bool
      */
     public function getAlumniPermission($val){
-        //$val->getStatus() ==
+        switch($val->getUserStatus()){
+            case 0:
+            case 1:
+                return Permission::IS_STUDENT;
+            case 2:
+                return Permission::IS_GRADUATE;
+            case 3:
+                return Permission::IS_TEACHER;
+        }
     }
 
     public function getIdentifier()

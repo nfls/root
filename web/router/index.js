@@ -12,6 +12,8 @@ import Jump from '../components/Jump'
 import Album from '../components/Media/Album'
 import List from '../components/Game/List'
 import Directory from '../components/Alumni/Directory'
+import Security from '../components/User/Security'
+import PastPaper from '../components/School/PastPaper'
 
 
 Vue.use(Router)
@@ -31,9 +33,15 @@ export default new Router({
                 {
                     path: 'user/dashboard',
                     component: Dashboard
+                },{
+                    path: 'user/security',
+                    component: Security
                 }, {
                     path: 'school/vote',
                     component: Vote
+                }, {
+                    path: 'school/pastpaper',
+                    component: PastPaper
                 }, {
                     path: 'alumni/auth',
                     component: Realname

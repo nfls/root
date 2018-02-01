@@ -15,17 +15,20 @@ class AliyunOSS {
      */
     private $client;
 
-    const DOWNLOAD_ROLE = "acs:ram::1978482396280799:role/download-users";
+    const DOWNLOAD_ROLE = "acs:ram::1978482396280799:role/past-papers";
     const UPLOAD_ROLE = "acs:ram::1978482396280799:role/upload-users";
-    const SECRET_ID = "LTAIrn88mOuMssDn";
-    const SECRET_KEY = "Y5La4e2Fcvnm4z58ylKONfwI18Qobr";
-    const HOST = "http://nflsio.oss-cn-shanghai.aliyuncs.com";
+    const HOST = "http://nfls-paper.oss-cn-shanghai.aliyuncs.com";
     const UPLOAD_DIR = "uploads/";
+
+    private $key_id;
+    private $key_secret;
 
 
     public function __construct()
     {
-        $profile = DefaultProfile::getProfile("cn-hangzhou",self::SECRET_ID,self::SECRET_KEY);
+        $this->key_id = $_SERVER["ALIYUN_KEY_ID"];
+        $this->key_secret = $_SERVER["ALIYUN_KEY_SECRET"];
+        $profile = DefaultProfile::getProfile("cn-hangzhou",$this->key_id,$this->key_secret);
         $this->client = new DefaultAcsClient($profile);
     }
     public function getDownloadListToken($id){
@@ -68,7 +71,7 @@ class AliyunOSS {
         $policy = json_encode($arr);
         $base64_policy = base64_encode($policy);
         $string_to_sign = $base64_policy;
-        $signature = base64_encode(hash_hmac('sha1', $string_to_sign, self::SECRET_KEY, true));
+        $signature = base64_encode(hash_hmac('sha1', $string_to_sign, $this->key_id, true));
 
         $response = array();
         $response['accessid'] = self::SECRET_ID;
