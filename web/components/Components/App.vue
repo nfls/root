@@ -104,15 +104,20 @@
                         <md-list slot="md-expand">
                             <md-list-item class="md-inset" to="/user/info"><md-icon>info</md-icon><span class="md-list-item-text">Info</span></md-list-item>
                             <md-list-item class="md-inset" to="/user/security"><md-icon>security</md-icon><span class="md-list-item-text">Security</span></md-list-item>
-                            <md-list-item class="md-inset" to="/user/announcement"><md-icon>chat</md-icon><span class="md-list-item-text">Message</span></md-list-item>
-                            <md-list-item class="md-inset" to="/user/announcement"><md-icon>announcement</md-icon><span class="md-list-item-text">Announcement</span></md-list-item>
+                            <md-list-item class="md-inset" to="/user/message"><md-icon>chat</md-icon><span class="md-list-item-text">Message</span></md-list-item>
                         </md-list>
                     </md-list-item>
 
-                    <md-list-item to="/app">
-                        <md-icon>apps</md-icon>
-                        <span class="md-list-item-text">App</span>
+                    <md-list-item md-expand>
+                        <md-icon>adb</md-icon>
+                        <span class="md-list-item-text">About</span>
+                        <md-list slot="md-expand">
+                            <md-list-item class="md-inset" to="/about/app"><md-icon>apps</md-icon><span class="md-list-item-text">App</span></md-list-item>
+                            <md-list-item class="md-inset" to="/about/team"><md-icon>people</md-icon><span class="md-list-item-text">Dev Team</span></md-list-item>
+                            <md-list-item class="md-inset" to="/about/feedback"><md-icon>feedback</md-icon><span class="md-list-item-text">Feedback</span></md-list-item>
+                        </md-list>
                     </md-list-item>
+
                 </md-list>
             </md-app-drawer>
 

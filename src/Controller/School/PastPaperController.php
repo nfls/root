@@ -4,6 +4,7 @@ namespace App\Controller\School;
 
 use App\Controller\AbstractController;
 use App\Service\AliyunOSS;
+use App\Service\SettingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +23,7 @@ class PastPaperController extends AbstractController
     /**
      * @Route("school/pastpaper/header", methods="GET")
      */
-    public function downloadSts(Request $request,AliyunOSS $oss){
-        return $this->response->response($oss->getDownloadListToken($this->getUser()->getUsername()),200);
+    public function getHeader(Request $request,AliyunOSS $oss){
+        return $this->response->response($this->setting()->get(SettingService::PAST_PAPER_HEADER));
     }
 }

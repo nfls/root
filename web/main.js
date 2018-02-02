@@ -8,6 +8,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VuePreview from 'vue-preview'
 import 'vue-material/dist/vue-material.min.css'
+import VueMarkdown from 'vue-markdown'
 
 
 
@@ -15,6 +16,7 @@ Vue.use(VuePreview)
 Vue.use(VueAxios, axios)
 Vue.use(VueMaterial)
 Vue.use(require('vue-moment'));
+Vue.use(VueMarkdown);
 
 Vue.config.productionTip = false
 
@@ -22,6 +24,9 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  components: {
+    App,
+    VueMarkdown
+  },
   template: '<App/>'
 })

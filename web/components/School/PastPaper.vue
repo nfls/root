@@ -9,41 +9,56 @@
                 style="width:100%;padding-bottom: 100%;">
         </md-empty-state>
         <div v-else>
-            <span class="md-body-1">废话啰嗦的说明文字废话啰嗦的说明文字废话啰嗦的说明文字废话啰嗦的说明文字废话啰嗦的说明文字废话啰嗦的说明文字废话啰嗦的说明文字废话啰嗦的说明文字废话啰嗦的说明文字</span>
-            <md-field>
-                <label for="path">Path</label>
-                <md-input name="path" id="path" v-model="pathString" readonly disabled/>
-            </md-field>
-            <md-list>
-                <md-list-item v-if="path.length > 0" @click="back">
-                    <md-icon>folder_open</md-icon>
-                    <span class="md-list-item-text">..</span>
-                </md-list-item>
-                <md-list-item v-for="item in displayItems" :key="item.etaf" @click="enter(item)">
-                    <md-icon v-if="item.size == 0">folder</md-icon>
-                    <md-icon v-else-if="item.name.endsWith('pdf')">picture_as_pdf</md-icon>
-                    <md-inco v-else>attachment</md-inco>
-                    <span class="md-list-item-text">{{item.displayName}}</span>
-                </md-list-item>
-            </md-list>
+            <md-card>
+                <md-card-header>
+                    <vue-markdown>{{header}}</vue-markdown>
+                </md-card-header>
+                <md-card-content>
+                    <md-field style="width:90%;margin-left:auto;margin-right:auto">
+                        <label for="path">Path</label>
+                        <md-input name="path" id="path" v-model="pathString" readonly disabled/>
+                    </md-field>
+                    <md-list>
+                        <md-list-item v-if="path.length > 0" @click="back">
+                            <md-icon>folder_open</md-icon>
+                            <span class="md-list-item-text">..</span>
+                        </md-list-item>
+                        <md-list-item v-for="item in displayItems" :key="item.etaf" @click="enter(item)">
+                            <md-icon v-if="item.size == 0">folder</md-icon>
+                            <md-icon v-else-if="item.name.endsWith('pdf')">picture_as_pdf</md-icon>
+                            <md-inco v-else>attachment</md-inco>
+                            <span class="md-list-item-text">{{item.displayName}}</span>
+                        </md-list-item>
+                    </md-list>
+                </md-card-content>
+
+            </md-card>
         </div>
 
     </div>
 </template>
 
 <script>
+    import VueMarkdown from 'vue-markdown'
     export default {
         name: "Past-paper",
+        components: {
+            VueMarkdown
+        },
         data: () => ({
             fileInfo: [],
             path: [],
             pathString: "",
             displayItems: [],
             client: null,
-            loading: true
+            loading: true,
+            header: ""
         }),
         mounted: function() {
-            this.axios.get("/oauth/downloadSts").then((response) => {
+            this.axios.get("/school/pastpaper/header").then((response) => {
+                this.header = response.data["data"]
+            })
+            this.axios.get("/school/pastpaper/token").then((response) => {
                 var data = response.data["data"]
                 var OSS = require('ali-oss').Wrapper;
 
@@ -65,7 +80,7 @@
                     "marker": next
                 }).then(function (result) {
                     self.fileInfo = self.fileInfo.concat(result.objects)
-                    if(result.objects.length == 1000){
+                    if(result.objects.length != 1000){
                         self.loadFiles(result.nextMarker)
                     }else{
                         self.loading = false
