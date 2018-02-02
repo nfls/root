@@ -1,6 +1,6 @@
 <template>
     <div class="login">
-        <form novalidate class="md-layout-row md-gutter" @submit.prevent="login">
+        <form novalidate class="md-layout-row md-gutter" @submit.prevent="validate">
             <md-card class="md-flex-50 md-flex-small-100 login-card">
                 <md-card-header>
                     <md-card-header-text>
@@ -30,7 +30,7 @@
                             <md-checkbox v-model="form.remember" :disabled="sending" style="width:100%" class="md-primary">Remember Me</md-checkbox>
                         </div>
                         <div class="md-flex md-flex-small-100">
-                            <md-button type="submit" class="md-raised md-primary">L o g i n</md-button>
+                            <md-button type="submit" class="md-raised md-primary">LINK START</md-button>
                         </div>
                     </div>
 
@@ -58,39 +58,44 @@
     export default {
         name: 'Login',
         mixins: [validationMixin],
+        props: ['gResponse'],
         data: () => ({
-        form: {
-            username: null,
-            remember: false,
-            password: null
-        },
-        sending: false,
-        userSaved: false,
-        lastUser: '',
-        message: ''
-    }),
-    validations: {
-        form: {
-            username: {
-                required
+            form: {
+                username: null,
+                remember: false,
+                password: null
             },
-            password: {
-                required
-            }
-        }
-    },
-    methods: {
-        getValidationClass (fieldName) {
-            const field = this.$v.form[fieldName]
-            if (field) {
-                return {
-                    'md-invalid': field.$invalid && field.$dirty
+            sending: false,
+            userSaved: false,
+            lastUser: '',
+            message: ''
+        }),
+        validations: {
+            form: {
+                username: {
+                    required
+                },
+                password: {
+                    required
                 }
             }
         },
-        login () {
-            this.$v.$touch()
-            if (!this.$v.$invalid) {
+        methods: {
+            getValidationClass (fieldName) {
+                const field = this.$v.form[fieldName]
+                if (field) {
+                    return {
+                        'md-invalid': field.$invalid && field.$dirty
+                    }
+                }
+            },
+            validate() {
+                this.$v.$touch()
+                if (!this.$v.$invalid) {
+                    grecaptcha.execute()
+                }
+            },
+            ct () {
                 this.sending = true
                 this.axios.post('/user/login', {
                     username: this.form.username,
@@ -106,22 +111,25 @@
                     } else {
                         this.userSaved = true
                         this.message = 'Invalid Username or Password.'
+                        grecaptcha.reset()
                         window.setTimeout(() => {
                             this.userSaved = false
                         }, 3000)
-                }
-                console.log(response.data)
-                this.sending = false
-            })
+                    }
+                    this.sending = false
+                })
+
             }
-        },
-        reset () {
-
-        },
-        register () {
-
+        }, mounted: function() {
+            this.$emit("changeTitle","Login")
+            this.$emit("prepareRecaptcha")
+        }, watch: {
+            gResponse: {
+                handler: function(val,newVal){
+                    this.ct();
+                }
+            }
         }
-    }
     }
 </script>
 

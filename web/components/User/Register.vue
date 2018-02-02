@@ -105,8 +105,6 @@
                     :md-content="text"
                     md-confirm-text="OK" />
         </form>
-        <div id="recaptcha" class="g-recaptcha"></div>
-
     </div>
 
 </template>
@@ -125,6 +123,7 @@
     export default {
         name: 'Register',
         mixins: [validationMixin],
+        props: ['gResponse'],
         data: () => ({
             form: {
                 phone: null,
@@ -171,8 +170,6 @@
                 }
             },
             ct() {
-                console.log(111)
-                console.log(this.task)
                 this.sending = true
                 switch(this.task){
                     case "register":
@@ -285,30 +282,21 @@
             showMsg(msg){
                 this.message = msg
                 this.showMessage = true
-            },
-            initReCaptcha: function() {
-                var self = this;
-                setTimeout(function() {
-                    if(typeof grecaptcha === 'undefined') {
-                        self.initReCaptcha();
-                    }
-                    else {
-                        //var callback = this.ct()
-                        //console.log(callback)
-                        grecaptcha.render("recaptcha", {
-                            sitekey: '6Le32kIUAAAAAGZa00irP5FPovXsk1qZdpnx15H9',
-                            size: 'invisible',
-                            callback: self.ct
-                        });
-                    }
-                }, 100);
             }
         },
         mounted: function(){
             this.axios.get("/code/available").then((response) => {
                 this.countries = response.data["data"]
             })
-            this.initReCaptcha();
+            this.$emit("changeTitle","Register")
+            this.$emit("prepareRecaptcha")
+        },
+        watch: {
+            gResponse: {
+                handler: function(val,newVal){
+                    this.ct();
+                }
+            }
         }
     }
 </script>

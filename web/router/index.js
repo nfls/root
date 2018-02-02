@@ -38,13 +38,7 @@ Vue.use(Router)
 
 export default new Router({
     routes: [
-        {
-            path: '/user/login',
-            component: Login
-        },{
-            path: '/user/register',
-            component: Register
-        }, {
+         {
             path: '/',
             component: App,
             children: [
@@ -108,6 +102,12 @@ export default new Router({
                 }, {
                     path: 'user/message',
                     component: Message
+                }, {
+                    path: '/user/login',
+                    component: Login
+                }, {
+                    path: '/user/register',
+                    component: Register
                 }, {
                     path: 'user/info',
                     component: Info

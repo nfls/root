@@ -1,41 +1,41 @@
 <template>
-    <div class="page-container">
-        <md-app md-waterfall md-mode="fixed">
-            <md-app-toolbar class="md-primary">
+    <div class='page-container'>
+        <md-app md-waterfall md-mode='fixed'>
+            <md-app-toolbar class='md-primary'>
 
-                <div class="md-toolbar-section-start">
-                    <md-button class="md-icon-button" @click="menuVisible = !menuVisible" v-if="!menuVisible">
+                <div class='md-toolbar-section-start'>
+                    <md-button class='md-icon-button' @click='menuVisible = !menuVisible' v-if='!menuVisible'>
                         <md-icon>menu</md-icon>
                     </md-button>
-                    <span class="md-title">{{name}}</span>
+                    <span class='md-title'>{{title}}</span>
                 </div>
-                <div class="md-toolbar-section-end">
-                    <md-menu md-size="big" md-direction="bottom-start">
-                        <md-button md-menu-trigger class="md-icon-button">
+                <div class='md-toolbar-section-end'>
+                    <md-menu md-size='big' md-direction='bottom-start'>
+                        <md-button md-menu-trigger class='md-icon-button'>
                             <md-icon>more_vert</md-icon>
                         </md-button>
                         <md-menu-content>
-                            <md-list v-if="loggedIn">
+                            <md-list v-if='loggedIn'>
                                 <md-list-item>
                                     <md-avatar>
-                                        <img src="https://placeimg.com/40/40/people/5" alt="People">
+                                        <img src='https://placeimg.com/40/40/people/5' alt='People'>
                                     </md-avatar>
-                                    <span class="md-list-item-text">{{username}}</span>
+                                    <span class='md-list-item-text'>{{username}}</span>
                                 </md-list-item>
-                                <md-divider class="md-inset"></md-divider>
+                                <md-divider class='md-inset'></md-divider>
                                 <md-list-item>
                                     <md-icon>settings</md-icon>
-                                    <span class="md-list-item-text">Settings</span>
+                                    <span class='md-list-item-text'>Settings</span>
                                 </md-list-item>
                                 <md-list-item>
                                     <md-icon>exit_to_app</md-icon>
-                                    <span class="md-list-item-text">Logout</span>
+                                    <span class='md-list-item-text'>Logout</span>
                                 </md-list-item>
                             </md-list>
                             <md-list v-else>
-                                <md-list-item to="/user/login">
+                                <md-list-item to='/user/login'>
                                     <md-icon>flight_land</md-icon>
-                                    <span class="md-list-item-text">Login</span>
+                                    <span class='md-list-item-text'>Login</span>
                                 </md-list-item>
                             </md-list>
                         </md-menu-content>
@@ -43,78 +43,78 @@
                 </div>
             </md-app-toolbar>
 
-            <md-app-drawer :md-active.sync="menuVisible" md-persistent="mini">
-                <md-toolbar class="md-transparent" md-elevation="0">
+            <md-app-drawer :md-active.sync='menuVisible' md-persistent='mini'>
+                <md-toolbar class='md-transparent' md-elevation='0'>
                     NFLS.IO
-                    <div class="md-toolbar-section-end">
-                        <md-button class="md-icon-button md-dense" @click="menuVisible = !menuVisible">
+                    <div class='md-toolbar-section-end'>
+                        <md-button class='md-icon-button md-dense' @click='menuVisible = !menuVisible'>
                             <md-icon>keyboard_arrow_left</md-icon>
                         </md-button>
                     </div>
                 </md-toolbar>
 
                 <md-list>
-                    <md-list-item to="/user/dashboard">
+                    <md-list-item to='/user/dashboard'>
                         <md-icon>dashboard</md-icon>
-                        <span class="md-list-item-text">Dashboard</span>
+                        <span class='md-list-item-text'>Dashboard</span>
                     </md-list-item>
                     <md-list-item md-expand>
                         <md-icon>library_books</md-icon>
-                        <span class="md-list-item-text">School</span>
-                        <md-list slot="md-expand">
-                            <md-list-item class="md-inset" to="/school/pastpaper"><md-icon>book</md-icon><span class="md-list-item-text">Past Paper</span></md-list-item>
-                            <md-list-item class="md-inset" to="/school/blackboard"><md-icon>speaker_notes</md-icon><span class="md-list-item-text">Blackboard</span></md-list-item>
-                            <md-list-item class="md-inset" to="/school/assignment"><md-icon>assignment</md-icon><span class="md-list-item-text">Assignment</span></md-list-item>
-                            <md-list-item class="md-inset" to="/school/lunch"><md-icon>credit_card</md-icon><span class="md-list-item-text">Lunch</span></md-list-item>
-                            <md-list-item class="md-inset" to="/school/vote"><md-icon>plus_one</md-icon><span class="md-list-item-text">Vote</span></md-list-item>
+                        <span class='md-list-item-text'>School</span>
+                        <md-list slot='md-expand'>
+                            <md-list-item class='md-inset' to='/school/pastpaper'><md-icon>book</md-icon><span class='md-list-item-text'>Past Paper</span></md-list-item>
+                            <md-list-item class='md-inset' to='/school/blackboard'><md-icon>speaker_notes</md-icon><span class='md-list-item-text'>Blackboard</span></md-list-item>
+                            <md-list-item class='md-inset' to='/school/assignment'><md-icon>assignment</md-icon><span class='md-list-item-text'>Assignment</span></md-list-item>
+                            <md-list-item class='md-inset' to='/school/lunch'><md-icon>credit_card</md-icon><span class='md-list-item-text'>Lunch</span></md-list-item>
+                            <md-list-item class='md-inset' to='/school/vote'><md-icon>plus_one</md-icon><span class='md-list-item-text'>Vote</span></md-list-item>
                         </md-list>
                     </md-list-item>
 
                     <md-list-item md-expand>
                         <md-icon>school</md-icon>
-                        <span class="md-list-item-text">Alumni</span>
-                        <md-list slot="md-expand">
-                            <md-list-item class="md-inset" to="/alumni/auth"><md-icon>perm_identity</md-icon><span class="md-list-item-text">Realname</span></md-list-item>
-                            <md-list-item class="md-inset" to="/alumni/directory"><md-icon>info</md-icon><span class="md-list-item-text">Directory</span></md-list-item>
+                        <span class='md-list-item-text'>Alumni</span>
+                        <md-list slot='md-expand'>
+                            <md-list-item class='md-inset' to='/alumni/auth'><md-icon>perm_identity</md-icon><span class='md-list-item-text'>Realname</span></md-list-item>
+                            <md-list-item class='md-inset' to='/alumni/directory'><md-icon>info</md-icon><span class='md-list-item-text'>Directory</span></md-list-item>
                         </md-list>
                     </md-list-item>
 
                     <md-list-item md-expand>
                         <md-icon>videogame_asset</md-icon>
-                        <span class="md-list-item-text">Game</span>
-                        <md-list slot="md-expand">
-                            <md-list-item class="md-inset" to="/game/list"><md-icon>gamepad</md-icon><span class="md-list-item-text">List</span></md-list-item>
-                            <md-list-item class="md-inset" to="/game/rank"><md-icon>list</md-icon><span class="md-list-item-text">Rank</span></md-list-item>
-                            <md-list-item class="md-inset" to="/game/history"><md-icon>history</md-icon><span class="md-list-item-text">History</span></md-list-item>
+                        <span class='md-list-item-text'>Game</span>
+                        <md-list slot='md-expand'>
+                            <md-list-item class='md-inset' to='/game/list'><md-icon>gamepad</md-icon><span class='md-list-item-text'>List</span></md-list-item>
+                            <md-list-item class='md-inset' to='/game/rank'><md-icon>list</md-icon><span class='md-list-item-text'>Rank</span></md-list-item>
+                            <md-list-item class='md-inset' to='/game/history'><md-icon>history</md-icon><span class='md-list-item-text'>History</span></md-list-item>
                         </md-list>
                     </md-list-item>
 
                     <md-list-item md-expand>
                         <md-icon>video_library</md-icon>
-                        <span class="md-list-item-text">Media</span>
-                        <md-list slot="md-expand">
-                            <md-list-item class="md-inset" to="/media/gallery"><md-icon>photo_library</md-icon><span class="md-list-item-text">Gallery</span></md-list-item>
-                            <md-list-item class="md-inset" to="/media/video"><md-icon>video_library</md-icon><span class="md-list-item-text">Video</span></md-list-item>
+                        <span class='md-list-item-text'>Media</span>
+                        <md-list slot='md-expand'>
+                            <md-list-item class='md-inset' to='/media/gallery'><md-icon>photo_library</md-icon><span class='md-list-item-text'>Gallery</span></md-list-item>
+                            <md-list-item class='md-inset' to='/media/video'><md-icon>video_library</md-icon><span class='md-list-item-text'>Video</span></md-list-item>
                         </md-list>
                     </md-list-item>
 
                     <md-list-item md-expand>
                         <md-icon>account_box</md-icon>
-                        <span class="md-list-item-text">Account</span>
-                        <md-list slot="md-expand">
-                            <md-list-item class="md-inset" to="/user/info"><md-icon>info</md-icon><span class="md-list-item-text">Info</span></md-list-item>
-                            <md-list-item class="md-inset" to="/user/security"><md-icon>security</md-icon><span class="md-list-item-text">Security</span></md-list-item>
-                            <md-list-item class="md-inset" to="/user/message"><md-icon>chat</md-icon><span class="md-list-item-text">Message</span></md-list-item>
+                        <span class='md-list-item-text'>Account</span>
+                        <md-list slot='md-expand'>
+                            <md-list-item class='md-inset' to='/user/info'><md-icon>info</md-icon><span class='md-list-item-text'>Info</span></md-list-item>
+                            <md-list-item class='md-inset' to='/user/security'><md-icon>security</md-icon><span class='md-list-item-text'>Security</span></md-list-item>
+                            <md-list-item class='md-inset' to='/user/message'><md-icon>chat</md-icon><span class='md-list-item-text'>Message</span></md-list-item>
                         </md-list>
                     </md-list-item>
 
                     <md-list-item md-expand>
                         <md-icon>adb</md-icon>
-                        <span class="md-list-item-text">About</span>
-                        <md-list slot="md-expand">
-                            <md-list-item class="md-inset" to="/about/app"><md-icon>apps</md-icon><span class="md-list-item-text">App</span></md-list-item>
-                            <md-list-item class="md-inset" to="/about/team"><md-icon>people</md-icon><span class="md-list-item-text">Dev Team</span></md-list-item>
-                            <md-list-item class="md-inset" to="/about/feedback"><md-icon>feedback</md-icon><span class="md-list-item-text">Feedback</span></md-list-item>
+                        <span class='md-list-item-text'>About</span>
+                        <md-list slot='md-expand'>
+                            <md-list-item class='md-inset' to='/about/app'><md-icon>apps</md-icon><span class='md-list-item-text'>App</span></md-list-item>
+                            <md-list-item class='md-inset' to='/about/team'><md-icon>people</md-icon><span class='md-list-item-text'>Dev Team</span></md-list-item>
+                            <md-list-item class='md-inset' to='/about/feedback'><md-icon>feedback</md-icon><span class='md-list-item-text'>Feedback</span></md-list-item>
                         </md-list>
                     </md-list-item>
 
@@ -122,7 +122,7 @@
             </md-app-drawer>
 
             <md-app-content>
-                <router-view v-model="name"/>
+                <router-view :gResponse='gResponse' @changeTitle="changeTitle" @prepareRecaptcha="prepareRecaptcha"/>
             </md-app-content>
         </md-app>
     </div>
@@ -130,24 +130,55 @@
 
 <script>
     export default {
-        name: "Dashboard",
+        name: 'Dashboard',
         data: () => ({
             menuVisible: false,
-            name: "Unknown Region",
+            title: 'Unknown Region',
             toggleCard: false,
             loggedIn: false,
-            username: "加载中",
-            admin: false
+            username: '加载中',
+            admin: false,
+            gResponse: ''
         }),
+        methods: {
+            initReCaptcha() {
+                var self = this;
+                setTimeout(function() {
+                    if(typeof grecaptcha === 'undefined') {
+                        self.initReCaptcha();
+                    }
+                    else {
+                        grecaptcha.render('recaptcha', {
+                            sitekey: '6Le32kIUAAAAAGZa00irP5FPovXsk1qZdpnx15H9',
+                            size: 'invisible',
+                            callback: self.ct
+                        });
+                    }
+                }, 100);
+            }, ct(response){
+                this.gResponse = response
+            }, changeTitle(title) {
+                this.title = title
+            }, prepareRecaptcha() {
+                document.getElementById('recaptcha').style.visibility = 'visible';
+            }
+        },
         mounted: function (){
-            this.axios.get("/user/current").then((response) =>{
-                if(response.data["code"] == 200){
-                    this.username = response.data["data"]["username"];
-                    this.admin = response.data["data"]["admin"];
+            this.axios.get('/user/current').then((response) =>{
+                if(response.data['code'] == 200){
+                    this.username = response.data['data']['username'];
+                    this.admin = response.data['data']['admin'];
                     this.loggedIn = true
                 }
             })
+            document.getElementById('recaptcha').style.visibility = 'hidden';
+            this.initReCaptcha()
+        }, watch: {
+            $route () {
+                document.getElementById('recaptcha').style.visibility = 'hidden';
+            }
         }
+
     }
 </script>
 
@@ -173,7 +204,7 @@
 
 
 </style>
-<style lang="scss">
-    @import "~vue-material/dist/theme/engine"; // Import the theme engine
-    @import "~vue-material/dist/theme/all"; // Apply the theme
+<style lang='scss'>
+    @import '~vue-material/dist/theme/engine'; // Import the theme engine
+    @import '~vue-material/dist/theme/all'; // Apply the theme
 </style>
