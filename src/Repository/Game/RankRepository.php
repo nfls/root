@@ -32,6 +32,7 @@ class RankRepository extends ServiceEntityRepository
 
     }
 
+
     public function getCurrentRankByGame($game,$user){
         if($game->isPreferBigger()){
             return $this->createQueryBuilder("u")
@@ -56,6 +57,14 @@ class RankRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getResult();
         }
-
     }
+
+    public function getAllRankByUser($user){
+        return $this->createQueryBuilder("u")
+            ->where("u.user = :user")
+            ->setParameter("user", $user)
+            ->getQuery()
+            ->getResult();
+    }
+
 }

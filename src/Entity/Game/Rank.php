@@ -3,10 +3,12 @@
 namespace App\Entity\Game;
 
 use App\Entity\User\User;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\Game\RankRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Rank
 {
@@ -45,9 +47,37 @@ class Rank
      */
     private $time;
 
+    private $rank = -1;
+
     public function __construct()
     {
         $this->time = new \DateTime();
+    }
+
+    /** @ORM\PostLoad */
+    public function calcRank(LifecycleEventArgs $args)
+    {
+        if($this->game->isPreferBigger()){
+            $count = $args->getEntityManager()->getRepository(Rank::class)->createQueryBuilder("u")
+                ->select("count(u.id)")
+                ->where("u.score > :score")
+                ->setParameter("score", $this->score)
+                ->andWhere("u.game = :game")
+                ->setParameter("game", $this->game)
+                ->getQuery()
+                ->getSingleScalarResult();
+        }else{
+            $count = $args->getEntityManager()->getRepository(Rank::class)->createQueryBuilder("u")
+                ->select("count(u.id)")
+                ->where("u.score < :score")
+                ->setParameter("score", $this->score)
+                ->andWhere("u.game = :game")
+                ->setParameter("game", $this->game)
+                ->getQuery()
+                ->getSingleScalarResult();
+        }
+
+        $this->rank = $count + 1;
     }
 
     /**
@@ -105,6 +135,26 @@ class Rank
     {
         $this->score = $score;
     }
+
+    /**
+     * @return int
+     */
+    public function getRank(): int
+    {
+        return $this->rank;
+    }
+
+    /**
+     * @param int $rank
+     */
+    public function setRank(int $rank): void
+    {
+        $this->rank = $rank;
+    }
+
+
+
+
 
 
 }

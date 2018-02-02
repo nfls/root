@@ -100,13 +100,14 @@
                 this.axios.post('/user/login', {
                     username: this.form.username,
                     password: this.form.password,
-                    remember: this.form.remember
+                    remember: this.form.remember,
+                    captcha: grecaptcha.getResponse()
                 }).then((response) => {
                     if (response.data.code === 200) {
                         this.userSaved = true
                         this.message = 'Login succeeded.'
                         window.setTimeout(() => {
-                            this.$router.push("/user/dashboard");
+                            this.$emit("reload")
                         },1500)
                     } else {
                         this.userSaved = true
@@ -145,7 +146,7 @@
         margin-right: auto;
         width:70%;
         height:100%;
-        min-width:300px;
+        min-width:260px;
         max-width:500px;
         display: flex;
         flex-direction: column;

@@ -27,6 +27,7 @@ class Permission {
     const IS_STUDENT = "ROLES_STUDENTS";
     const IS_GRADUATE = "ROLES_GRADUATES";
     const HAS_PHONE = "ROLES_HAVE_PHONE";
+    const IS_LOGIN = "IS_AUTHENTICATED_FULLY";
 
     const PERMISSION_ARRAY = [
         self::ALLOW_LOGIN,

@@ -23,4 +23,13 @@ class AbstractController extends Controller
     public function setting(){
         return new SettingService($this->get('kernel')->getRootDir()."/Files/Settings.json");
     }
+
+    public function verifyCaptcha($captcha){
+        $verifyResponse = file_get_contents('https://www.recaptcha.net/recaptcha/api/siteverify?secret=' . $_ENV["GOOGLE_KEY"] . '&response=' . $captcha);
+        if(json_decode($verifyResponse)->success){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

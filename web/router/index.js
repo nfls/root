@@ -13,7 +13,6 @@ import Realname from '../components/Alumni/Realname'
 import Form from '../components/Alumni/Form'
 
 import List from '../components/Game/List'
-import Rank from '../components/Game/Rank'
 import History from '../components/Game/History'
 
 import Gallery from '../components/Media/Gallery'
@@ -69,9 +68,6 @@ export default new Router({
                 }, {
                     path: 'game/history',
                     component: History
-                }, {
-                    path: 'game/rank',
-                    component: Rank
                 }, {
                     path: 'media/gallery',
                     component: Gallery

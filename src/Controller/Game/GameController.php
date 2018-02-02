@@ -4,6 +4,7 @@ namespace App\Controller\Game;
 
 use App\Controller\AbstractController;
 use App\Entity\Game\Game;
+use App\Entity\Game\Rank;
 use App\Model\ApiResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,6 +20,11 @@ class GameController extends AbstractController
         return $this->response->responseEntity($this->getDoctrine()->getManager()->getRepository(Game::class)->findAll());
     }
 
-
+    /**
+     * @Route("game/listRank", methods="GET")
+     */
+    public function listRank(){
+        return $this->response->responseEntity($this->getDoctrine()->getManager()->getRepository(Rank::class)->getAllRankByUser($this->getUser()));
+    }
 
 }

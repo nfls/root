@@ -7,7 +7,9 @@ use App\Entity\Media\Comment;
 use App\Entity\Media\Gallery;
 use App\Entity\Media\Photo;
 use App\Model\ApiResponse;
+use App\Model\Permission;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +30,7 @@ class GalleryController extends AbstractController
      */
     public function getList(Request $request){
         $page = $request->query->get("page") ?? 1;
+
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
         return $this->response->responseEntity($repo->getList($page),Response::HTTP_OK);
     }
@@ -44,6 +47,8 @@ class GalleryController extends AbstractController
      * @Route("/media/gallery/comment", methods="POST")
      */
     public function getComment(Request $request){
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
         $content = $request->request->get("content");
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
         $comment = new Comment();
@@ -60,6 +65,7 @@ class GalleryController extends AbstractController
      * @Route("media/gallery/like", methods="POST")
      */
     public function like(Request $request){
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $repo = $this->getDoctrine()->getManager()->getRepository( Gallery::class);
         $gallery = $repo->getGallery($request->request->get("id"));
         $gallery->like($this->getUser());
@@ -73,6 +79,7 @@ class GalleryController extends AbstractController
      * @Route("media/gallery/like", methods="GET")
      */
     public function likeStatus(Request $request){
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $repo = $this->getDoctrine()->getManager()->getRepository( Gallery::class);
         $gallery = $repo->getGallery($request->query->get("id"));
         return $this->response->response($gallery->likeStatus($this->getUser()));
@@ -83,6 +90,8 @@ class GalleryController extends AbstractController
      * @Route("/admin/media/upload", methods="GET")
      */
     public function uploadPage(){
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN_MEDIA);
         return $this->render("admin/media/upload.html.twig");
     }
 
@@ -91,6 +100,8 @@ class GalleryController extends AbstractController
      */
     public function managePhotos()
     {
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN_MEDIA);
         return $this->render("admin/media/photo.html.twig");
     }
 
@@ -98,6 +109,8 @@ class GalleryController extends AbstractController
      * @Route("admin/media/gallery", methods="GET")
      */
     public function manageGallery(){
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN_MEDIA);
         return $this->render("admin/media/gallery.html.twig");
     }
 
@@ -105,6 +118,8 @@ class GalleryController extends AbstractController
      * @Route("/admin/media/gallery/edit", methods="POST")
      */
     public function editGallery(Request $request){
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN_MEDIA);
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Gallery::class);
         $photoRepo = $em->getRepository(Photo::class);
@@ -143,6 +158,8 @@ class GalleryController extends AbstractController
      * @Route("/admin/media/photo/edit", methods="POST")
      */
     public function editPhotos(Request $request){
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN_MEDIA);
         $em = $this->getDoctrine()->getManager();
         $photoRepo = $em->getRepository(Photo::class);
         $galleryRepo = $em->getRepository(Gallery::class);
@@ -187,7 +204,8 @@ class GalleryController extends AbstractController
      * @Route("media/gallery/upload", methods="POST")
      */
     publiC function addPhoto(Request $request){
-        //todo role check
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN_MEDIA);
         $allowOrigin = $request->request->get("allowOrigin");
         $originalPhoto = $request->files->get("photo");
         $path = $originalPhoto->getRealPath();

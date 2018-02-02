@@ -313,7 +313,7 @@
         margin-right: auto;
         width:70%;
         height:100%;
-        min-width:300px;
+        min-width:260px;
         max-width:500px;
         display: flex;
         flex-direction: column;

@@ -10,9 +10,9 @@
 <script>
     export default {
         name: "Dashboard",
-        props: ["name"],
+        props: ["isAdmin","isLoggedIn","isVerified"],
         mounted: function () {
-            this.$emit('input', "Dashboard")
+            this.$emit("changeTitle","Dashboard")
         }
     }
 </script>

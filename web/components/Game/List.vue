@@ -1,5 +1,19 @@
 <template>
     <div id="game-list">
+        <div style="row">
+            <md-table v-model="ranks" md-card>
+                <md-table-toolbar>
+                    <h1 class="md-title">我的排名</h1>
+                </md-table-toolbar>
+
+                <md-table-row slot="md-table-row" slot-scope="{ item }" style="text-align: left;">
+                    <md-table-cell md-label="游戏" md-sort-by="id" md-numeric>{{ item.game.title }}</md-table-cell>
+                    <md-table-cell md-label="得分" md-sort-by="name">{{ item.score }}</md-table-cell>
+                    <md-table-cell md-label="排名" md-sort-by="name">{{ item.rank }}</md-table-cell>
+                    <md-table-cell md-label="时间" md-sort-by="name">{{ item.time | moment("lll") }}</md-table-cell>
+                </md-table-row>
+            </md-table>
+        </div>
         <div class="md-layout md-gutter md-alignment-center">
             <div class="md-layout-item md-xlarge-size-20 md-large-size-20 md-medium-size-33 md-small-size-50 md-xsmall-size-100 game-card" v-for="item in list" :key="item.id">
                 <md-card>
@@ -41,6 +55,7 @@
         name: "List",
         data: () => ({
             list: [],
+            ranks: [],
             dialogContent: {
                 name: "",
                 donwloadUrl: ""
@@ -49,6 +64,9 @@
         mounted: function() {
             this.axios.get("/game/list").then((response) => {
                 this.list = response.data["data"]
+            })
+            this.axios.get("/game/listRank").then((response) => {
+                this.ranks = response.data["data"]
             })
         },methods:{
             getIcon(name){

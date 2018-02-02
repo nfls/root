@@ -6,6 +6,7 @@ use App\Controller\AbstractController;
 use App\Entity\Game\Game;
 use App\Entity\Game\Rank;
 use App\Model\ApiResponse;
+use App\Model\Normalizer\GameNormalizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,16 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AbstractRankController extends AbstractController
 {
-    /**
-     * @var ApiResponse
-     */
-    private $reponse;
-
-    public function __construct()
-    {
-        $this->reponse = new ApiResponse();
-    }
-
     /**
      * @Route("/game/rank")
      */
@@ -56,14 +47,14 @@ class AbstractRankController extends AbstractController
                 }
             }
         }
-
         $result = $rankRepo->getRankByGame($game);
-        return $this->reponse->responseEntity($result);
+        return $this->response->responseEntity($result);
     }
 
-    private function updateScore($game,$user,$score){
+    private function updateScore($game,$user,$score)
+    {
         $em = $this->getDoctrine()->getManager();
-        if(@!is_null($score)){
+        if (@!is_null($score)) {
             $rank = new Rank();
             $rank->setGame($game);
             $rank->setScore($score);
@@ -71,8 +62,22 @@ class AbstractRankController extends AbstractController
             $em->persist($rank);
             $em->flush();
         }
-
     }
 
+    private function phaseRank($ranks){
+        $previous = -1;
+        $pos = 1;
+        $final = array();
+        foreach ($ranks as $key => $rank){
+            if($previous != $rank->getScore()){
+                $previous = $rank->getScore();
+                $pos = $key + 1;
+            }
+            $rank->setRank($pos);
+            $rank->setGame((new GameNormalizer())->normalize($rank->getGame()));
+            array_push($final,$rank);
+        }
+        return $final;
+    }
 
 }

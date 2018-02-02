@@ -28,11 +28,14 @@ class UserController extends AbstractController
     public function index(){
         return $this->render("index.html.twig");
     }
+
     /**
      * @Route("/user/register", name="register", methods="POST")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
+        if(!$this->verifyCaptcha($request->request->get("captcha")))
+            return $this->response->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
         $em = $this->getDoctrine()->getManager();
         $user = new User();
         $sms = new CodeVerificationService($this->getDoctrine()->getManager());
@@ -75,6 +78,8 @@ class UserController extends AbstractController
      */
     public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
+        if(!$this->verifyCaptcha($request->request->get("captcha")))
+            return $this->response->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
         $session = $request->getSession();
         if(!$session)
             $session = new Session();
@@ -102,14 +107,11 @@ class UserController extends AbstractController
      * @Route("/user/logout", methods="GET")
      */
     public function logout(Request $request){
-        $session = $request->getSession();
-        $session->start();
-        $session->remove("user_token");
-        $session->invalidate();
         $response = $this->response->response(null,200);
         $time = new \DateTime();
         $time->sub(new \DateInterval("P1M"));
         $response->headers->setCookie(new Cookie("remember_token","deleted",$time,"/",null,false,true));
+        $response->headers->setCookie(new Cookie("PHPSESSID","deleted",$time,"/",null,false,true));
         return $response;
     }
 

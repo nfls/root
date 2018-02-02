@@ -13,6 +13,8 @@ class ApiResponse {
     private $serializer;
     private $userSerializer;
     private $rawSerializer;
+    const REQUIRED_LOGIN = 1001;
+    const REQUIRED_AUTHORIZED = 1002;
     public function __construct()
     {
         $encoder = new JsonEncoder();

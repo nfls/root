@@ -27,7 +27,7 @@
                                     <md-icon>settings</md-icon>
                                     <span class='md-list-item-text'>Settings</span>
                                 </md-list-item>
-                                <md-list-item>
+                                <md-list-item @click="logout">
                                     <md-icon>exit_to_app</md-icon>
                                     <span class='md-list-item-text'>Logout</span>
                                 </md-list-item>
@@ -36,6 +36,10 @@
                                 <md-list-item to='/user/login'>
                                     <md-icon>flight_land</md-icon>
                                     <span class='md-list-item-text'>Login</span>
+                                </md-list-item>
+                                <md-list-item to='/user/register'>
+                                    <md-icon>create</md-icon>
+                                    <span class='md-list-item-text'>Register</span>
                                 </md-list-item>
                             </md-list>
                         </md-menu-content>
@@ -84,7 +88,6 @@
                         <span class='md-list-item-text'>Game</span>
                         <md-list slot='md-expand'>
                             <md-list-item class='md-inset' to='/game/list'><md-icon>gamepad</md-icon><span class='md-list-item-text'>List</span></md-list-item>
-                            <md-list-item class='md-inset' to='/game/rank'><md-icon>list</md-icon><span class='md-list-item-text'>Rank</span></md-list-item>
                             <md-list-item class='md-inset' to='/game/history'><md-icon>history</md-icon><span class='md-list-item-text'>History</span></md-list-item>
                         </md-list>
                     </md-list-item>
@@ -122,7 +125,7 @@
             </md-app-drawer>
 
             <md-app-content>
-                <router-view :gResponse='gResponse' @changeTitle="changeTitle" @prepareRecaptcha="prepareRecaptcha"/>
+                <router-view :gResponse='gResponse' @changeTitle="changeTitle" @prepareRecaptcha="prepareRecaptcha" @reload="reload"/>
             </md-app-content>
         </md-app>
     </div>
@@ -149,29 +152,41 @@
                     }
                     else {
                         grecaptcha.render('recaptcha', {
-                            sitekey: '6Le32kIUAAAAAGZa00irP5FPovXsk1qZdpnx15H9',
+                            sitekey: '6LfV3UIUAAAAADBXL7tfgvUs9rt2gw-4GBxLO9Pj',
                             size: 'invisible',
                             callback: self.ct
                         });
                     }
                 }, 100);
+            }, logout() {
+                this.axios.get('/user/logout').then((response) => {
+                    this.reload();
+                })
             }, ct(response){
                 this.gResponse = response
             }, changeTitle(title) {
                 this.title = title
             }, prepareRecaptcha() {
                 document.getElementById('recaptcha').style.visibility = 'visible';
+            }, reload() {
+                this.axios.get('/user/current').then((response) =>{
+                    if(response.data['code'] == 200){
+                        this.username = response.data['data']['username'];
+                        this.admin = response.data['data']['admin'];
+                        this.loggedIn = true
+                        var path = this.$route.fullPath
+                        //console.log(path)
+                        if ( path === "/user/login" || path === "/user/register" || path === "user/reset")
+                            this.$router.push("/dashboard")
+                    }else{
+                        this.loggedIn = false
+                    }
+                })
             }
-        },
-        mounted: function (){
-            this.axios.get('/user/current').then((response) =>{
-                if(response.data['code'] == 200){
-                    this.username = response.data['data']['username'];
-                    this.admin = response.data['data']['admin'];
-                    this.loggedIn = true
-                }
-            })
+        },created: function(){
             document.getElementById('recaptcha').style.visibility = 'hidden';
+        },mounted: function (){
+            this.reload()
             this.initReCaptcha()
         }, watch: {
             $route () {
