@@ -85,7 +85,7 @@
                         <md-list slot="md-expand">
                             <md-list-item class="md-inset" to="/game/list"><md-icon>gamepad</md-icon><span class="md-list-item-text">List</span></md-list-item>
                             <md-list-item class="md-inset" to="/game/rank"><md-icon>list</md-icon><span class="md-list-item-text">Rank</span></md-list-item>
-                            <md-list-item class="md-inset" to="/game/purchase"><md-icon>shopping_cart</md-icon><span class="md-list-item-text">Purchase</span></md-list-item>
+                            <md-list-item class="md-inset" to="/game/history"><md-icon>history</md-icon><span class="md-list-item-text">History</span></md-list-item>
                         </md-list>
                     </md-list-item>
 

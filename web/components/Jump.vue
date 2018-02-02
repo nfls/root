@@ -7,7 +7,7 @@
         name: "Jump",
         props: ["name"],
         mounted: function () {
-            this.$router.push("/user/dashboard")
+            this.$router.push("/dashboard")
             this.$emit('input', "Unknown Field")
         }
     }

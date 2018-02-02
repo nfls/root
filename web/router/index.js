@@ -85,6 +85,9 @@ export default new Router({
                     path: 'media/gallery/:id',
                     component: Album
                 }, {
+                    path: 'media/video',
+                    component: Video
+                }, {
                     path: 'school/vote',
                     component: Vote
                 }, {
