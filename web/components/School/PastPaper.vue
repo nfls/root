@@ -1,17 +1,33 @@
 <template>
     <div class="browser">
-        <md-list>
-            <md-list-item v-if="path.length > 0" @click="back">
-                <md-icon>folder_open</md-icon>
-                <span class="md-list-item-text">..</span>
-            </md-list-item>
-            <md-list-item v-for="item in displayItems" :key="item.etaf" @click="enter(item)">
-                <md-icon v-if="item.size == 0">folder</md-icon>
-                <md-icon v-else-if="item.name.endsWith('pdf')">picture_as_pdf</md-icon>
-                <md-inco v-else>attachment</md-inco>
-                <span class="md-list-item-text">{{item.displayName}}</span>
-            </md-list-item>
-        </md-list>
+
+        <md-empty-state v-if="loading"
+                md-rounded
+                md-icon="access_time"
+                md-label="Loading"
+                md-description="Please wait for a few seconds."
+                style="width:100%;padding-bottom: 100%;">
+        </md-empty-state>
+        <div v-else>
+            <span class="md-body-1">废话啰嗦的说明文字废话啰嗦的说明文字废话啰嗦的说明文字废话啰嗦的说明文字废话啰嗦的说明文字废话啰嗦的说明文字废话啰嗦的说明文字废话啰嗦的说明文字废话啰嗦的说明文字</span>
+            <md-field>
+                <label for="path">Path</label>
+                <md-input name="path" id="path" v-model="pathString" readonly disabled/>
+            </md-field>
+            <md-list>
+                <md-list-item v-if="path.length > 0" @click="back">
+                    <md-icon>folder_open</md-icon>
+                    <span class="md-list-item-text">..</span>
+                </md-list-item>
+                <md-list-item v-for="item in displayItems" :key="item.etaf" @click="enter(item)">
+                    <md-icon v-if="item.size == 0">folder</md-icon>
+                    <md-icon v-else-if="item.name.endsWith('pdf')">picture_as_pdf</md-icon>
+                    <md-inco v-else>attachment</md-inco>
+                    <span class="md-list-item-text">{{item.displayName}}</span>
+                </md-list-item>
+            </md-list>
+        </div>
+
     </div>
 </template>
 
@@ -21,8 +37,10 @@
         data: () => ({
             fileInfo: [],
             path: [],
+            pathString: "",
             displayItems: [],
-            client: null
+            client: null,
+            loading: true
         }),
         mounted: function() {
             this.axios.get("/oauth/downloadSts").then((response) => {
@@ -47,10 +65,10 @@
                     "marker": next
                 }).then(function (result) {
                     self.fileInfo = self.fileInfo.concat(result.objects)
-                    if(result.objects.length == 1000 && false){
+                    if(result.objects.length == 1000){
                         self.loadFiles(result.nextMarker)
                     }else{
-                        console.log(self.fileInfo)
+                        self.loading = false
                     }
                 }).catch(function (err) {
                     console.error(err);
@@ -60,7 +78,7 @@
                 var uri = this.path.reduce(reducer,"") + "/"
                 if(uri.startsWith("/"))
                     uri = uri.slice(1)
-
+                this.pathString = uri
                 return uri
             }, enter(item) {
                 if(item.size == 0){

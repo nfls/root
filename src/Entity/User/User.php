@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\User\UserRepository")
  */
-class User implements UserInterface,UserEntityInterface
+class User implements UserInterface,UserEntityInterface,\JsonSerializable
 {
 
     /**
@@ -312,6 +312,11 @@ class User implements UserInterface,UserEntityInterface
     public function getIdentifier()
     {
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->getId();
     }
 
 

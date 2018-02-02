@@ -39,9 +39,9 @@ class Client implements ClientEntityInterface
     private $clientSecret;
 
     /**
-     * @var string
+     * @var array
      *
-     * @ORM\Column(type="string",length=128)
+     * @ORM\Column(type="json",length=128)
      */
     private $grantType;
 
@@ -62,7 +62,7 @@ class Client implements ClientEntityInterface
     /**
      * @return string
      */
-    public function getIdentifier()
+    public function getIdentifier():string
     {
         return $this->clientId;
     }
@@ -70,7 +70,7 @@ class Client implements ClientEntityInterface
     /**
      * @return string
      */
-    public function getName()
+    public function getName():string
     {
         return $this->name;
     }
@@ -78,7 +78,7 @@ class Client implements ClientEntityInterface
     /**
      * @return string
      */
-    public function getRedirectUri()
+    public function getRedirectUri():string
     {
         return $this->redirectUrl;
     }
@@ -86,15 +86,16 @@ class Client implements ClientEntityInterface
     /**
      * @return string
      */
-    public function getSecret(){
+    public function getSecret():string
+    {
         return $this->clientSecret;
     }
 
 
     /**
-     * @return string
+     * @return array
      */
-    public function getGrantType()
+    public function getGrantType():array
     {
         return $this->grantType;
     }
@@ -102,7 +103,7 @@ class Client implements ClientEntityInterface
     /**
      * @return string
      */
-    public function getVersion()
+    public function getVersion():string
     {
         return $this->version;
     }
@@ -110,7 +111,7 @@ class Client implements ClientEntityInterface
     /**
      * @param string $version
      */
-    public function setVersion($version)
+    public function setVersion($version):string
     {
         $this->version = $version;
     }

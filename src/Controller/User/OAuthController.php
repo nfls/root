@@ -63,13 +63,6 @@ class OAuthController extends AbstractController
     }
 
     /**
-     * @Route("oauth/downloadSts", methods="GET")
-     */
-    public function downloadSts(Request $request,AliyunOSS $oss){
-        return $this->response->response($oss->getDownloadListToken($this->getUser()->getUsername()),200);
-    }
-
-    /**
      * @Route("oauth/uploadSts", methods="GET")
      */
     public function uploadSts(Request $request,AliyunOSS $oss){

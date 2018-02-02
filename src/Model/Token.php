@@ -8,12 +8,15 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\TokenInterface;
 use App\Entity\OAuth\Client;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use Mrgoon\AliyunSmsSdk\Exception\ClientException;
+use App\Entity\User\User;
+
 
 abstract class Token implements TokenInterface {
 
@@ -69,6 +72,14 @@ abstract class Token implements TokenInterface {
         $this->em = $args->getEntityManager();
     }
 
+    /** @ORM\PreFlush */
+    public function fetchUser(PreFlushEventArgs $args){
+        if(!($this->user instanceof \App\Entity\User\User)){
+            $em = $args->getEntityManager()->getRepository(User::class);
+            $this->user = $em->findOneBy(["id"=>$this->user]);
+        }
+    }
+
     public function __construct()
     {
         $this->scopes = json_encode([]);
@@ -96,7 +107,6 @@ abstract class Token implements TokenInterface {
 
     public function setUserIdentifier($identifier)
     {
-        //var_dump($identifier);
         $this->user = $identifier;
     }
 

@@ -19,7 +19,7 @@ class ClientRepository extends ServiceEntityRepository implements ClientReposito
         $client = $this->getClientById($clientIdentifier);
         if(@null === $client)
             return null;
-        if($grantType != $client->getGrantType())
+        if(!in_array($grantType,$client->getGrantType()))
             return null;
         if($mustValidateSecret && $clientSecret != $client->getSecret())
             return null;

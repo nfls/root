@@ -22,6 +22,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class AccessToken extends Token implements AccessTokenEntityInterface,UserInterface
 {
 
+
     public function convertToJWT(CryptKey $privateKey)
     {
         return (new Builder())
