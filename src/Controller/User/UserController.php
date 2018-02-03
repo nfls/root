@@ -84,7 +84,7 @@ class UserController extends AbstractController
         if(!$session)
             $session = new Session();
         $session->start();
-        $user = $this->getDoctrine()->getRepository(User::class)->findByUsername($request->request->get("username"));
+        $user = $this->getDoctrine()->getRepository(User::class)->search($request->request->get("username"));
         if (null === $user)
             return $this->response->response(null,401);
         if ($passwordEncoder->isPasswordValid($user, $request->request->get("password", $user->getSalt()))) {
@@ -101,6 +101,42 @@ class UserController extends AbstractController
         }else{
             return $this->response->response(null,Response::HTTP_UNAUTHORIZED);
         }
+    }
+
+    /**
+     * @Route("/user/reset", methods="POST")
+     */
+    public function reset(Request $request, UserPasswordEncoderInterface $passwordEncoder){
+        if(!$this->verifyCaptcha($request->request->get("captcha")))
+            return $this->response->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
+        $sms = new CodeVerificationService($this->getDoctrine()->getManager());
+        $phone = $request->request->get("phone");
+        $country = $request->request->get("country");
+        $code = $request->request->get("code");
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository(User::class);
+        if(intval($phone) > 0){
+            $phoneE164 = $sms->validate($country,$phone,$code,"reset");
+            if($phoneE164 === false)
+                return $this->response->response("手机验证码不正确",Response::HTTP_UNAUTHORIZED);
+            $user = $repo->findByPhone($phoneE164);
+        }else{
+            $email = $request->request->get("email");
+            if ($sms->verify($email,$code,"reset")) {
+                $user = $repo->findByEmail($email);
+            } else {
+                return $this->response->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
+            }
+        }
+        $password = $request->request->get("password");
+        if ($this->verifyPassword($user, $password)) {
+            $user->setPassword($passwordEncoder->encodePassword($user, $password));
+        } else {
+            return $this->response->response("密码不合法", Response::HTTP_UNAUTHORIZED);
+        }
+        $em->persist($user);
+        $em->flush();
+        return $this->response->response(null);
     }
 
     /**

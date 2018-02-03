@@ -9,6 +9,7 @@ use App\Model\ApiResponse;
 use App\Service\AliyunSMS;
 use App\Service\MailService;
 use App\Service\NexmoSMS;
+use PHPMailer\PHPMailer\Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -79,39 +80,55 @@ class CodeController extends AbstractController
      * @Route("/code/register", methods="POST", name="sendRegisterCode")
      */
     public function sendRegisterCode(Request $request){
+        if(!$this->verifyCaptcha($request->request->get("captcha")))
+            return $this->response->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
         $phone = intval($request->request->get("phone"));
         if($phone > 0){
             $country = $request->request->get("country");
             return $this->send($country,$phone,"register",AliyunSMS::REGISTER);
         }else{
             $email = $request->request->get("email");
-            if($this->checkUsedEmail($email))
-                return $this->response->response("email.repeated",Response::HTTP_BAD_REQUEST);
-            else
-                return $this->sendMail($email,"register","registering a new account");
+            return $this->sendMail($email,"register","registering a new account");
         }
 
     }
 
     /**
-     * @Route("/code/recover", methods="GET", name="sendResetCode")
+     * @Route("/code/reset", methods="POST", name="sendResetCode")
      */
-    public function sendRecoverCode(Request $request){
+    public function sendResetCode(Request $request){
+        if(!$this->verifyCaptcha($request->request->get("captcha")))
+            return $this->response->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
         $em = $this->getDoctrine()->getManager()->getRepository(User::class);
-        $user = $em->search($request->query->get("info"));
-        if(@is_null($user))
-            return $this->response->response("用户不存在",400);
-        $phone = $user->getPhone();
-        if(is_null($phone)){
-            return $this->api->response(null,400);
+        $phone = intval($request->request->get("phone"));
+        $email = $request->request->get("email");
+        $country = $request->request->get("country");
+        if($phone > 0){
+            $util = \libphonenumber\PhoneNumberUtil::getInstance();
+            try {
+                $phoneObject = $util->parse($phone,$country);
+                $phoneE164 = $util->format($phoneObject,\libphonenumber\PhoneNumberFormat::E164);
+                $user = $em->findByPhone($phoneE164);
+                if(@is_null($user))
+                    return $this->response->response("用户不存在",400);
+                else
+                    return $this->directlySend($user->getPhone(),"reset",AliyunSMS::RECOVER);
+            }catch(\libphonenumber\NumberParseException $e){
+                return $this->response->response("手机号格式错误",400);
+            }
+        }else{
+            $user = $em->findByEmail($email);
+            if(@is_null($user))
+                return $this->response->response("用户不存在",400);
+            else
+                return $this->sendMail($user->getEmail(),"reset","resetting your password",false);
         }
-        return $this->directlySend($phone,"reset",AliyunSMS::RECOVER);
     }
 
     /**
      * @Route("/code/change", methods="GET", name="sendChangeCode")
      */
-    public function sendResetCode(Request $request){
+    public function sendChangeCode(Request $request){
         $phone = $this->getUser()->getPhone();
         if(is_null($phone)){
             return $this->api->response(null,400);
@@ -166,14 +183,15 @@ class CodeController extends AbstractController
      * @param $type
      * @return JsonResponse
      */
-    private function directlySend($phoneObject,$action,$type){
+    private function directlySend($phone,$action,$type){
         $util = \libphonenumber\PhoneNumberUtil::getInstance();
-        if($phoneObject->getCountryCode() == 86){
-            $this->sendDomestic($phoneObject->getNationalNumber(),$action,$type);
+        if($phone->getCountryCode() == 86){
+            $this->sendDomestic($phone->getNationalNumber(),$action,$type);
         }else{
-            $this->sendInternational($util->format($phoneObject,\libphonenumber\PhoneNumberFormat::E164),$action);
+            $this->sendInternational($util->format($phone,\libphonenumber\PhoneNumberFormat::E164),$action);
         }
         return $this->response->response(null,200);
+
     }
 
     private function send($country,$phone,$action,$type,$checkUsed = true){
@@ -224,7 +242,9 @@ class CodeController extends AbstractController
         $this->aliyunService->sendCode($phone,$this->code,$type);
     }
 
-    private function sendMail($target,$action,$readableAction){
+    private function sendMail($target,$action,$readableAction,$checkUsed = true){
+        if($checkUsed && $this->checkUsedEmail($target))
+            return $this->response->response("email.repeated",Response::HTTP_BAD_REQUEST);
         $banDomain = ['chacuo','027168','bccto','a7996','zv68','sohus','piaa',
             'deiie','zhewei88','11163','svip520','ado0','haida-edu',
             'sian','jy5201','chaichuang','xtianx','zymuying','dayone',

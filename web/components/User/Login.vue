@@ -14,7 +14,7 @@
                    <div class="md-layout-row md-layout-wrap md-gutter">
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('username')">
-                                <label for="username">Username</label>
+                                <label for="username">Username/Email/E.164 Phone</label>
                                 <md-input name="username" id="username" autocomplete="username" v-model="form.username" :disabled="sending"  />
                                 <span class="md-error" v-if="!$v.form.username.required">Username is required.</span>
                             </md-field>

@@ -160,7 +160,7 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
     {
         $util = \libphonenumber\PhoneNumberUtil::getInstance();
         try {
-            $phoneObject = $util->parse($this->phone);
+            $phoneObject = $util->parse("+" . $this->phone);
             return $phoneObject;
         }catch(\libphonenumber\NumberParseException $e){
             return null;

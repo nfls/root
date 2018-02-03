@@ -173,7 +173,7 @@
                 this.sending = true
                 switch(this.task){
                     case "register":
-                        this.form["recaptcha"] = grecaptcha.getResponse()
+                        this.form["captcha"] = grecaptcha.getResponse()
                         this.axios.post("/user/register",this.form).then((response) => {
                             if(response.data["code"] == 200){
                                 this.showMsg("正常に登録")

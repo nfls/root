@@ -27,6 +27,7 @@ import Vote from '../components/School/Vote'
 
 import Login from '../components/User/Login'
 import Register from '../components/User/Register'
+import Reset from '../components/User/Reset'
 import Security from '../components/User/Security'
 import Message from '../components/User/Message'
 import Info from '../components/User/Info'
@@ -104,6 +105,9 @@ export default new Router({
                 }, {
                     path: '/user/register',
                     component: Register
+                }, {
+                    path: '/user/reset',
+                    component: Reset
                 }, {
                     path: 'user/info',
                     component: Info
