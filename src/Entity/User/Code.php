@@ -21,14 +21,14 @@ class Code
     /**
      * @var DateTime
      *
-     * @ORM\Column(type="datetimetz")
+     * @ORM\Column(type="datetime")
      */
     private $time;
 
     /**
      * @var DateTime
      *
-     * @ORM\Column(type="datetimetz")
+     * @ORM\Column(type="datetime")
      */
     private $expired;
 

@@ -43,7 +43,7 @@ class Rank
     /**
      * @var \DateTime
      *
-     * @ORM\Column(type="datetimetz")
+     * @ORM\Column(type="datetime")
      */
     private $time;
 

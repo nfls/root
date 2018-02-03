@@ -62,11 +62,11 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
     private $token;
 
     /**
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(type="string", unique=true, nullable = true)
+     * @ORM\Column(type="boolean")
      */
-    private $fa;
+    private $admin = false;
 
     /**
      * @var integer
@@ -75,25 +75,17 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
      */
     private $point = 0;
 
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(type="bigint", options={"unsigned":true, "default":1})
-     */
-    private $permission = 1;
-
     /**
      * @var \DateTime
      *
-     * @ORM\Column(type="datetimetz", options={"default":"CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="datetime", options={"default":"CURRENT_TIMESTAMP"})
      */
     private $readTime;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(type="datetimetz", options={"default":"CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="datetime", options={"default":"CURRENT_TIMESTAMP"})
      */
     private $joinTime;
 
@@ -228,7 +220,8 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
             "email" => $this->email,
             "phone" => $this->phone,
             "joinTime" => $this->joinTime,
-            "admin" => false
+            "admin" => $this->isAdmin(),
+            "verified" => $this->isVerified()
         );
     }
 
@@ -265,18 +258,24 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
 
     public function getRoles()
     {
-        $permissions = array();
-        $array = Permission::PERMISSION_ARRAY;
-        foreach ($array as $key => $value) {
-            if($this->permission & (1<<$key))
-                array_push($permissions,$value);
-        }
+        if($this->isAdmin())
+            $permissions = [Permission::IS_ADMIN];
+        else
+            $permissions = [];
         $valid = array_filter($this->authTickets->toArray(),array($this,"getValid"));
         if(count($valid) > 0){
             array_push($permissions,Permission::IS_AUTHENTICATED);
             array_push($permissions,$this->getAlumniPermission(array_values($valid)[0]));
         }
         return $permissions;
+    }
+
+    private function isVerified(){
+        $valid = array_filter($this->authTickets->toArray(),array($this,"getValid"));
+        if(count($valid) > 0)
+            return true;
+        else
+            return false;
     }
 
     public function hasRole($role){
@@ -313,6 +312,15 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
                 return Permission::IS_TEACHER;
         }
     }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->admin;
+    }
+
 
     public function getIdentifier()
     {

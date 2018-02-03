@@ -1,0 +1,43 @@
+{% extends 'admin/base.html.twig' %}
+{% block content %}
+    <div data-options="region:'center',title:'实名认证'" style="padding:5px;background:#eee;width:100%">
+        <table class="easyui-datagrid" title="待审核列表" id="dg" style="width:100%"
+               data-options="rownumbers:true,singleSelect:true">
+            <thead>
+            <tr>
+                <th data-options="field:'id'">ID</th>
+                <th data-options="field:'submitTime'" formatter="dateFormatter">提交日期</th>
+                <th data-options="field:'user'" formatter="usernameFormatter">提交用户</th>
+                <th data-options="field:'chineseName'">姓名</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <script>
+        function dateFormatter(val,row) {
+            var d = new Date(val);
+            return [d.getMonth()+1,
+                    d.getDate(),
+                    d.getFullYear()].join('/')+' '+
+                [d.getHours(),
+                    d.getMinutes(),
+                    d.getSeconds()].join(':');
+        }
+        function usernameFormatter(val,row){
+            return val.username;
+        }
+        function reload() {
+            $.get( "/admin/alumni/auth/list", function( data ) {
+                console.log(data.data);
+                $('#dg').datagrid({
+                    data: data.data,
+                    onClickRow: function(index,row){
+                        window.open("/#/alumni/auth/admin/"+row.id)
+                    }
+                });
+            });
+        }
+        window.onload = reload;
+        window.onfocus = reload;
+    </script>
+{% endblock %}

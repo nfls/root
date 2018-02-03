@@ -39,7 +39,7 @@ class GalleryController extends AbstractController
 
         $page = $request->query->get("page") ?? 1;
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
-        return $this->response->responseEntity($repo->getList($page,$canViewPrivate,$canViewAll),Response::HTTP_OK);
+        return $this->response->responseEntity($repo->getList($page,$canViewPrivate,$canViewAll));
     }
 
     /**
@@ -55,7 +55,7 @@ class GalleryController extends AbstractController
         }
 
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
-        return $this->response->responseEntity($repo->getGallery($request->query->get("id")));
+        return $this->response->responseEntity($repo->getGallery($request->query->get("id"),$canViewPrivate,$canViewAll));
     }
 
     /**
@@ -106,18 +106,19 @@ class GalleryController extends AbstractController
      */
     public function uploadPage(){
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
-        $this->denyAccessUnlessGranted(Permission::IS_ADMIN_MEDIA);
         return $this->render("admin/media/upload.html.twig");
     }
 
     /**
      * @Route("/admin/media/photo", methods="GET")
      */
-    public function managePhotos()
+    public function managePhotos(Request $request)
     {
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
-        $this->denyAccessUnlessGranted(Permission::IS_ADMIN_MEDIA);
-        return $this->render("admin/media/photo.html.twig");
+        if($request->query->has("gallery_id"))
+            return $this->render("admin/media/photo.html.twig",["gallery_id"=>$request->query->get("gallery_id")]);
+        else
+            return $this->render("admin/media/photo.html.twig",["gallery_id"=>0]);
     }
 
     /**
@@ -125,7 +126,6 @@ class GalleryController extends AbstractController
      */
     public function manageGallery(){
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
-        $this->denyAccessUnlessGranted(Permission::IS_ADMIN_MEDIA);
         return $this->render("admin/media/gallery.html.twig");
     }
 
@@ -134,14 +134,14 @@ class GalleryController extends AbstractController
      */
     public function editGallery(Request $request){
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
-        $this->denyAccessUnlessGranted(Permission::IS_ADMIN_MEDIA);
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Gallery::class);
         $photoRepo = $em->getRepository(Photo::class);
         if($request->request->has("id")){
-            $gallery = $repo->getGallery($request->request->get("id")) ?? new Gallery();
+            $gallery = $repo->getGallery($request->request->get("id"),true,true) ?? new Gallery();
             if($request->request->get("delete") == "true"){
                 //var_dump($gallery->getPhotos());
+                $em->remove($gallery->getCover() ?? new Photo());
                 foreach ($gallery->getPhotos() as $photo){
                     $photo->setGallery(null);
                     $em->remove($photo);
@@ -174,7 +174,6 @@ class GalleryController extends AbstractController
      */
     public function editPhotos(Request $request){
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
-        $this->denyAccessUnlessGranted(Permission::IS_ADMIN_MEDIA);
         $em = $this->getDoctrine()->getManager();
         $photoRepo = $em->getRepository(Photo::class);
         $galleryRepo = $em->getRepository(Gallery::class);
@@ -220,7 +219,6 @@ class GalleryController extends AbstractController
      */
     publiC function addPhoto(Request $request){
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
-        $this->denyAccessUnlessGranted(Permission::IS_ADMIN_MEDIA);
         $allowOrigin = $request->request->get("allowOrigin");
         $originalPhoto = $request->files->get("photo");
         $path = $originalPhoto->getRealPath();

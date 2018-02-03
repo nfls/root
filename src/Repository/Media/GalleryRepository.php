@@ -4,6 +4,7 @@ namespace App\Repository\Media;
 
 use App\Entity\Media\Gallery;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class GalleryRepository extends ServiceEntityRepository
@@ -37,12 +38,16 @@ class GalleryRepository extends ServiceEntityRepository
     }
 
     public function getGallery($id,$canViewPrivate = false,$canViewAll = false){
-        $gallery = $this->findOneBy(["id"=>$id])->getPhotos();
-        $gallery->setPhotos(array_filter($this->findOneBy(["id"=>$id])->getPhotos()),function($val)use($canViewAll,$canViewPrivate){
+        $gallery = $this->findOneBy(["id"=>$id]);
+
+        $photos = new ArrayCollection(array_filter($gallery->getPhotos()->toArray(),function($val)use($canViewAll,$canViewPrivate){
             if(!$canViewAll)
                 return $val->isVisible();
             if(!$canViewPrivate)
                 return $val->isPublic();
-        });
+            return true;
+        }));
+        $gallery->setPhotos($photos);
+        return $gallery;
     }
 }

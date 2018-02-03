@@ -20,6 +20,10 @@
                             <label for="submitTime">验证时间</label>
                             <md-input name="submitTime" id="submitTime" v-model="submitTime" readonly />
                         </md-field>
+                        <md-field>
+                            <label for="submitTime">过期时间</label>
+                            <md-input name="submitTime" id="submitTime" v-model="expireAt" readonly />
+                        </md-field>
                     </div>
                 </form>
             </md-card-content>
@@ -54,12 +58,13 @@
             valid: false,
             chineseName: "",
             englishName: "",
-            submitTime: ""
+            submitTime: "",
+            expireAt: ""
         }),
         mounted: function() {
-            this.$emit('input', "实名认证")
             this.loadData()
             this.loadStatus()
+            this.$emit('changeTitle', "实名认证")
         },
         methods: {
             loadData() {
@@ -68,10 +73,10 @@
                     this.history = response.data["data"].map(function(val){
                         val["readableText"] = self.getStatus(val.status)
                         if(val.submitTime){
-                            var moment = require('moment');
-                            val["readableText"] += "（提交时间：" + moment(val.submitTime).format("lll") + "）"
+                            var moment = require('moment-timezone');
+                            val["readableText"] += "（提交时间：" + moment(val.submitTime).tz(moment.tz.guess()).format("lll") + "）"
                         }
-                        val["readableText"] += " - " + val.id
+                        val["readableText"] += " " + val.id
                         return val
                     })
                     this.allowNew = (this.history.filter(function(val){
@@ -84,11 +89,15 @@
                     //var self = this
                     var data = response.data["data"]
                     if(data){
-                        var moment = require('moment');
+                        var moment = require('moment-timezone');
                         this.valid = true
                         this.chineseName = data["chineseName"]
                         this.englishName = data["englishName"]
-                        this.submitTime = moment(data["submitTime"]).format("lll")
+                        this.submitTime = moment(data["submitTime"]).tz(moment.tz.guess()).format("lll")
+                        if(data["expireAt"])
+                            this.expireAt = moment(data["expireAt"]).tz(moment.tz.guess()).format("L")
+                        else
+                            this.expireAt = "无期限"
                     }else{
                         this.valid = false
                     }
@@ -111,6 +120,8 @@
                         return "被退回"
                     case 5:
                         return "已通过"
+                    case 6:
+                        return "已过期"
                 }
             },
             newForm() {

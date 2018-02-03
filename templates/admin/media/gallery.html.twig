@@ -20,6 +20,7 @@
                 <th data-options="field:'time'" formatter="dateFormatter">上传日期</th>
                 <th data-options="field:'photoCount'">照片数</th>
                 <th data-options="field:'originCount'">精选数</th>
+                <th data-options="field:'cover'" formatter="boolFormatter">封面</th>
                 <th data-options="field:'public'" formatter="boolFormatter">公开</th>
                 <th data-options="field:'visible'" formatter="boolFormatter">可见</th>
             </tr>
@@ -50,6 +51,8 @@
                 <div>
                     <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="editPhotos()">提交</a>
                     <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="removePhotos()">删除</a>
+                    <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="viewPhotos()">查看</a>
+                    <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-filter'" onclick="goToPhotos()">照片</a>
                 </div>
             </form>
         </div>
@@ -60,12 +63,14 @@
         function edit(row,val){
             $("#title").val(val.title).change();
             $("#description").val(val.description).change();
+            if(val.cover)
+                $("#cover").val(val.cover.id).change();
             $('#public').prop('checked', val.public);
             $('#visible').prop('checked', val.visible);
             $('#dd').dialog({
                 title: '修改属性',
                 width: 250,
-                height: 300,
+                height: 250,
                 closed: true
             });
             $('#dd').dialog("open");
@@ -98,6 +103,14 @@
                 $('#dd').dialog("close");
                 loadData();
             },"json");
+        }
+        function viewPhotos(){
+            var selected = $("#dg").datagrid("getSelected");
+            window.open("/#/media/gallery/" + selected.id)
+        }
+        function goToPhotos(){
+            var selected = $("#dg").datagrid("getSelected");
+            window.location.href = "/admin/media/photo?gallery_id=" + selected.id
         }
         function nameFormatter(val,row){
             if(val === null){

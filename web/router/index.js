@@ -61,6 +61,9 @@ export default new Router({
                     path: 'alumni/auth/:id',
                     component: Form
                 }, {
+                    path: 'alumni/auth/admin/:id',
+                    component: Form
+                }, {
                     path: 'alumni/directory',
                     component: Directory
                 }, {

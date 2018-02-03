@@ -1,20 +1,13 @@
 <template>
     <div>
-        <!--
-        <md-speed-dial class="md-top-left back-button" md-direction="bottom">
-            <md-speed-dial-target class="md-primary">
-                <md-icon>arrow_back</md-icon>
-            </md-speed-dial-target>
-            <md-speed-dial-content></md-speed-dial-content>
-        </md-speed-dial>
-        -->
         <md-drawer class="md-right" :md-active.sync="showSidepanel">
             <md-toolbar class="md-transparent" md-elevation="0">
                 <span class="md-title">Comments</span>
             </md-toolbar>
-            <md-button class="md-icon-button" @click="writeComments()">
+            <md-button class="md-icon-button" @click="writeComments()" v-if="verified">
                 <md-icon>add</md-icon>
             </md-button>
+            <span v-else>只有实名认证后的账户才能发表评论！</span>
             <md-divider></md-divider>
             <div style="margin-top:20px">
                 <md-card v-for="comment in comments" :key="comment.id">
@@ -91,6 +84,7 @@
 <script>
     export default {
         name: "Album",
+        props: ["admin","verified",'loggedIn'],
         data: () => ({
             items: [],
             comments: [],
@@ -127,8 +121,9 @@
                     }
                 }).then((response) => {
                     if(full){
-                        var items = response.data["data"]["photos"]
+                        var items = Object.values(response.data["data"]["photos"])
                         if(this.onlyOrigin){
+                            console.log(items)
                             items = items.filter(item => item.osrc != null)
                         }
                         this.items = items.map(function(val){
@@ -143,7 +138,7 @@
                         })
                     }
                     this.comments = response.data["data"]["comments"]
-                    this.$emit('input', "Gallery - " + response.data["data"]["title"])
+                    this.$emit('changeTitle', "Gallery - " + response.data["data"]["title"])
                     this.info.title = response.data["data"]["title"]
                     this.info.description = response.data["data"]["description"]
                     this.info.originCount = response.data["data"]["originCount"]

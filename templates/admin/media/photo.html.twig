@@ -29,6 +29,9 @@
         To: <input class="easyui-datebox" style="width:110px">
         相册:
         <select id="combobox" class="easyui-combobox" panelHeight="auto" style="width:100px">
+            { % if gallery_id != 0 % }
+            <option value="{{ gallery_id }}">指定</option>
+            { % endif % }
             <option value="null">未分配</option>
             <option value="all">所有</option>
         </select>
@@ -38,7 +41,7 @@
         <form id="ff" method="post" style="padding: 5px;width: 100%">
             <div>
                 <label for="name">相册：</label>
-                <input id="gallery" class="easyui-validatebox" type="text" name="name" data-options="required:true" />
+                <input id="gallery" class="easyui-validatebox" type="text" value="{{ gallery_id }}" name="name" data-options="required:true" />
             </div>
             <div>
                 <label for="public">公开： </label>

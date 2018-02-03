@@ -1,5 +1,22 @@
 <template>
     <div class="realname">
+        <md-card class="review" v-if="adminMode">
+            <md-card-header>
+                <div class="md-title">审核</div>
+            </md-card-header>
+            <md-card-content>
+                <form novalidate class="md-layout-row md-gutter">
+                    <div class="md-flex">
+                        <md-datepicker format="MM/dd/yy" v-model="reviewDate"></md-datepicker>
+                    </div>
+                </form>
+            </md-card-content>
+            <md-card-actions md-alignment="left">
+                <md-button @click="acceptWithLimit">接受有期限</md-button>
+                <md-button @click="acceptWithoutLimit">接受无期限</md-button>
+                <md-button @click="reject">拒绝</md-button>
+            </md-card-actions>
+        </md-card>
         <md-card class="form">
             <md-card-header>
                 <div class="md-title">实名认证</div>
@@ -86,11 +103,13 @@
     export default {
         name: 'Form',
         mixins: [validationMixin],
+        props: ["admin","verified",'loggedIn'],
         data: () => ({
             formItems: [],
             validatorItems: [],
             form: [],
             hide: [],//反过来的。。。
+            reviewDate: null,
             reactor: [],
             countries: [],
             showForm: false,
@@ -100,7 +119,8 @@
             changed: false,
             showMessage: false,
             active: false,
-            message: ""
+            message: "",
+            adminMode: false
         }),
         validations() {
             return {
@@ -108,6 +128,7 @@
             }
         },
         mounted: function () {
+
             this.axios.get("/alumni/detail",{
                 params: {
                     id: this.$route.params["id"]
@@ -115,7 +136,6 @@
             }).then((response) => {
                 var formData = response.data["data"]
                 this.isDisabled = (formData.status != 0)
-                console.log(this.isDisabled)
                 this.status = formData.status
                 this.axios.get("/alumni/form").then((response) => {
                     var objects = response.data["data"]
@@ -155,7 +175,7 @@
             this.axios.get("/alumni/countries").then((response) => {
                 this.countries = response.data["data"]
             })
-            this.$emit('input', "实名认证 - 表格填写")
+            this.$emit('changeTitle', "实名认证 - 表格填写")
         },
         methods: {
             getValidationClass (fieldName) {
@@ -173,7 +193,8 @@
                         this.sending = true
                         this.axios.post("alumni/save?id="+this.$route.params["id"],this.form).then((response) => {
                             this.isDisabled = false
-                            this.changed = false
+                            if(!this.adminMode)
+                                this.changed = false
                             this.sending = false
                             this.message = "保存成功，您可以提交了"
                             this.showMessage = true
@@ -256,6 +277,31 @@
                     }
                     return previous
                 }, {})
+            }, acceptWithLimit() {
+                this.axios.post("/admin/alumni/auth/update",{
+                    id: this.$route.params["id"],
+                    action: "accept",
+                    time: this.reviewDate
+                }).then((response) => {
+                    //if(response.data["code"] == 200)
+                    //    window.close()
+                })
+            }, acceptWithoutLimit() {
+                this.axios.post("/admin/alumni/auth/update",{
+                    id: this.$route.params["id"],
+                    action: "accept"
+                }).then((response) => {
+                    if(response.data["code"] == 200)
+                    window.close()
+                })
+            }, reject() {
+                this.axios.post("/admin/alumni/auth/update",{
+                    id: this.$route.params["id"],
+                    action: "reject"
+                }).then((response) => {
+                    if(response.data["code"] == 200)
+                    window.close()
+                })
             }
         },
         watch: {
@@ -281,6 +327,16 @@
                     this.refreshValidator(this.formItems)
                 },
                 deep: true
+            },
+            admin: {
+                handler(newVal) {
+                    var path = this.$route.fullPath
+                    if(path.startsWith('/alumni/auth/admin')){
+                        this.adminMode = this.admin
+                        if(this.adminMode)
+                            this.isDisabled = false
+                    }
+                }
             }
         }
     }
@@ -305,5 +361,8 @@
     }
     .md-content {
         margin:5px;
+    }
+    .md-card {
+        margin:10px;
     }
 </style>

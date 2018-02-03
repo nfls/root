@@ -2,7 +2,6 @@
     <div class="browser">
 
         <md-empty-state v-if="loading"
-                md-rounded
                 md-icon="access_time"
                 md-label="Loading"
                 md-description="Please wait for a few seconds."
@@ -10,9 +9,10 @@
         </md-empty-state>
         <div v-else>
             <md-card>
-                <md-card-header>
+                <md-card-header style="text-align: left;">
                     <vue-markdown>{{header}}</vue-markdown>
                 </md-card-header>
+                <md-divider></md-divider>
                 <md-card-content>
                     <md-field style="width:90%;margin-left:auto;margin-right:auto">
                         <label for="path">Path</label>
@@ -34,6 +34,10 @@
 
             </md-card>
         </div>
+        <md-dialog-alert
+                :md-active.sync="error"
+                md-title="错误"
+                md-content="请确保您已登录您的账户并通过实名认证。如果实名认证已提交，请耐心等待审核！" />
 
     </div>
 </template>
@@ -45,6 +49,7 @@
         components: {
             VueMarkdown
         },
+        props: ["admin","verified",'loggedIn'],
         data: () => ({
             fileInfo: [],
             path: [],
@@ -52,16 +57,18 @@
             displayItems: [],
             client: null,
             loading: true,
-            header: ""
+            header: "",
+            error: false
         }),
         mounted: function() {
+            var self = this
+            this.$emit("changeTitle","Past Papers")
             this.axios.get("/school/pastpaper/header").then((response) => {
                 this.header = response.data["data"]
             })
             this.axios.get("/school/pastpaper/token").then((response) => {
                 var data = response.data["data"]
                 var OSS = require('ali-oss').Wrapper;
-
                 this.client = new OSS({
                     region: 'oss-cn-shanghai',
                     accessKeyId: data["AccessKeyId"],
@@ -71,7 +78,10 @@
                     secure: true
                 });
                 this.loadFiles("")
-            })
+            }).catch(function (error) {
+                self.error = true
+            });
+
         }, methods: {
             loadFiles(next){
                 var self = this
@@ -80,7 +90,7 @@
                     "marker": next
                 }).then(function (result) {
                     self.fileInfo = self.fileInfo.concat(result.objects)
-                    if(result.objects.length != 1000){
+                    if(result.objects.length == 1000){
                         self.loadFiles(result.nextMarker)
                     }else{
                         self.loading = false

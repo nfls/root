@@ -17,7 +17,7 @@ class Message
     private $id;
 
     /**
-     * @ORM\Column(type="datetimetz")
+     * @ORM\Column(type="datetime")
      */
     private $time;
 

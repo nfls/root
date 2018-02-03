@@ -51,6 +51,7 @@ class Alumni
     const STATUS_REVIEWING = 3;
     const STATUS_REJECTED = 4;
     const STATUS_PASSED = 5;
+    const STATUS_EXPIRED = 6;
 
     /**
      * @var integer
@@ -195,6 +196,13 @@ class Alumni
     private $remark;
 
     /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $expireAt;
+
+    /**
      * @return Uuid
      */
     public function getId(): Uuid
@@ -231,6 +239,8 @@ class Alumni
      */
     public function getStatus(): int
     {
+        if($this->expireAt && $this->expireAt < new \DateTime())
+            return self::STATUS_EXPIRED;
         return $this->status;
     }
 
@@ -554,12 +564,29 @@ class Alumni
         $this->submitTime = $submitTime;
     }
 
+    /**
+     * @return \DateTime|null
+     */
+    public function getExpireAt(): ?\DateTime
+    {
+        return $this->expireAt;
+    }
+
+    /**
+     * @param \DateTime|null $expireAt
+     */
+    public function setExpireAt(?\DateTime $expireAt): void
+    {
+        $this->expireAt = $expireAt;
+    }
 
 
     /**
      * @Assert\IsTrue(message="alumni.auth.error.notInNfls")
      */
     public function isAtNflsOnce(){
+        if($this->userStatus == 3)
+            return true;
         if($this->juniorSchool > 0)
             return true;
         if(null != $this->seniorSchool && $this->seniorSchool > 0)

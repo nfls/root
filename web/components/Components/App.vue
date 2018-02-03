@@ -125,7 +125,7 @@
             </md-app-drawer>
 
             <md-app-content>
-                <router-view :gResponse='gResponse' @changeTitle="changeTitle" @prepareRecaptcha="prepareRecaptcha" @reload="reload"/>
+                <router-view :gResponse='gResponse' :loggedIn='loggedIn' :admin='admin' :verified='verified' @changeTitle="changeTitle" @prepareRecaptcha="prepareRecaptcha" @reload="reload"/>
             </md-app-content>
         </md-app>
     </div>
@@ -141,6 +141,7 @@
             loggedIn: false,
             username: '加载中',
             admin: false,
+            verified: false,
             gResponse: ''
         }),
         methods: {
@@ -168,15 +169,17 @@
                 this.title = title
             }, prepareRecaptcha() {
                 document.getElementById('recaptcha').style.visibility = 'visible';
-                grecaptcha.reset()
+                if(typeof grecaptcha !== 'undefined') {
+                    grecaptcha.reset()
+                }
             }, reload() {
                 this.axios.get('/user/current').then((response) =>{
                     if(response.data['code'] == 200){
                         this.username = response.data['data']['username'];
                         this.admin = response.data['data']['admin'];
+                        this.verified = response.data['data']['verified']
                         this.loggedIn = true
                         var path = this.$route.fullPath
-                        //console.log(path)
                         if ( path === "/user/login" || path === "/user/register" || path === "user/reset")
                             this.$router.push("/dashboard")
                     }else{
