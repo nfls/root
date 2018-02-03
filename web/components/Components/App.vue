@@ -168,6 +168,7 @@
                 this.title = title
             }, prepareRecaptcha() {
                 document.getElementById('recaptcha').style.visibility = 'visible';
+                grecaptcha.reset()
             }, reload() {
                 this.axios.get('/user/current').then((response) =>{
                     if(response.data['code'] == 200){

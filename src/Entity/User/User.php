@@ -261,10 +261,7 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
         return null;
     }
 
-    public function eraseCredentials()
-    {
-        // TODO: Implement eraseCredentials() method.
-    }
+    public function eraseCredentials(){}
 
     public function getRoles()
     {
@@ -280,6 +277,14 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
             array_push($permissions,$this->getAlumniPermission(array_values($valid)[0]));
         }
         return $permissions;
+    }
+
+    public function hasRole($role){
+        $roles = $this->getRoles();
+        if(in_array($role,$roles))
+            return true;
+        else
+            return false;
     }
 
     /**

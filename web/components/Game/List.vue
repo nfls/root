@@ -68,6 +68,7 @@
             this.axios.get("/game/listRank").then((response) => {
                 this.ranks = response.data["data"]
             })
+            this.$emit("changeTitle","Game List")
         },methods:{
             getIcon(name){
                 switch(name) {

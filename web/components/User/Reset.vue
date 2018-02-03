@@ -261,7 +261,7 @@
             this.axios.get("/code/available").then((response) => {
                 this.countries = response.data["data"]
         })
-            this.$emit("changeTitle","Register")
+            this.$emit("changeTitle","Reset Password")
             this.$emit("prepareRecaptcha")
         },
         watch: {

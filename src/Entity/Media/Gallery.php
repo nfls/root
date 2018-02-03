@@ -310,4 +310,14 @@ class Gallery
         $this->comments = new ArrayCollection();
     }
 
+    /**
+     * @param ArrayCollection $photos
+     */
+    public function setPhotos(ArrayCollection $photos): void
+    {
+        $this->photos = $photos;
+    }
+
+
+
 }

@@ -13,10 +13,17 @@ class GalleryRepository extends ServiceEntityRepository
         parent::__construct($registry, Gallery::class);
     }
 
-    public function getList($page)
+    public function getList($page,$canViewPrivate = false,$canViewAll = false)
     {
-        return $this->createQueryBuilder("u")
-            ->setMaxResults(10)
+        $query = $this->createQueryBuilder("u");
+        if(!$canViewPrivate){
+            $query = $query->where("u.isPublic = true");
+        }
+        if(!$canViewAll){
+            $query = $query->andWhere("u.isVisible = true");
+        }
+
+        return $query->setMaxResults(10)
             ->setFirstResult(($page - 1) * 10)
             ->getQuery()
             ->getResult();
@@ -29,7 +36,13 @@ class GalleryRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getGallery($id){
-        return $this->findOneBy(["id"=>$id]);
+    public function getGallery($id,$canViewPrivate = false,$canViewAll = false){
+        $gallery = $this->findOneBy(["id"=>$id])->getPhotos();
+        $gallery->setPhotos(array_filter($this->findOneBy(["id"=>$id])->getPhotos()),function($val)use($canViewAll,$canViewPrivate){
+            if(!$canViewAll)
+                return $val->isVisible();
+            if(!$canViewPrivate)
+                return $val->isPublic();
+        });
     }
 }

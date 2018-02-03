@@ -29,16 +29,31 @@ class GalleryController extends AbstractController
      * @Route("/media/gallery/list", methods="GET")
      */
     public function getList(Request $request){
-        $page = $request->query->get("page") ?? 1;
+        if(null === $this->getUser()){
+            $canViewPrivate = false;
+            $canViewAll = false;
+        }else{
+            $canViewPrivate = $this->getUser()->hasRole(Permission::IS_AUTHENTICATED);
+            $canViewAll = $this->getUser()->hasRole(Permission::IS_ADMIN);
+        }
 
+        $page = $request->query->get("page") ?? 1;
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
-        return $this->response->responseEntity($repo->getList($page),Response::HTTP_OK);
+        return $this->response->responseEntity($repo->getList($page,$canViewPrivate,$canViewAll),Response::HTTP_OK);
     }
 
     /**
      * @Route("/media/gallery/detail", methods="GET")
      */
     public function getDetail(Request $request){
+        if(null === $this->getUser()){
+            $canViewPrivate = false;
+            $canViewAll = false;
+        }else{
+            $canViewPrivate = $this->getUser()->hasRole(Permission::IS_AUTHENTICATED);
+            $canViewAll = $this->getUser()->hasRole(Permission::IS_ADMIN);
+        }
+
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
         return $this->response->responseEntity($repo->getGallery($request->query->get("id")));
     }
