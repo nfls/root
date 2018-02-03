@@ -100,6 +100,13 @@ class GalleryController extends AbstractController
         return $this->response->response($gallery->likeStatus($this->getUser()));
     }
 
+    /**
+     * @Route("admin/media/comment", methods="GET")
+     */
+    public function commentPage(){
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        return $this->render("admin/media/comment.html.twig");
+    }
 
     /**
      * @Route("/admin/media/upload", methods="GET")
@@ -127,6 +134,24 @@ class GalleryController extends AbstractController
     public function manageGallery(){
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         return $this->render("admin/media/gallery.html.twig");
+    }
+
+    /**
+     * @Route("/admin/media/comment/edit", methods="POST")
+     */
+    public function editComment(Request $request){
+        $page = $request->request->get("page") ?? 1;
+        $rows = $request->request->get("rows") ?? 10;
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository(Comment::class);
+        if($request->request->has("delete")){
+            $items = json_decode($request->request->get("delete"),true);
+            foreach ($items as $item){
+                $em->remove($repo->findOneBy(["id"=>$item]));
+            }
+            $em->flush();
+        }
+        return $this->response->responseRowEntity($repo->getList($page,$rows),$repo->getCount(),Response::HTTP_OK);
     }
 
     /**

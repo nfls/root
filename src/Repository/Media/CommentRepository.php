@@ -13,16 +13,20 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
-    /*
-    public function findBySomething($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->where('c.something = :value')->setParameter('value', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
+    public function getList($page,$pagesize){
+        return $this->createQueryBuilder("u")
+            ->orderBy("u.time","DESC")
+            ->setMaxResults($pagesize)
+            ->setFirstResult(($page - 1)*$pagesize)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
+
+    public function getCount(){
+        return $this->createQueryBuilder("u")
+            ->select("count(u)")
+            ->orderBy("u.time","DESC")
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

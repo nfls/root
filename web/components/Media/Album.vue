@@ -19,8 +19,8 @@
                     <md-card-content>
                         {{comment.content}}
                     </md-card-content>
-                    <md-card-actions>
-
+                    <md-card-actions v-if="admin">
+                        <md-button class="md-accent" @click="deleteComment(comment.id)">Delete</md-button>
                     </md-card-actions>
                 </md-card>
             </div>
@@ -44,10 +44,19 @@
 
             <md-card-content>
                 <span>{{info.description}}</span><br/>
-                <span>Total count: {{info.photoCount}} / Featured count: {{info.originCount}}</span>
+                <span>Total count: {{info.photoCount}} / Featured count: {{info.originCount}}</span><br/>
+                <span v-if="!verified">实名认证后即可查看更多照片！</span>
+                <span v-else>使用右上角菜单栏可查看全部照片！</span>
             </md-card-content>
         </md-card>
-        <img class="preview-img photo" v-for="(item, index) in items" :src="item.msrc" @click="$preview.open(index, items, options)">
+        <div class="md-row" style="display:inline-block;">
+            <figure v-for="(item, index) in items" class="photo" style="display:inline-block;">
+                <img class="preview-img"  :src="item.msrc" @click="$preview.open(index, items, options)">
+                <figcaption v-if="showDebug">ID: {{item.id}}</figcaption>
+            </figure>
+        </div>
+
+
         <md-speed-dial class="md-top-right back-button" md-direction="bottom" md-event="click">
             <md-speed-dial-target>
                 <md-icon class="md-morph-initial">highlight</md-icon>
@@ -55,7 +64,7 @@
             </md-speed-dial-target>
 
             <md-speed-dial-content>
-                <md-button class="md-icon-button" @click="like()">
+                <md-button class="md-icon-button" @click="like()" v-if="loggedIn">
                     <md-tooltip v-if="isLiked">Dislike</md-tooltip>
                     <md-tooltip v-else>Like</md-tooltip>
                     <md-icon v-if="isLiked">thumb_down</md-icon>
@@ -72,6 +81,11 @@
                     <md-tooltip v-else>Show only featured photos</md-tooltip>
                     <md-icon v-if="onlyOrigin">launch</md-icon>
                     <md-icon v-else>featured_video</md-icon>
+                </md-button>
+
+                <md-button class="md-icon-button" @click="showDebug = !showDebug" v-if="admin">
+                    <md-tooltip>Debug</md-tooltip>
+                    <md-icon>report_problem</md-icon>
                 </md-button>
             </md-speed-dial-content>
         </md-speed-dial>
@@ -108,7 +122,8 @@
             isLiked: false,
             showSnackbar: false,
             onlyOrigin: true,
-            message: ""
+            message: "",
+            showDebug: false
         }),
         mounted: function () {
             this.loadData(true)
@@ -194,6 +209,13 @@
                     this.message = "All the photos will be shown."
                 this.showSnackbar = true
                 this.loadData(true)
+            },
+            deleteComment: function(id){
+                this.axios.post("/admin/media/comment/edit",{
+                    "delete": "[" + id + "]"
+                }).then((response) => {
+                    this.loadData(false)
+                })
             }
         }
     }

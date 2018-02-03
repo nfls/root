@@ -1,6 +1,14 @@
 {% extends 'admin/base.html.twig' %}
 {% block content %}
     <div data-options="region:'center',title:'相册管理'" style="padding:5px;background:#eee;width:100%">
+        <div id="p" class="easyui-panel" title="前排提醒"
+             style="padding:10px;background:#fafafa;width:100%"
+             data-options="iconCls:'icon-tip',closable:false,
+                collapsible:false,minimizable:false,pagination:true,maximizable:false">
+            <p>
+                只有当相册设置了封面图后才会在页面上显示！
+            </p>
+        </div>
         <div id="p" class="easyui-panel" title="新建相册"
              style="padding:10px;background:#fafafa;width:100%"
              data-options="iconCls:'icon-tip',closable:false,
