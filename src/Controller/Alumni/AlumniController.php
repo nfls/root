@@ -24,7 +24,8 @@ class AlumniController extends AbstractController
      */
     public function getForm(Request $request)
     {
-        return $this->response->response(json_decode(file_get_contents($this->get('kernel')->getRootDir() . "/Controller/Alumni/Form.json")));
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        return $this->response->response(json_decode(file_get_contents($this->get('kernel')->getRootDir() . "/Files/Form.json")));
     }
 
     /**
@@ -32,7 +33,8 @@ class AlumniController extends AbstractController
      */
     public function getCountries()
     {
-        return $this->response->response(json_decode(file_get_contents($this->get('kernel')->getRootDir() . "/Model/Countries.json")));
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        return $this->response->response(json_decode(file_get_contents($this->get('kernel')->getRootDir() . "/Files/Countries.json")));
     }
 
     /**
@@ -40,6 +42,7 @@ class AlumniController extends AbstractController
      */
     public function getCurrentStatus()
     {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $repo = $this->getDoctrine()->getManager()->getRepository(Alumni::class);
         $auths = $repo->getLastSuccessfulAuth($this->getUser());
         return $this->response->responseEntity($auths);
@@ -50,6 +53,7 @@ class AlumniController extends AbstractController
      */
     public function getInfo()
     {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $repo = $this->getDoctrine()->getManager()->getRepository(Alumni::class);
         return $this->response->responseEntity($repo->getAuths($this->getUser()));
     }
@@ -59,6 +63,7 @@ class AlumniController extends AbstractController
      */
     public function newForm(Request $request)
     {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $repo = $this->getDoctrine()->getManager()->getRepository(Alumni::class);
         if ((count($repo->findBy(["user" => $this->getUser(), "status" => Alumni::STATUS_NOT_SUBMITTED])) + count($repo->findBy(["user" => $this->getUser(), "status" => Alumni::STATUS_SUBMITTED]))) > 0) {
             return $this->response->response("alumni.already.new", 403);
@@ -76,6 +81,7 @@ class AlumniController extends AbstractController
      */
     public function getFormDetail(Request $request)
     {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Alumni::class);
         $id = $request->query->get("id");
@@ -91,6 +97,7 @@ class AlumniController extends AbstractController
      */
     public function saveForm(Request $request)
     {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $id = $request->query->get("id");
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Alumni::class);
@@ -134,6 +141,7 @@ class AlumniController extends AbstractController
      */
     public function submitForm(Request $request, ValidatorInterface $validator)
     {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $id = $request->query->get("id");
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Alumni::class);
@@ -184,6 +192,7 @@ class AlumniController extends AbstractController
      */
     public function cancelForm(Request $request)
     {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $id = $request->query->get("id");
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Alumni::class);
@@ -223,6 +232,7 @@ class AlumniController extends AbstractController
      */
     public function update(Request $request)
     {
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Alumni::class);
         $id = $request->request->get("id");

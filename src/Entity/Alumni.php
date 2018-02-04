@@ -585,7 +585,7 @@ class Alumni
      * @Assert\IsTrue(message="alumni.auth.error.notInNfls")
      */
     public function isAtNflsOnce(){
-        if($this->userStatus == 3)
+        if($this->userStatus == 4)
             return true;
         if($this->juniorSchool > 0)
             return true;

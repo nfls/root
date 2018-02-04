@@ -36,8 +36,8 @@
                                 <label :for="item.key">{{item.name}}</label>
                                 <md-input :name="item.key" :id="item.key" :autocomplete="item.key" v-model="form[item.key]" :disabled="isDisabled"></md-input>
                                 <span class="md-error" v-if="!$v.form[item.key].required">本项必填</span>
-                                <span class="md-error" v-else-if="!$v.form[item.key].minLength">填写的内容太少</span>
-                                <span class="md-error" v-else-if="!$v.form[item.key].maxLength">填写的内容太多</span>
+                                <span class="md-error" v-else-if="!$v.form[item.key].minLength">填写的内容不正确</span>
+                                <span class="md-error" v-else-if="!$v.form[item.key].maxLength">填写的内容不正确</span>
                                 <span class="md-error" v-else-if="!$v.form[item.key].minValue">填写的内容不正确</span>
                                 <span class="md-error" v-else-if="!$v.form[item.key].maxValue">填写的内容不正确</span>
                             </md-field>
@@ -221,7 +221,7 @@
                         },3000)
                     }else{
                         self.message = ""
-                        response.data["data"].forEach(function(val){
+                        Object.values(response.data["data"]).forEach(function(val){
                             self.message += val
                         })
                         this.isDisabled = false

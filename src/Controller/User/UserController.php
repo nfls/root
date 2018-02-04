@@ -5,6 +5,7 @@ namespace App\Controller\User;
 use App\Controller\AbstractController;
 use App\Entity\User\Code;
 use App\Model\ApiResponse;
+use App\Model\Permission;
 use App\Service\NexmoSMS;
 use App\Service\CodeVerificationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -36,6 +37,7 @@ class UserController extends AbstractController
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if(!$this->verifyCaptcha($request->request->get("captcha")))
             return $this->response->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
         $em = $this->getDoctrine()->getManager();
@@ -80,6 +82,7 @@ class UserController extends AbstractController
      */
     public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if(!$this->verifyCaptcha($request->request->get("captcha")))
             return $this->response->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
         $session = $request->getSession();
@@ -109,6 +112,7 @@ class UserController extends AbstractController
      * @Route("/user/reset", methods="POST")
      */
     public function reset(Request $request, UserPasswordEncoderInterface $passwordEncoder){
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if(!$this->verifyCaptcha($request->request->get("captcha")))
             return $this->response->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
         $sms = new CodeVerificationService($this->getDoctrine()->getManager());
@@ -157,6 +161,7 @@ class UserController extends AbstractController
      * @Route("/user/current", name="User(Current)", methods="GET")
      */
     public function current(){
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if(null === $this->getUser())
             return $this->response->response(null,Response::HTTP_NO_CONTENT);
         return $this->response->responseUser($this->getUser()->getInfoArray());
