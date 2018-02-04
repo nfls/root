@@ -35,7 +35,7 @@
 
     accessid = '';
     accesskey = '';
-    host = 'https://nflsio.oss-cn-shanghai.aliyuncs.com';
+    host = 'https://nfls-public.oss-cn-shanghai.aliyuncs.com';
     policyBase64 = '';
     signature = '';
     callbackbody = '';
@@ -207,7 +207,7 @@
             FileUploaded: function(up, file, info) {
                 if (info.status == 200)
                 {
-                    document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '   https://nflsio.oss-cn-shanghai.aliyuncs.com/' + get_uploaded_object_name(file.name);
+                    document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '   https://nfls-public.oss-cn-shanghai.aliyuncs.com/' + get_uploaded_object_name(file.name);
                 }
                 else
                 {

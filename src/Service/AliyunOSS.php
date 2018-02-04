@@ -17,7 +17,7 @@ class AliyunOSS {
 
     const DOWNLOAD_ROLE = "acs:ram::1978482396280799:role/past-papers";
     const UPLOAD_ROLE = "acs:ram::1978482396280799:role/upload-users";
-    const HOST = "http://nfls-paper.oss-cn-shanghai.aliyuncs.com";
+    const HOST = "http://nfls-public.oss-cn-shanghai.aliyuncs.com";
     const UPLOAD_DIR = "uploads/";
 
     private $key_id;
@@ -43,9 +43,9 @@ class AliyunOSS {
             return false;
         }
     }
-    public function getUploadToken($id){
+    public function getUploadToken(){
         $request = new AssumeRoleRequest();
-        $request->setRoleSessionName($id);
+        $request->setRoleSessionName("api");
         $request->setRoleArn(self::UPLOAD_ROLE);
         $request->setDurationSeconds(3600);
         try{
@@ -56,6 +56,7 @@ class AliyunOSS {
         }
     }
     public function getSignature(){
+        $token = $this->getUploadToken();
         $now = time();
         $expire = 30; //设置该policy超时时间是10s. 即这个policy过了这个有效时间，将不能访问
         $end = $now + $expire;
@@ -71,10 +72,10 @@ class AliyunOSS {
         $policy = json_encode($arr);
         $base64_policy = base64_encode($policy);
         $string_to_sign = $base64_policy;
-        $signature = base64_encode(hash_hmac('sha1', $string_to_sign, $this->key_id, true));
+        $signature = base64_encode(hash_hmac('sha1', $string_to_sign, $this->key_secret, true));
 
         $response = array();
-        $response['accessid'] = self::SECRET_ID;
+        $response['accessid'] = $this->key_id;
         $response['host'] = self::HOST;
         $response['policy'] = $base64_policy;
         $response['signature'] = $signature;
