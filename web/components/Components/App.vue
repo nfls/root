@@ -185,6 +185,8 @@
                     }else{
                         this.loggedIn = false
                     }
+                }).catch((error) => {
+                    this.loggedIn = false
                 })
             }
         },created: function(){

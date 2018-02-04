@@ -3,6 +3,7 @@
 namespace App\Controller\User;
 
 use App\Controller\AbstractController;
+use App\Entity\Alumni;
 use App\Entity\User\Code;
 use App\Model\ApiResponse;
 use App\Model\Permission;
@@ -33,11 +34,45 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/migrate", methods="POST")
+     */
+    public function migrate(\Symfony\Component\HttpFoundation\Request $request){
+        $info = json_decode($request->getContent(),true);
+        $em = $this->getDoctrine()->getManager();
+        foreach ($info as $userInfo) {
+            $user = new User();
+            if(!$this->verifyUsername($userInfo["username"]))
+                $user->setUsername(substr(md5(microtime()),rand(0,26),6));
+            else
+                $user->setUsername($userInfo["username"]);
+            $user->setPassword($userInfo["password"]);
+            $user->setEmail($userInfo["email"]);
+            if(isset($userInfo["phone"]))
+                $user->setPhone(intval("86".(string)$userInfo["phone"]));
+            $em->persist($user);
+            if(isset($userInfo["realname"]["englishName"])){
+                $alumniInfo = $userInfo["realname"];
+                $alumni = new Alumni();
+                $alumni->setUserStatus(1);
+                $alumni->setChineseName($alumniInfo["chineseName"]);
+                $alumni->setEnglishName($alumniInfo["englishName"]);
+                $alumni->setSeniorRegistration($alumniInfo["seniorRegistration"]);
+                $alumni->setSeniorClass($alumniInfo["seniorClass"]);
+                $alumni->setSeniorSchool($alumniInfo["seniorSchool"]);
+                $alumni->setRemark("由旧版IC实名认证系统自动生成。");
+                $alumni->setUser($user);
+                $em->persist($alumni);
+            }
+        }
+        $em->flush();
+        return $this->response->response(null);
+    }
+
+    /**
      * @Route("/user/register", name="register", methods="POST")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if(!$this->verifyCaptcha($request->request->get("captcha")))
             return $this->response->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
         $em = $this->getDoctrine()->getManager();
@@ -82,7 +117,6 @@ class UserController extends AbstractController
      */
     public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if(!$this->verifyCaptcha($request->request->get("captcha")))
             return $this->response->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
         $session = $request->getSession();
@@ -112,7 +146,6 @@ class UserController extends AbstractController
      * @Route("/user/reset", methods="POST")
      */
     public function reset(Request $request, UserPasswordEncoderInterface $passwordEncoder){
-        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if(!$this->verifyCaptcha($request->request->get("captcha")))
             return $this->response->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
         $sms = new CodeVerificationService($this->getDoctrine()->getManager());
