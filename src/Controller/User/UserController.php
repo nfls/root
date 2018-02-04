@@ -47,6 +47,8 @@ class UserController extends AbstractController
                 $user->setUsername($userInfo["username"]);
             $user->setPassword($userInfo["password"]);
             $user->setEmail($userInfo["email"]);
+
+            $user->setJoinTime(\DateTime::createFromFormat("Y-m-d H:i:s",$userInfo["join_time"]));
             if(isset($userInfo["phone"]))
                 $user->setPhone(intval("86".(string)$userInfo["phone"]));
             $em->persist($user);

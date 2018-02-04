@@ -332,6 +332,14 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
         return $this->getId();
     }
 
+    /**
+     * @param \DateTime $joinTime
+     */
+    public function setJoinTime(\DateTime $joinTime): void
+    {
+        $this->joinTime = $joinTime;
+    }
+
 
 }
 
