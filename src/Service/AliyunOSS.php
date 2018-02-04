@@ -33,7 +33,7 @@ class AliyunOSS {
     }
     public function getDownloadListToken($id){
         $request = new AssumeRoleRequest();
-        $request->setRoleSessionName($id);
+        $request->setRoleSessionName("api");
         $request->setRoleArn(self::DOWNLOAD_ROLE);
         $request->setDurationSeconds(3600);
         try{
