@@ -8,6 +8,8 @@
             Human makes mistakes, and I am 100% of human. -- Ms. E <br/>
             右上角可以登录或者注册<br/>
             iOS将会在寒假后开始弄<br/>
+            其实影音和游戏也好了，只不过我还没有传数据上去<br/>
+            网站目前中英日文夹杂，稍后会统一<br/>
             <strong>如果还是有问题，麻烦去找AS1刘欣然</strong><br/>
         </span>
         <br/>
