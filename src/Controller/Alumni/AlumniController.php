@@ -161,7 +161,7 @@ class AlumniController extends AbstractController
         });
         $serializer = new Serializer([new UuidNormalizer(), $normalizer], [new JsonEncoder()]);
         $formArray = json_decode($serializer->serialize($form, "json"), true);
-        $content = json_decode(file_get_contents($this->get('kernel')->getRootDir() . "/Controller/Alumni/Form.json"), true);
+        $content = json_decode(file_get_contents($this->get('kernel')->getRootDir() . "/Files/Form.json"), true);
         foreach ($content as $item) {
             if ($item["type"] == "select" && null !== $formArray[$item["key"]]) {
                 $values = $item["values"][(int)$formArray[$item["key"]]];
