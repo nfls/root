@@ -39,7 +39,8 @@ class GalleryRepository extends ServiceEntityRepository
 
     public function getGallery($id,$canViewPrivate = false,$canViewAll = false){
         $gallery = $this->findOneBy(["id"=>$id]);
-
+        if(null === $gallery)
+            return null;
         $photos = new ArrayCollection(array_filter($gallery->getPhotos()->toArray(),function($val)use($canViewAll,$canViewPrivate){
             if(!$canViewAll)
                 return $val->isVisible();
