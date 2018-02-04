@@ -1,0 +1,9 @@
+sentry:
+    options:
+        curl_method: async
+
+    dsn: "https://353a032cb29e48eab4de1be0d8ab47c9:c019d37d910c414c87aec16ca901115f@sentry.io/282745"
+#    skip_capture:  # To skip certain exceptions, specify a list below
+#      - 'Symfony\Component\HttpKernel\Exception\NotFoundHttpException'
+#      - 'Symfony\Component\HttpKernel\Exception\BadRequestHttpException'
+#      - 'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException'

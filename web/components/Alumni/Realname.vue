@@ -46,6 +46,10 @@
                 </md-list>
             </md-card-content>
         </md-card>
+        <md-dialog-alert
+                :md-active.sync="error"
+                md-title="错误"
+                md-content="请先登录您的账户！" />
     </div>
 </template>
 
@@ -59,7 +63,8 @@
             chineseName: "",
             englishName: "",
             submitTime: "",
-            expireAt: ""
+            expireAt: "",
+            error: false
         }),
         mounted: function() {
             this.loadData()
@@ -82,6 +87,8 @@
                     this.allowNew = (this.history.filter(function(val){
                         return val.status <= 1
                     }).length == 0)
+                }).catch((error) => {
+                    this.error = true
                 })
             },
             loadStatus() {

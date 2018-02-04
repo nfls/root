@@ -19,6 +19,7 @@
     "photoswipe": "^4.1.2",
     "style-loader": "^0.19.1",
     "vue": "^2.5.2",
+    "vue-analytics": "^5.8.0",
     "vue-axios": "^2.0.2",
     "vue-markdown": "^2.2.4",
     "vue-material": "^1.0.0-beta-7",

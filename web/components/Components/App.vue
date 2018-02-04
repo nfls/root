@@ -18,7 +18,7 @@
                             <md-list v-if='loggedIn'>
                                 <md-list-item>
                                     <md-avatar>
-                                        <img src='https://placeimg.com/40/40/people/5' alt='People'>
+                                        <img>
                                     </md-avatar>
                                     <span class='md-list-item-text'>{{username}}</span>
                                 </md-list-item>
@@ -161,7 +161,8 @@
                 }, 100);
             }, logout() {
                 this.axios.get('/user/logout').then((response) => {
-                    this.reload();
+                    this.reload
+                    location.reload()
                 })
             }, ct(response){
                 this.gResponse = response
