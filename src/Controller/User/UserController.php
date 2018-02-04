@@ -42,7 +42,7 @@ class UserController extends AbstractController
         foreach ($info as $userInfo) {
             $user = new User();
             if(!$this->verifyUsername($userInfo["username"]))
-                $user->setUsername(substr(md5(microtime()),rand(0,26),6));
+                $user->setUsername("user".substr(md5(microtime()),rand(0,26),6));
             else
                 $user->setUsername($userInfo["username"]);
             $user->setPassword($userInfo["password"]);
