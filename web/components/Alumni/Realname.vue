@@ -19,8 +19,8 @@
                         <md-field v-if="valid">
                             <label for="submitTime">验证时间</label>
                             <md-input name="submitTime" id="submitTime" v-model="submitTime" readonly />
-                        </md-field v-if="valid">
-                        <md-field>
+                        </md-field>
+                        <md-field v-if="valid">
                             <label for="submitTime">过期时间</label>
                             <md-input name="submitTime" id="submitTime" v-model="expireAt" readonly />
                         </md-field>

@@ -168,6 +168,7 @@
                     }, {})
                     this.refreshValidator(objects)
                     this.formItems = response.data["data"]
+                    this.ddlHelper()
                 })
             })
 
@@ -283,8 +284,8 @@
                     action: "accept",
                     time: this.reviewDate
                 }).then((response) => {
-                    //if(response.data["code"] == 200)
-                    //    window.close()
+                    if(response.data["code"] == 200)
+                        window.close()
                 })
             }, acceptWithoutLimit() {
                 this.axios.post("/admin/alumni/auth/update",{
@@ -302,6 +303,13 @@
                     if(response.data["code"] == 200)
                     window.close()
                 })
+            }, ddlHelper() {
+                if(this.form.userStatus == "0" && this.form.juniorRegistration){
+                    this.reviewDate = new Date(this.form.juniorRegistration + "/06/30")
+                }
+                if(this.form.userStatus == "1" && this.form.seniorRegistration){
+                    this.reviewDate = new Date(this.form.seniorRegistration + "/06/30")
+                }
             }
         },
         watch: {
