@@ -2,8 +2,8 @@
 var Encore = require('@symfony/webpack-encore');
 
 Encore
-    .setOutputPath('public/assets/')
-    .setPublicPath('/assets')
+    .setOutputPath('public/vue/')
+    .setPublicPath('/vue')
     .addEntry('vue', './web/main.js')
     .enableSassLoader()
     .autoProvidejQuery()
