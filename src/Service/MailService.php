@@ -14,7 +14,7 @@ class MailService {
         $this->service->Host = "hk2.nfls.io";
         $this->service->SMTPAuth = true;
         $this->service->Username = "no-reply@nfls.io";
-        $this->service->Password = "612e8e9f";
+        $this->service->Password = $_ENV["MAIL_PASSWORD"];
         $this->service->SMTPSecure = "tls";
     }
 

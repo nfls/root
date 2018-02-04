@@ -5,11 +5,16 @@ use Nexmo;
 
 class NexmoSMS {
     private $client;
-    const API_KEY = "91490ea5";
-    const API_SECRET = "cfaa6b8d6c8f365b";
+
+    private $key_id;
+    private $key_secret;
+
     public function __construct()
     {
-        $this->client = new Nexmo\Client(new Nexmo\Client\Credentials\Basic(self::API_KEY, self::API_SECRET));
+        $this->key_id = $_SERVER["NEXMO_KEY_ID"];
+        $this->key_secret = $_SERVER["NEXMO_KEY_SECRET"];
+
+        $this->client = new Nexmo\Client(new Nexmo\Client\Credentials\Basic($this->key_id, $this->key_secret));
     }
     public function send($phone,$brand){
         $verification = $this->client->verify()->start([
