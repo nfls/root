@@ -116,7 +116,7 @@
                     if(this.phone === null)
                         this.phone = "未绑定"
                 }).catch((error) => {
-                    location.reload()
+                    this.$router.push('/user/login')
                 })
                 this.form = {
                     password: null,
