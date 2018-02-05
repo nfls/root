@@ -126,38 +126,21 @@ class CodeController extends AbstractController
     }
 
     /**
-     * @Route("/code/change", methods="GET", name="sendChangeCode")
-     */
-    public function sendChangeCode(Request $request){
-        $phone = $this->getUser()->getPhone();
-        if(is_null($phone)){
-            return $this->api->response(null,400);
-        }
-        $phone = intval($request->request->get("phone"));
-        return $this->send(null,$phone,"unbind",AliyunSMS::RECOVER);
-    }
-
-    /**
-     * @Route("/code/bind", methods="GET", name="sendBindCode")
+     * @Route("/code/bind", methods="POST", name="sendBindCode")
      */
     public function sendBindCode(Request $request){
-        $phone = $request->query->get("phone");
-        if(!is_null($phone)){
-            return $this->api->response(null,400);
+        if(!$this->verifyCaptcha($request->request->get("captcha")))
+            return $this->response->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
+        $phone = intval($request->request->get("phone"));
+        if($phone > 0){
+            $country = $request->request->get("country");
+            return $this->send($country,$phone,"bind",AliyunSMS::BIND);
+        }else{
+            $email = $request->request->get("email");
+            return $this->sendMail($email,"bind","linking your email with an account");
         }
-        return $this->send(null,$phone,"bind",AliyunSMS::BIND);
     }
 
-    /**
-     * @Route("/code/unbind", methods="GET", name="sendUnBindCode")
-     */
-    public function sendUnBindCode(Request $request){
-        $phone = $this->getUser()->getPhone();
-        if(is_null($phone)){
-            return $this->api->response(null,400);
-        }
-        return $this->directlySend($phone,"unbind",AliyunSMS::UNBIND);
-    }
 
     private function checkUsedEmail($email){
         $em = $this->getDoctrine()->getManager()->getRepository(User::class);

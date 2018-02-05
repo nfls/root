@@ -82,7 +82,7 @@ class OAuthController extends AbstractController
      * @Route("admin/basic/upload", methods="GET")
      */
     public function renderUploadPage(){
-        $this->denA3accessUnlessGranted(Permission::IS_ADMIN);
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         return $this->render("admin/basic/upload.html.twig");
     }
 

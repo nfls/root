@@ -7,6 +7,7 @@ use App\Entity\Game\Game;
 use App\Entity\Game\Rank;
 use App\Model\ApiResponse;
 use App\Model\Normalizer\GameNormalizer;
+use App\Model\Permission;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +23,10 @@ class AbstractRankController extends AbstractController
         $gameRepo = $this->getDoctrine()->getManager()->getRepository(Game::class);
         $rankRepo = $this->getDoctrine()->getManager()->getRepository(Rank::class);
         $game = $gameRepo->findGame($request->query->get("game"));
+        if(null === $game)
+            return $this->response->response(null,204);
         if($request->request->has("score")){
+            $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
             $current = $rankRepo->getCurrentRankByGame($game,$this->getUser());
             $score = $request->request->get("score");
             if(count($current) == 0){

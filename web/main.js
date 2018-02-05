@@ -11,6 +11,8 @@ import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 import VueMarkdown from 'vue-markdown'
 import VueAnalytics from 'vue-analytics'
+import Raven from 'raven-js';
+import RavenVue from 'raven-js/plugins/vue';
 
 Vue.use(VuePreview)
 Vue.use(VueAxios, axios)
@@ -25,6 +27,11 @@ Vue.use(VueAnalytics, {
     }
 })
 
+Raven
+    .config('https://a9dbb410043f46369cd2f27763a1be82@sentry.io/282834')
+    .addPlugin(RavenVue, Vue)
+    .install();
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
@@ -37,3 +44,5 @@ new Vue({
   },
   template: '<App/>'
 })
+
+

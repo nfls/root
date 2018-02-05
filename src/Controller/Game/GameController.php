@@ -17,7 +17,7 @@ class GameController extends AbstractController
      * @Route("/game/list", methods="GET")
      */
     public function list(){
-        return $this->response->responseEntity($this->getDoctrine()->getManager()->getRepository(Game::class)->findAll());
+        return $this->response->responseRawEntity($this->getDoctrine()->getManager()->getRepository(Game::class)->findAll());
     }
 
     /**

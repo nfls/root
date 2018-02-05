@@ -1,5 +1,6 @@
 <?php
 namespace App\Model;
+use App\Model\Normalizer\GameNormalizer;
 use App\Model\Normalizer\PhotoNormalizer;
 use App\Model\Normalizer\UserNormalizer;
 use App\Model\Normalizer\UuidNormalizer;
@@ -27,8 +28,9 @@ class ApiResponse {
         $photoNormalizer = new PhotoNormalizer();
         $userNormalizer = new UserNormalizer();
         $uuidNormalizer = new UuidNormalizer();
+        $gameNormalizer = new GameNormalizer();
         $this->rawSerializer = new Serializer([$uuidNormalizer,$dateNormalizer,$normalizer],[$encoder]);
-        $this->serializer = new Serializer([$photoNormalizer,$uuidNormalizer,$dateNormalizer,$userNormalizer,$normalizer],[$encoder]);
+        $this->serializer = new Serializer([$gameNormalizer,$photoNormalizer,$uuidNormalizer,$dateNormalizer,$userNormalizer,$normalizer],[$encoder]);
     }
 
     public function response($data,$code = 200){
@@ -51,7 +53,7 @@ class ApiResponse {
         $json->setData($array);
         return $json;
     }
-    function responseUser($data,$code = 200){
+    function responseRawEntity($data,$code = 200){
         $data = json_decode($this->rawSerializer->serialize($data,"json"),TRUE);
         $json = new JsonResponse();
         $array = array("code"=>$code,"data"=>$data);
