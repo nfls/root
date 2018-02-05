@@ -1,5 +1,6 @@
 <template>
     <div style="text-align:left;">
+        <md-button to="/user/login">点我登陆（For iOS USERS）</md-button><br/>
         <span class="md-display-1">欢迎使用南外人v2.0 beta!</span><br/><br/>
         <span class="md-body-1">
             目前只有往卷和实名认证可以使用。
