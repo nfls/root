@@ -1,0 +1,64 @@
+{% extends 'admin/base.html.twig' %}
+{% block content %}
+    <div data-options="region:'center',title:'OAuth管理'" style="padding:5px;background:#eee;width:100%">
+        <table class="easyui-datagrid" title="客户端列表" id="dg" style="width:100%"
+               data-options="rownumbers:true,singleSelect:true">
+            <thead>
+            <tr>
+                <th data-options="field:'id'">ID</th>
+                <th data-options="field:'name'">名称</th>
+                <th data-options="field:'identifier'">客户端ID</th>
+                <th data-options="field:'clientSecret'">客户端密钥</th>
+                <th data-options="field:'redirectUri'">重定向Url</th>
+                <th data-options="field:'grantType'" formatter="grantFormatter">鉴权方式</th>
+                <th data-options="field:'version'">版本附加信息</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div id="dd" hidden>
+        <form id="ff" method="post" style="padding: 5px;width: 100%">
+            <div>
+                <label for="name">版本附加信息：</label>
+                <textarea id="version" class="easyui-validatebox" name="version"  style="width:90%"></textarea>
+            </div>
+            <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="save()">提交</a>
+        </form>
+    </div>
+    <script>
+        function grantFormatter(val,row){
+            return val.reduce(function(content,previous){
+                return previous + " " + content
+            },"")
+        }
+        function reload() {
+            $.get( "/admin/basic/oauth/edit", function( data ) {
+                $('#dg').datagrid({
+                    data: data.data,
+                    onClickRow: function(row,val){
+                        $("#version").val(val.version).change();
+                        $('#dd').dialog({
+                            title: '修改属性',
+                            width: 250,
+                            height: 250,
+                            closed: true
+                        });
+                        $('#dd').dialog("open");
+                    }
+                });
+            });
+        }
+        function save(){
+            var selected = $("#dg").datagrid("getSelected");
+            $.post("/admin/basic/oauth/edit", {
+                client_id:selected.identifier,
+                version:$("#version").val()
+            }, function(data){
+                $('#dd').dialog("close");
+                reload();
+            });
+        }
+        window.onload = reload;
+        window.onfocus = reload;
+    </script>
+{% endblock %}

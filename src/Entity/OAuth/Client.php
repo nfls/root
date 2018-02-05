@@ -111,10 +111,27 @@ class Client implements ClientEntityInterface
     /**
      * @param string $version
      */
-    public function setVersion($version):string
+    public function setVersion($version)
     {
         $this->version = $version;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClientSecret(): string
+    {
+        return $this->clientSecret;
+    }
+
 
 
 

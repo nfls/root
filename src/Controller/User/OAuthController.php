@@ -5,6 +5,7 @@ namespace App\Controller\User;
 use App\Controller\AbstractController;
 use App\Entity\OAuth\Client;
 use App\Model\ApiResponse;
+use App\Model\Permission;
 use App\Service\AliyunOSS;
 use App\Service\OAuthService;
 use League\OAuth2\Server\Exception\OAuthServerException;
@@ -81,7 +82,34 @@ class OAuthController extends AbstractController
      * @Route("admin/basic/upload", methods="GET")
      */
     public function renderUploadPage(){
+        $this->denA3accessUnlessGranted(Permission::IS_ADMIN);
         return $this->render("admin/basic/upload.html.twig");
+    }
+
+    /**
+     * @Route("admin/basic/oauth", methods="GET")
+     */
+    public function renderOAuthPage(){
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        return $this->render("admin/basic/oauth.html.twig");
+    }
+
+
+    /**
+     * @Route("admin/basic/oauth/edit")
+     */
+    public function getOAuthList(Request $request) {
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        $repo = $this->getDoctrine()->getManager()->getRepository(Client::class);
+        if($request->request->has("client_id")){
+            $client = $repo->getClientById($request->request->get("client_id"));
+            $client->setVersion($request->request->get("version"));
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($client);
+            $em->flush();
+            //return $this->response->responseEntity($client);
+        }
+        return $this->response->responseEntity($repo->findAll());
     }
 
 }
