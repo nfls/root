@@ -23,18 +23,21 @@ class AuthCodeRepository extends ServiceEntityRepository implements AuthCodeRepo
 
     public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity)
     {
-        // TODO: Implement persistNewAuthCode() method.
-
+        $em = $this->getEntityManager();
+        $em->flush($authCodeEntity);
+        $em->persist();
     }
 
     public function revokeAuthCode($codeId)
     {
-        // TODO: Implement revokeAuthCode() method.
+        $em = $this->getEntityManager();
+        $em->remove($this->findOneBy(["token"=>$codeId]));
+        $em->persist();
     }
 
     public function isAuthCodeRevoked($codeId)
     {
-        // TODO: Implement isAuthCodeRevoked() method.
+        return ($this->findOneBy(["token"=>$codeId]) === null);
     }
 
 

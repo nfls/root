@@ -16,6 +16,7 @@ class ClientRepository extends ServiceEntityRepository implements ClientReposito
 
     public function getClientEntity($clientIdentifier, $grantType, $clientSecret = null, $mustValidateSecret = true)
     {
+
         $client = $this->getClientById($clientIdentifier);
         if(@null === $client)
             return null;

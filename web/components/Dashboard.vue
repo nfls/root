@@ -1,5 +1,37 @@
 <template>
-    <div style="text-align:left;">
+    <div>
+        <div class="md-layout md-gutter md-alignment-center">
+            <div class="md-layout-item md-xlarge-size-50 md-large-size-50 md-medium-size-50 md-small-size-100 md-xsmall-size-100">
+                <md-card>
+                    <md-card-header>
+                        <span class="md-title">最新百科词条</span>
+                    </md-card-header>
+                    <md-divider></md-divider>
+                    <md-card-content>
+                        <md-list>
+                            <md-list-item v-for="title in wiki" :key="title" :href="'https://wiki.nfls.io/w/' + title" target="_blank">
+                                {{title}}
+                            </md-list-item>
+                        </md-list>
+                    </md-card-content>
+                </md-card>
+            </div>
+            <div class="md-layout-item md-xlarge-size-50 md-large-size-50 md-medium-size-50 md-small-size-100 md-xsmall-size-100"">
+                <md-card>
+                    <md-card-header>
+                        <span class="md-title">最新论坛帖子</span>
+                    </md-card-header>
+                    <md-divider></md-divider>
+                    <md-card-content>
+                        <md-list>
+                            <md-list-item v-for="post in forum" :key="post.id" :href="'https://forum.nfls.io/d/' + post.id" target="_blank">
+                                {{post.attributes.title}}
+                            </md-list-item>
+                        </md-list>
+                    </md-card-content>
+                </md-card>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -7,14 +39,35 @@
     export default {
         name: "Dashboard",
         props: ["isAdmin","isLoggedIn","isVerified"],
+        data: () => ({
+            wiki: null,
+            forum: null
+        }),
         mounted: function () {
             this.$emit("changeTitle","Dashboard")
             this.axios.get("https://wiki.nfls.io/api.php?action=query&format=json&list=recentchanges&generator=categorymembers&rcshow=!bot&rclimit=50&gcmtitle=Category%3A*&gcmlimit=100").then((response) => {
-                
+                var changes = response.data["query"]["recentchanges"].map(function(val){
+                    return val.title
+                }).filter(function(val){
+                    if(val.startsWith("用户"))
+                        return false
+                    if(val.startsWith("MediaWiki"))
+                        return false
+                    if(val.startsWith("文件"))
+                        return false
+                    return true
+                })
+                this.wiki = Array.from(new Set(changes)).slice(0,10)
+            })
+            this.axios.get("https://forum.nfls.io/api/discussions").then((response) => {
+                this.forum = response.data["data"].slice(0,10)
             })
         }
     }
 </script>
 
 <style scoped>
+    .md-card {
+        margin:10px;
+    }
 </style>

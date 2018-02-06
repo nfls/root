@@ -14,6 +14,7 @@ use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -35,7 +36,21 @@ class OAuthController extends AbstractController
      * @Route("/oauth/authorize")
      */
     public function authorize(Request $request){
-        return JsonResponse::create(null,404);
+        $user = $this->getUser();
+        $factory = new DiactorosFactory();
+        $httpFoundationFactory = new HttpFoundationFactory();
+        $psrRequest = $factory->createRequest($request);
+        $psrResponse = $factory->createResponse(new Response());
+        if(null === $user)
+            return new RedirectResponse("/#/user/login");
+        try{
+            $authRequest = $this->server->validateAuthorizationRequest($psrRequest);
+            $authRequest->setUser($user);
+            $authRequest->setAuthorizationApproved(true);
+            return $httpFoundationFactory->createResponse($this->server->completeAuthorizationRequest($authRequest, $psrResponse));
+        }catch(OAuthServerException $e){
+            return $httpFoundationFactory->createResponse($e->generateHttpResponse($psrResponse));
+        }
     }
 
     /**

@@ -24,6 +24,7 @@ class AuthCode extends Token implements AuthCodeEntityInterface
     public function __construct()
     {
         $this->scopes = new ArrayCollection();
+        parent::__construct();
     }
 
     public function getRedirectUri()
