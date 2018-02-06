@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Preference;
 use App\Model\ApiResponse;
 use App\Service\SettingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -21,7 +22,7 @@ class AbstractController extends Controller
     }
 
     public function setting(){
-        return new SettingService($this->get('kernel')->getRootDir()."/Files/Settings.json");
+        return $this->getDoctrine()->getManager()->getRepository(Preference::class);
     }
 
     public function verifyCaptcha($captcha){

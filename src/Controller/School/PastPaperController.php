@@ -3,6 +3,7 @@
 namespace App\Controller\School;
 
 use App\Controller\AbstractController;
+use App\Entity\Preference;
 use App\Model\Permission;
 use App\Service\AliyunOSS;
 use App\Service\SettingService;
@@ -27,6 +28,6 @@ class PastPaperController extends AbstractController
      */
     public function getHeader(){
         $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
-        return $this->response->response($this->setting()->get(SettingService::PAST_PAPER_HEADER));
+        return $this->response->response($this->setting()->get(Preference::SCHOOL_PASTPAPER_HEADER));
     }
 }

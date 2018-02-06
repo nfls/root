@@ -13,16 +13,14 @@ class PreferenceRepository extends ServiceEntityRepository
         parent::__construct($registry, Preference::class);
     }
 
-    /*
-    public function findBySomething($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->where('p.something = :value')->setParameter('value', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+    public function get($identifier){
+        return $this->findOneBy(["identifier"=>$identifier])->getContent();
     }
-    */
+
+    public function set($identifier,$content){
+         $preference = $this->findOneBy(["identifier"=>$identifier]);
+         $preference->setContent($content);
+         $this->getEntityManager()->persist($preference);
+         $this->getEntityManager()->flush();
+    }
 }

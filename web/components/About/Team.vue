@@ -10,6 +10,16 @@
                 <div class="md-subtitle">特约摄影记者</div>
             </md-card-header>
         </md-card>
+        <md-card class="md-primary" md-theme="purple-card">
+            <md-card-media>
+                <img src="/storage/yxy.png" alt="People">
+            </md-card-media>
+
+            <md-card-header>
+                <div class="md-title">姚馨瑜<md-tooltip md-direction="bottom">2019届IB2班</md-tooltip></div>
+                <div class="md-subtitle">特约摄影记者</div>
+            </md-card-header>
+        </md-card>
 
         <md-card class="md-primary" md-theme="mint-green-card">
             <md-card-media>
@@ -18,6 +28,15 @@
             <md-card-header>
                 <div class="md-title">侯子康</div>
                 <div class="md-subtitle">配音演员</div>
+            </md-card-header>
+        </md-card>
+        <md-card class="md-primary" md-theme="mint-green-card">
+            <md-card-media>
+                <img src="/storage/xzd.png" alt="People">
+            </md-card-media>
+            <md-card-header>
+                <div class="md-title">谢祖地</div>
+                <div class="md-subtitle">首席游戏开发师</div>
             </md-card-header>
         </md-card>
         <md-card class="md-primary" md-theme="blue-green-card">
@@ -38,6 +57,16 @@
             <md-card-header>
                 <div class="md-title">顾平德</div>
                 <div class="md-subtitle">官方二手手机供货商</div>
+            </md-card-header>
+        </md-card>
+        <md-card class="md-primary" md-theme="grass-card">
+            <md-card-media>
+                <img src="/storage/lxr.png" alt="People">
+            </md-card-media>
+
+            <md-card-header>
+                <div class="md-title">刘欣然</div>
+                <div class="md-subtitle">（还没想好写啥）</div>
             </md-card-header>
         </md-card>
         <md-card class="md-primary" md-theme="fog-card">
@@ -95,6 +124,8 @@
     .md-card {
         max-width: 200px;
         display: inline-block;
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
-    
+
 </style>
