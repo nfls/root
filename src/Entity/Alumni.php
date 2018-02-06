@@ -83,7 +83,7 @@ class Alumni
 
     /**
      * @var integer|null
-     * @Assert\Choice(choices={0,1},message="alumni.auth.error.gender.invalid")
+     * @Assert\Choice(choices={0,1,2},message="alumni.auth.error.gender.invalid")
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $gender;
