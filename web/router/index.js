@@ -12,9 +12,7 @@ import Directory from '../components/Alumni/Directory'
 import Realname from '../components/Alumni/Realname'
 import Form from '../components/Alumni/Form'
 
-import List from '../components/Game/List'
-import History from '../components/Game/History'
-
+import Game from '../components/Media/Game'
 import Gallery from '../components/Media/Gallery'
 import Album from '../components/Media/Album'
 import Video from '../components/Media/Video'
@@ -67,11 +65,8 @@ export default new Router({
                     path: 'alumni/directory',
                     component: Directory
                 }, {
-                    path: 'game/list',
-                    component: List
-                }, {
-                    path: 'game/history',
-                    component: History
+                    path: 'media/game',
+                    component: Game
                 }, {
                     path: 'media/gallery',
                     component: Gallery

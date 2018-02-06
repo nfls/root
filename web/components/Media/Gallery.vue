@@ -1,12 +1,11 @@
 <template>
     <div class="md-layout md-gutter md-alignment-center">
-        <div class="md-layout-item md-medium-size-33 md-small-size-50 md-xsmall-size-100 gallery-card" v-for="item in items" :key="item.id">
+        <div class="md-layout-item md-xlarge-size-20 md-large-size-20 md-medium-size-33 md-small-size-50 md-xsmall-size-100 gallery-card" v-for="item in items" :key="item.id">
             <md-card @click.native="onclick(item.id)" v-if="item.cover !== null">
                 <md-card-media-cover md-solid>
                     <md-card-media md-ratio="4:3">
                         <img :src="item.cover.src" alt="Skyscraper">
                     </md-card-media>
-
                     <md-card-area>
                         <md-card-header>
                             <span class="md-title">{{item.title}}</span>

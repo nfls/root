@@ -84,18 +84,10 @@
                     </md-list-item>
 
                     <md-list-item md-expand>
-                        <md-icon>videogame_asset</md-icon>
-                        <span class='md-list-item-text'>Game</span>
-                        <md-list slot='md-expand'>
-                            <md-list-item class='md-inset' to='/game/list'><md-icon>gamepad</md-icon><span class='md-list-item-text'>List</span></md-list-item>
-                            <md-list-item class='md-inset' to='/game/history'><md-icon>history</md-icon><span class='md-list-item-text'>History</span></md-list-item>
-                        </md-list>
-                    </md-list-item>
-
-                    <md-list-item md-expand>
                         <md-icon>video_library</md-icon>
                         <span class='md-list-item-text'>Media</span>
                         <md-list slot='md-expand'>
+                            <md-list-item class='md-inset' to='/media/game'><md-icon>gamepad</md-icon><span class='md-list-item-text'>Game</span></md-list-item>
                             <md-list-item class='md-inset' to='/media/gallery'><md-icon>photo_library</md-icon><span class='md-list-item-text'>Gallery</span></md-list-item>
                             <md-list-item class='md-inset' to='/media/video'><md-icon>video_library</md-icon><span class='md-list-item-text'>Video</span></md-list-item>
                         </md-list>
