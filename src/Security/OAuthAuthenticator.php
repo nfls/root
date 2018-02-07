@@ -30,7 +30,7 @@ class OAuthAuthenticator extends AbstractGuardAuthenticator
 
     public function supports(Request $request)
     {
-        return ($request->headers->has("Authorization") || $request->query->has("access_token"));
+        return (($request->headers->has("Authorization") && strpos($request->headers->get("Authorization"),"Bearer") === 0 )|| $request->query->has("access_token"));
     }
 
     public function getCredentials(Request $request)

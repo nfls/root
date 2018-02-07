@@ -49,7 +49,8 @@ class OAuthController extends AbstractController
             $authRequest->setAuthorizationApproved(true);
             return $httpFoundationFactory->createResponse($this->server->completeAuthorizationRequest($authRequest, $psrResponse));
         }catch(OAuthServerException $e){
-            return $httpFoundationFactory->createResponse($e->generateHttpResponse($psrResponse));
+            return $this->response->response($e->getMessage(),404);
+            //return $httpFoundationFactory->createResponse($e->generateHttpResponse($psrResponse));
         }
     }
 

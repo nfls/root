@@ -110,6 +110,7 @@
                             <md-list-item class='md-inset' to='/about/app'><md-icon>apps</md-icon><span class='md-list-item-text'>App</span></md-list-item>
                             <md-list-item class='md-inset' to='/about/team'><md-icon>people</md-icon><span class='md-list-item-text'>Dev Team</span></md-list-item>
                             <md-list-item class='md-inset' to='/about/feedback'><md-icon>feedback</md-icon><span class='md-list-item-text'>Feedback</span></md-list-item>
+                            <md-list-item class='md-inset' href='/admin' v-if="admin"><md-icon>developer_mode</md-icon><span class='md-list-item-text'>Admin</span></md-list-item>
                         </md-list>
                     </md-list-item>
 
