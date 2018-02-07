@@ -79,4 +79,7 @@ class Preference
     }
 
     const SCHOOL_PASTPAPER_HEADER = "school.pastpaper.header";
+    const ABOUT_DEVS = "about.devs";
+
+    const ALL = [self::SCHOOL_PASTPAPER_HEADER,self::ABOUT_DEVS];
 }

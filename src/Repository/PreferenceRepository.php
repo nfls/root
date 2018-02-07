@@ -14,7 +14,12 @@ class PreferenceRepository extends ServiceEntityRepository
     }
 
     public function get($identifier){
-        return $this->findOneBy(["identifier"=>$identifier])->getContent();
+        $preference = $this->findOneBy(["identifier"=>$identifier]);
+        if($preference->getType() == "json")
+            return json_decode($preference->getContent());
+        else
+            return $preference->getContent();
+
     }
 
     public function set($identifier,$content){

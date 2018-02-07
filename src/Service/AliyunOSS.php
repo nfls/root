@@ -17,7 +17,7 @@ class AliyunOSS {
 
     const DOWNLOAD_ROLE = "acs:ram::1978482396280799:role/past-papers";
     const UPLOAD_ROLE = "acs:ram::1978482396280799:role/upload-users";
-    const HOST = "http://nfls-public.oss-cn-shanghai.aliyuncs.com";
+    const HOST = "https://nfls-public.oss-cn-shanghai.aliyuncs.com";
     const UPLOAD_DIR = "uploads/";
 
     private $key_id;

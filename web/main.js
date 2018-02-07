@@ -11,14 +11,16 @@ import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 import VueMarkdown from 'vue-markdown'
 import VueAnalytics from 'vue-analytics'
-import Raven from 'raven-js';
-import RavenVue from 'raven-js/plugins/vue';
+import Raven from 'raven-js'
+import RavenVue from 'raven-js/plugins/vue'
+import Editor from 'markdown-palettes'
 
 Vue.use(VuePreview)
 Vue.use(VueAxios, axios)
 Vue.use(VueMaterial)
-Vue.use(require('vue-moment'));
-Vue.use(VueMarkdown);
+Vue.use(require('vue-moment'))
+Vue.use(VueMarkdown)
+Vue.use(Editor)
 Vue.use(VueAnalytics, {
     id: 'UA-113518783-1',
     router,

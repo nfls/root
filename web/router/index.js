@@ -30,6 +30,7 @@ import Security from '../components/User/Security'
 import Message from '../components/User/Message'
 import Info from '../components/User/Info'
 
+import Preference from '../components/Preference'
 
 
 Vue.use(Router)
@@ -109,6 +110,9 @@ export default new Router({
                 }, {
                     path: 'user/info',
                     component: Info
+                }, {
+                    path: '/admin/preference',
+                    component: Preference
                 }, {
                     path: '*',
                     component: Jump
