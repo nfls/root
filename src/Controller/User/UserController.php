@@ -207,6 +207,17 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/user/oauth", name="User(OAuth)", methods="GET")
+     */
+    public function oauth()
+    {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if (null === $this->getUser())
+            return $this->response->response(null, Response::HTTP_NO_CONTENT);
+        return new JsonResponse($this->getUser()->getInfoArray());
+    }
+
+    /**
      * @Route("user/info", name="User(Info)", methods="GET")
      */
     public function info(Request $request)
