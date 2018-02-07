@@ -32,7 +32,7 @@ class AuthCodeRepository extends ServiceEntityRepository implements AuthCodeRepo
     {
         $em = $this->getEntityManager();
         $em->remove($this->findOneBy(["token"=>$codeId]));
-        $em->persist();
+        $em->flush();
     }
 
     public function isAuthCodeRevoked($codeId)
