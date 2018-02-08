@@ -3,6 +3,7 @@
 namespace App\Controller\User;
 
 use App\Controller\AbstractController;
+use App\Entity\Preference;
 use App\Entity\User\Message;
 use App\Entity\User\User;
 use App\Model\ApiResponse;
@@ -52,6 +53,13 @@ class MessageController extends AbstractController
     public function getUnreadCount(){
         $em = $this->getDoctrine()->getManager()->getRepository(Message::class);
         return $this->response->response($em->getUnreadCount($this->getUser()->getReadTime()),200);
+    }
+
+    /**
+     * @Route("/message/announcement", methods="GET")
+     */
+    public function getAnnouncement(Request $request){
+        return $this->response->response($this->getDoctrine()->getRepository(Preference::class)->get(Preference::DASHBOARD_ANNOUNCEMENT));
     }
 
     // Below is for admin part.

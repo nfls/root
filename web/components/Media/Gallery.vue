@@ -36,7 +36,8 @@
                     return val
                 })
             })
-            this.$emit('input', "Gallery")
+            this.$emit("changeTitle","Gallery")
+            //this.$emit('input', "Gallery")
         },
         methods: {
             onclick: function(id) {

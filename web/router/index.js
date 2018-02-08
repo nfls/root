@@ -4,9 +4,7 @@ import Jump from '../components/Jump'
 import App from '../components/Components/App'
 import Dashboard from '../components/Dashboard'
 
-import Apps from '../components/About/App'
-import Feedback from '../components/About/Feedback'
-import Team from'../components/About/Team'
+import About from'../components/About/About'
 
 import Directory from '../components/Alumni/Directory'
 import Realname from '../components/Alumni/Realname'
@@ -15,9 +13,7 @@ import Form from '../components/Alumni/Form'
 import Game from '../components/Media/Game'
 import Gallery from '../components/Media/Gallery'
 import Album from '../components/Media/Album'
-import Video from '../components/Media/Video'
 
-import Assignment from '../components/School/Assignment'
 import Blackboard from '../components/School/Blackboard'
 import Lunch from '../components/School/Lunch'
 import PastPaper from '../components/School/PastPaper'
@@ -45,14 +41,8 @@ export default new Router({
                     path: 'dashboard',
                     component: Dashboard
                 }, {
-                    path: 'about/app',
-                    component: Apps
-                }, {
-                    path: 'about/team',
-                    component: Team
-                }, {
-                    path: 'about/Feedback',
-                    component: Feedback
+                    path: 'about',
+                    component: About
                 }, {
                     path: 'alumni/auth',
                     component: Realname
@@ -75,17 +65,11 @@ export default new Router({
                     path: 'media/gallery/:id',
                     component: Album
                 }, {
-                    path: 'media/video',
-                    component: Video
-                }, {
                     path: 'school/vote',
                     component: Vote
                 }, {
                     path: 'school/pastpaper',
                     component: PastPaper
-                }, {
-                    path: 'school/assignment',
-                    component: Assignment
                 }, {
                     path: 'school/blackboard',
                     component: Blackboard

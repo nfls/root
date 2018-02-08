@@ -284,6 +284,7 @@ class UserController extends AbstractController
         }
     }
 
+
     private function verifyUsername($username)
     {
         $re = '/[A-Za-z0-9_\-\x{0800}-\x{9fa5}]{3,16}/u';

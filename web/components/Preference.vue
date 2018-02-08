@@ -68,5 +68,7 @@
 </script>
 
 <style scoped>
-
+    div {
+        text-align: left;
+    }
 </style>

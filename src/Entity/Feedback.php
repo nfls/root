@@ -27,6 +27,55 @@ class Feedback
      */
     private $content;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=1024)
+     */
+    private $contact;
+
+    /**
+     * @return Uuid
+     */
+    public function getId(): Uuid
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent(): string
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param string $content
+     */
+    public function setContent(string $content): void
+    {
+        $this->content = $content;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContact(): string
+    {
+        return $this->contact;
+    }
+
+    /**
+     * @param string $contact
+     */
+    public function setContact(string $contact): void
+    {
+        $this->contact = $contact;
+    }
+
+
+
 
 
 }

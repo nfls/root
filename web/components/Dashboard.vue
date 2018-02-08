@@ -2,7 +2,7 @@
     <div>
         <md-card style="text-align:left;">
             <md-card-content>
-                <vue-markdown># hhhh</vue-markdown>
+                <vue-markdown v-if="loaded">{{announcement}}</vue-markdown>
             </md-card-content>
         </md-card>
         <div class="md-layout md-gutter md-alignment-center">
@@ -50,10 +50,16 @@
         props: ["isAdmin","isLoggedIn","isVerified"],
         data: () => ({
             wiki: null,
-            forum: null
+            forum: null,
+            announcement: null,
+            loaded: false
         }),
         mounted: function () {
             this.$emit("changeTitle","Dashboard")
+            this.axios.get("/message/announcement").then((response) => {
+                this.announcement = response.data["data"]
+                this.loaded = true
+            })
             this.axios.get("https://wiki.nfls.io/api.php?action=query&format=json&list=recentchanges&generator=categorymembers&rcshow=!bot&rclimit=50&gcmtitle=Category%3A*&gcmlimit=100").then((response) => {
                 var changes = response.data["query"]["recentchanges"].map(function(val){
                     return val.title

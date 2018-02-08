@@ -9,28 +9,19 @@
                     </md-button>
                     <span class='md-title'>{{title}}</span>
                 </div>
-                <div class='md-toolbar-section-end'>
+                <div class='md-toolbar-section-end' align="right" style="margin-right: 0px;">
                     <md-menu md-size='big' md-direction='bottom-start'>
                         <md-button md-menu-trigger class='md-icon-button'>
-                            <md-icon>more_vert</md-icon>
+                            <md-avatar>
+                                <img>
+                            </md-avatar>
                         </md-button>
                         <md-menu-content>
                             <md-list v-if='loggedIn'>
-                                <md-list-item>
-                                    <md-avatar>
-                                        <img>
-                                    </md-avatar>
-                                    <span class='md-list-item-text'>{{username}}</span>
-                                </md-list-item>
-                                <md-divider class='md-inset'></md-divider>
-                                <md-list-item>
-                                    <md-icon>settings</md-icon>
-                                    <span class='md-list-item-text'>Settings</span>
-                                </md-list-item>
-                                <md-list-item @click="logout">
-                                    <md-icon>exit_to_app</md-icon>
-                                    <span class='md-list-item-text'>Logout</span>
-                                </md-list-item>
+                                <md-list-item to='/user/info'><md-icon>info</md-icon><span class='md-list-item-text'>Info</span></md-list-item>
+                                <md-list-item to='/user/security'><md-icon>security</md-icon><span class='md-list-item-text'>Security</span></md-list-item>
+                                <md-list-item to='/user/message'><md-icon>chat</md-icon><span class='md-list-item-text'>Message</span></md-list-item>
+                                <md-list-item @click="logout"><md-icon>exit_to_app</md-icon><span class='md-list-item-text'>Logout</span></md-list-item>
                             </md-list>
                             <md-list v-else>
                                 <md-list-item to='/user/login'>
@@ -44,6 +35,7 @@
                             </md-list>
                         </md-menu-content>
                     </md-menu>
+                    <span class='md-list-item-text' >{{username}}</span>
                 </div>
             </md-app-toolbar>
 
@@ -64,16 +56,25 @@
                     </md-list-item>
 
                     <md-list-item md-expand>
-                        <md-icon>school</md-icon>
+                        <md-icon>class</md-icon>
                         <span class='md-list-item-text'>School</span>
                         <md-list slot='md-expand'>
-                            <md-list-item class='md-inset' to='/alumni/auth'><md-icon>perm_identity</md-icon><span class='md-list-item-text'>Realname</span></md-list-item>
-                            <md-list-item class='md-inset' to='/alumni/directory'><md-icon>info</md-icon><span class='md-list-item-text'>Directory</span></md-list-item>
                             <md-list-item class='md-inset' to='/school/pastpaper'><md-icon>book</md-icon><span class='md-list-item-text'>Past Paper</span></md-list-item>
                             <md-list-item class='md-inset' to='/school/blackboard'><md-icon>speaker_notes</md-icon><span class='md-list-item-text'>Blackboard</span></md-list-item>
                             <md-list-item class='md-inset' to='/school/vote'><md-icon>plus_one</md-icon><span class='md-list-item-text'>Vote</span></md-list-item>
                         </md-list>
                     </md-list-item>
+
+                    <md-list-item md-expand>
+                        <md-icon>school</md-icon>
+                        <span class='md-list-item-text'>Alumni</span>
+                        <md-list slot='md-expand'>
+                            <md-list-item class='md-inset' to='/alumni/auth'><md-icon>perm_identity</md-icon><span class='md-list-item-text'>Realname</span></md-list-item>
+                            <md-list-item class='md-inset' to='/alumni/directory'><md-icon>info</md-icon><span class='md-list-item-text'>Directory</span></md-list-item>
+                        </md-list>
+                    </md-list-item>
+
+
 
                     <md-list-item md-expand>
                         <md-icon>video_library</md-icon>
@@ -84,27 +85,10 @@
                         </md-list>
                     </md-list-item>
 
-                    <md-list-item md-expand>
-                        <md-icon>account_box</md-icon>
-                        <span class='md-list-item-text'>Account</span>
-                        <md-list slot='md-expand'>
-                            <md-list-item class='md-inset' to='/user/info'><md-icon>info</md-icon><span class='md-list-item-text'>Info</span></md-list-item>
-                            <md-list-item class='md-inset' to='/user/security'><md-icon>security</md-icon><span class='md-list-item-text'>Security</span></md-list-item>
-                            <md-list-item class='md-inset' to='/user/message'><md-icon>chat</md-icon><span class='md-list-item-text'>Message</span></md-list-item>
-                        </md-list>
-                    </md-list-item>
-
-                    <md-list-item md-expand>
-                        <md-icon>adb</md-icon>
-                        <span class='md-list-item-text'>About</span>
-                        <md-list slot='md-expand'>
-                            <md-list-item class='md-inset' to='/about/app'><md-icon>apps</md-icon><span class='md-list-item-text'>App</span></md-list-item>
-                            <md-list-item class='md-inset' to='/about/team'><md-icon>people</md-icon><span class='md-list-item-text'>Dev Team</span></md-list-item>
-                            <md-list-item class='md-inset' to='/about/feedback'><md-icon>feedback</md-icon><span class='md-list-item-text'>Feedback</span></md-list-item>
-                            <md-list-item class='md-inset' href='/admin' v-if="admin"><md-icon>developer_mode</md-icon><span class='md-list-item-text'>Admin</span></md-list-item>
-                        </md-list>
-                    </md-list-item>
-
+                    <md-list-item href='https://forum.nfls.io'><md-icon>forum</md-icon><span class='md-list-item-text'>Forum</span></md-list-item>
+                    <md-list-item href='https://wiki.nfls.io'><md-icon>library_books</md-icon><span class='md-list-item-text'>Wiki</span></md-list-item>
+                    <md-list-item to='/about'><md-icon>adb</md-icon><span class='md-list-item-text'>About</span></md-list-item>
+                    <md-list-item href='/admin' v-if="admin"><md-icon>developer_mode</md-icon><span class='md-list-item-text'>Admin</span></md-list-item>
                 </md-list>
             </md-app-drawer>
 
