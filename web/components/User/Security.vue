@@ -2,7 +2,7 @@
     <div class="security">
         此页面施工中，请勿使用！WIP. DO NOT USE!
         <form novalidate class="md-layout" @submit.prevent="submit">
-            <md-card class="md-layout-item md-size-50 md-small-size-100">
+            <md-card class="md-layout-item md-size-100">
                 <md-card-header>
                     <div class="md-title">安全设置</div>
                 </md-card-header>

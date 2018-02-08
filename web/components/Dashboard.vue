@@ -1,5 +1,10 @@
 <template>
     <div>
+        <md-card style="text-align:left;">
+            <md-card-content>
+                <vue-markdown># hhhh</vue-markdown>
+            </md-card-content>
+        </md-card>
         <div class="md-layout md-gutter md-alignment-center">
             <div class="md-layout-item md-xlarge-size-50 md-large-size-50 md-medium-size-50 md-small-size-100 md-xsmall-size-100">
                 <md-card>
@@ -36,8 +41,12 @@
 </template>
 
 <script>
+    import VueMarkdown from 'vue-markdown'
     export default {
         name: "Dashboard",
+        components: {
+            VueMarkdown
+        },
         props: ["isAdmin","isLoggedIn","isVerified"],
         data: () => ({
             wiki: null,

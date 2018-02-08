@@ -282,7 +282,6 @@ class UserController extends AbstractController
         }else{
             return $this->response->response(null,Response::HTTP_UNAUTHORIZED);
         }
-
     }
 
     private function verifyUsername($username)

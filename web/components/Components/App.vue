@@ -62,24 +62,16 @@
                         <md-icon>dashboard</md-icon>
                         <span class='md-list-item-text'>Dashboard</span>
                     </md-list-item>
-                    <md-list-item md-expand>
-                        <md-icon>library_books</md-icon>
-                        <span class='md-list-item-text'>School</span>
-                        <md-list slot='md-expand'>
-                            <md-list-item class='md-inset' to='/school/pastpaper'><md-icon>book</md-icon><span class='md-list-item-text'>Past Paper</span></md-list-item>
-                            <md-list-item class='md-inset' to='/school/blackboard'><md-icon>speaker_notes</md-icon><span class='md-list-item-text'>Blackboard</span></md-list-item>
-                            <md-list-item class='md-inset' to='/school/assignment'><md-icon>assignment</md-icon><span class='md-list-item-text'>Assignment</span></md-list-item>
-                            <md-list-item class='md-inset' to='/school/lunch'><md-icon>credit_card</md-icon><span class='md-list-item-text'>Lunch</span></md-list-item>
-                            <md-list-item class='md-inset' to='/school/vote'><md-icon>plus_one</md-icon><span class='md-list-item-text'>Vote</span></md-list-item>
-                        </md-list>
-                    </md-list-item>
 
                     <md-list-item md-expand>
                         <md-icon>school</md-icon>
-                        <span class='md-list-item-text'>Alumni</span>
+                        <span class='md-list-item-text'>School</span>
                         <md-list slot='md-expand'>
                             <md-list-item class='md-inset' to='/alumni/auth'><md-icon>perm_identity</md-icon><span class='md-list-item-text'>Realname</span></md-list-item>
                             <md-list-item class='md-inset' to='/alumni/directory'><md-icon>info</md-icon><span class='md-list-item-text'>Directory</span></md-list-item>
+                            <md-list-item class='md-inset' to='/school/pastpaper'><md-icon>book</md-icon><span class='md-list-item-text'>Past Paper</span></md-list-item>
+                            <md-list-item class='md-inset' to='/school/blackboard'><md-icon>speaker_notes</md-icon><span class='md-list-item-text'>Blackboard</span></md-list-item>
+                            <md-list-item class='md-inset' to='/school/vote'><md-icon>plus_one</md-icon><span class='md-list-item-text'>Vote</span></md-list-item>
                         </md-list>
                     </md-list-item>
 
@@ -89,7 +81,6 @@
                         <md-list slot='md-expand'>
                             <md-list-item class='md-inset' to='/media/game'><md-icon>gamepad</md-icon><span class='md-list-item-text'>Game</span></md-list-item>
                             <md-list-item class='md-inset' to='/media/gallery'><md-icon>photo_library</md-icon><span class='md-list-item-text'>Gallery</span></md-list-item>
-                            <md-list-item class='md-inset' to='/media/video'><md-icon>video_library</md-icon><span class='md-list-item-text'>Video</span></md-list-item>
                         </md-list>
                     </md-list-item>
 
