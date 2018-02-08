@@ -24,6 +24,8 @@ class PreferenceRepository extends ServiceEntityRepository
 
     public function set($identifier,$content){
          $preference = $this->findOneBy(["identifier"=>$identifier]);
+         if($preference->getType() == "json")
+             $content = json_encode($content);
          $preference->setContent($content);
          $this->getEntityManager()->persist($preference);
          $this->getEntityManager()->flush();

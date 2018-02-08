@@ -10,8 +10,9 @@
         </div>
         <div style="text-align: left;">
             <markdown-palettes v-model="content" v-if="type == 'markdown'"></markdown-palettes>
-            <vue-json-editor v-model="content" :showBtns="true" v-if="type == 'json'"></vue-json-editor>
+            <vue-json-editor v-model="content" v-if="type == 'json'"></vue-json-editor>
         </div>
+        <md-button class="md-raised md-primary" @click="save">保存</md-button>
     </div>
 
 </template>
@@ -27,14 +28,27 @@
         name: "Preference",
         data: () => ({
             info: null,
+            identifier: null,
             content: null,
             item: null,
             type: ""
         }),
+        methods: {
+            save() {
+                this.axios.post("/admin/preference",{
+                    identifier: this.identifier,
+                    content: this.content
+                }).then((response) => {
+                    this.update()
+                })
+            }, update() {
+                this.axios.get("/admin/preference").then((response) => {
+                    this.info = response.data["data"]
+                })
+            }
+        },
         mounted: function() {
-            this.axios.get("/admin/preference").then((response) => {
-                this.info = response.data["data"]
-            })
+            this.update()
         },
         watch: {
             item: {
@@ -44,9 +58,9 @@
                     })
                     this.content = item[0].content
                     this.type = item[0].type
+                    this.identifier = item[0].identifier
                     if(this.type == "json")
                         this.content = JSON.parse(this.content)
-                    console.log(item)
                 }
             }
         }

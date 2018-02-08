@@ -6,6 +6,7 @@ use App\Controller\AbstractController;
 use App\Entity\Alumni;
 use App\Entity\Preference;
 use App\Entity\User\User;
+use App\Model\Permission;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -23,10 +24,15 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/preference", methods="GET")
+     * @Route("/admin/preference")
      */
     public function getPreferenceList(Request $request)
     {
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        if($request->request->has("identifier")){
+            $this->getDoctrine()->getManager()->getRepository(Preference::class)->set($request->request->get("identifier"),$request->request->get("content"));
+            return $this->response->response(null,204);
+        }
         return $this->response->responseEntity($this->getDoctrine()->getManager()->getRepository(Preference::class)->findAll());
     }
 
