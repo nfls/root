@@ -109,9 +109,11 @@ class UserController extends AbstractController
                 return $this->response->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
             }
         }
+
         $em->persist($user);
         $em->flush();
-
+        $user = $em->getRepository(User::class)->findByUsername($username);
+        $this->getDefaultAvatar($username,$user->getId());
         return $this->response->response(null);
     }
 
@@ -331,6 +333,10 @@ class UserController extends AbstractController
         }
 
 
+    }
+
+    private function getDefaultAvatar($username,$id){
+        file_put_contents($this->get('kernel')->getRootDir() . "/../public/avatar/" . strval($id) . ".png", fopen('http://identicon.relucks.org/' . md5($username) . '?size=200', 'r'));
     }
 
 

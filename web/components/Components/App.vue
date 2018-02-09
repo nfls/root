@@ -109,10 +109,10 @@
             title: 'Unknown Region',
             toggleCard: false,
             loggedIn: false,
-            username: '加载中',
+            username: '未登录',
             admin: false,
             verified: false,
-            avatar: null,
+            avatar: "/avatar/0.png",
             gResponse: '',
             reloadC: 0
         }),
@@ -146,7 +146,7 @@
                     grecaptcha.reset()
                 }
             }, reload() {
-                this.avatar = null
+                this.avatar = "/avatar/0.png"
                 this.axios.get('/user/current').then((response) =>{
                     if(response.data['code'] == 200){
                         this.username = response.data['data']['username'];
