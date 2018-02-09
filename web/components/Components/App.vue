@@ -9,11 +9,12 @@
                     </md-button>
                     <span class='md-title'>{{title}}</span>
                 </div>
-                <div class='md-toolbar-section-end' align="right" style="margin-right: 0px;">
+                <div class='md-toolbar-section-end' align="right" style="margin: 10px;">
+                    <span class='md-title' >{{username}}</span>&nbsp;&nbsp;&nbsp;
                     <md-menu md-size='big' md-direction='bottom-start'>
                         <md-button md-menu-trigger class='md-icon-button'>
                             <md-avatar>
-                                <img>
+                                <img :src="avatar">
                             </md-avatar>
                         </md-button>
                         <md-menu-content>
@@ -21,6 +22,7 @@
                                 <md-list-item to='/user/info'><md-icon>info</md-icon><span class='md-list-item-text'>Info</span></md-list-item>
                                 <md-list-item to='/user/security'><md-icon>security</md-icon><span class='md-list-item-text'>Security</span></md-list-item>
                                 <md-list-item to='/user/message'><md-icon>chat</md-icon><span class='md-list-item-text'>Message</span></md-list-item>
+                                <md-divider></md-divider>
                                 <md-list-item @click="logout"><md-icon>exit_to_app</md-icon><span class='md-list-item-text'>Logout</span></md-list-item>
                             </md-list>
                             <md-list v-else>
@@ -35,7 +37,7 @@
                             </md-list>
                         </md-menu-content>
                     </md-menu>
-                    <span class='md-list-item-text' >{{username}}</span>
+
                 </div>
             </md-app-toolbar>
 
@@ -59,7 +61,7 @@
                         <md-icon>class</md-icon>
                         <span class='md-list-item-text'>School</span>
                         <md-list slot='md-expand'>
-                            <md-list-item class='md-inset' to='/school/pastpaper'><md-icon>book</md-icon><span class='md-list-item-text'>Past Paper</span></md-list-item>
+                            <md-list-item class='md-inset' to='/school/pastpaper'><md-icon>book</md-icon><span class='md-list-item-text'>PP</span></md-list-item>
                             <md-list-item class='md-inset' to='/school/blackboard'><md-icon>speaker_notes</md-icon><span class='md-list-item-text'>Blackboard</span></md-list-item>
                             <md-list-item class='md-inset' to='/school/vote'><md-icon>plus_one</md-icon><span class='md-list-item-text'>Vote</span></md-list-item>
                         </md-list>
@@ -93,7 +95,7 @@
             </md-app-drawer>
 
             <md-app-content>
-                <router-view :gResponse='gResponse' :loggedIn='loggedIn' :admin='admin' :verified='verified' @changeTitle="changeTitle" @prepareRecaptcha="prepareRecaptcha" @reload="reload"/>
+                <router-view :gResponse='gResponse' :loggedIn='loggedIn' :admin='admin' :verified='verified' :avatar="avatar" @changeTitle="changeTitle" @prepareRecaptcha="prepareRecaptcha" @reload="reload"/>
             </md-app-content>
         </md-app>
     </div>
@@ -110,7 +112,9 @@
             username: '加载中',
             admin: false,
             verified: false,
-            gResponse: ''
+            avatar: null,
+            gResponse: '',
+            reloadC: 0
         }),
         methods: {
             initReCaptcha() {
@@ -142,12 +146,15 @@
                     grecaptcha.reset()
                 }
             }, reload() {
+                this.avatar = null
                 this.axios.get('/user/current').then((response) =>{
                     if(response.data['code'] == 200){
                         this.username = response.data['data']['username'];
                         this.admin = response.data['data']['admin'];
                         this.verified = response.data['data']['verified']
+                        this.avatar = "/avatar/" + response.data['data']['id'] + ".png?" + this.reloadC
                         this.loggedIn = true
+                        this.reloadC++
                         var path = this.$route.fullPath
                         if ( path === "/user/login" || path === "/user/register" || path === "user/reset")
                             this.$router.push("/dashboard")

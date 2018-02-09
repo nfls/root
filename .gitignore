@@ -8,6 +8,7 @@ storage/
 ###> symfony/framework-bundle ###
 .env
 /public/bundles/
+/public/avatar/
 #/public/assets/
 /var/
 /vendor/

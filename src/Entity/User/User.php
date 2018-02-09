@@ -96,14 +96,13 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
      */
     private $authTickets;
 
-
     public function __construct()
     {
         $this->joinTime = new \DateTime();
         $this->readTime = new \DateTime();
         $this->authTickets = new ArrayCollection();
     }
-
+    
     /**
      * @return string
      */
@@ -208,9 +207,6 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
         return $this->id;
     }
 
-
-
-
     public function getInfoArray()
     {
         return array(
@@ -239,6 +235,13 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
     public function setPoint($point)
     {
         $this->point = $point;
+    }
+
+    /**
+     * @param int $point
+     */
+    public function minusPoints($point){
+        $this->point -= $point;
     }
 
     /**

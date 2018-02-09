@@ -1,4 +1,7 @@
 {
+    "aliyuncs/oss-sdk-php": {
+        "version": "v2.3.0"
+    },
     "aliyunsts/aliyun-sts": {
         "version": "1.0"
     },

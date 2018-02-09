@@ -4,7 +4,10 @@
 
 <script>
     export default {
-        name: "Blackboard"
+        name: "Blackboard",
+        mounted: function (){
+            this.$emit("changeTitle","Blackboard")
+        }
     }
 </script>
 

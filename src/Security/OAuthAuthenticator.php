@@ -41,9 +41,14 @@ class OAuthAuthenticator extends AbstractGuardAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $auth = $this->server->validateAuthenticatedRequest($credentials);
-        $id = $auth->getAttribute("oauth_user_id");
-        return $userProvider->loadUserByUsername($id);
+        try {
+            $auth = $this->server->validateAuthenticatedRequest($credentials);
+            $id = $auth->getAttribute("oauth_user_id");
+            return $userProvider->loadUserByUsername($id);
+        }catch(\Exception $e) {
+            return null;
+        }
+
     }
 
     public function checkCredentials($credentials, UserInterface $user)
@@ -53,7 +58,7 @@ class OAuthAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        return new JsonResponse(array("code"=>400,"message"=>$exception->getMessage()),400);
+        return new JsonResponse(array("code"=>400,"message"=>"Incorrect Information"),400);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)

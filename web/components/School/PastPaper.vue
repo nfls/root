@@ -62,7 +62,7 @@
         }),
         mounted: function() {
             var self = this
-            this.$emit("changeTitle","Past Papers")
+            this.$emit("changeTitle","PP(Past Papers)")
             this.axios.get("/school/pastpaper/header").then((response) => {
                 this.header = response.data["data"]
             })

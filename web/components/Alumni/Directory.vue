@@ -4,7 +4,10 @@
 
 <script>
     export default {
-        name: "Directory"
+        name: "Directory",
+        mounted: function (){
+            this.$emit("changeTitle","在线校友录")
+        }
     }
 </script>
 

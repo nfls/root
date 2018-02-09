@@ -236,7 +236,8 @@ class UserController extends AbstractController
      */
     public function change(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-        if($passwordEncoder->isPasswordValid($this->getUser(),$request->request->get("password"))) {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if ($passwordEncoder->isPasswordValid($this->getUser(), $request->request->get("password"))) {
             $newPassword = $request->request->get("newPassword");
             $unbindEmail = $request->request->get("unbindEmail");
             $newEmail = $request->request->get("newEmail");
@@ -246,30 +247,30 @@ class UserController extends AbstractController
             $code = $request->request->get("code");
             $user = $this->getUser();
             $sms = new CodeVerificationService($this->getDoctrine()->getManager());
-            if($newPassword) {
-                if(!$this->verifyPassword($user,$newPassword))
-                    return $this->response->response("密码太弱！",Response::HTTP_UNAUTHORIZED);
-                $password = $passwordEncoder->encodePassword($this->getUser(),$newPassword);
+            if ($newPassword) {
+                if (!$this->verifyPassword($user, $newPassword))
+                    return $this->response->response("密码太弱！", Response::HTTP_UNAUTHORIZED);
+                $password = $passwordEncoder->encodePassword($this->getUser(), $newPassword);
                 $user->setPassword($password);
-            }else if($unbindEmail){
-                if($user->getPhone()){
+            } else if ($unbindEmail) {
+                if ($user->getPhone()) {
                     $user->setEmail(null);
-                }else{
+                } else {
                     return $this->response->response("您没有绑定手机！");
                 }
-            }else if($newEmail){
+            } else if ($newEmail) {
                 if ($sms->verify($newEmail, $code, "bind")) {
                     $user->setEmail($newEmail);
                 } else {
                     return $this->response->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
                 }
-            }else if($unbindPhone){
-                if($user->getEmail()){
+            } else if ($unbindPhone) {
+                if ($user->getEmail()) {
                     $user->setPhone(null);
-                }else{
+                } else {
                     return $this->response->response("您没有绑定邮箱！", Response::HTTP_UNAUTHORIZED);
                 }
-            }else if($newPhone){
+            } else if ($newPhone) {
                 $phoneE164 = $sms->validate($country, $newPhone, $code, "bind");
                 if ($phoneE164 === false)
                     return $this->response->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
@@ -279,9 +280,57 @@ class UserController extends AbstractController
             $em->persist($user);
             $em->flush();
             return $this->response->response(null, Response::HTTP_OK);
-        }else{
-            return $this->response->response(null,Response::HTTP_UNAUTHORIZED);
+        } else {
+            return $this->response->response(null, Response::HTTP_UNAUTHORIZED);
         }
+    }
+
+    /**
+     * @Route("/user/avatar", methods="POST")
+     */
+    public function avatar(Request $request)
+    {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $originalPhoto = $request->files->get("photo");
+        $path = $originalPhoto->getRealPath();
+        $avatar = new \Imagick($path);
+        $height = $avatar->getImageHeight();
+        $width = $avatar->getImageWidth();
+        if ($height > $width) {
+            $avatar->cropImage($width, $width, 0, ($height - $width) / 2);
+        } else {
+            $avatar->cropImage($width, $width, ($width - $height) / 2, 0);
+        }
+        $avatar->resizeImage(200, 200, \Imagick::FILTER_LANCZOS, 1);
+        $avatar->setImageFormat("png");
+        $avatar->writeImage($this->get('kernel')->getRootDir() . "/../public/avatar/" . strval($this->getUser()->getId()) . ".png");
+        return $this->response->response(null, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/user/rename", methods="POST")
+     */
+    public function rename(Request $request)
+    {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $username = $request->request->get("username");
+        if($this->verifyUsername($username)){
+            if($this->getUser()->getPoint() >= 2){
+                $this->getUser()->minusPoints(2);
+                $this->getUser()->setUsername($username);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($this->getUser());
+                $em->flush();
+                return $this->response->response(null);
+            }else{
+                return $this->response->response("积分不足",Response::HTTP_FORBIDDEN);
+            }
+
+        }else{
+            return $this->response->response("用户名不合法不足",Response::HTTP_FORBIDDEN);
+        }
+
+
     }
 
 
