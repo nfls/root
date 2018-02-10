@@ -64,6 +64,7 @@ class AlumniController extends AbstractController
     public function newForm(Request $request)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $this->verfityCsrfToken($request->request->get("_token"),AbstractController::CSRF_ALUMNI_FORM);
         $repo = $this->getDoctrine()->getManager()->getRepository(Alumni::class);
         if ((count($repo->findBy(["user" => $this->getUser(), "status" => Alumni::STATUS_NOT_SUBMITTED])) + count($repo->findBy(["user" => $this->getUser(), "status" => Alumni::STATUS_SUBMITTED]))) > 0) {
             return $this->response->response("alumni.already.new", 403);

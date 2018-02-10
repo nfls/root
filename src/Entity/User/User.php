@@ -96,6 +96,11 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
      */
     private $authTickets;
 
+    /**
+     * @var bool
+     */
+    public $isOAuth = false;
+
     public function __construct()
     {
         $this->joinTime = new \DateTime();

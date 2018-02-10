@@ -64,11 +64,13 @@
             englishName: "",
             submitTime: "",
             expireAt: "",
-            error: false
+            error: false,
+            csrf: null,
         }),
         mounted: function() {
             this.loadData()
             this.loadStatus()
+            this.loadCsrf()
             this.$emit('changeTitle', "实名认证")
         },
         methods: {
@@ -132,8 +134,19 @@
                 }
             },
             newForm() {
-                this.axios.post("alumni/new")
+                this.axios.post("alumni/new",{
+                    _csrf: this.csrf
+                })
                 this.loadData()
+            },
+            loadCsrf() {
+                this.axios.get("user/csrf",{
+                    params: {
+                        id: "aa"
+                    }
+                }).then((rsponse) => {
+                    this.csrf = response.data["data"]
+                })
             }
         }
     }

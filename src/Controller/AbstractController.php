@@ -33,4 +33,19 @@ class AbstractController extends Controller
             return false;
         }
     }
+
+    const CSRF_USER_LOGOUT = "logout";
+    const CSRF_ALUMNI_FORM = "alumni.form";
+    const CSRF_MEDIA_GALLERY = "media.gallery";
+
+    public function verfityCsrfToken($token,$id) {
+        if($this->getUser()->isOAuth) {
+            return true;
+        } else {
+            if($this->isCsrfTokenValid($token,$id))
+                return true;
+            else
+                return false;
+        }
+    }
 }

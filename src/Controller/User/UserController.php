@@ -331,8 +331,16 @@ class UserController extends AbstractController
         }else{
             return $this->response->response("用户名不合法不足",Response::HTTP_FORBIDDEN);
         }
+    }
 
 
+    /**
+     * @Route("/user/csrf")
+     */
+    public function getCsrfToken(Request $request){
+        /** @var \Symfony\Component\Security\Csrf\CsrfTokenManagerInterface $csrf */
+        $csrf = $this->get('security.csrf.token_manager');
+        return $this->response->response($csrf->refreshToken($request->query->get("name") ?? "")->getValue());
     }
 
     private function getDefaultAvatar($username,$id){
