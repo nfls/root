@@ -133,7 +133,7 @@
                 }, 100);
             }, logout() {
                 this.axios.get('/user/logout').then((response) => {
-                    this.reload
+                    this.reload()
                     location.reload()
                 })
             }, ct(response){
