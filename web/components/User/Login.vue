@@ -4,7 +4,7 @@
             <md-card class="md-flex-50 md-flex-small-100 login-card">
                 <md-card-header>
                     <md-card-header-text>
-                        <div class="md-title">Login</div>
+                        <div class="md-title"> aaa </div>
                         <div class="md-subtitle">Login with your nfls.io account.</div>
 
                     </md-card-header-text>
@@ -124,6 +124,9 @@
         }, mounted: function() {
             this.$emit("changeTitle","Login")
             this.$emit("prepareRecaptcha")
+            this.$i18n.locale = "en"
+            console.log("aaa")
+            console.log(this.$t('login.title'))
         }, watch: {
             gResponse: {
                 handler: function(val,newVal){
@@ -153,3 +156,11 @@
         justify-content: center;
     }
 </style>
+
+<i18n>
+    {
+        "en": {
+            "hello": "登录"
+        }
+    }
+</i18n>

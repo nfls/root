@@ -14,7 +14,9 @@ import VueAnalytics from 'vue-analytics'
 import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
 import Editor from 'markdown-palettes'
+import VueI18n from 'vue-i18n'
 
+Vue.use(VueI18n)
 Vue.use(VuePreview)
 Vue.use(VueAxios, axios)
 Vue.use(VueMaterial)
