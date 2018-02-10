@@ -1,3 +1,4 @@
+git submodule update --recursive --remote
 npm install
 composer install
 cd public/assets
