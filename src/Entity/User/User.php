@@ -315,8 +315,9 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
             case 1:
                 return Permission::IS_STUDENT;
             case 2:
-                return Permission::IS_GRADUATE;
             case 3:
+                return Permission::IS_GRADUATE;
+            case 4:
                 return Permission::IS_TEACHER;
         }
     }

@@ -20,6 +20,7 @@ use App\Entity\User\User;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Zend\Diactoros\Request\Serializer;
 
 class UserController extends AbstractController
@@ -185,10 +186,12 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/logout", methods="GET")
+     * @Route("/user/logout", methods="POST")
      */
     public function logout(Request $request)
     {
+        if(!$this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_USER))
+            return $this->response->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
         $response = $this->response->response(null, 200);
         $time = new \DateTime();
         $time->sub(new \DateInterval("P1M"));

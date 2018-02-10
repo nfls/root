@@ -64,7 +64,8 @@ class AlumniController extends AbstractController
     public function newForm(Request $request)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        $this->verfityCsrfToken($request->request->get("_token"),AbstractController::CSRF_ALUMNI_FORM);
+        if(!$this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_ALUMNI_FORM))
+            return $this->response->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
         $repo = $this->getDoctrine()->getManager()->getRepository(Alumni::class);
         if ((count($repo->findBy(["user" => $this->getUser(), "status" => Alumni::STATUS_NOT_SUBMITTED])) + count($repo->findBy(["user" => $this->getUser(), "status" => Alumni::STATUS_SUBMITTED]))) > 0) {
             return $this->response->response("alumni.already.new", 403);
@@ -99,6 +100,8 @@ class AlumniController extends AbstractController
     public function saveForm(Request $request)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if(!$this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_ALUMNI_FORM))
+            return $this->response->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
         $id = $request->query->get("id");
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Alumni::class);
@@ -143,6 +146,8 @@ class AlumniController extends AbstractController
     public function submitForm(Request $request, ValidatorInterface $validator)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if(!$this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_ALUMNI_FORM))
+            return $this->response->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
         $id = $request->query->get("id");
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Alumni::class);
@@ -194,6 +199,8 @@ class AlumniController extends AbstractController
     public function cancelForm(Request $request)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if(!$this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_ALUMNI_FORM))
+            return $this->response->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
         $id = $request->query->get("id");
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Alumni::class);
@@ -234,6 +241,8 @@ class AlumniController extends AbstractController
     public function update(Request $request)
     {
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        if(!$this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_ALUMNI_FORM))
+            return $this->response->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Alumni::class);
         $id = $request->request->get("id");

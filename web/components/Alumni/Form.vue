@@ -120,7 +120,8 @@
             showMessage: false,
             active: false,
             message: "",
-            adminMode: false
+            adminMode: false,
+            csrf: null
         }),
         validations() {
             return {
@@ -128,7 +129,7 @@
             }
         },
         mounted: function () {
-
+            this.getCsrf()
             this.axios.get("/alumni/detail",{
                 params: {
                     id: this.$route.params["id"]
@@ -192,7 +193,9 @@
                     if(this.changed){
                         this.isDisabled = true
                         this.sending = true
+                        this.form._csrf = this.csrf;
                         this.axios.post("alumni/save?id="+this.$route.params["id"],this.form).then((response) => {
+                            this.getCsrf()
                             this.isDisabled = false
                             if(!this.adminMode)
                                 this.changed = false
@@ -209,8 +212,10 @@
             }, submit(){
                 this.isDisabled = true
                 this.sending = true
+                this.form._csrf = this.csrf;
                 this.axios.post("alumni/submit?id="+this.$route.params["id"],this.form).then((response) => {
                     var self = this
+                    this.getCsrf()
                     var data = response.data
                     this.sending = false
                     this.isDisabled = true
@@ -231,6 +236,7 @@
 
                 })
             }, cancel(){
+                this.form._csrf = this.csrf;
                 this.axios.post("alumni/cancel?id="+this.$route.params["id"],this.form).then((response) => {
                     this.message = "本次验证已被取消，您可以重新提交了。"
                     this.showMessage = true
@@ -282,7 +288,8 @@
                 this.axios.post("/admin/alumni/auth/update",{
                     id: this.$route.params["id"],
                     action: "accept",
-                    time: this.reviewDate
+                    time: this.reviewDate,
+                    _csrf: this.csrf
                 }).then((response) => {
                     if(response.data["code"] == 200)
                         window.close()
@@ -290,7 +297,8 @@
             }, acceptWithoutLimit() {
                 this.axios.post("/admin/alumni/auth/update",{
                     id: this.$route.params["id"],
-                    action: "accept"
+                    action: "accept",
+                    _csrf: this.csrf
                 }).then((response) => {
                     if(response.data["code"] == 200)
                     window.close()
@@ -298,7 +306,8 @@
             }, reject() {
                 this.axios.post("/admin/alumni/auth/update",{
                     id: this.$route.params["id"],
-                    action: "reject"
+                    action: "reject",
+                    _csrf: this.csrf
                 }).then((response) => {
                     if(response.data["code"] == 200)
                     window.close()
@@ -310,6 +319,14 @@
                 if(this.form.userStatus == "1" && this.form.seniorRegistration){
                     this.reviewDate = new Date(this.form.seniorRegistration + "/06/30")
                 }
+            }, getCsrf() {
+                this.axios.get("user/csrf",{
+                    params: {
+                        name: "alumni.form"
+                    }
+                }).then((response) => {
+                    this.csrf = response.data["data"]
+                })
             }
         },
         watch: {

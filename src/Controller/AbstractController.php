@@ -8,6 +8,7 @@ use App\Service\SettingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 class AbstractController extends Controller
 {
@@ -34,18 +35,23 @@ class AbstractController extends Controller
         }
     }
 
-    const CSRF_USER_LOGOUT = "logout";
+    const CSRF_USER = "user";
     const CSRF_ALUMNI_FORM = "alumni.form";
     const CSRF_MEDIA_GALLERY = "media.gallery";
 
     public function verfityCsrfToken($token,$id) {
-        if($this->getUser()->isOAuth) {
-            return true;
-        } else {
-            if($this->isCsrfTokenValid($token,$id))
+        if(is_null($token))
+            return false;
+        else
+            if($this->getUser()->isOAuth) {
                 return true;
-            else
-                return false;
-        }
+            } else {
+                /** @var \Symfony\Component\Security\Csrf\CsrfTokenManagerInterface $csrf */
+                $csrf = $this->get('security.csrf.token_manager');
+                if($csrf->isTokenValid(new CsrfToken($id,$token)))
+                    return true;
+                else
+                    return false;
+            }
     }
 }

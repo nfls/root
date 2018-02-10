@@ -132,9 +132,17 @@
                     }
                 }, 100);
             }, logout() {
-                this.axios.get('/user/logout').then((response) => {
-                    this.reload()
-                    location.reload()
+                this.axios.get("user/csrf",{
+                    params: {
+                        name: "user"
+                    }
+                }).then((response) => {
+                    this.axios.post("/user/logout",{
+                        _csrf: response.data["data"]
+                    }).then((response) => {
+                        this.reload()
+                        location.reload()
+                    })
                 })
             }, ct(response){
                 this.gResponse = response

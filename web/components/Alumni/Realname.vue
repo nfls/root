@@ -70,7 +70,6 @@
         mounted: function() {
             this.loadData()
             this.loadStatus()
-            this.loadCsrf()
             this.$emit('changeTitle', "实名认证")
         },
         methods: {
@@ -134,18 +133,16 @@
                 }
             },
             newForm() {
-                this.axios.post("alumni/new",{
-                    _csrf: this.csrf
-                })
-                this.loadData()
-            },
-            loadCsrf() {
                 this.axios.get("user/csrf",{
                     params: {
-                        id: "aa"
+                        name: "user"
                     }
-                }).then((rsponse) => {
-                    this.csrf = response.data["data"]
+                }).then((response) => {
+                    this.axios.post("alumni/new",{
+                        _csrf: response.data["data"]
+                    }).then((response) => {
+                        this.loadData()
+                    })
                 })
             }
         }

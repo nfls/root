@@ -123,13 +123,15 @@
             showSnackbar: false,
             onlyOrigin: true,
             message: "",
-            showDebug: false
+            showDebug: false,
+            csrf: null
         }),
         mounted: function () {
             this.loadData(true)
         },
         methods: {
             loadData: function(full){
+                this.getCsrf()
                 this.axios.get("/media/gallery/detail",{
                     params: {
                         id: this.$route.params["id"]
@@ -180,7 +182,8 @@
             submitComment: function(){
                 this.axios.post('/media/gallery/comment', {
                     id: this.$route.params["id"],
-                    content: this.comment
+                    content: this.comment,
+                    _csrf: this.csrf
                 }).then((response) => {
                     this.loadData(false)
                     this.showSidepanel = true
@@ -190,7 +193,8 @@
             },
             like: function(){
                 this.axios.post('/media/gallery/like', {
-                    id: this.$route.params["id"]
+                    id: this.$route.params["id"],
+                    _csrf: this.csrf
                 }).then((response) => {
                     if(this.isLiked){
                         this.message = "You have canceled your like to this gallery."
@@ -212,9 +216,18 @@
             },
             deleteComment: function(id){
                 this.axios.post("/admin/media/comment/edit",{
-                    "delete": "[" + id + "]"
+                    "delete": "[" + id + "]",
+                    _csrf: this.csrf
                 }).then((response) => {
                     this.loadData(false)
+                })
+            }, getCsrf() {
+                this.axios.get("user/csrf",{
+                    params: {
+                        name: "media.gallery"
+                    }
+                }).then((response) => {
+                    this.csrf = response.data["data"]
                 })
             }
         }
