@@ -30,6 +30,13 @@ Vue.use(VueAnalytics, {
         exception: true
     }
 })
+const i18n = new VueI18n({
+    locale: 'en',
+    messages: {
+        en: {
+        }
+    }
+})
 
 Raven
     .config('https://a9dbb410043f46369cd2f27763a1be82@sentry.io/282834')
@@ -40,11 +47,11 @@ Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
+  i18n,
   el: '#app',
   router,
   components: {
-    App,
-    VueMarkdown
+    App
   },
   template: '<App/>'
 })

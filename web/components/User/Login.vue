@@ -1,10 +1,20 @@
+<i18n>
+    {
+        "en": {
+            "hello": "hello world!"
+        },
+        "ja": {
+            "hello": "こんにちは、世界！"
+        }
+    }
+</i18n>
 <template>
     <div class="login">
         <form novalidate class="md-layout-row md-gutter" @submit.prevent="validate">
             <md-card class="md-flex-50 md-flex-small-100 login-card">
                 <md-card-header>
                     <md-card-header-text>
-                        <div class="md-title"> aaa </div>
+                        <div class="md-title"> {{ $t('hello') }} </div>
                         <div class="md-subtitle">Login with your nfls.io account.</div>
 
                     </md-card-header-text>
@@ -90,6 +100,8 @@
                 }
             },
             validate() {
+                console.log("aaa")
+                //console.log(this.$t('hello'))
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
                     grecaptcha.execute()
@@ -125,8 +137,7 @@
             this.$emit("changeTitle","Login")
             this.$emit("prepareRecaptcha")
             this.$i18n.locale = "en"
-            console.log("aaa")
-            console.log(this.$t('login.title'))
+
         }, watch: {
             gResponse: {
                 handler: function(val,newVal){
@@ -156,11 +167,3 @@
         justify-content: center;
     }
 </style>
-
-<i18n>
-    {
-        "en": {
-            "hello": "登录"
-        }
-    }
-</i18n>
