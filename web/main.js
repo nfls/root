@@ -32,10 +32,8 @@ Vue.use(VueAnalytics, {
 })
 const i18n = new VueI18n({
     locale: 'en',
-    messages: {
-        en: {
-        }
-    }
+    messages:
+        {}
 })
 
 Raven

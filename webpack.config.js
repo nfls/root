@@ -10,7 +10,11 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
-    .enableVueLoader()
+    .enableVueLoader(function(options){
+        options.loaders = {
+            i18n: '@kazupon/vue-i18n-loader'
+        }
+    })
     // create hashed filenames (e.g. app.abc123.css)
     // .enableVersioning()
 ;

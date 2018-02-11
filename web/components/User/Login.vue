@@ -1,13 +1,4 @@
-<i18n>
-    {
-        "en": {
-            "hello": "hello world!"
-        },
-        "ja": {
-            "hello": "こんにちは、世界！"
-        }
-    }
-</i18n>
+<i18n src="../../translation/user.json"></i18n>
 <template>
     <div class="login">
         <form novalidate class="md-layout-row md-gutter" @submit.prevent="validate">
