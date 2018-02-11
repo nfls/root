@@ -5,8 +5,8 @@
             <md-card class="md-flex-50 md-flex-small-100 login-card">
                 <md-card-header>
                     <md-card-header-text>
-                        <div class="md-title"> {{ $t('hello') }} </div>
-                        <div class="md-subtitle">Login with your nfls.io account.</div>
+                        <div class="md-title"> {{ $t('title') }} </div>
+                        <div class="md-subtitle">{{ $t('subtitle') }}</div>
 
                     </md-card-header-text>
                 </md-card-header>
@@ -15,31 +15,31 @@
                    <div class="md-layout-row md-layout-wrap md-gutter">
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('username')">
-                                <label for="username">Username/Email/E.164 Phone</label>
+                                <label for="username">{{ $t('username') }}</label>
                                 <md-input name="username" id="username" autocomplete="username" v-model="form.username" :disabled="sending"  />
-                                <span class="md-error" v-if="!$v.form.username.required">Username is required.</span>
+                                <span class="md-error" v-if="!$v.form.username.required">{{ $t('required') }}</span>
                             </md-field>
                         </div>
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('password')">
-                                <label for="password">Password</label>
+                                <label for="password">{{ $t('password') }}</label>
                                 <md-input name="password" id="password" autocomplete="password" v-model="form.password" :disabled="sending" type="password" />
-                                <span class="md-error" v-if="!$v.form.password.required">Password is required</span>
+                                <span class="md-error" v-if="!$v.form.password.required">{{ $t('required') }}</span>
                             </md-field>
                         </div>
                         <div class="md-flex md-flex-small-100">
-                            <md-checkbox v-model="form.remember" :disabled="sending" style="width:100%" class="md-primary">Remember Me</md-checkbox>
+                            <md-checkbox v-model="form.remember" :disabled="sending" style="width:100%" class="md-primary">{{ $t('remember') }}</md-checkbox>
                         </div>
                         <div class="md-flex md-flex-small-100">
-                            <md-button type="submit" class="md-raised md-primary">LINK START</md-button>
+                            <md-button type="submit" class="md-raised md-primary">{{ $t('submit') }}</md-button>
                         </div>
                     </div>
 
                 </md-card-content>
                 <md-divider></md-divider>
                 <md-card-actions md-alignment="left">
-                    <md-button to="/user/register">Register</md-button>
-                    <md-button to="/user/reset">Reset Password</md-button>
+                    <md-button to="/user/register">{{ $t('reg') }}</md-button>
+                    <md-button to="/user/reset">{{ $t('reset') }}</md-button>
                 </md-card-actions>
 
                 <md-progress-bar md-mode="indeterminate" v-if="sending" />
@@ -91,8 +91,6 @@
                 }
             },
             validate() {
-                console.log("aaa")
-                //console.log(this.$t('hello'))
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
                     grecaptcha.execute()
@@ -127,7 +125,7 @@
         }, mounted: function() {
             this.$emit("changeTitle","Login")
             this.$emit("prepareRecaptcha")
-            this.$i18n.locale = "en"
+            this.$i18n.locale = "zh-cn"
 
         }, watch: {
             gResponse: {

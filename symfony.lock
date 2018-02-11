@@ -101,6 +101,9 @@
     "mrgoon/aliyun-sms-sdk": {
         "version": "v1.2.1"
     },
+    "mustangostang/spyc": {
+        "version": "0.6.2"
+    },
     "nexmo/client": {
         "version": "1.2.0"
     },
@@ -124,6 +127,9 @@
     },
     "phpmailer/phpmailer": {
         "version": "v6.0.3"
+    },
+    "piwik/device-detector": {
+        "version": "3.9.2"
     },
     "psr/cache": {
         "version": "1.0.1"
