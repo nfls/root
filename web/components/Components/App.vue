@@ -199,15 +199,6 @@
         max-width: calc(100vw - 125px);
     }
 
-    .md-list {
-        width: 320px;
-        max-width: 100%;
-        display: inline-block;
-        vertical-align: top;
-        border: 1px solid rgba(0, 0, 0, 0.12);
-    }
-
-
 </style>
 <style lang='scss'>
     @import '~vue-material/dist/theme/engine'; // Import the theme engine
