@@ -99,7 +99,7 @@ class Rank
     /**
      * @return int
      */
-    public function getScore()
+    public function getScore(): int
     {
         return $this->score;
     }

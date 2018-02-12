@@ -25,15 +25,7 @@ use Zend\Diactoros\Request\Serializer;
 
 class UserController extends AbstractController
 {
-    /**
-     * @Route("/",name="index",methods="GET")
-     */
-    public function index()
-    {
-        if ($_ENV["APP_ENV"] == "dev")
-            return $this->render("index.debug.html.twig");
-        return $this->render("index.html.twig");
-    }
+
 
     /*
     public function migrate(\Symfony\Component\HttpFoundation\Request $request)

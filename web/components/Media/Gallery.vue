@@ -1,6 +1,6 @@
 <template>
     <div class="md-layout md-gutter md-alignment-center">
-        <div class="md-layout-item md-xlarge-size-20 md-large-size-20 md-medium-size-33 md-small-size-50 md-xsmall-size-100 gallery-card" v-for="item in items" :key="item.id">
+        <div class="md-layout-item md-size-50 md-small-size-100 md-xsmall-size-100 gallery-card" v-for="item in items" :key="item.id">
             <md-card @click.native="onclick(item.id)" v-if="item.cover !== null">
                 <md-card-media-cover md-solid>
                     <md-card-media md-ratio="4:3">

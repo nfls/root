@@ -204,7 +204,7 @@
         max-width: 100%;
         display: inline-block;
         vertical-align: top;
-        border: 1px solid rgba(#000, .12);
+        border: 1px solid rgba(0, 0, 0, 0.12);
     }
 
 
