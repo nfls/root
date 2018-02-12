@@ -129,7 +129,6 @@
             }
         },
         mounted: function () {
-            this.getCsrf()
             this.axios.get("/alumni/detail",{
                 params: {
                     id: this.$route.params["id"]
@@ -170,6 +169,7 @@
                     this.refreshValidator(objects)
                     this.formItems = response.data["data"]
                     this.ddlHelper()
+                    this.getCsrf()
                 })
             })
 

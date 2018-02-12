@@ -1,7 +1,10 @@
 <template>
     <div id="game-list">
+        <div v-if="verified" style="margin:20px;">
+            <span class="md-display-1">请尽快完成实名认证，否则您游戏中的成绩将<strong>不会</strong>计入排行榜！</span>
+        </div>
         <div style="row">
-            <md-table v-model="ranks" md-card>
+            <md-table v-model="ranks" md-card v-if="loggedIn">
                 <md-table-toolbar>
                     <h1 class="md-title">我的排名</h1>
                 </md-table-toolbar>
@@ -53,6 +56,7 @@
 <script>
     export default {
         name: "Game",
+        props: ["admin","verified",'loggedIn'],
         data: () => ({
             list: [],
             ranks: [],
