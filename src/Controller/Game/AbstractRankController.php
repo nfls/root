@@ -25,7 +25,7 @@ class AbstractRankController extends AbstractController
         $game = $gameRepo->findGame($request->query->get("game"));
         if(null === $game)
             return $this->response->response(null,204);
-        if($request->request->has("score")){
+        if($request->request->has("score") && $this->getUser()->hasRole(Permission::IS_AUTHENTICATED)){
             $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
             $current = $rankRepo->getCurrentRankByGame($game,$this->getUser());
             $score = $request->request->get("score");

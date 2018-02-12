@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Preference;
+use App\Entity\User\User;
 use App\Model\ApiResponse;
 use App\Service\SettingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -53,5 +54,13 @@ class AbstractController extends Controller
                 else
                     return false;
             }
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return parent::getUser();
     }
 }
