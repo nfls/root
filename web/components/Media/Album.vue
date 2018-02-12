@@ -156,6 +156,7 @@
                     }
                     this.comments = response.data["data"]["comments"]
                     this.$emit('changeTitle', "Gallery - " + response.data["data"]["title"])
+                    this.$emit('renderWebp')
                     this.info.title = response.data["data"]["title"]
                     this.info.description = response.data["data"]["description"]
                     this.info.originCount = response.data["data"]["originCount"]

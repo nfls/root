@@ -35,9 +35,10 @@
                     }
                     return val
                 })
+                this.$emit('renderWebp')
             })
             this.$emit("changeTitle","Gallery")
-            //this.$emit('input', "Gallery")
+
         },
         methods: {
             onclick: function(id) {
