@@ -135,7 +135,7 @@
             newForm() {
                 this.axios.get("user/csrf",{
                     params: {
-                        name: "user"
+                        name: "form.alumni"
                     }
                 }).then((response) => {
                     this.axios.post("alumni/new",{
