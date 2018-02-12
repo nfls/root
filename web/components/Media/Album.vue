@@ -103,9 +103,11 @@
             items: [],
             comments: [],
             options: {
+                /*
                 shareButtons: [
                     {id:'download', label:'Download image', url:'{{raw_image_url}}', download:true}
                 ]
+                */
             },
             info: {
                 title: "",
@@ -230,6 +232,8 @@
                 }).then((response) => {
                     this.csrf = response.data["data"]
                 })
+            }, webp() {
+                this.$emit("renderWebp");
             }
         }
     }
