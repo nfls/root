@@ -147,8 +147,6 @@
                 }
             }
             const actions = [
-                { message: 'worker1', func: webp},
-                { message: 'worker2', func: webp}
             ]
             this.worker = this.$worker.create(actions)
             this.loadData(true)
@@ -325,7 +323,7 @@
             }, getWorker(){
                 var minC = 100;
                 var pos = 0;
-                for(var i=0;i<=1;i++){
+                for(var i=0;i<=0;i++){
                     if(this.counter[i] < minC){
                         minC = this.counter[i]
                         pos = i
@@ -350,7 +348,7 @@
                         break
                 }
                 console.log(this.counter)
-                if(this.counter[0] == 0 || this.counter[1] == 0 ){
+                if(this.counter[0] == 0){
                     this.current ++
                     this.decodeToPNG()
                 }

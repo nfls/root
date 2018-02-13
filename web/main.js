@@ -32,7 +32,7 @@ Vue.use(VueAnalytics, {
     }
 })
 Vue.use(VueWorker)
-const i18n = new VueI18n({
+var i18n = new VueI18n({
     locale: 'en',
     messages:
         {}
