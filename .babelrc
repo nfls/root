@@ -1,12 +1,6 @@
 {
   "presets": [
-    ["env", {
-      "modules": false,
-      "targets": {
-        "browsers": [">= 0%", "not unreleased versions"]
-      }
-    }],
-    "stage-2"
+    "env"
   ],
   "plugins": ["transform-vue-jsx", "transform-runtime"]
 }

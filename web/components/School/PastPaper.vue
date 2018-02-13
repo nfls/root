@@ -75,7 +75,8 @@
                     accessKeySecret: data["AccessKeySecret"],
                     stsToken: data["SecurityToken"],
                     bucket: 'nfls-papers',
-                    secure: true
+                    secure: true,
+                    timeout: "60s"
                 });
                 this.loadFiles("")
             }).catch(function (error) {

@@ -31,7 +31,7 @@
                 var items = response.data["data"]
                 this.items = items.filter(function(val){
                     if (val.cover !== null){
-                        val.cover.src = "/storage/photos/hd/" + val.cover.src
+                        val.cover.src = "/storage/photos/thumb/" + val.cover.msrc
                     }
                     return val
                 })

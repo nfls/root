@@ -48,6 +48,8 @@
                 <span>Total count: {{info.photoCount}} / Featured count: {{info.originCount}}</span><br/>
                 <span v-if="!verified">实名认证后即可查看更多照片！</span>
                 <span v-else>使用右上角菜单栏可查看全部照片！</span>
+                <br/>
+                <span v-if="!webpSupported"><strong>您的浏览器不支持WebP格式图片的渲染。</strong>仅前5张将会被展示。图片加载速度可能会变慢。</span>
             </md-card-content>
         </md-card>
         <md-progress-spinner md-mode="indeterminate" v-if="!loaded"></md-progress-spinner>
@@ -130,8 +132,8 @@
             showDebug: false,
             csrf: null,
             worker: null,
-            loaded: false,
-            counter: [0, 0, 0, 0],
+            loaded: true,
+            counter: [0],
             current: 0
         }),
         mounted: function () {
@@ -147,8 +149,7 @@
                 }
             }
             const actions = [
-                { message: 'worker1', func: webp},
-                { message: 'worker2', func: webp}
+                { message: 'worker1', func: webp}
             ]
             this.worker = this.$worker.create(actions)
             this.loadData(true)
@@ -179,6 +180,7 @@
                             return val
                         })
                         if(!this.webpSupported) {
+                            this.items = this.items.slice(0, 5);
                             this.current = 0;
                             this.decodeToPNG();
                         } else {
@@ -208,7 +210,7 @@
                     }
                 }).then((response) => {
                     this.isLiked = response.data.data
-                    console.log(this.isLiked)
+                    //console.log(this.isLiked)
                 })
             },
             showComments: function(){
@@ -325,7 +327,7 @@
             }, getWorker(){
                 var minC = 100;
                 var pos = 0;
-                for(var i=0;i<=3;i++){
+                for(var i=0;i<=0;i++){
                     if(this.counter[i] < minC){
                         minC = this.counter[i]
                         pos = i
@@ -349,8 +351,8 @@
                         this.counter[1] --
                         break
                 }
-                console.log(this.counter)
-                if(this.counter[0] == 0 || this.counter[1] == 0 || this.counter[2] == 0 || this.counter[3] == 0){
+                //console.log(this.counter)
+                if(this.counter[0] == 0){
                     this.current ++
                     this.decodeToPNG()
                 }

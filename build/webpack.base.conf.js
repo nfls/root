@@ -47,10 +47,24 @@ module.exports = {
         options: vueLoaderConfig
       },
       {
+        test: /vue-preview.src.*?js$/,
+        loader: 'babel-loader'
+      },
+      {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
-      },
+        include: [
+          resolve('web'), 
+          resolve('test'), 
+          resolve('node_modules/webpack-dev-server/client'), 
+          resolve('node_modules/markdown-palettes/src'), 
+          resolve('node_modules/ali-oss/dist'), 
+          resolve('node_modules/ali-oss/lib'),
+          resolve('node_modules/ali-oss/shims'),
+          resolve('node_modules/vue-material/dist'),
+          resolve('node_modules/vue-material/src')
+        ]
+      }, 
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
