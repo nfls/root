@@ -180,7 +180,7 @@
                             }
                             return val
                         })
-                        if(this.webpSupported) {
+                        if(!this.webpSupported) {
                             for (var i=0; i<this.items.length; i++) {
                                 this.decodeToPNG(i);
                             }
