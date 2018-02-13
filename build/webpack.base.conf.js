@@ -53,7 +53,15 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('web'), resolve('test'), resolve('node_modules/webpack-dev-server/client'), resolve('node_modules/markdown-palettes/src')]
+        include: [
+          resolve('web'), 
+          resolve('test'), 
+          resolve('node_modules/webpack-dev-server/client'), 
+          resolve('node_modules/markdown-palettes/src'), 
+          resolve('node_modules/ali-oss/dist'), 
+          resolve('node_modules/ali-oss/lib'),
+          resolve('node_modules/ali-oss/shims')
+        ]
       }, 
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
