@@ -131,7 +131,7 @@
             csrf: null,
             worker: null,
             loaded: false,
-            counter: [0, 0, 0, 0],
+            counter: [0],
             current: 0
         }),
         mounted: function () {
@@ -325,7 +325,7 @@
             }, getWorker(){
                 var minC = 100;
                 var pos = 0;
-                for(var i=0;i<=3;i++){
+                for(var i=0;i<=1;i++){
                     if(this.counter[i] < minC){
                         minC = this.counter[i]
                         pos = i
@@ -350,7 +350,7 @@
                         break
                 }
                 console.log(this.counter)
-                if(this.counter[0] == 0 || this.counter[1] == 0 || this.counter[2] == 0 || this.counter[3] == 0){
+                if(this.counter[0] == 0 || this.counter[1] == 0 ){
                     this.current ++
                     this.decodeToPNG()
                 }
