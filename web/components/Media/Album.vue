@@ -50,9 +50,10 @@
                 <span v-else>使用右上角菜单栏可查看全部照片！</span>
             </md-card-content>
         </md-card>
-        <div class="md-row" style="display:inline-block;">
-            <figure v-for="(item, index) in items" class="photo" style="display:inline-block;">
-                <img class="preview-img"  :src="item.msrc" @click="$preview.open(index, items, options)">
+        <md-progress-spinner md-mode="indeterminate" v-if="!loaded"></md-progress-spinner>
+        <div class="md-row" style="display:inline-block;margin:0px;min-width:90%" v-if="loaded">
+            <figure v-for="(item, index) in items" class="photo">
+                <img class="preview-img"  :src="item.msrc" @click="$preview.open(index, items, options)" style="display:inline;">
                 <figcaption v-if="showDebug">ID: {{item.id}}</figcaption>
             </figure>
         </div>
@@ -129,12 +130,8 @@
             showDebug: false,
             csrf: null,
             worker: null,
-            counter: [
-                0,
-                0,
-                0,
-                0
-            ]
+            loaded: false,
+            counter: [0, 0, 0, 0]
         }),
         mounted: function () {
             const webp = function(data){
@@ -163,6 +160,7 @@
                     }
                 }).then((response) => {
                     if(full){
+                        this.loaded = false
                         var items = Object.values(response.data["data"]["photos"])
                         if(this.onlyOrigin){
                             //console.log(items)
@@ -183,6 +181,7 @@
                                 this.decodeToPNG(i);
                             }
                         } else {
+                            this.loaded = true
                             this.items.map(function(val){
                                 if(val.osrc != null){
                                     val.msrc = val.src
@@ -191,7 +190,6 @@
                                 return val
                             })
                         }
-
                     }
                     this.comments = response.data["data"]["comments"]
                     this.$emit('changeTitle', "相册 " + response.data["data"]["title"])
@@ -293,26 +291,26 @@
                 })
             }, bitmapToPNGFromCanvas(bitmap, attribute) {
                 if (bitmap != null) {
-                    var height = attribute.height.value;
-                    var width = attribute.width.value;
-                    var canvas = document.createElement("canvas");
-                    canvas.innerHTML = "text";
-                    document.body.appendChild(canvas);
-                    canvas.style.display = "none";
-                    canvas.height = height;
-                    canvas.width = width;
-                    var content = canvas.getContext("2d");
-                    var image = content.createImageData(canvas.width, canvas.height);
-                    var arr = image.data;
+                    var height = attribute.height.value
+                    var width = attribute.width.value
+                    var canvas = document.createElement("canvas")
+                    canvas.innerHTML = "text"
+                    document.body.appendChild(canvas)
+                    canvas.style.display = "none"
+                    canvas.height = height
+                    canvas.width = width
+                    var content = canvas.getContext("2d")
+                    var image = content.createImageData(canvas.width, canvas.height)
+                    var arr = image.data
                     for (var h = 0; h < height; h++)
                         for (var w = 0; w < width; w++) {
-                            arr[2 + w * 4 + width * 4 * h] = bitmap[3 + w * 4 + width * 4 * h];
-                            arr[1 + w * 4 + width * 4 * h] = bitmap[2 + w * 4 + width * 4 * h];
-                            arr[0 + w * 4 + width * 4 * h] = bitmap[1 + w * 4 + width * 4 * h];
+                            arr[2 + w * 4 + width * 4 * h] = bitmap[3 + w * 4 + width * 4 * h]
+                            arr[1 + w * 4 + width * 4 * h] = bitmap[2 + w * 4 + width * 4 * h]
+                            arr[0 + w * 4 + width * 4 * h] = bitmap[1 + w * 4 + width * 4 * h]
                             arr[3 + w * 4 + width * 4 * h] = bitmap[0 + w * 4 + width * 4 * h]
                         }
-                    content.putImageData(image, 0, 0);
-                    var k = canvas.toDataURL("image/png");
+                    content.putImageData(image, 0, 0)
+                    var k = canvas.toDataURL("image/png")
                     document.body.removeChild(canvas)
                 } else k = attribute.URL;
                 return k
@@ -325,6 +323,7 @@
                         pos = i
                     }
                 }
+                this.counter[pos] ++
                 return "worker" + (pos+1)
 
             }, removeWorker(name){
@@ -336,6 +335,11 @@
                         this.counter[1] --
                         break
                 }
+                console.log(this.counter)
+                if(this.counter[0] == 0 && this.counter[1] == 0)
+                    this.loaded = true
+                else
+                    this.loaded = false
                 return
             }
         }
@@ -344,10 +348,13 @@
 
 <style scoped>
     .photo {
-        margin:5px;
+        display:inline-block;
+        float:none;
+        vertical-align: top;
         max-width:80px;
         min-width:250px;
         width:40%;
+        margin:0px;
     }
     .avatar {
         max-width: 100%;
