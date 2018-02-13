@@ -149,9 +149,7 @@
             }
             const actions = [
                 { message: 'worker1', func: webp},
-                { message: 'worker2', func: webp},
-                { message: 'worker3', func: webp},
-                { message: 'worker4', func: webp}
+                { message: 'worker2', func: webp}
             ]
             this.worker = this.$worker.create(actions)
             this.loadData(true)
@@ -321,7 +319,7 @@
             }, getWorker(){
                 var minC = 100;
                 var pos = 0;
-                for(var i=0;i<=3;i++){
+                for(var i=0;i<=1;i++){
                     if(this.counter[i] < minC){
                         minC = this.counter[i]
                         pos = i
@@ -336,12 +334,6 @@
                         break
                     case "worker2":
                         this.counter[1] --
-                        break
-                    case "worker3":
-                        this.counter[2] --
-                        break
-                    case "worker4":
-                        this.counter[3] --
                         break
                 }
                 return
