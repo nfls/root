@@ -147,6 +147,7 @@
                 }
             }
             const actions = [
+                { message: 'worker1', func: webp}
             ]
             this.worker = this.$worker.create(actions)
             this.loadData(true)
