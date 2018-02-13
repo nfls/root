@@ -1,6 +1,6 @@
 <template>
     <div>
-        <md-drawer class="md-right" :md-active.sync="showSidepanel">
+        <md-drawer class="md-right" :md-active.sync="showSidepanel" v-if="showSidepanel" >
             <md-toolbar class="md-transparent" md-elevation="0">
                 <span class="md-title">Comments</span>
             </md-toolbar>
@@ -26,6 +26,7 @@
             </div>
 
         </md-drawer>
+
         <md-dialog-prompt
                 :md-active.sync="active"
                 v-model="comment"
@@ -126,9 +127,33 @@
             onlyOrigin: true,
             message: "",
             showDebug: false,
-            csrf: null
+            csrf: null,
+            worker: null,
+            counter: [
+                0,
+                0,
+                0,
+                0
+            ]
         }),
         mounted: function () {
+            const webp = function(data){
+                importScripts("https://nfls.io/js/libwebp-0.1.3.min.js")
+                var decoder = new WebPDecoder()
+                var WebPImage = {width: {value: 0}, height: {value: 0}}
+                var bitmap = decoder.WebPDecodeARGB(data, data.length, WebPImage.width, WebPImage.height)
+                return {
+                    attribute: WebPImage,
+                    bitmap: bitmap
+                }
+            }
+            const actions = [
+                { message: 'worker1', func: webp},
+                { message: 'worker2', func: webp},
+                { message: 'worker3', func: webp},
+                { message: 'worker4', func: webp}
+            ]
+            this.worker = this.$worker.create(actions)
             this.loadData(true)
         },
         methods: {
@@ -155,7 +180,7 @@
                             }
                             return val
                         })
-                        if(!this.webpSupported) {
+                        if(this.webpSupported) {
                             for (var i=0; i<this.items.length; i++) {
                                 this.decodeToPNG(i);
                             }
@@ -172,7 +197,6 @@
                     }
                     this.comments = response.data["data"]["comments"]
                     this.$emit('changeTitle', "相册 " + response.data["data"]["title"])
-                    //this.$emit('renderWebp')
                     this.info.title = response.data["data"]["title"]
                     this.info.description = response.data["data"]["description"]
                     this.info.originCount = response.data["data"]["originCount"]
@@ -191,7 +215,6 @@
                 })
             },
             showComments: function(){
-                //console.log(this.$preview)
                 this.showSidepanel = true
             },
             writeComments: function(){
@@ -253,20 +276,22 @@
                 this.axios.get(this.items[index].msrc, {
                     responseType: 'arraybuffer'
                 }).then((response) => {
-                    var decoder = new WebPDecoder()
-                    var WebPImage = {width: {value: 0}, height: {value: 0}}
                     var data = convertBinaryToArray(atob(new Buffer(response.data, 'binary').toString('base64')))
-                    var bitmap = decoder.WebPDecodeARGB(data, data.length, WebPImage.width, WebPImage.height)
-                    this.items[index].msrc = this.bitmapToPNGFromCanvas(bitmap, WebPImage)
+                    var worker = this.getWorker()
+                    this.worker.postMessage(worker,[data]).then((response) => {
+                        this.items[index].msrc = this.bitmapToPNGFromCanvas(response.bitmap, response.attribute)
+                        this.removeWorker(worker)
+                    })
                 })
                 this.axios.get(this.items[index].src, {
                     responseType: 'arraybuffer'
                 }).then((response) => {
-                    var decoder = new WebPDecoder()
-                    var WebPImage = {width: {value: 0}, height: {value: 0}}
                     var data = convertBinaryToArray(atob(new Buffer(response.data, 'binary').toString('base64')))
-                    var bitmap = decoder.WebPDecodeARGB(data, data.length, WebPImage.width, WebPImage.height)
-                    this.items[index].src = this.bitmapToPNGFromCanvas(bitmap, WebPImage)
+                    var worker = this.getWorker()
+                    this.worker.postMessage(worker,[data]).then((response) => {
+                        this.items[index].src = this.bitmapToPNGFromCanvas(response.bitmap, response.attribute)
+                        this.removeWorker(worker)
+                    })
                 })
             }, bitmapToPNGFromCanvas(bitmap, attribute) {
                 if (bitmap != null) {
@@ -293,6 +318,33 @@
                     document.body.removeChild(canvas)
                 } else k = attribute.URL;
                 return k
+            }, getWorker(){
+                var minC = 100;
+                var pos = 0;
+                for(var i=0;i<=3;i++){
+                    if(this.counter[i] < minC){
+                        minC = this.counter[i]
+                        pos = i
+                    }
+                }
+                return "worker" + (pos+1)
+
+            }, removeWorker(name){
+                switch(name){
+                    case "worker1":
+                        this.counter[0] --
+                        break
+                    case "worker2":
+                        this.counter[1] --
+                        break
+                    case "worker3":
+                        this.counter[2] --
+                        break
+                    case "worker4":
+                        this.counter[3] --
+                        break
+                }
+                return
             }
         }
     }
