@@ -131,10 +131,12 @@
             csrf: null,
             worker: null,
             loaded: false,
-            counter: [0, 0, 0, 0]
+            counter: [0, 0, 0, 0],
+            current: 0
         }),
         mounted: function () {
             const webp = function(data){
+                //console.log("concurrent!")
                 importScripts("https://nfls.io/js/libwebp-0.1.3.min.js")
                 var decoder = new WebPDecoder()
                 var WebPImage = {width: {value: 0}, height: {value: 0}}
@@ -177,9 +179,8 @@
                             return val
                         })
                         if(!this.webpSupported) {
-                            for (var i=0; i<this.items.length; i++) {
-                                this.decodeToPNG(i);
-                            }
+                            this.current = 0;
+                            this.decodeToPNG();
                         } else {
                             this.loaded = true
                             this.items.map(function(val){
@@ -268,7 +269,14 @@
                 })
             }, webp() {
                 this.$emit("renderWebp");
-            }, decodeToPNG(index) {
+            }, decodeToPNG() {
+                var index = this.current
+                if(index >= this.items.length){
+                    this.loaded = true
+                    return
+                }else{
+                    this.loaded = false
+                }
                 this.axios.get(this.items[index].msrc, {
                     responseType: 'arraybuffer'
                 }).then((response) => {
@@ -317,7 +325,7 @@
             }, getWorker(){
                 var minC = 100;
                 var pos = 0;
-                for(var i=0;i<=1;i++){
+                for(var i=0;i<=3;i++){
                     if(this.counter[i] < minC){
                         minC = this.counter[i]
                         pos = i
@@ -334,13 +342,18 @@
                     case "worker2":
                         this.counter[1] --
                         break
+                    case "worker3":
+                        this.counter[1] --
+                        break
+                    case "worker4":
+                        this.counter[1] --
+                        break
                 }
                 console.log(this.counter)
-                if(this.counter[0] == 0 && this.counter[1] == 0)
-                    this.loaded = true
-                else
-                    this.loaded = false
-                return
+                if(this.counter[0] == 0 || this.counter[1] == 0 || this.counter[2] == 0 || this.counter[3] == 0){
+                    this.current ++
+                    this.decodeToPNG()
+                }
             }
         }
     }
