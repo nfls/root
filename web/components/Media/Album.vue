@@ -1,6 +1,6 @@
 <template>
     <div>
-        <md-drawer class="md-right" :md-active.sync="showSidepanel">
+        <md-drawer class="md-right" :md-active.sync="showSidepanel" v-if="showSidepanel" >
             <md-toolbar class="md-transparent" md-elevation="0">
                 <span class="md-title">Comments</span>
             </md-toolbar>
@@ -26,6 +26,7 @@
             </div>
 
         </md-drawer>
+
         <md-dialog-prompt
                 :md-active.sync="active"
                 v-model="comment"

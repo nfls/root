@@ -15,6 +15,7 @@ import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
 import Editor from 'markdown-palettes'
 import VueI18n from 'vue-i18n'
+import VueWorker from 'vue-worker'
 
 Vue.use(VueI18n)
 Vue.use(VuePreview)
@@ -30,6 +31,7 @@ Vue.use(VueAnalytics, {
         exception: true
     }
 })
+Vue.use(VueWorker)
 const i18n = new VueI18n({
     locale: 'en',
     messages:
