@@ -98,7 +98,7 @@
 <script>
     export default {
         name: "Album",
-        props: ["admin","verified",'loggedIn'],
+        props: ["admin","verified",'loggedIn','webpSupported'],
         data: () => ({
             items: [],
             comments: [],
@@ -142,7 +142,7 @@
                     if(full){
                         var items = Object.values(response.data["data"]["photos"])
                         if(this.onlyOrigin){
-                            console.log(items)
+                            //console.log(items)
                             items = items.filter(item => item.osrc != null)
                         }
                         this.items = items.map(function(val){
@@ -155,10 +155,24 @@
                             }
                             return val
                         })
+                        if(!this.webpSupported) {
+                            for (var i=0; i<this.items.length; i++) {
+                                this.decodeToPNG(i);
+                            }
+                        } else {
+                            this.items.map(function(val){
+                                if(val.osrc != null){
+                                    val.msrc = val.src
+                                    val.src = val.osrc
+                                }
+                                return val
+                            })
+                        }
+
                     }
                     this.comments = response.data["data"]["comments"]
-                    this.$emit('changeTitle', "Gallery - " + response.data["data"]["title"])
-                    this.$emit('renderWebp')
+                    this.$emit('changeTitle', "相册 " + response.data["data"]["title"])
+                    //this.$emit('renderWebp')
                     this.info.title = response.data["data"]["title"]
                     this.info.description = response.data["data"]["description"]
                     this.info.originCount = response.data["data"]["originCount"]
@@ -177,6 +191,7 @@
                 })
             },
             showComments: function(){
+                //console.log(this.$preview)
                 this.showSidepanel = true
             },
             writeComments: function(){
@@ -234,6 +249,50 @@
                 })
             }, webp() {
                 this.$emit("renderWebp");
+            }, decodeToPNG(index) {
+                this.axios.get(this.items[index].msrc, {
+                    responseType: 'arraybuffer'
+                }).then((response) => {
+                    var decoder = new WebPDecoder()
+                    var WebPImage = {width: {value: 0}, height: {value: 0}}
+                    var data = convertBinaryToArray(atob(new Buffer(response.data, 'binary').toString('base64')))
+                    var bitmap = decoder.WebPDecodeARGB(data, data.length, WebPImage.width, WebPImage.height)
+                    this.items[index].msrc = this.bitmapToPNGFromCanvas(bitmap, WebPImage)
+                })
+                this.axios.get(this.items[index].src, {
+                    responseType: 'arraybuffer'
+                }).then((response) => {
+                    var decoder = new WebPDecoder()
+                    var WebPImage = {width: {value: 0}, height: {value: 0}}
+                    var data = convertBinaryToArray(atob(new Buffer(response.data, 'binary').toString('base64')))
+                    var bitmap = decoder.WebPDecodeARGB(data, data.length, WebPImage.width, WebPImage.height)
+                    this.items[index].src = this.bitmapToPNGFromCanvas(bitmap, WebPImage)
+                })
+            }, bitmapToPNGFromCanvas(bitmap, attribute) {
+                if (bitmap != null) {
+                    var height = attribute.height.value;
+                    var width = attribute.width.value;
+                    var canvas = document.createElement("canvas");
+                    canvas.innerHTML = "text";
+                    document.body.appendChild(canvas);
+                    canvas.style.display = "none";
+                    canvas.height = height;
+                    canvas.width = width;
+                    var content = canvas.getContext("2d");
+                    var image = content.createImageData(canvas.width, canvas.height);
+                    var arr = image.data;
+                    for (var h = 0; h < height; h++)
+                        for (var w = 0; w < width; w++) {
+                            arr[2 + w * 4 + width * 4 * h] = bitmap[3 + w * 4 + width * 4 * h];
+                            arr[1 + w * 4 + width * 4 * h] = bitmap[2 + w * 4 + width * 4 * h];
+                            arr[0 + w * 4 + width * 4 * h] = bitmap[1 + w * 4 + width * 4 * h];
+                            arr[3 + w * 4 + width * 4 * h] = bitmap[0 + w * 4 + width * 4 * h]
+                        }
+                    content.putImageData(image, 0, 0);
+                    var k = canvas.toDataURL("image/png");
+                    document.body.removeChild(canvas)
+                } else k = attribute.URL;
+                return k
             }
         }
     }
