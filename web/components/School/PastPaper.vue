@@ -23,14 +23,18 @@
                             <md-icon>folder_open</md-icon>
                             <span class="md-list-item-text">..</span>
                         </md-list-item>
-                        <md-list-item v-for="item in displayItems" :key="item.etaf" @click="enter(item)">
+                        <md-list-item v-for="item in displayItems" :key="item.etag" @click="enter(item)">
                             <md-icon v-if="item.size == 0">folder</md-icon>
                             <md-icon v-else-if="item.name.endsWith('pdf')">picture_as_pdf</md-icon>
                             <md-inco v-else>attachment</md-inco>
                             <span class="md-list-item-text">{{item.displayName}}</span>
+                            <md-checkbox/>
                         </md-list-item>
                     </md-list>
                 </md-card-content>
+                <md-card-actions>
+                    <md-button class="md-raised" @click="batch">批量下载</md-button>
+                </md-card-actions>
 
             </md-card>
         </div>
@@ -91,7 +95,7 @@
                     "marker": next
                 }).then(function (result) {
                     self.fileInfo = self.fileInfo.concat(result.objects)
-                    if(result.objects.length == 1000){
+                    if(result.objects.length != 1000){
                         self.loadFiles(result.nextMarker)
                     }else{
                         self.loading = false
@@ -110,7 +114,7 @@
                 if(item.size == 0){
                     this.path.push(item.displayName)
                 } else {
-                    var url = this.client.signatureUrl(item.name, {expires: 120})
+                    var url = this.client.signatureUrl(item.name, {expires: 60})
                     this.downloadURI(url,item.displayName)
                 }
             }, updateItems(val){
@@ -136,6 +140,19 @@
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+            }, batch() {
+                var JSZip = require("jszip");
+                var FileSaver = require('file-saver');
+                var zip = new JSZip();
+                this.axios.get(this.client.signatureUrl("A-Level/Past Papers/Mathematics/2014 Winter/9709_w14_ms_71.pdf"),{
+                    responseType: 'blob'
+                }).then((response) => {
+                    zip.file("1.pdf",response.data)
+                    zip.generateAsync({type:"blob"}).then(function (blob) {
+                        FileSaver.saveAs(blob, "hello.zip");
+                    })
+                })
+
             }
         }, watch: {
             fileInfo: function(val) {
