@@ -14,10 +14,9 @@
                 </md-card-header>
                 <md-divider></md-divider>
                 <md-card-content>
-                    <md-field style="width:90%;margin-left:auto;margin-right:auto">
-                        <label for="path">Path</label>
-                        <md-input name="path" id="path" v-model="pathString" readonly disabled/>
-                    </md-field>
+                    <p align="left">
+                        <span class="md-caption">Path: {{pathString}}</span>
+                    </p>
                     <md-list>
                         <md-list-item v-if="path.length > 0" @click="back">
                             <md-icon>folder_open</md-icon>
@@ -41,10 +40,13 @@
                     <md-progress-bar md-mode="determinate" :md-value="(current)/(toDownload.length + current + 1)*100"></md-progress-bar><br/>
                     <p align="left">
                         <span class="md-title">批量下载</span><span class="md-subheading"> 第 {{current}} 个，共 {{current + toDownload.length + 1}} 个</span><br/>
-                        <span class="md-caption">当前文件：{{filename}} </span>
+                        <span class="md-caption">当前文件：{{filename}} </span><br/>
+                        <span class="md-body-1">下载过程中，请保持网络畅通，并请不要做任何无关操作！</span>
                     </p>
-
                 </md-card-content>
+                <md-card-actions>
+                    <md-button class="md-raised" @click="cancel">取消</md-button>
+                </md-card-actions>
             </md-card>
         </div>
         <md-dialog-alert
@@ -158,7 +160,6 @@
                     return item.selected == "on"
                 })
                 this.toDownload = []
-                //var self = this
                 items.forEach((value) => {
                     if(value.size == 0)
                         this.toDownload = this.toDownload.concat(this.fileInfo.filter(item => item.name.startsWith(value.name)))
@@ -175,7 +176,7 @@
                 if(this.toDownload.length == 0) {
                     var FileSaver = require('file-saver')
                     this.zipFile.generateAsync({type:"blob"}).then(function (blob) {
-                        FileSaver.saveAs(blob, "Batch Download.zip");
+                        FileSaver.saveAs(blob, "Past Papers@" + (Math.floor(Math.random() * 10000000000)) + ".zip");
                     })
                 } else {
                     var item = this.toDownload.pop()
@@ -185,9 +186,12 @@
                     }).then((response) => {
                         this.zipFile.file(item.name,response.data)
                         this.downloadBatch()
+                    }).catch((error) => {
+                        this.filename = "下载出错。"
                     })
                 }
-
+            }, cancel() {
+                this.toDownload = []
             }
         }, watch: {
             fileInfo: function(val) {
