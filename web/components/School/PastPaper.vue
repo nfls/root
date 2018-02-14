@@ -8,7 +8,7 @@
                 style="width:100%;padding-bottom: 100%;">
         </md-empty-state>
         <div v-else>
-            <md-card>
+            <md-card v-if="toDownload.length == 0">
                 <md-card-header style="text-align: left;">
                     <vue-markdown>{{header}}</vue-markdown>
                 </md-card-header>
@@ -28,14 +28,23 @@
                             <md-icon v-else-if="item.name.endsWith('pdf')">picture_as_pdf</md-icon>
                             <md-inco v-else>attachment</md-inco>
                             <span class="md-list-item-text">{{item.displayName}}</span>
-                            <md-checkbox/>
+                            <md-checkbox v-model="item.selected"/>
                         </md-list-item>
                     </md-list>
                 </md-card-content>
                 <md-card-actions>
                     <md-button class="md-raised" @click="batch">批量下载</md-button>
                 </md-card-actions>
+            </md-card>
+            <md-card v-else>
+                <md-card-content>
+                    <md-progress-bar md-mode="determinate" :md-value="(current)/(toDownload.length + current + 1)*100"></md-progress-bar><br/>
+                    <p align="left">
+                        <span class="md-title">批量下载</span><span class="md-subheading"> 第 {{current}} 个，共 {{current + toDownload.length + 1}} 个</span><br/>
+                        <span class="md-caption">当前文件：{{filename}} </span>
+                    </p>
 
+                </md-card-content>
             </md-card>
         </div>
         <md-dialog-alert
@@ -62,7 +71,11 @@
             client: null,
             loading: true,
             header: "",
-            error: false
+            error: false,
+            current: 0,
+            filename: "",
+            toDownload: [],
+            zipFile: null
         }),
         mounted: function() {
             var self = this
@@ -141,17 +154,39 @@
                 link.click();
                 document.body.removeChild(link);
             }, batch() {
-                var JSZip = require("jszip");
-                var FileSaver = require('file-saver');
-                var zip = new JSZip();
-                this.axios.get(this.client.signatureUrl("A-Level/Past Papers/Mathematics/2014 Winter/9709_w14_ms_71.pdf"),{
-                    responseType: 'blob'
-                }).then((response) => {
-                    zip.file("1.pdf",response.data)
-                    zip.generateAsync({type:"blob"}).then(function (blob) {
-                        FileSaver.saveAs(blob, "hello.zip");
-                    })
+                let items = this.displayItems.filter(function(item){
+                    return item.selected == "on"
                 })
+                this.toDownload = []
+                //var self = this
+                items.forEach((value) => {
+                    if(value.size == 0)
+                        this.toDownload = this.toDownload.concat(this.fileInfo.filter(item => item.name.startsWith(value.name)))
+                    else
+                        this.toDownload = this.toDownload.concat(value)
+                })
+                var JSZip = require("jszip");
+                this.zipFile = new JSZip();
+                this.cuurent = 0
+                this.downloadBatch()
+
+            }, downloadBatch() {
+                this.current ++
+                if(this.toDownload.length == 0) {
+                    var FileSaver = require('file-saver')
+                    this.zipFile.generateAsync({type:"blob"}).then(function (blob) {
+                        FileSaver.saveAs(blob, "Batch Download.zip");
+                    })
+                } else {
+                    var item = this.toDownload.pop()
+                    this.filename = item.name
+                    this.axios.get(this.client.signatureUrl(item.name),{
+                        responseType: 'blob'
+                    }).then((response) => {
+                        this.zipFile.file(item.name,response.data)
+                        this.downloadBatch()
+                    })
+                }
 
             }
         }, watch: {
