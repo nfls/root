@@ -108,7 +108,7 @@
                     "marker": next
                 }).then(function (result) {
                     self.fileInfo = self.fileInfo.concat(result.objects)
-                    if(result.objects.length != 1000){
+                    if(result.objects.length == 1000){
                         self.loadFiles(result.nextMarker)
                     }else{
                         self.loading = false
