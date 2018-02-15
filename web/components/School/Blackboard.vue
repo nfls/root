@@ -5,6 +5,7 @@
 <script>
     export default {
         name: "Blackboard",
+        props: ["admin","verified",'loggedIn'],
         mounted: function (){
             this.$emit("changeTitle","Blackboard")
         }

@@ -2,9 +2,10 @@
 
 namespace App\Entity\User;
 
-use App\Entity\Alumni;
+use App\Entity\School\Alumni;
 use App\Entity\Media\Gallery;
 use App\Entity\Media\Photo;
+use App\Entity\School\Claz;
 use App\Model\Permission;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -357,6 +358,24 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
         $this->joinTime = $joinTime;
     }
 
+    /**
+     * @return ArrayCollection
+     */
+    public function getClasses()
+    {
+        return $this->classes;
+    }
 
+    public function addClass(Claz $class){
+        if(!$this->classes->contains($class)){
+            $this->classes->add($class);
+        }
+    }
+
+    public function removeClass(Claz $class){
+        if($this->classes->contains($class)){
+            $this->classes->remove($class);
+        }
+    }
 }
 

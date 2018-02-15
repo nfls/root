@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller\Alumni;
+namespace App\Controller\School;
 
 use App\Controller\AbstractController;
-use App\Entity\Alumni;
+use App\Entity\School\Alumni;
 use App\Model\Normalizer\UuidNormalizer;
 use App\Model\Permission;
 use Doctrine\Common\Collections\ArrayCollection;

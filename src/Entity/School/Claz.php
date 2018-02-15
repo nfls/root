@@ -23,16 +23,17 @@ class Claz
     private $id;
 
     /**
-     * @var ArrayCollection
+     * @var User
      *
-     * @ORM\ManyToMany(targetEntity="App\Entity\User\User")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User\User")
      */
-    private $teachers;
+    private $teacher;
 
     /**
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="App\Entity\User\User",mappedBy="classes")
+     * @ORM\JoinTable(name="user")
      */
     private $students;
 
@@ -63,11 +64,110 @@ class Claz
 
     public function __construct()
     {
-        $this->teachers = new ArrayCollection();
+        //$this->teachers = new ArrayCollection();
         $this->students = new ArrayCollection();
         $this->notices = new ArrayCollection();
+        $this->announcement = "";
+    }
+
+    /**
+     * @return Uuid
+     */
+    public function getId(): Uuid
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAnnouncement(): string
+    {
+        return $this->announcement;
+    }
+
+    /**
+     * @param string $announcement
+     */
+    public function setAnnouncement(string $announcement): void
+    {
+        $this->announcement = $announcement;
+    }
+
+    /**
+     * @param User $student
+     */
+    public function addStudent(User $student): void
+    {
+        if(!$this->students->contains($student)){
+            $this->students->add($student);
+            $student->addClass($this);
+        }
+
+    }
+
+    /**
+     * @param User $student
+     */
+    public function removeStudent(User $student): void
+    {
+        if($this->students->contains($student)){
+            $this->students->remove($student);
+            $student->removeClass($this);
+        }
+
+    }
+
+    /**
+     * @param User $teacher
+     */
+    public function setTeacher(User $teacher): void
+    {
+        if(null !== $this->teacher)
+            $this->removeStudent($this->teacher);
+        $this->teacher = $teacher;
+        $this->addStudent($teacher);
     }
 
 
-    // add your own fields
+    /**
+     * @return User
+     */
+    public function getTeachers()
+    {
+        return $this->teacher;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getStudents()
+    {
+        return $this->students;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getNotices()
+    {
+        return $this->notices;
+    }
+
 }

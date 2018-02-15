@@ -25,7 +25,7 @@ import Security from '../components/User/Security'
 import Message from '../components/User/Message'
 import Info from '../components/User/Info'
 
-import Preference from '../components/Preference'
+import Preference from '../components/Admin/Preference'
 
 
 Vue.use(Router)

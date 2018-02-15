@@ -2,7 +2,7 @@
 
 namespace App\Repository\School;
 
-use App\Entity\Alumni;
+use App\Entity\School\Alumni;
 use App\Service\AliyunOSS;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
