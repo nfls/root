@@ -149,7 +149,7 @@ class Claz
     /**
      * @return User
      */
-    public function getTeachers()
+    public function getTeacher()
     {
         return $this->teacher;
     }

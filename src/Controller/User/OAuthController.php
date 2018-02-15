@@ -49,7 +49,7 @@ class OAuthController extends AbstractController
             $authRequest->setAuthorizationApproved(true);
             return $httpFoundationFactory->createResponse($this->server->completeAuthorizationRequest($authRequest, $psrResponse));
         }catch(OAuthServerException $e){
-            return $this->response->response($e->getMessage(),404);
+            return $this->response()->response($e->getMessage(),404);
             //return $httpFoundationFactory->createResponse($e->generateHttpResponse($psrResponse));
         }
     }
@@ -76,14 +76,14 @@ class OAuthController extends AbstractController
     public function version(Request $request){
         $repo = $this->getDoctrine()->getManager()->getRepository(Client::class);
         $client = $repo->getClientById($request->query->get("client_id"));
-        return $this->response->response($client->getVersion());
+        return $this->response()->response($client->getVersion());
     }
 
     /**
      * @Route("oauth/uploadSts", methods="GET")
      */
     public function uploadSts(Request $request,AliyunOSS $oss){
-        return $this->response->response($oss->getUploadToken($this->getUser()->getUsername()),200);
+        return $this->response()->response($oss->getUploadToken($this->getUser()->getUsername()),200);
     }
 
     /**
@@ -91,7 +91,7 @@ class OAuthController extends AbstractController
      */
     public function uploadSignature(Request $request,AliyunOSS $oss){
 
-        return $this->response->response($oss->getSignature());
+        return $this->response()->response($oss->getSignature());
     }
 
     /**
@@ -123,9 +123,9 @@ class OAuthController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($client);
             $em->flush();
-            //return $this->response->responseEntity($client);
+            //return $this->response()->responseEntity($client);
         }
-        return $this->response->responseEntity($repo->findAll());
+        return $this->response()->responseEntity($repo->findAll());
     }
 
 }

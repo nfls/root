@@ -33,7 +33,7 @@ class MessageController extends AbstractController
      */
     public function getNews(Request $request){
         $page = $request->query->get("page") ?? 1;
-        return $this->response->response($this->getMessages(MessageConstant::NEWS,$page));
+        return $this->response()->response($this->getMessages(MessageConstant::NEWS,$page));
     }
 
     /**
@@ -43,7 +43,7 @@ class MessageController extends AbstractController
      */
     public function getSystemMessages(Request $request){
         $page = $request->query->get("page") ?? 1;
-        return $this->response->response($this->getMessages(MessageConstant::SYSTEM_MESSAGE,$page));
+        return $this->response()->response($this->getMessages(MessageConstant::SYSTEM_MESSAGE,$page));
     }
 
     /**
@@ -52,14 +52,14 @@ class MessageController extends AbstractController
      */
     public function getUnreadCount(){
         $em = $this->getDoctrine()->getManager()->getRepository(Message::class);
-        return $this->response->response($em->getUnreadCount($this->getUser()->getReadTime()),200);
+        return $this->response()->response($em->getUnreadCount($this->getUser()->getReadTime()),200);
     }
 
     /**
      * @Route("/message/announcement", methods="GET")
      */
     public function getAnnouncement(Request $request){
-        return $this->response->response($this->getDoctrine()->getRepository(Preference::class)->get(Preference::DASHBOARD_ANNOUNCEMENT));
+        return $this->response()->response($this->getDoctrine()->getRepository(Preference::class)->get(Preference::DASHBOARD_ANNOUNCEMENT));
     }
 
     // Below is for admin part.
@@ -97,7 +97,7 @@ class MessageController extends AbstractController
                 $em->persist($message);
             }
             $em->flush();
-            return $this->response->response(null,200);
+            return $this->response()->response(null,200);
         }else{
             if($request->query->get("filter") > 0){
                 $type = $request->query->get("filter");
@@ -106,7 +106,7 @@ class MessageController extends AbstractController
             }
             $data = $messageRepo->getAllMessages($page,$rows,$type,null);
             $count = $messageRepo->getAllMessagesCount($page,$rows,$type,null);
-            return $this->response->responseRowEntity($data,$count,200);
+            return $this->response()->responseRowEntity($data,$count,200);
         }
     }
 

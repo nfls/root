@@ -4,7 +4,9 @@ namespace App\Controller\School;
 
 use App\Controller\AbstractController;
 use App\Entity\School\Claz;
+use App\Entity\School\Notice;
 use App\Model\Permission;
+use App\Service\AliyunOSS;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,6 +61,35 @@ class BlackBoardController extends AbstractController
             }else{
                 return $this->response()->responseEntity($class->nextNotices($request->query->getInt("page",0)));
             }
+        }else{
+            throw $this->createAccessDeniedException();
+        }
+    }
+
+    /**
+     * @Route("/school/blackboard/signature", methods="GET")
+     */
+    public function signature(Request $request){
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if(!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
+            throw $this->createAccessDeniedException();
+        $oss = new AliyunOSS();
+        return $this->response()->response($oss->privateUploadSignature($request->query->get("object"),$request->query->get("type")));
+    }
+
+    /**
+     * @Route("/school/blackboard/post", methods="POST")
+     */
+    public function post(Request $request){
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if(!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
+            throw $this->createAccessDeniedException();
+        $id = $request->query->get("id");
+        $repo = $this->getDoctrine()->getManager()->getRepository(Claz::class);
+        /** @var $class  Claz*/
+        $class = $repo->findOneBy(["id"=>$id]);
+        if(!is_null($class) & ($class->getStudents()->contains($this->getUser()) || $this->getUser()->hasRole(Permission::IS_ADMIN))){
+            $notice = new Notice();
         }else{
             throw $this->createAccessDeniedException();
         }

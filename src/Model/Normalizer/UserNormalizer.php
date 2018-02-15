@@ -42,7 +42,7 @@ class UserNormalizer implements NormalizerInterface{
             $info["username"] = $object->realUsername ?? $info["username"];
         }
         if($info["admin"]){
-            $this["username"] = "[管理员]".$this["username"];
+            $info["username"] = "[管理员]".$info["username"];
         }
         return $info;
 

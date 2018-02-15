@@ -16,6 +16,9 @@ import RavenVue from 'raven-js/plugins/vue'
 import Editor from 'markdown-palettes'
 import VueI18n from 'vue-i18n'
 import VueWorker from 'vue-worker'
+import Datetime from 'vue-datetime'
+
+Vue.use(Datetime)
 
 Vue.use(VueI18n)
 Vue.use(VuePreview)

@@ -40,6 +40,13 @@ class Notice
      *
      * @ORM\Column(type="string", length=1024)
      */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=1024)
+     */
     private $content;
 
     /**
@@ -64,4 +71,112 @@ class Notice
     {
         $this->time = new \DateTime();
     }
+
+    /**
+     * @return Uuid
+     */
+    public function getId(): Uuid
+    {
+        return $this->id;
+    }
+
+
+    /**
+     * @return Claz
+     */
+    public function getClaz(): Claz
+    {
+        return $this->claz;
+    }
+
+    /**
+     * @param Claz $claz
+     */
+    public function setClaz(Claz $claz): void
+    {
+        $this->claz = $claz;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getTime(): \DateTime
+    {
+        return $this->time;
+    }
+
+    /**
+     * @param \DateTime $time
+     */
+    public function setTime(\DateTime $time): void
+    {
+        $this->time = $time;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent(): string
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param string $content
+     */
+    public function setContent(string $content): void
+    {
+        $this->content = $content;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttachment(): array
+    {
+        return $this->attachment;
+    }
+
+    /**
+     * @param array $attachment
+     */
+    public function setAttachment(array $attachment): void
+    {
+        $this->attachment = $attachment;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDeadline(): \DateTime
+    {
+        return $this->deadline;
+    }
+
+    /**
+     * @param \DateTime $deadline
+     */
+    public function setDeadline(\DateTime $deadline): void
+    {
+        $this->deadline = $deadline;
+    }
+
+
+
 }
