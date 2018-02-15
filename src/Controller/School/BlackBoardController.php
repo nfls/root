@@ -30,7 +30,6 @@ class BlackBoardController extends AbstractController
         $class = new Claz();
         $class->setTitle($request->request->get("title"));
         $class->setTeacher($this->getUser());
-        //$this->getUser()-
         $em = $this->getDoctrine()->getManager();
         $em->persist($class);
         $em->persist($this->getUser());
