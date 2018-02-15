@@ -90,6 +90,23 @@ class BlackBoardController extends AbstractController
         $class = $repo->findOneBy(["id"=>$id]);
         if(!is_null($class) & ($class->getStudents()->contains($this->getUser()) || $this->getUser()->hasRole(Permission::IS_ADMIN))){
             $notice = new Notice();
+            $notice->setContent($request->request->get("content"));
+            $notice->setAttachment($request->request->get("files"));
+            $time = \DateTime::createFromFormat("Y-m-d\TH:i:s\.???\Z",$request->request->get("time"));
+            if($time === false || $time < new \DateTime())
+                $time = new \DateTime();
+            $notice->setTime($time);
+            $ddl = \DateTime::createFromFormat("Y-m-d\TH:i:s\.???\Z",$request->request->get("deadline"));
+            if($ddl === false || $ddl < new \DateTime())
+                $ddl = null;
+            else
+                $notice->setTitle($request->request->get("title"));
+            $notice->setDeadline($ddl);
+            $notice->setClaz($class);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($notice);
+            $em->flush();
+            return $this->response()->response(null);
         }else{
             throw $this->createAccessDeniedException();
         }

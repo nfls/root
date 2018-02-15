@@ -105,6 +105,14 @@ class AliyunOSS {
         } catch (OssException $e) {
             return null;
         }
+    }
 
+    public function privateDownloadSignature($object){
+        try {
+            $ossClient = new OssClient($this->key_id, $this->key_secret, "https://oss-cn-shanghai.aliyuncs.com");
+            return $ossClient->signUrl("nfls-private",$object,600,OssClient::OSS_HTTP_GET);
+        } catch (OssException $e) {
+            return null;
+        }
     }
 }

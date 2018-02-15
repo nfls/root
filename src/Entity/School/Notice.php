@@ -3,6 +3,7 @@
 namespace App\Entity\School;
 
 use App\Entity\User\User;
+use App\Service\AliyunOSS;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
@@ -36,9 +37,9 @@ class Notice
     private $time;
 
     /**
-     * @var string
+     * @var string|null
      *
-     * @ORM\Column(type="string", length=1024)
+     * @ORM\Column(type="string", length=1024, nullable=true)
      */
     private $title;
 
@@ -57,7 +58,7 @@ class Notice
     private $attachment;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      *
      * @ORM\Column(type="datetimetz", nullable=true)
      */
@@ -80,14 +81,6 @@ class Notice
         return $this->id;
     }
 
-
-    /**
-     * @return Claz
-     */
-    public function getClaz(): Claz
-    {
-        return $this->claz;
-    }
 
     /**
      * @param Claz $claz
@@ -114,17 +107,17 @@ class Notice
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
     /**
-     * @param string $title
+     * @param null|string $title
      */
-    public function setTitle(string $title): void
+    public function setTitle(?string $title): void
     {
         $this->title = $title;
     }
@@ -150,7 +143,13 @@ class Notice
      */
     public function getAttachment(): array
     {
-        return $this->attachment;
+        $oss = new AliyunOSS();
+        return array_map(function($val)use($oss){
+            return array(
+                "name" => $val,
+                "href" => $oss->privateDownloadSignature($val)
+            );
+        },$this->attachment);
     }
 
     /**
@@ -162,20 +161,22 @@ class Notice
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getDeadline(): \DateTime
+    public function getDeadline(): ?\DateTime
     {
         return $this->deadline;
     }
 
     /**
-     * @param \DateTime $deadline
+     * @param \DateTime|null $deadline
      */
-    public function setDeadline(\DateTime $deadline): void
+    public function setDeadline(?\DateTime $deadline): void
     {
         $this->deadline = $deadline;
     }
+
+
 
 
 

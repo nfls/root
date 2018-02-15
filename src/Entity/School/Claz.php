@@ -41,6 +41,7 @@ class Claz
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="App\Entity\School\Notice",mappedBy="claz")
+     * @ORM\OrderBy({"time":"DESC"})
      */
     private $notices;
 
