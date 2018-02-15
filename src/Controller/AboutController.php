@@ -24,9 +24,9 @@ class AboutController extends AbstractController
      * @Route("/about/version")
      */
     public function version(){
-        exec('git log -3', $gitHashLong);
+        exec('git lg2 -10', $gitHashLong);
         $gitHashLong = array_reduce($gitHashLong,function($previous,$current){
-            return $previous."\n".$current;
+            return $previous."<br/>".$current;
         });
         return $this->response->response($gitHashLong);
     }
