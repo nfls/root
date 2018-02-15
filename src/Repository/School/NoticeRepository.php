@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\School;
 
 use App\Entity\Notice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

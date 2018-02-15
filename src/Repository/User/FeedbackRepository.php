@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\User;
 
-use App\Entity\Claz;
+use App\Entity\Feedback;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class ClazRepository extends ServiceEntityRepository
+class FeedbackRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, Claz::class);
+        parent::__construct($registry, Feedback::class);
     }
 
     /*
     public function findBySomething($value)
     {
-        return $this->createQueryBuilder('c')
-            ->where('c.something = :value')->setParameter('value', $value)
-            ->orderBy('c.id', 'ASC')
+        return $this->createQueryBuilder('f')
+            ->where('f.something = :value')->setParameter('value', $value)
+            ->orderBy('f.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
