@@ -92,9 +92,16 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Alumni", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\School\Alumni", mappedBy="user")
      */
     private $authTickets;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\School\Claz", inversedBy="students")
+     */
+    private $classes;
 
     /**
      * @var bool
@@ -106,6 +113,7 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
         $this->joinTime = new \DateTime();
         $this->readTime = new \DateTime();
         $this->authTickets = new ArrayCollection();
+        $this->classes = new ArrayCollection();
     }
     
     /**
