@@ -24,7 +24,7 @@ class AbstractRankController extends AbstractController
         $rankRepo = $this->getDoctrine()->getManager()->getRepository(Rank::class);
         $game = $gameRepo->findGame($request->query->get("game"));
         if(null === $game)
-            return $this->response->response(null,204);
+            return $this->response()->response(null,204);
         if($request->request->has("score") && $this->getUser()->hasRole(Permission::IS_AUTHENTICATED)){
             $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
             $current = $rankRepo->getCurrentRankByGame($game,$this->getUser());
@@ -52,7 +52,7 @@ class AbstractRankController extends AbstractController
             }
         }
         $result = $rankRepo->getRankByGame($game);
-        return $this->response->responseEntity($result);
+        return $this->response()->responseEntity($result);
     }
 
     private function updateScore($game,$user,$score)

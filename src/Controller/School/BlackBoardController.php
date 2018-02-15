@@ -15,15 +15,23 @@ class BlackBoardController extends AbstractController
     /**
      * @Route("/school/blackboard/list",methods="GET")
      */
-    public function getClass(Request $request){
+    public function list(Request $request){
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->denyAccessUnlessGranted(Permission::IS_STUDENT);
-        return $this->response->responseEntity($this->getUser()->getClasses());
+
+        return $this->response()->responseEntity($this->getUser()->getClasses()->map(function($val){
+            /** @var $val Claz */
+            return array(
+                "id" => $val->getId(),
+                "title" => $val->getTitle()
+            );
+        }));
     }
+
     /**
      * @Route("/school/blackboard/create", methods="POST")
      */
-    public function createClass(Request $request){
+    public function create(Request $request){
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if(!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
             throw $this->createAccessDeniedException();
@@ -34,6 +42,25 @@ class BlackBoardController extends AbstractController
         $em->persist($class);
         $em->persist($this->getUser());
         $em->flush();
-        return $this->response->response(null);
+        return $this->response()->response(null);
+    }
+
+    /**
+     * @Route("/school/blackboard/detail", methods="GET")
+     */
+    public function detail(Request $request) {
+        $id = $request->query->get("id");
+        $repo = $this->getDoctrine()->getManager()->getRepository(Claz::class);
+        /** @var $class  Claz*/
+        $class = $repo->findOneBy(["id"=>$id]);
+        if(!is_null($class) & ($class->getStudents()->contains($this->getUser()) || $this->getUser()->hasRole(Permission::IS_ADMIN))){
+            if(!$request->query->has("page")){
+                return $this->response()->responseEntity($class);
+            }else{
+                return $this->response()->responseEntity($class->nextNotices($request->query->getInt("page",0)));
+            }
+        }else{
+            throw $this->createAccessDeniedException();
+        }
     }
 }

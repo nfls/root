@@ -2,7 +2,7 @@
 
 namespace App\Repository\School;
 
-use App\Entity\Claz;
+use App\Entity\School\Claz;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 

@@ -9,6 +9,20 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\scalar;
 
 class UserNormalizer implements NormalizerInterface{
+
+    private $realname;
+
+    /**
+     * UserNormalizer constructor.
+     * @param $realname boolean
+     */
+    public function __construct(bool $realname = false)
+    {
+        $this->realname = $realname;
+    }
+
+
+
     /**
      * @param User $object
      * @param null $format
@@ -17,12 +31,21 @@ class UserNormalizer implements NormalizerInterface{
      */
     public function normalize($object, $format = null, array $context = array())
     {
-        return array(
+        /** @var $object User */
+        $info = array(
             "id" => $object->getId(),
             "username" => $object->getUsername(),
             "point" => $object->getPoint(),
-            "admin" => false
+            "admin" => $object->isAdmin()
         );
+        if($this->realname){
+            $info["username"] = $object->realUsername ?? $info["username"];
+        }
+        if($info["admin"]){
+            $this["username"] = "[管理员]".$this["username"];
+        }
+        return $info;
+
     }
 
     public function supportsNormalization($data, $format = null)

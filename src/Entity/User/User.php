@@ -109,6 +109,11 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
      */
     public $isOAuth = false;
 
+    /**
+     * @var string
+     */
+    public $realUsername = null;
+
     public function __construct()
     {
         $this->joinTime = new \DateTime();
@@ -281,6 +286,9 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
             $permissions = [];
         $valid = array_filter($this->authTickets->toArray(),array($this,"getValid"));
         if(count($valid) > 0){
+            /** @var $auth Alumni*/
+            $auth = array_values($valid)[0];
+            $this->realUsername = $this->username . "( " . $auth->getEnglishName() . " | " . $auth->getChineseName() . " )";
             array_push($permissions,Permission::IS_AUTHENTICATED);
             array_push($permissions,$this->getAlumniPermission(array_values($valid)[0]));
         }

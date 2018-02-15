@@ -73,6 +73,9 @@ export default new Router({
                     path: 'school/blackboard',
                     component: Blackboard
                 }, {
+                    path: 'school/blackboard/:id',
+                    component: Blackboard
+                }, {
                     path: 'user/security',
                     component: Security
                 }, {

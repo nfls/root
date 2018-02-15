@@ -167,7 +167,23 @@ class Claz
      */
     public function getNotices()
     {
-        return $this->notices;
+        return $this->notices->slice(0,10);
     }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function nextNotices($page){
+        return $this->notices->slice(($page - 1)*10,10);
+    }
+
+    /**
+     * @param ArrayCollection $notices
+     */
+    public function setNotices(ArrayCollection $notices): void
+    {
+        $this->notices = $notices;
+    }
+
 
 }

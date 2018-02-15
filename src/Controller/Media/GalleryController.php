@@ -39,7 +39,7 @@ class GalleryController extends AbstractController
 
         $page = $request->query->get("page") ?? 1;
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
-        return $this->response->responseEntity($repo->getList($page,$canViewPrivate,$canViewAll));
+        return $this->response()->responseEntity($repo->getList($page,$canViewPrivate,$canViewAll));
     }
 
     /**
@@ -55,7 +55,7 @@ class GalleryController extends AbstractController
         }
 
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
-        return $this->response->responseEntity($repo->getGallery($request->query->get("id"),$canViewPrivate,$canViewAll));
+        return $this->response()->responseEntity($repo->getGallery($request->query->get("id"),$canViewPrivate,$canViewAll));
     }
 
     /**
@@ -65,7 +65,7 @@ class GalleryController extends AbstractController
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
         if(!$this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_MEDIA_GALLERY))
-            return $this->response->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
+            return $this->response()->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
         $content = $request->request->get("content");
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
         $comment = new Comment();
@@ -75,7 +75,7 @@ class GalleryController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->persist($comment);
         $em->flush();
-        return $this->response->response(null);
+        return $this->response()->response(null);
     }
 
     /**
@@ -84,14 +84,14 @@ class GalleryController extends AbstractController
     public function like(Request $request){
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if(!$this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_MEDIA_GALLERY))
-            return $this->response->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
+            return $this->response()->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
         $repo = $this->getDoctrine()->getManager()->getRepository( Gallery::class);
         $gallery = $repo->getGallery($request->request->get("id"));
         $gallery->like($this->getUser());
         $em = $this->getDoctrine()->getManager();
         $em->persist($this->getUser());
         $em->flush();
-        return $this->response->response(null);
+        return $this->response()->response(null);
     }
 
     /**
@@ -101,7 +101,7 @@ class GalleryController extends AbstractController
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $repo = $this->getDoctrine()->getManager()->getRepository( Gallery::class);
         $gallery = $repo->getGallery($request->query->get("id"));
-        return $this->response->response($gallery->likeStatus($this->getUser()));
+        return $this->response()->response($gallery->likeStatus($this->getUser()));
     }
 
     /**
@@ -150,14 +150,14 @@ class GalleryController extends AbstractController
         $repo = $em->getRepository(Comment::class);
         if($request->request->has("delete")){
             if(!$this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_MEDIA_GALLERY))
-                return $this->response->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
+                return $this->response()->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
             $items = json_decode($request->request->get("delete"),true);
             foreach ($items as $item){
                 $em->remove($repo->findOneBy(["id"=>$item]));
             }
             $em->flush();
         }
-        return $this->response->responseRowEntity($repo->getList($page,$rows),$repo->getCount(),Response::HTTP_OK);
+        return $this->response()->responseRowEntity($repo->getList($page,$rows),$repo->getCount(),Response::HTTP_OK);
     }
 
     /**
@@ -197,7 +197,7 @@ class GalleryController extends AbstractController
             $em->flush();
         }
         $list = $repo->getAllList();
-        return $this->response->responseEntity($list,200);
+        return $this->response()->responseEntity($list,200);
     }
 
     /**
@@ -242,7 +242,7 @@ class GalleryController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(Photo::class);
         $list = $repo->getList($page,$rows,$showAll,$name);
         $count = $repo->getListCount($page,$rows,$showAll,$name);
-        return $this->response->responseRowEntity($list,$count,200);
+        return $this->response()->responseRowEntity($list,$count,200);
     }
 
     /**
@@ -301,7 +301,7 @@ class GalleryController extends AbstractController
         $em->persist($photo);
         $em->flush();
 
-        return $this->response->response(array(
+        return $this->response()->response(array(
             "hd" => $hdName,
             "thumb" => $thumbName
         ),200);

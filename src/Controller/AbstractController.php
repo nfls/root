@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Preference;
 use App\Entity\User\User;
 use App\Model\ApiResponse;
+use App\Model\Permission;
 use App\Service\SettingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -13,14 +14,10 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 
 class AbstractController extends Controller
 {
-    /**
-     * @var ApiResponse
-     */
-    protected $response;
 
-    public function __construct()
+    public function response()
     {
-        $this->response = new ApiResponse();
+        return new ApiResponse($this->getUser()->hasRole(Permission::IS_AUTHENTICATED));
     }
 
     public function setting(){

@@ -34,6 +34,6 @@ class PageController extends AbstractController
         $dd = new DeviceDetector($request->headers->get("user-agent"));
         $dd->parse();
         dump($dd);
-        return $this->response->response(null);
+        return $this->response()->response(null);
     }
 }
