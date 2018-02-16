@@ -211,7 +211,7 @@ class UserController extends AbstractController
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if (null === $this->getUser())
             return $this->response->response(null, Response::HTTP_NO_CONTENT);
-        return new JsonResponse($this->getUser()->getInfoArray());
+        return new JsonResponse(array("user"=>$this->getUser()->getInfoArray()));
     }
 
     /**
