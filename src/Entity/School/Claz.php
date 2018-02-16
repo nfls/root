@@ -188,5 +188,25 @@ class Claz
         $this->notices = $notices;
     }
 
+    /**
+     * @return array
+     */
+    public function getDeadlines(){
+        return array_values(array_slice($this->notices->filter(function($val){
+            /** @var $val Notice */
+            if(is_null($val->getDeadline()))
+                return false;
+            else
+                return true;
+        })->map(function($val){
+            /** @var $val Notice */
+            return array(
+                "id"=>$val->getId(),
+                "title"=>$val->getTitle(),
+                "time"=>$val->getDeadline()
+            );
+        })->toArray(),0,20));
+    }
+
 
 }

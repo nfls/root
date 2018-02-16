@@ -18,6 +18,9 @@ import VueI18n from 'vue-i18n'
 import VueWorker from 'vue-worker'
 import Datetime from 'vue-datetime'
 import infiniteScroll from 'vue-infinite-scroll'
+import "vue-simple-calendar/dist/static/css/default.css"
+import "vue-simple-calendar/dist/static/css/holidays-us.css"
+
 
 Vue.use(infiniteScroll)
 Vue.use(Datetime)

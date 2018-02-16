@@ -16,13 +16,20 @@
                 <md-card-header>
                     <div class="md-title">{{classInfo.title}}</div>
                 </md-card-header>
-
-
-
                 <md-card-content style="text-align:left;align:left;">
                     <span>老师：</span><span v-html="classInfo.teacher.htmlUsername"></span>
                     <md-divider></md-divider>
                     <vue-markdown>{{classInfo.announcement}}</vue-markdown>
+                </md-card-content>
+            </md-card>
+            <md-card>
+                <md-card-header>
+                    <div class="md-title">截止日期</div>
+                </md-card-header>
+                <md-card-content>
+                    <calendar-view
+                            :events="classInfo.deadlines"
+                    />
                 </md-card-content>
             </md-card>
             <md-card v-for="notice in classInfo.notices" :key="notice.id">
@@ -152,7 +159,8 @@
     import VueMarkdown from 'vue-markdown'
     import MarkdownPalettes from 'markdown-palettes'
     import vueJsonEditor from 'vue-json-editor'
-    import { Datetime } from 'vue-datetime';
+    import { Datetime } from 'vue-datetime'
+    import CalendarView from "vue-simple-calendar"
     export default {
         name: "Blackboard",
         props: ["admin","verified",'loggedIn'],
@@ -160,6 +168,7 @@
             VueMarkdown,
             MarkdownPalettes,
             vueJsonEditor,
+            CalendarView,
             datetime: Datetime
         },
         data: () => ({
@@ -197,6 +206,11 @@
                 this.axios.get("/school/blackboard/detail?id="+this.currentClass).then((response) => {
                     this.empty = false
                     this.classInfo = response.data["data"]
+                    var moment = require('moment-timezone');
+                    this.classInfo.deadlines = this.classInfo.deadlines.map(function(val){
+                        val.startDate = moment(val.time).toDate()
+                        return val
+                    })
                 }).catch((error) => {
                     if(this.claz.length > 0)
                         this.currentClass = this.claz[0].id
