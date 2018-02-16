@@ -122,7 +122,7 @@
             this.axios.get("/code/available").then((response) => {
                 this.countries = response.data["data"]
             })
-            if(this.$route.query.reason = "email")
+            if(this.$route.query.reason == "email")
                 this.oauth = true
         },
         methods: {
