@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Log;
 use App\Entity\Preference;
 use App\Entity\User\User;
 use App\Model\ApiResponse;
@@ -60,6 +61,17 @@ class AbstractController extends Controller
             }
     }
 
+    public function writeLog(string $identifier,?string $message = null,?User $user = null){
+        if(is_null($user))
+            $user = $this->getUser();
+        $log = new Log();
+        $log->setUser($user);
+        $log->setIdentifier($identifier);
+        $log->setMessage($message);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($log);
+        $em->flush();
+    }
     /**
      * @return User
      */

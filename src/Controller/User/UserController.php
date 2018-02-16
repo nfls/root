@@ -107,6 +107,7 @@ class UserController extends AbstractController
         $em->persist($user);
         $em->flush();
         $user = $em->getRepository(User::class)->findByUsername($username);
+        $this->writeLog("UserCreated",null,$user);
         $this->getDefaultAvatar($username,$user->getId());
         return $this->response()->response(null);
     }
@@ -135,8 +136,10 @@ class UserController extends AbstractController
                 $response->headers->setCookie(new Cookie("remember_token", $user->getToken(), $time, "/", null, false, true));
                 return $response;
             }
+            $this->writeLog("UserLoginSucceeded",null,$user);
             return $this->response()->response(null);
         } else {
+            $this->writeLog("UserLoginFailed",null,$user);
             return $this->response()->response(null, Response::HTTP_UNAUTHORIZED);
         }
     }
@@ -175,6 +178,7 @@ class UserController extends AbstractController
         }
         $em->persist($user);
         $em->flush();
+        $this->writeLog("UserPasswordReset",null,$user);
         return $this->response()->response(null);
     }
 
@@ -276,6 +280,7 @@ class UserController extends AbstractController
                     return $this->response()->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
                 $user->setPhone($phoneE164);
             }
+            $this->writeLog("UserSecurityChanged");
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
@@ -321,6 +326,7 @@ class UserController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($this->getUser());
                 $em->flush();
+                $this->writeLog("UserRenamed");
                 return $this->response()->response(null);
             }else{
                 return $this->response()->response("积分不足",Response::HTTP_FORBIDDEN);
