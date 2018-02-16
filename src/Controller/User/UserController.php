@@ -204,7 +204,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/wiki", name="User(OAuth)", methods="GET")
+     * @Route("/user/wiki", name="User(Wiki)", methods="GET")
      */
     public function wiki()
     {
