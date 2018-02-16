@@ -29,6 +29,9 @@
                 <md-card-content>
                     <calendar-view
                             :events="classInfo.deadlines"
+                            :disable-past="false"
+                            :disable-future="false"
+                            :show-date="showDate"
                     />
                 </md-card-content>
             </md-card>
@@ -172,6 +175,7 @@
             datetime: Datetime
         },
         data: () => ({
+            showDate: new Date(),
             currentClass: null,
             empty: true,
             claz: [],
@@ -357,4 +361,10 @@
     .md-card{
         margin:10px;
     }
+    .calendar-view {
+        .header {
+            display: none
+        }
+    }
+
 </style>
