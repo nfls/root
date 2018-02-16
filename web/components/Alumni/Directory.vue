@@ -1,8 +1,10 @@
 <template>
     <div>
-        <form>
-
-        </form>
+        <md-empty-state
+                md-icon="new_releases"
+                md-label="开发中"
+                md-description="此功能正在开发中">
+        </md-empty-state>
     </div>
 </template>
 

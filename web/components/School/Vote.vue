@@ -1,6 +1,6 @@
 <template>
     <md-empty-state
-            md-icon="new_release"
+            md-icon="new_releases"
             md-label="开发中"
             md-description="此功能正在开发中">
     </md-empty-state>
@@ -10,7 +10,7 @@
     export default {
         name: "Vote",
         mounted: function () {
-            this.$emit('input', "投票")
+            this.$emit('changeTitle', "投票")
         }
     }
 </script>

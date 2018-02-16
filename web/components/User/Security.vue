@@ -71,7 +71,11 @@
                             </md-field>
                         </md-tab>
                         <md-tab id="tab-settings" md-label="隐私">
-                            Comming Soon
+                            <md-empty-state
+                                    md-icon="new_releases"
+                                    md-label="开发中"
+                                    md-description="此功能正在开发中">
+                            </md-empty-state>
                         </md-tab>
                     </md-tabs>
                     <md-field>
