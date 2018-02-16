@@ -21,7 +21,6 @@ import infiniteScroll from 'vue-infinite-scroll'
 import "vue-simple-calendar/dist/static/css/default.css"
 import "vue-simple-calendar/dist/static/css/holidays-us.css"
 
-
 Vue.use(infiniteScroll)
 Vue.use(Datetime)
 Vue.use(VueI18n)

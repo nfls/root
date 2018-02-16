@@ -108,7 +108,11 @@
                         this.userSaved = true
                         this.message = 'Login succeeded.'
                         window.setTimeout(() => {
-                            this.$emit("reload")
+                            var uri = this.$route.query.redirect
+                            if(uri)
+                                window.location.href = uri
+                            else
+                                this.$emit("reload")
                         },1500)
                     } else {
                         this.userSaved = true

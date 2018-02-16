@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,8 +42,10 @@ class OAuthController extends AbstractController
         $httpFoundationFactory = new HttpFoundationFactory();
         $psrRequest = $factory->createRequest($request);
         $psrResponse = $factory->createResponse(new Response());
-        if(null === $user)
-            return new RedirectResponse("/#/user/login");
+        if(null === $user){
+            $response = new RedirectResponse("/#/user/login?redirect=".urlencode($request->getUri()));
+            return $response;
+        }
         try{
             $authRequest = $this->server->validateAuthorizationRequest($psrRequest);
             $authRequest->setUser($user);
