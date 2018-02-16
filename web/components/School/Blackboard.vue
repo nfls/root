@@ -52,9 +52,12 @@
                     <md-divider></md-divider>
                     <span class="md-caption">{{notice.time | moment("lll")}}</span>
                 </md-card-content>
+                <md-card-actions v-if="classInfo.admin">
+                    <md-button @click="removeNotice(notice.id)">删除</md-button>
+                </md-card-actions>
             </md-card>
             <!-- Admin Part-->
-            <md-speed-dial class="md-bottom-right" md-effect="opacity" md-direction="top">
+            <md-speed-dial class="md-bottom-right" md-effect="opacity" md-direction="top" v-if="classInfo.admin">
                 <md-speed-dial-target class="md-plain">
                     <md-icon>edit</md-icon>
                 </md-speed-dial-target>
@@ -93,13 +96,12 @@
                 </md-dialog-actions>
             </md-dialog>
             <md-dialog :md-active.sync="showAdmin" style="width:80%">
-                <md-dialog-title>管理学生</md-dialog-title>
+                <md-dialog-title>管理</md-dialog-title>
                 <md-dialog-content>
                     <md-tabs md-dynamic-height :md-active-tab="active">
                         <md-tab id="tab-list" md-label="列表" >
                             <span class="md-caption">警告：请不要将自己移出课堂之外！</span><br/>
                             <md-list>
-
                                 <md-list-item v-for="student in classInfo.students" :key="student.id">
                                     <md-avatar>
                                         <img :src="'/avatar/' + student.id + '.png'" alt="Avatar">
@@ -142,7 +144,24 @@
                                     </md-button>
                                 </md-list-item>
                             </md-list>
-
+                        </md-tab>
+                        <md-tab id="tab-edit" md-label="配置">
+                            <md-card>
+                                <md-card-content>
+                                    <form>
+                                        <md-field>
+                                            <label for="seniorSchool">标题</label>
+                                            <md-input v-model="info.title" id="title" name="title"/>
+                                        </md-field>
+                                        <span class="md-caption">公告</span>
+                                        <markdown-palettes v-model="info.announcement"></markdown-palettes>
+                                    </form>
+                                </md-card-content>
+                                <md-card-actions>
+                                    <md-button class="md-accent" @click="destroy">删除本黑板</md-button>
+                                    <md-button @click="preference">提交</md-button>
+                                </md-card-actions>
+                            </md-card>
                         </md-tab>
                     </md-tabs>
                 </md-dialog-content>
@@ -191,6 +210,10 @@
                 seniorSchool: "2",
                 seniorRegistration: "2019"
             },
+            info: {
+                title: "",
+                announcement: ""
+            },
             studentsInfo:[]
         }),
         mounted: function (){
@@ -215,6 +238,8 @@
                         val.startDate = moment(val.time).toDate()
                         return val
                     })
+                    this.info.title = this.classInfo.title
+                    this.info.announcement = this.classInfo.announcement
                 }).catch((error) => {
                     if(this.claz.length > 0)
                         this.currentClass = this.claz[0].id
@@ -324,11 +349,31 @@
                     this.list()
                 })
             },
+            removeNotice(id){
+                this.axios.post("/school/blackboard/delete?id="+this.currentClass,{
+                    id: id
+                }).then((response)=>{
+                    this.list()
+                })
+            },
             add(id){
                 this.axios.post("/school/blackboard/edit?id="+this.currentClass,{
                     id: id,
                     add: true
                 }).then((response)=>{
+                    this.list()
+                })
+            },
+            destroy(){
+                this.axios.post("/school/blackboard/preference?id="+this.currentClass,{
+                    "delete":true
+                }).then((response)=>{
+                    this.showAdmin = false
+                    this.init()
+                })
+            },
+            preference(){
+                this.axios.post("/school/blackboard/preference?id="+this.currentClass,this.info).then((response)=>{
                     this.list()
                 })
             },

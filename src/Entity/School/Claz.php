@@ -59,6 +59,7 @@ class Claz
      */
     private $announcement;
 
+    public $admin = false;
     /**
      * Claz constructor.
      */
@@ -181,11 +182,12 @@ class Claz
     }
 
     /**
-     * @param ArrayCollection $notices
+     * @param Notice $notice
      */
-    public function setNotices(ArrayCollection $notices): void
+    public function removeNotice(Notice $notice): void
     {
-        $this->notices = $notices;
+        if($this->notices->contains($notice))
+            $this->notices->removeElement($notice);
     }
 
     /**

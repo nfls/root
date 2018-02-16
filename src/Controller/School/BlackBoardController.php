@@ -57,6 +57,8 @@ class BlackBoardController extends AbstractController
         /** @var $class  Claz*/
         $class = $repo->findOneBy(["id"=>$id]);
         if(!is_null($class) & ($class->getStudents()->contains($this->getUser()) || $this->getUser()->hasRole(Permission::IS_ADMIN))){
+            if($class->getTeacher() === $this->getUser())
+                $class->admin = true;
             if(!$request->query->has("page")){
                 return $this->response()->responseEntity($class);
             }else{
@@ -84,10 +86,72 @@ class BlackBoardController extends AbstractController
             $user = $userRepo->find($uid);
             if($request->request->has("add"))
                 $class->addStudent($user);
-            else
+            else if($request->request->has("remove"))
                 $class->removeStudent($user);
             $em = $this->getDoctrine()->getManager();
             $em->persist($class);
+            $em->flush();
+            return $this->response()->response(null);
+        }else{
+            throw $this->createAccessDeniedException();
+        }
+    }
+
+    /**
+     * @Route("/school/blackboard/delete", methods="POST")
+     */
+    public function delete(Request $request){
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if(!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
+            throw $this->createAccessDeniedException();
+        $id = $request->query->get("id");
+        $repo = $this->getDoctrine()->getManager()->getRepository(Claz::class);
+        /** @var $class  Claz*/
+        $class = $repo->findOneBy(["id"=>$id]);
+        if(!is_null($class) & ($class->getTeacher() === $this->getUser() || $this->getUser()->hasRole(Permission::IS_ADMIN))){
+            $uid = $request->request->get("id");
+            $noticeRepo = $this->getDoctrine()->getManager()->getRepository(Notice::class);
+            $notice = $noticeRepo->find($uid);
+            $class->removeNotice($notice);
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($notice);
+            $em->persist($class);
+            $em->flush();
+            return $this->response()->response(null);
+        }else{
+            throw $this->createAccessDeniedException();
+        }
+    }
+
+    /**
+     * @Route("/school/blackboard/preference", methods="POST")
+     */
+    public function preference(Request $request){
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if(!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
+            throw $this->createAccessDeniedException();
+        $id = $request->query->get("id");
+        $repo = $this->getDoctrine()->getManager()->getRepository(Claz::class);
+        /** @var $class  Claz*/
+        $class = $repo->findOneBy(["id"=>$id]);
+        if(!is_null($class) & ($class->getTeacher() === $this->getUser() || $this->getUser()->hasRole(Permission::IS_ADMIN))){
+            $em = $this->getDoctrine()->getManager();
+            if($request->request->has("delete")){
+                foreach($class->getNotices() as $val){
+                    $em->remove($val);
+                }
+                foreach($class->getStudents() as $val){
+                    /** @var $val User */
+                    $val->removeClass($class);
+                    $em->persist($val);
+                }
+                $em->remove($class);
+            } else {
+                $class->setAnnouncement($request->request->get("announcement"));
+                $class->setTitle($request->request->get("title"));
+                $em->persist($class);
+            }
+
             $em->flush();
             return $this->response()->response(null);
         }else{

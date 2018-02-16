@@ -2,7 +2,7 @@
 
 namespace App\Repository\School;
 
-use App\Entity\Notice;
+use App\Entity\School\Notice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
