@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Log;
 use App\Entity\Preference;
 use App\Entity\User\User;
 use App\Model\ApiResponse;
+use App\Model\Permission;
 use App\Service\SettingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -13,14 +15,17 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 
 class AbstractController extends Controller
 {
-    /**
-     * @var ApiResponse
-     */
-    protected $response;
 
     public function __construct()
     {
-        $this->response = new ApiResponse();
+    }
+
+    public function response()
+    {
+        if(is_null($this->getUser()))
+            return new ApiResponse(false);
+        else
+        return new ApiResponse($this->getUser()->hasRole(Permission::IS_AUTHENTICATED));
     }
 
     public function setting(){
@@ -56,6 +61,17 @@ class AbstractController extends Controller
             }
     }
 
+    public function writeLog(string $identifier,?string $message = null,?User $user = null){
+        if(is_null($user))
+            $user = $this->getUser();
+        $log = new Log();
+        $log->setUser($user);
+        $log->setIdentifier($identifier);
+        $log->setMessage($message);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($log);
+        $em->flush();
+    }
     /**
      * @return User
      */

@@ -21,7 +21,7 @@
                             <md-list v-if='loggedIn'>
                                 <md-list-item to='/user/info'><md-icon>info</md-icon><span class='md-list-item-text'>Info</span></md-list-item>
                                 <md-list-item to='/user/security'><md-icon>security</md-icon><span class='md-list-item-text'>Security</span></md-list-item>
-                                <md-list-item to='/user/message'><md-icon>chat</md-icon><span class='md-list-item-text'>Message</span></md-list-item>
+                                <md-list-item to='/user/message'><md-icon>chat</md-icon><span class='md-list-item-text'>Message</span><md-chip class="md-accent" v-if="unread > 0">{{unread}}</md-chip></md-list-item>
                                 <md-divider></md-divider>
                                 <md-list-item @click="logout"><md-icon>exit_to_app</md-icon><span class='md-list-item-text'>Logout</span></md-list-item>
                             </md-list>
@@ -94,7 +94,7 @@
                 </md-list>
             </md-app-drawer>
 
-            <md-app-content>
+            <md-app-content v-infinite-scroll="loadMore" >
                 <router-view :gResponse='gResponse' :webpSupported='webpSupported' :loggedIn='loggedIn' :admin='admin' :verified='verified' :avatar="avatar" @changeTitle="changeTitle" @prepareRecaptcha="prepareRecaptcha" @reload="reload" @renderWebp="renderWebp"/>
             </md-app-content>
         </md-app>
@@ -112,6 +112,7 @@
             username: '未登录',
             admin: false,
             verified: false,
+            unread: 0,
             avatar: "/avatar/0.png",
             gResponse: '',
             reloadC: 0,
@@ -160,9 +161,10 @@
                 this.avatar = "/avatar/0.png"
                 this.axios.get('/user/current').then((response) =>{
                     if(response.data['code'] == 200){
-                        this.username = response.data['data']['username'];
-                        this.admin = response.data['data']['admin'];
+                        this.username = response.data['data']['username']
+                        this.admin = response.data['data']['admin']
                         this.verified = response.data['data']['verified']
+                        this.unread = response.data['data']['unread']
                         this.avatar = "/avatar/" + response.data['data']['id'] + ".png?" + this.reloadC
                         this.loggedIn = true
                         this.reloadC++
@@ -191,6 +193,8 @@
                     }
                 };
                 WebP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
+            }, loadMore(){
+                console.log(11)
             }
         },created: function(){
             document.getElementById('recaptcha').style.visibility = 'hidden';

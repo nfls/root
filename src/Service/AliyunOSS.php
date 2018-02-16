@@ -8,6 +8,10 @@ use Sts\Core\AcsRequest;
 use Sts\Core\DefaultAcsClient;
 use Sts\Core\Exception\ClientException;
 use Sts\Core\Profile\DefaultProfile;
+use OSS\Http\RequestCore;
+use OSS\Http\ResponseCore;
+use OSS\OssClient;
+use OSS\Core\OssException;
 
 class AliyunOSS {
     /**
@@ -91,5 +95,24 @@ class AliyunOSS {
         $pos = strpos($expiration, '+');
         $expiration = substr($expiration, 0, $pos);
         return $expiration."Z";
+    }
+
+    public function privateUploadSignature($object,$type){
+        try {
+            $ossClient = new OssClient($this->key_id, $this->key_secret, "https://oss-cn-shanghai.aliyuncs.com");
+            $options = array('Content-Type' => $type);
+            return $ossClient->signUrl("nfls-private",$object,360,OssClient::OSS_HTTP_PUT,$options);
+        } catch (OssException $e) {
+            return null;
+        }
+    }
+
+    public function privateDownloadSignature($object){
+        try {
+            $ossClient = new OssClient($this->key_id, $this->key_secret, "https://oss-cn-shanghai.aliyuncs.com");
+            return $ossClient->signUrl("nfls-private",$object,600,OssClient::OSS_HTTP_GET);
+        } catch (OssException $e) {
+            return null;
+        }
     }
 }

@@ -12,8 +12,8 @@
         </p>
         <p class="text">
             <span class="md-title">版本控制信息</span><br/>
-            <span class="md-body">仅显示最近3条 Commits</span><br/>
-            <vue-markdown v-if="loaded">{{version}}</vue-markdown>
+            <span class="md-body">仅显示最近10条 Commits</span>
+            <code v-if="loaded" v-html="version"></code>
         </p>
         <p class="text">
             <span class="md-title">开发组博客</span><br/>

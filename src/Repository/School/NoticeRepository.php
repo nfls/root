@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\School;
 
-use App\Entity\Feedback;
+use App\Entity\School\Notice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class FeedbackRepository extends ServiceEntityRepository
+class NoticeRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, Feedback::class);
+        parent::__construct($registry, Notice::class);
     }
 
     /*
     public function findBySomething($value)
     {
-        return $this->createQueryBuilder('f')
-            ->where('f.something = :value')->setParameter('value', $value)
-            ->orderBy('f.id', 'ASC')
+        return $this->createQueryBuilder('n')
+            ->where('n.something = :value')->setParameter('value', $value)
+            ->orderBy('n.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()

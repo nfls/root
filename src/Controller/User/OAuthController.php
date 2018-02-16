@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,15 +42,19 @@ class OAuthController extends AbstractController
         $httpFoundationFactory = new HttpFoundationFactory();
         $psrRequest = $factory->createRequest($request);
         $psrResponse = $factory->createResponse(new Response());
-        if(null === $user)
-            return new RedirectResponse("/#/user/login");
+        if(null === $user){
+            return new RedirectResponse("/#/user/login?redirect=".urlencode($request->getUri()));
+        }
+        if(is_null($user->getEmail())){
+            return new RedirectResponse("/#/user/security?reason=email");
+        }
         try{
             $authRequest = $this->server->validateAuthorizationRequest($psrRequest);
             $authRequest->setUser($user);
             $authRequest->setAuthorizationApproved(true);
             return $httpFoundationFactory->createResponse($this->server->completeAuthorizationRequest($authRequest, $psrResponse));
         }catch(OAuthServerException $e){
-            return $this->response->response($e->getMessage(),404);
+            return $this->response()->response($e->getMessage(),404);
             //return $httpFoundationFactory->createResponse($e->generateHttpResponse($psrResponse));
         }
     }
@@ -76,14 +81,14 @@ class OAuthController extends AbstractController
     public function version(Request $request){
         $repo = $this->getDoctrine()->getManager()->getRepository(Client::class);
         $client = $repo->getClientById($request->query->get("client_id"));
-        return $this->response->response($client->getVersion());
+        return $this->response()->response($client->getVersion());
     }
 
     /**
      * @Route("oauth/uploadSts", methods="GET")
      */
     public function uploadSts(Request $request,AliyunOSS $oss){
-        return $this->response->response($oss->getUploadToken($this->getUser()->getUsername()),200);
+        return $this->response()->response($oss->getUploadToken($this->getUser()->getUsername()),200);
     }
 
     /**
@@ -91,7 +96,7 @@ class OAuthController extends AbstractController
      */
     public function uploadSignature(Request $request,AliyunOSS $oss){
 
-        return $this->response->response($oss->getSignature());
+        return $this->response()->response($oss->getSignature());
     }
 
     /**
@@ -123,9 +128,9 @@ class OAuthController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($client);
             $em->flush();
-            //return $this->response->responseEntity($client);
+            //return $this->response()->responseEntity($client);
         }
-        return $this->response->responseEntity($repo->findAll());
+        return $this->response()->responseEntity($repo->findAll());
     }
 
 }

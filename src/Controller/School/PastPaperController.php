@@ -20,7 +20,7 @@ class PastPaperController extends AbstractController
      */
     public function getSts(Request $request,AliyunOSS $oss){
         $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
-        return $this->response->response($oss->getDownloadListToken($this->getUser()->getUsername()),200);
+        return $this->response()->response($oss->getDownloadListToken($this->getUser()->getUsername()),200);
     }
 
     /**
@@ -28,6 +28,6 @@ class PastPaperController extends AbstractController
      */
     public function getHeader(){
         $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
-        return $this->response->response($this->setting()->get(Preference::SCHOOL_PASTPAPER_HEADER));
+        return $this->response()->response($this->setting()->get(Preference::SCHOOL_PASTPAPER_HEADER));
     }
 }

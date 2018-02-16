@@ -1,10 +1,22 @@
 <template>
     <div class="security">
-        此页面施工中，请勿使用！WIP. DO NOT USE!
+
         <form novalidate class="md-layout" @submit.prevent="submit">
             <md-card class="md-layout-item md-size-100">
                 <md-card-header>
                     <div class="md-title">安全设置</div>
+                    <div class="md-subtitle" style="align:left;text-align:left;">
+                        <p align="left">
+                            <span class="md-body-2" v-if="oauth"><strong>清先绑定邮箱后再使用论坛或百科功能！</strong></span><br/>
+                            <span class="md-body-1">您可以在此处修改您的账户安全设置。</span><br/>
+                            <span class="md-caption">
+                                注意事项：<br/>
+                                1. 手机和邮箱至少需要绑定一个。在只有一个绑定的情况下您将无法进行解除绑定的操作<br/>
+                                2. 在使用百科或论坛功能前，您必须绑定您的邮箱，并请不要修改，以免绑定失效<br/>
+                                3. 隐私设置仅针对实名用户有效
+                            </span>
+                        </p>
+                    </div>
                 </md-card-header>
 
                 <md-card-content>
@@ -93,6 +105,7 @@
             message: "",
             email: "",
             phone: "",
+            oauth: false,
             form:{
             }
         }),
@@ -105,6 +118,8 @@
             this.axios.get("/code/available").then((response) => {
                 this.countries = response.data["data"]
             })
+            if(this.$route.query.reason = "email")
+                this.oauth = true
         },
         methods: {
             resetForm() {

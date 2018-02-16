@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\School;
 
 use App\Entity\User\User;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\AlumniRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\School\AlumniRepository")
  */
 class Alumni
 {

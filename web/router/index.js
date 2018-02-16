@@ -25,7 +25,7 @@ import Security from '../components/User/Security'
 import Message from '../components/User/Message'
 import Info from '../components/User/Info'
 
-import Preference from '../components/Preference'
+import Preference from '../components/Admin/Preference'
 
 
 Vue.use(Router)
@@ -73,10 +73,16 @@ export default new Router({
                     path: 'school/blackboard',
                     component: Blackboard
                 }, {
+                    path: 'school/blackboard/:id',
+                    component: Blackboard
+                }, {
                     path: 'user/security',
                     component: Security
                 }, {
                     path: 'user/message',
+                    component: Message
+                }, {
+                    path: 'user/message/:id',
                     component: Message
                 }, {
                     path: '/user/login',

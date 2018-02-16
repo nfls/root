@@ -4,6 +4,7 @@ namespace App\Controller\User;
 
 use App\Controller\AbstractController;
 use App\Entity\Alumni;
+use App\Entity\User\Chat;
 use App\Entity\User\Code;
 use App\Model\ApiResponse;
 use App\Model\Permission;
@@ -60,7 +61,7 @@ class UserController extends AbstractController
             }
         }
         $em->flush();
-        return $this->response->response(null);
+        return $this->response()->response(null);
     }
     */
 
@@ -70,7 +71,7 @@ class UserController extends AbstractController
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         if (!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
         $em = $this->getDoctrine()->getManager();
         $user = new User();
         $sms = new CodeVerificationService($this->getDoctrine()->getManager());
@@ -81,33 +82,34 @@ class UserController extends AbstractController
         if ($this->verifyUsername($username)) {
             $user->setUsername($username);
         } else {
-            return $this->response->response("用户名不正确", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response("用户名不正确", Response::HTTP_UNAUTHORIZED);
         }
         $password = $request->request->get("password");
         if ($this->verifyPassword($user, $password)) {
             $user->setPassword($passwordEncoder->encodePassword($user, $password));
         } else {
-            return $this->response->response("密码不合法", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response("密码不合法", Response::HTTP_UNAUTHORIZED);
         }
         if (intval($phone) > 0) {
             $phoneE164 = $sms->validate($country, $phone, $code, "register");
             if ($phoneE164 === false)
-                return $this->response->response("手机验证码不正确", Response::HTTP_UNAUTHORIZED);
+                return $this->response()->response("手机验证码不正确", Response::HTTP_UNAUTHORIZED);
             $user->setPhone($phoneE164);
         } else {
             $email = $request->request->get("email");
             if ($sms->verify($email, $code, "register")) {
                 $user->setEmail($email);
             } else {
-                return $this->response->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
+                return $this->response()->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
             }
         }
 
         $em->persist($user);
         $em->flush();
         $user = $em->getRepository(User::class)->findByUsername($username);
+        $this->writeLog("UserCreated",null,$user);
         $this->getDefaultAvatar($username,$user->getId());
-        return $this->response->response(null);
+        return $this->response()->response(null);
     }
 
     /**
@@ -116,27 +118,29 @@ class UserController extends AbstractController
     public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         if (!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
         $session = $request->getSession();
         if (!$session)
             $session = new Session();
         $session->start();
         $user = $this->getDoctrine()->getRepository(User::class)->search($request->request->get("username"));
         if (null === $user)
-            return $this->response->response(null, 401);
+            return $this->response()->response(null, 401);
         if ($passwordEncoder->isPasswordValid($user, $request->request->get("password", $user->getSalt()))) {
             $session->set("user_token", $user->getToken());
 
             if ($request->request->get("remember") == "true") {
-                $response = $this->response->response(null);
+                $response = $this->response()->response(null);
                 $time = new \DateTime();
                 $time->add(new \DateInterval("P1M"));
                 $response->headers->setCookie(new Cookie("remember_token", $user->getToken(), $time, "/", null, false, true));
                 return $response;
             }
-            return $this->response->response(null);
+            $this->writeLog("UserLoginSucceeded",null,$user);
+            return $this->response()->response(null);
         } else {
-            return $this->response->response(null, Response::HTTP_UNAUTHORIZED);
+            $this->writeLog("UserLoginFailed",null,$user);
+            return $this->response()->response(null, Response::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -146,7 +150,7 @@ class UserController extends AbstractController
     public function reset(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         if (!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
         $sms = new CodeVerificationService($this->getDoctrine()->getManager());
         $phone = $request->request->get("phone");
         $country = $request->request->get("country");
@@ -156,25 +160,26 @@ class UserController extends AbstractController
         if (intval($phone) > 0) {
             $phoneE164 = $sms->validate($country, $phone, $code, "reset");
             if ($phoneE164 === false)
-                return $this->response->response("手机验证码不正确", Response::HTTP_UNAUTHORIZED);
+                return $this->response()->response("手机验证码不正确", Response::HTTP_UNAUTHORIZED);
             $user = $repo->findByPhone($phoneE164);
         } else {
             $email = $request->request->get("email");
             if ($sms->verify($email, $code, "reset")) {
                 $user = $repo->findByEmail($email);
             } else {
-                return $this->response->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
+                return $this->response()->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
             }
         }
         $password = $request->request->get("password");
         if ($this->verifyPassword($user, $password)) {
             $user->setPassword($passwordEncoder->encodePassword($user, $password));
         } else {
-            return $this->response->response("密码不合法", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response("密码不合法", Response::HTTP_UNAUTHORIZED);
         }
         $em->persist($user);
         $em->flush();
-        return $this->response->response(null);
+        $this->writeLog("UserPasswordReset",null,$user);
+        return $this->response()->response(null);
     }
 
     /**
@@ -183,8 +188,8 @@ class UserController extends AbstractController
     public function logout(Request $request)
     {
         if(!$this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_USER))
-            return $this->response->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
-        $response = $this->response->response(null, 200);
+            return $this->response()->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
+        $response = $this->response()->response(null, 200);
         $time = new \DateTime();
         $time->sub(new \DateInterval("P1M"));
         $response->headers->setCookie(new Cookie("remember_token", "deleted", $time, "/", null, false, true));
@@ -199,8 +204,10 @@ class UserController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if (null === $this->getUser())
-            return $this->response->response(null, Response::HTTP_NO_CONTENT);
-        return $this->response->responseRawEntity($this->getUser()->getInfoArray());
+            return $this->response()->response(null, Response::HTTP_NO_CONTENT);
+        $info = $this->getUser()->getInfoArray();
+        $info["unread"] = $this->getDoctrine()->getManager()->getRepository(Chat::class)->getInboxCount($this->getUser());
+        return $this->response()->responseRawEntity($info);
     }
 
     /**
@@ -221,7 +228,7 @@ class UserController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if (null === $this->getUser())
-            return $this->response->response(null, Response::HTTP_NO_CONTENT);
+            return $this->response()->response(null, Response::HTTP_NO_CONTENT);
         return new JsonResponse($this->getUser()->getInfoArray());
     }
 
@@ -234,9 +241,9 @@ class UserController extends AbstractController
         $repo = $this->getDoctrine()->getManager()->getRepository(User::class);
         $user = $repo->search($info);
         if (@null === $user) {
-            return $this->response->response(null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->response()->response(null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        return $this->response->responseEntity($user);
+        return $this->response()->responseEntity($user);
     }
 
     /**
@@ -257,39 +264,40 @@ class UserController extends AbstractController
             $sms = new CodeVerificationService($this->getDoctrine()->getManager());
             if ($newPassword) {
                 if (!$this->verifyPassword($user, $newPassword))
-                    return $this->response->response("密码太弱！", Response::HTTP_UNAUTHORIZED);
+                    return $this->response()->response("密码太弱！", Response::HTTP_UNAUTHORIZED);
                 $password = $passwordEncoder->encodePassword($this->getUser(), $newPassword);
                 $user->setPassword($password);
             } else if ($unbindEmail) {
                 if ($user->getPhone()) {
                     $user->setEmail(null);
                 } else {
-                    return $this->response->response("您没有绑定手机！");
+                    return $this->response()->response("您没有绑定手机！");
                 }
             } else if ($newEmail) {
                 if ($sms->verify($newEmail, $code, "bind")) {
                     $user->setEmail($newEmail);
                 } else {
-                    return $this->response->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
+                    return $this->response()->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
                 }
             } else if ($unbindPhone) {
                 if ($user->getEmail()) {
                     $user->setPhone(null);
                 } else {
-                    return $this->response->response("您没有绑定邮箱！", Response::HTTP_UNAUTHORIZED);
+                    return $this->response()->response("您没有绑定邮箱！", Response::HTTP_UNAUTHORIZED);
                 }
             } else if ($newPhone) {
                 $phoneE164 = $sms->validate($country, $newPhone, $code, "bind");
                 if ($phoneE164 === false)
-                    return $this->response->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
+                    return $this->response()->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
                 $user->setPhone($phoneE164);
             }
+            $this->writeLog("UserSecurityChanged");
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
-            return $this->response->response(null, Response::HTTP_OK);
+            return $this->response()->response(null, Response::HTTP_OK);
         } else {
-            return $this->response->response(null, Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response(null, Response::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -312,7 +320,7 @@ class UserController extends AbstractController
         $avatar->resizeImage(200, 200, \Imagick::FILTER_LANCZOS, 1);
         $avatar->setImageFormat("png");
         $avatar->writeImage($this->get('kernel')->getRootDir() . "/../public/avatar/" . strval($this->getUser()->getId()) . ".png");
-        return $this->response->response(null, Response::HTTP_OK);
+        return $this->response()->response(null, Response::HTTP_OK);
     }
 
     /**
@@ -329,13 +337,14 @@ class UserController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($this->getUser());
                 $em->flush();
-                return $this->response->response(null);
+                $this->writeLog("UserRenamed");
+                return $this->response()->response(null);
             }else{
-                return $this->response->response("积分不足",Response::HTTP_FORBIDDEN);
+                return $this->response()->response("积分不足",Response::HTTP_FORBIDDEN);
             }
 
         }else{
-            return $this->response->response("用户名不合法不足",Response::HTTP_FORBIDDEN);
+            return $this->response()->response("用户名不合法不足",Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -346,7 +355,7 @@ class UserController extends AbstractController
     public function getCsrfToken(Request $request){
         /** @var \Symfony\Component\Security\Csrf\CsrfTokenManagerInterface $csrf */
         $csrf = $this->get('security.csrf.token_manager');
-        return $this->response->response($csrf->refreshToken($request->query->get("name") ?? "")->getValue());
+        return $this->response()->response($csrf->refreshToken($request->query->get("name") ?? "")->getValue());
     }
 
     private function getDefaultAvatar($username,$id){

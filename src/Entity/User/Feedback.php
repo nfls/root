@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\FeedbackRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\User\FeedbackRepository")
  */
 class Feedback
 {

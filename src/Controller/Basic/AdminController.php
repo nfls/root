@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\User;
+namespace App\Controller\Basic;
 
 use App\Controller\AbstractController;
 use App\Entity\Alumni;
@@ -31,9 +31,9 @@ class AdminController extends AbstractController
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         if($request->request->has("identifier")){
             $this->getDoctrine()->getManager()->getRepository(Preference::class)->set($request->request->get("identifier"),$request->request->get("content"));
-            return $this->response->response(null,204);
+            return $this->response()->response(null,204);
         } else {
-            return $this->response->responseEntity($this->getDoctrine()->getManager()->getRepository(Preference::class)->findAll());
+            return $this->response()->responseEntity($this->getDoctrine()->getManager()->getRepository(Preference::class)->findAll());
         }
 
     }

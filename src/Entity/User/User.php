@@ -2,9 +2,10 @@
 
 namespace App\Entity\User;
 
-use App\Entity\Alumni;
+use App\Entity\School\Alumni;
 use App\Entity\Media\Gallery;
 use App\Entity\Media\Photo;
+use App\Entity\School\Claz;
 use App\Model\Permission;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -92,20 +93,38 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Alumni", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\School\Alumni", mappedBy="user")
      */
     private $authTickets;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\School\Claz", inversedBy="students")
+     */
+    private $classes;
 
     /**
      * @var bool
      */
     public $isOAuth = false;
 
+    /**
+     * @var string
+     */
+    public $realUsername = null;
+
+    /**
+     * @var string
+     */
+    public $htmlUsername = null;
+
     public function __construct()
     {
         $this->joinTime = new \DateTime();
         $this->readTime = new \DateTime();
         $this->authTickets = new ArrayCollection();
+        $this->classes = new ArrayCollection();
     }
     
     /**
@@ -273,17 +292,27 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
         $valid = array_filter($this->authTickets->toArray(),array($this,"getValid"));
         if(count($valid) > 0){
             array_push($permissions,Permission::IS_AUTHENTICATED);
-            array_push($permissions,$this->getAlumniPermission(array_values($valid)[0]));
+            foreach(array_values($valid) as $value){
+                array_push($permissions,$this->getAlumniPermission($value));
+            }
+
         }
         return $permissions;
     }
 
-    private function isVerified(){
+    public function isVerified(){
         $valid = array_filter($this->authTickets->toArray(),array($this,"getValid"));
-        if(count($valid) > 0)
+        if(count($valid) > 0){
+            /** @var $auth Alumni*/
+            $auth = array_values($valid)[0];
+            $this->realUsername = $this->username . "( " . $auth->getEnglishName() . " | " . $auth->getChineseName() . " )";
+            $this->htmlUsername = $this->username."&nbsp;<span style='background-color:#3CDBC0;'>".$auth->getEnglishName()."</span>&nbsp;<span style='background-color:#2DCCD3;'>". $auth->getChineseName() ."</span>";
             return true;
-        else
+        }
+        else{
             return false;
+        }
+
     }
 
     public function hasRole($role){
@@ -349,6 +378,28 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
         $this->joinTime = $joinTime;
     }
 
+    /**
+     * @return ArrayCollection
+     */
+    public function getClasses()
+    {
+        return $this->classes;
+    }
 
+    public function addClass(Claz $class){
+        if(!$this->classes->contains($class)){
+            $this->classes->add($class);
+        }
+    }
+
+    public function removeClass(Claz $class){
+        if($this->classes->contains($class)){
+            $this->classes->removeElement($class);
+        }
+    }
+
+    public function __toString() {
+        return $this->username;
+    }
 }
 

@@ -108,7 +108,11 @@
                         this.userSaved = true
                         this.message = 'Login succeeded.'
                         window.setTimeout(() => {
-                            this.$emit("reload")
+                            var uri = this.$route.query.redirect
+                            if(uri)
+                                window.location.href = uri
+                            else
+                                this.$emit("reload")
                         },1500)
                     } else {
                         this.userSaved = true
@@ -145,14 +149,12 @@
         left: 0;
     }
     .login {
+        margin-top: 80px;
         margin-left: auto;
         margin-right: auto;
         width:70%;
         height:100%;
         min-width:260px;
         max-width:500px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
     }
 </style>
