@@ -204,14 +204,25 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/oauth", name="User(OAuth)", methods="GET")
+     * @Route("/user/wiki", name="User(OAuth)", methods="GET")
      */
-    public function oauth()
+    public function wiki()
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if (null === $this->getUser())
             return $this->response->response(null, Response::HTTP_NO_CONTENT);
         return new JsonResponse(array("user"=>$this->getUser()->getInfoArray()));
+    }
+
+    /**
+     * @Route("/user/forum", name="User(OAuth)", methods="GET")
+     */
+    public function forum()
+    {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if (null === $this->getUser())
+            return $this->response->response(null, Response::HTTP_NO_CONTENT);
+        return new JsonResponse($this->getUser()->getInfoArray());
     }
 
     /**
