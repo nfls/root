@@ -2,11 +2,12 @@
 
 namespace App\Controller\Basic;
 
+use App\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-class LogController extends Controller
+class LogController extends AbstractController
 {
     /**
      * @Route("/log", name="log")
