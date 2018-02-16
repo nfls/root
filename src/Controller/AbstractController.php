@@ -21,6 +21,9 @@ class AbstractController extends Controller
 
     public function response()
     {
+        if(is_null($this->getUser()))
+            return new ApiResponse(false);
+        else
         return new ApiResponse($this->getUser()->hasRole(Permission::IS_AUTHENTICATED));
     }
 

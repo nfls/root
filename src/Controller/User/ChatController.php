@@ -19,6 +19,7 @@ class ChatController extends AbstractController
      */
     public function inbox(Request $request){
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $this->updateUser();
         return $this->response()->responseEntity(
             $this->getDoctrine()->getManager()->getRepository(Chat::class)->getInbox(
                 $this->getUser(),
@@ -60,5 +61,12 @@ class ChatController extends AbstractController
         $em->persist($chat);
         $em->flush();
         return $this->response()->response(null);
+    }
+
+    private function updateUser(){
+        $this->getUser()->setReadTime(new \DateTime());
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($this->getUser());
+        $em->flush();
     }
 }

@@ -35,4 +35,15 @@ class ChatRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getInboxCount(User $user){
+        return intval($this->createQueryBuilder("u")
+            ->where("u.receiver = :receiver")
+            ->setParameter("receiver",$user)
+            ->andWhere("u.time > :time")
+            ->setParameter("time", $user->getReadTime())
+            ->select("count(u)")
+            ->getQuery()
+            ->getSingleScalarResult());
+    }
 }

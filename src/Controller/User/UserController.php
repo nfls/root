@@ -4,6 +4,7 @@ namespace App\Controller\User;
 
 use App\Controller\AbstractController;
 use App\Entity\Alumni;
+use App\Entity\User\Chat;
 use App\Entity\User\Code;
 use App\Model\ApiResponse;
 use App\Model\Permission;
@@ -200,7 +201,9 @@ class UserController extends AbstractController
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if (null === $this->getUser())
             return $this->response()->response(null, Response::HTTP_NO_CONTENT);
-        return $this->response()->responseRawEntity($this->getUser()->getInfoArray());
+        $info = $this->getUser()->getInfoArray();
+        $info["unread"] = $this->getDoctrine()->getManager()->getRepository(Chat::class)->getInboxCount($this->getUser());
+        return $this->response()->responseRawEntity($info);
     }
 
     /**

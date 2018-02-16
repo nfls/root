@@ -3,8 +3,8 @@
 
         <md-empty-state v-if="loading"
                 md-icon="access_time"
-                md-label="Loading"
-                md-description="Please wait for a few seconds."
+                md-label="加载中"
+                :md-description=currentFile
                 style="width:100%;padding-bottom: 100%;">
         </md-empty-state>
         <div v-else>
@@ -77,7 +77,8 @@
             current: 0,
             filename: "",
             toDownload: [],
-            zipFile: null
+            zipFile: null,
+            currentFile: "如果长期卡住，请考虑刷新或更换浏览器。"
         }),
         mounted: function() {
             var self = this
@@ -111,6 +112,7 @@
                 }).then(function (result) {
                     self.fileInfo = self.fileInfo.concat(result.objects)
                     if(result.objects.length == 1000){
+                        self.currentFile = result.nextMarker
                         self.loadFiles(result.nextMarker)
                     }else{
                         self.loading = false

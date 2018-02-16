@@ -3,7 +3,7 @@
         <span class="md-title" v-if="!verified">
             您尚未完成实名认证，将无法进行发送消息等操作！
         </span>
-        <md-tabs :md-active-tab="active">
+        <md-tabs @md-changed="change" :md-active-tab="active">
             <md-tab id="tab-inbox" md-label="收件箱">
                 <md-empty-state
                         v-if="inbox.length == 0"
@@ -60,6 +60,8 @@
 <script>
     import VueMarkdown from 'vue-markdown'
     import MarkdownPalettes from 'markdown-palettes'
+    import infiniteScroll from 'vue-infinite-scroll'
+
     export default {
         name: "Message",
         props: ["admin","loggedIn","verified","gResponse"],
@@ -67,16 +69,18 @@
             VueMarkdown,
             MarkdownPalettes
         },
+        directives: {infiniteScroll},
         data: () => ({
             message: "",
             showMessage: false,
             inboxPage: 1,
             outboxPage: 1,
-            active: null,
+            active: "tab-inbox",
             content: "",
             receiver: null,
             inbox: [],
-            outbox: []
+            outbox: [],
+            active: null
         }),
         mounted: function() {
             this.listInbox(1)
@@ -132,11 +136,14 @@
                 this.message = message
                 this.showMessage = true
             },
+            change(id){
+                this.active = id
+            },
             loadMore(){
-                if(this.active == "md-inbox"){
+                if(this.active == "tab-inbox"){
                     this.inboxPage ++
                     this.listInbox()
-                }else if(this.active == "md-outbox"){
+                }else if(this.active == "tab-outbox"){
                     this.outboxPage ++
                     this.listOutbox()
                 }
