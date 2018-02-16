@@ -36,7 +36,8 @@ class UserNormalizer implements NormalizerInterface{
             "id" => $object->getId(),
             "username" => $object->getUsername(),
             "point" => $object->getPoint(),
-            "admin" => $object->isAdmin()
+            "admin" => $object->isAdmin(),
+            "verified" => $object->isVerified()
         );
         if($this->realname){
             $info["htmlUsername"] = $object->htmlUsername ?? $info["username"];

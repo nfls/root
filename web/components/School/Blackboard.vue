@@ -32,8 +32,13 @@
                             :disable-past="false"
                             :disable-future="false"
                             :show-date="showDate"
+                            @setShowDate="setShowDate"
                     />
                 </md-card-content>
+                <md-card-actions>
+                    <md-button @click="showDate.setMonth(showDate.getMonth() + 1) ">上一个月</md-button>
+                    <md-button>下一个月</md-button>
+                </md-card-actions>
             </md-card>
             <md-card v-for="notice in classInfo.notices" :key="notice.id">
                 <md-card-content style="text-align:left;align:left;">
@@ -90,10 +95,6 @@
                         <span>发布日期（留空为立即发布）<datetime v-model="post.time" type="datetime" :disabled="sending"></datetime></span>
                     </form>
                 </md-dialog-content>
-                <md-dialog-actions>
-                    <md-button class="md-primary" @click="close" :disabled="sending">取消</md-button>
-                    <md-button class="md-primary" @click="submit" :disabled="sending">发布</md-button>
-                </md-dialog-actions>
             </md-dialog>
             <md-dialog :md-active.sync="showAdmin" style="width:80%">
                 <md-dialog-title>管理</md-dialog-title>
@@ -173,6 +174,13 @@
             <md-snackbar :md-active.sync="showSnackBar" md-persistent>
                 <span>{{message}}</span>
             </md-snackbar>
+        </div>
+        <div v-else>
+            <md-empty-state
+                    md-icon="access_time"
+                    md-label="什么都没有发现"
+                    md-description="看起来你还没有加入任何课堂呢，或者再等等？">
+            </md-empty-state>
         </div>
     </div>
 </template>
@@ -386,7 +394,10 @@
             },
             send(id){
                 this.$router.push("/user/message/"+id)
-            }
+            },
+            setShowDate(d) {
+                this.showDate = d;
+            },
         },
         watch: {
             currentClass: {

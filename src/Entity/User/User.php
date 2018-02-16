@@ -291,22 +291,28 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
             $permissions = [];
         $valid = array_filter($this->authTickets->toArray(),array($this,"getValid"));
         if(count($valid) > 0){
-            /** @var $auth Alumni*/
-            $auth = array_values($valid)[0];
-            $this->realUsername = $this->username . "( " . $auth->getEnglishName() . " | " . $auth->getChineseName() . " )";
-            $this->htmlUsername = $this->username."&nbsp;<span style='background-color:#3CDBC0;'>".$auth->getEnglishName()."</span>&nbsp;<span style='background-color:#2DCCD3;'>". $auth->getChineseName() ."</span>";
             array_push($permissions,Permission::IS_AUTHENTICATED);
-            array_push($permissions,$this->getAlumniPermission(array_values($valid)[0]));
+            foreach(array_values($valid) as $value){
+                array_push($permissions,$this->getAlumniPermission($value));
+            }
+
         }
         return $permissions;
     }
 
-    private function isVerified(){
+    public function isVerified(){
         $valid = array_filter($this->authTickets->toArray(),array($this,"getValid"));
-        if(count($valid) > 0)
+        if(count($valid) > 0){
+            /** @var $auth Alumni*/
+            $auth = array_values($valid)[0];
+            $this->realUsername = $this->username . "( " . $auth->getEnglishName() . " | " . $auth->getChineseName() . " )";
+            $this->htmlUsername = $this->username."&nbsp;<span style='background-color:#3CDBC0;'>".$auth->getEnglishName()."</span>&nbsp;<span style='background-color:#2DCCD3;'>". $auth->getChineseName() ."</span>";
             return true;
-        else
+        }
+        else{
             return false;
+        }
+
     }
 
     public function hasRole($role){

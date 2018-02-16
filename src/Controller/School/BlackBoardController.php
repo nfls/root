@@ -20,7 +20,6 @@ class BlackBoardController extends AbstractController
      */
     public function list(Request $request){
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        $this->denyAccessUnlessGranted(Permission::IS_STUDENT);
 
         return $this->response()->responseEntity($this->getUser()->getClasses()->map(function($val){
             /** @var $val Claz */
