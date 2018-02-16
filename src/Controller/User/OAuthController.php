@@ -43,8 +43,10 @@ class OAuthController extends AbstractController
         $psrRequest = $factory->createRequest($request);
         $psrResponse = $factory->createResponse(new Response());
         if(null === $user){
-            $response = new RedirectResponse("/#/user/login?redirect=".urlencode($request->getUri()));
-            return $response;
+            return new RedirectResponse("/#/user/login?redirect=".urlencode($request->getUri()));
+        }
+        if(is_null($user->getEmail())){
+            return new RedirectResponse("/#/user/security?reason=email");
         }
         try{
             $authRequest = $this->server->validateAuthorizationRequest($psrRequest);
