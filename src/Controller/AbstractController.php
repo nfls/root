@@ -15,6 +15,10 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 class AbstractController extends Controller
 {
 
+    public function __construct()
+    {
+    }
+
     public function response()
     {
         return new ApiResponse($this->getUser()->hasRole(Permission::IS_AUTHENTICATED));

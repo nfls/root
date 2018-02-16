@@ -17,9 +17,10 @@ import Editor from 'markdown-palettes'
 import VueI18n from 'vue-i18n'
 import VueWorker from 'vue-worker'
 import Datetime from 'vue-datetime'
+import infiniteScroll from 'vue-infinite-scroll'
 
+Vue.use(infiniteScroll)
 Vue.use(Datetime)
-
 Vue.use(VueI18n)
 Vue.use(VuePreview)
 Vue.use(VueAxios, axios)
@@ -56,6 +57,7 @@ new Vue({
   components: {
     App
   },
+  directives: {infiniteScroll},
   template: '<App/>'
 })
 
