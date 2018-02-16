@@ -49,7 +49,7 @@
                 <span v-if="!verified">实名认证后即可查看更多照片！</span>
                 <span v-else>使用右上角菜单栏可查看全部照片！</span>
                 <br/>
-                <span v-if="!webpSupported"><strong>您的浏览器不支持WebP格式图片的渲染。</strong>仅前5张将会被展示。图片加载速度可能会变慢。</span>
+                <span v-if="!webpSupported"><strong>您的浏览器不支持WebP格式图片的渲染。</strong>正在使用备用渲染方案，可能会无法正常显示，仅前五张将会被显示。</span>
             </md-card-content>
         </md-card>
         <md-progress-spinner md-mode="indeterminate" v-if="!loaded"></md-progress-spinner>
