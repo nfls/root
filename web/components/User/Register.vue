@@ -309,14 +309,12 @@
         left: 0;
     }
     .login {
+        margin-top: 80px;
         margin-left: auto;
         margin-right: auto;
         width:70%;
         height:100%;
         min-width:260px;
         max-width:500px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
     }
 </style>
