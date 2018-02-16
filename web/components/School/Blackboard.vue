@@ -25,7 +25,7 @@
                     <vue-markdown>{{classInfo.announcement}}</vue-markdown>
                 </md-card-content>
             </md-card>
-            <md-card v-for="notice in classInfo.notices" :key="notice.id" style="margin:10px">
+            <md-card v-for="notice in classInfo.notices" :key="notice.id">
                 <md-card-content style="text-align:left;align:left;">
                     <vue-markdown>{{notice.content}}</vue-markdown>
                     <div v-if="notice.deadline">
@@ -245,5 +245,8 @@
 <style scoped>
     .new-post{
         min-width: 500px;
+    }
+    .md-card{
+        margin:10px;
     }
 </style>
