@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\User;
+namespace App\Controller\Basic;
 
 use App\Controller\AbstractController;
 use App\Entity\Alumni;

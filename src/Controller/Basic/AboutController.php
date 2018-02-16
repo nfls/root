@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Basic;
 
 use App\Entity\Feedback;
 use App\Entity\Preference;

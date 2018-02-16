@@ -1,10 +1,15 @@
 <template>
     <div class="security">
-        此页面施工中，请勿使用！WIP. DO NOT USE!
+        <p>
+
+        </p>
         <form novalidate class="md-layout" @submit.prevent="submit">
             <md-card class="md-layout-item md-size-100">
                 <md-card-header>
                     <div class="md-title">安全设置</div>
+                    <div class="md-subtitle" style="align:left;text-align:left;">
+                        <vue-markdown></vue-markdown>
+                    </div>
                 </md-card-header>
 
                 <md-card-content>
