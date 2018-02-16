@@ -8,9 +8,16 @@
                 style="width:100%;padding-bottom: 100%;">
         </md-empty-state>
         <div v-else>
+            <span class="md-caption">
+                <countdown :time=" 60 * 60 * 1000">
+                    <template slot-scope="props">剩余有效时间：{{ props.minutes }}:{{ props.seconds }}。超出时间后请返回Dashboard并重新进入。</template>
+                </countdown>
+            </span>
             <md-card v-if="toDownload.length == 0">
                 <md-card-header style="text-align: left;">
                     <vue-markdown>{{header}}</vue-markdown>
+                    <md-divider></md-divider>
+
                 </md-card-header>
                 <md-divider></md-divider>
                 <md-card-content>
@@ -59,10 +66,12 @@
 
 <script>
     import VueMarkdown from 'vue-markdown'
+    import VueCountdown from '@xkeshi/vue-countdown'
     export default {
         name: "Past-paper",
         components: {
-            VueMarkdown
+            VueMarkdown,
+            'countdown': VueCountdown
         },
         props: ["admin","verified",'loggedIn'],
         data: () => ({
@@ -182,6 +191,10 @@
                     })
                 } else {
                     var item = this.toDownload.pop()
+                    if(item.size == 0){
+                        this.downloadBatch()
+                        return
+                    }
                     this.filename = item.name
                     this.axios.get(this.client.signatureUrl(item.name),{
                         responseType: 'blob'
