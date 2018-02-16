@@ -66,7 +66,7 @@ class CodeController extends AbstractController
         $this->api = new ApiResponse();
         $this->code = mt_rand(100000, 999999);
         $this->token = base64_encode(random_bytes(16));
-        parent::__construct();
+        //parent::__construct();
     }
 
     /**
