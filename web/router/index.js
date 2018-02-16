@@ -82,6 +82,9 @@ export default new Router({
                     path: 'user/message',
                     component: Message
                 }, {
+                    path: 'user/message/:id',
+                    component: Message
+                }, {
                     path: '/user/login',
                     component: Login
                 }, {

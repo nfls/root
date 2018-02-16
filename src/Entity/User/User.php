@@ -114,6 +114,11 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
      */
     public $realUsername = null;
 
+    /**
+     * @var string
+     */
+    public $htmlUsername = null;
+
     public function __construct()
     {
         $this->joinTime = new \DateTime();
@@ -289,6 +294,7 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
             /** @var $auth Alumni*/
             $auth = array_values($valid)[0];
             $this->realUsername = $this->username . "( " . $auth->getEnglishName() . " | " . $auth->getChineseName() . " )";
+            $this->htmlUsername = $this->username."&nbsp;<span style='background-color:#3CDBC0;'>".$auth->getEnglishName()."</span>&nbsp;<span style='background-color:#2DCCD3;'>". $auth->getChineseName() ."</span>";
             array_push($permissions,Permission::IS_AUTHENTICATED);
             array_push($permissions,$this->getAlumniPermission(array_values($valid)[0]));
         }
@@ -382,8 +388,12 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
 
     public function removeClass(Claz $class){
         if($this->classes->contains($class)){
-            $this->classes->remove($class);
+            $this->classes->removeElement($class);
         }
+    }
+
+    public function __toString() {
+        return $this->username;
     }
 }
 

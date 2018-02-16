@@ -39,10 +39,10 @@ class UserNormalizer implements NormalizerInterface{
             "admin" => $object->isAdmin()
         );
         if($this->realname){
-            $info["username"] = $object->realUsername ?? $info["username"];
+            $info["htmlUsername"] = $object->htmlUsername ?? $info["username"];
         }
         if($info["admin"]){
-            $info["username"] = "[管理员]".$info["username"];
+            $info["htmlUsername"] = "<span style='background-color: #F57EB6'>管理员</span>&nbsp;".$info["htmlUsername"];
         }
         return $info;
 

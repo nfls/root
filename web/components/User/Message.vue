@@ -3,7 +3,7 @@
         <span class="md-title" v-if="!verified">
             您尚未完成实名认证，将无法进行发送消息等操作！
         </span>
-        <md-tabs @md-changed="change" :md-active-tab="active">
+        <md-tabs @md-changed="change" :md-active-tab="active" md-dynamic-height>
             <md-tab id="tab-inbox" md-label="收件箱">
                 <md-empty-state
                         v-if="inbox.length == 0"
@@ -26,7 +26,7 @@
                 <md-empty-state
                         v-if="outbox.length == 0"
                         md-icon="devices_other"
-                        md-label="收件箱内没有消息"
+                        md-label="发件箱内没有消息"
                         md-description="要不去找一个人聊聊？">
                 </md-empty-state>
                 <md-card v-for="chat in outbox" :key="chat.id">
@@ -86,6 +86,10 @@
             this.listInbox(1)
             this.listOutbox(1)
             this.$emit("changeTitle","消息")
+            if(this.$route.params["id"] != null){
+                this.receiver = this.$route.params["id"]
+                this.active = "tab-new"
+            }
         },
         methods: {
             listInbox() {

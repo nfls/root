@@ -128,8 +128,10 @@ class Claz
      */
     public function removeStudent(User $student): void
     {
+        if($this->teacher === $student)
+            return;
         if($this->students->contains($student)){
-            $this->students->remove($student);
+            $this->students->removeElement($student);
             $student->removeClass($this);
         }
 

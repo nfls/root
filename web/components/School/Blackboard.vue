@@ -5,8 +5,8 @@
                 <md-card-content style="align:left;">
                     <md-field>
                         <label>我要看这块黑板：</label>
-                        <md-select v-model="currentClass" v-for="cla in claz" key="currentClass">
-                            <md-option :value="cla.id" :key="cla.id">{{cla.title}}</md-option>
+                        <md-select v-model="currentClass">
+                            <md-option v-for="cla in claz" :value="cla.id" :key="cla.id">{{cla.title}}</md-option>
                         </md-select>
                     </md-field>
 
@@ -20,7 +20,7 @@
 
 
                 <md-card-content style="text-align:left;align:left;">
-                    <span>老师：{{classInfo.teacher.username}}</span>
+                    <span>老师：</span><span v-html="classInfo.teacher.htmlUsername"></span>
                     <md-divider></md-divider>
                     <vue-markdown>{{classInfo.announcement}}</vue-markdown>
                 </md-card-content>
@@ -54,7 +54,7 @@
                         <md-icon>create</md-icon>
                     </md-button>
 
-                    <md-button class="md-icon-button">
+                    <md-button class="md-icon-button" @click="showAdmin = !showAdmin">
                         <md-icon>person</md-icon>
                     </md-button>
                 </md-speed-dial-content>
@@ -81,6 +81,65 @@
                     <md-button class="md-primary" @click="close" :disabled="sending">取消</md-button>
                     <md-button class="md-primary" @click="submit" :disabled="sending">发布</md-button>
                 </md-dialog-actions>
+            </md-dialog>
+            <md-dialog :md-active.sync="showAdmin" style="width:80%">
+                <md-dialog-title>管理学生</md-dialog-title>
+                <md-dialog-content>
+                    <md-tabs md-dynamic-height :md-active-tab="active">
+                        <md-tab id="tab-list" md-label="列表" >
+                            <span class="md-caption">警告：请不要将自己移出课堂之外！</span><br/>
+                            <md-list>
+
+                                <md-list-item v-for="student in classInfo.students" :key="student.id">
+                                    <md-avatar>
+                                        <img :src="'/avatar/' + student.id + '.png'" alt="Avatar">
+                                    </md-avatar>
+                                    <div class="md-list-item-text">
+                                        <span v-html="student.htmlUsername"></span>
+                                    </div>
+                                    <md-button class="md-icon-button md-list-action" @click="remove(student.id)">
+                                        <md-icon>delete</md-icon>
+                                    </md-button>
+                                    <md-button class="md-icon-button md-list-action" @click="send(student.id)">
+                                        <md-icon>send</md-icon>
+                                    </md-button>
+                                </md-list-item>
+                            </md-list>
+                        </md-tab>
+                        <md-tab id="tab-add" md-label="添加">
+                            <form>
+                                <div>
+                                    <md-radio v-model="form.seniorSchool" value="2">南外IB国际部</md-radio>
+                                    <md-radio v-model="form.seniorSchool" value="3">南外剑桥国际部</md-radio>
+                                </div>
+                                <md-field>
+                                    <label for="seniorSchool">高中毕业年份</label>
+                                    <md-input v-model="form.seniorRegistration" id="seniorRegistration" name="seniorRegistration"/>
+                                </md-field>
+                                <md-button @click="search">搜索</md-button>
+                            </form>
+                            <md-divider></md-divider>
+                            <md-list>
+                                <md-list-item v-for="student in studentsInfo" :key="student.id">
+                                    <md-avatar>
+                                        <img :src="'/avatar/' + student.id + '.png'" alt="Avatar">
+                                    </md-avatar>
+                                    <div class="md-list-item-text">
+                                        <span v-html="student.htmlUsername"></span>
+                                    </div>
+                                    <md-button class="md-icon-button md-list-action" @click="add(student.id)">
+                                        <md-icon>add</md-icon>
+                                    </md-button>
+                                </md-list-item>
+                            </md-list>
+
+                        </md-tab>
+                    </md-tabs>
+                </md-dialog-content>
+                <md-dialog-actions>
+                    <md-button class="md-primary" @click="showAdmin = false">关闭</md-button>
+                </md-dialog-actions>
+
             </md-dialog>
             <md-snackbar :md-active.sync="showSnackBar" md-persistent>
                 <span>{{message}}</span>
@@ -112,7 +171,14 @@
             post: {},
             sending: false,
             message: "",
-            showSnackBar: false
+            showSnackBar: false,
+            showAdmin: false,
+            active: "",
+            form: {
+                seniorSchool: "2",
+                seniorRegistration: "2019"
+            },
+            studentsInfo:[]
         }),
         mounted: function (){
             this.$emit("changeTitle","Blackboard")
@@ -229,6 +295,34 @@
             showMsg(msg){
                 this.showSnackBar = true
                 this.message = msg
+            },
+            remove(id){
+                this.active = "tab-add"
+                this.axios.post("/school/blackboard/edit?id="+this.currentClass,{
+                    id: id,
+                    remove: true
+                }).then((response)=>{
+                    this.active = "tab-list"
+                    this.list()
+                })
+            },
+            add(id){
+                this.axios.post("/school/blackboard/edit?id="+this.currentClass,{
+                    id: id,
+                    add: true
+                }).then((response)=>{
+                    this.list()
+                })
+            },
+            search(){
+                this.active = "tab-list"
+                this.axios.post("/alumni/directory/search",this.form).then((response) => {
+                    this.studentsInfo = response.data["data"]
+                    this.active = "tab-add"
+                })
+            },
+            send(id){
+                this.$router.push("/user/message/"+id)
             }
         },
         watch: {
