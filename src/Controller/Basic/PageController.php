@@ -3,6 +3,7 @@
 namespace App\Controller\Basic;
 
 use App\Controller\AbstractController;
+use App\Entity\Preference;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,5 +37,12 @@ class PageController extends AbstractController
         $dd->parse();
         dump($dd);
         return $this->response()->response(null);
+    }
+
+    /**
+     * @Route("/message/announcement", methods="GET")
+     */
+    public function getAnnouncement(Request $request){
+        return $this->response()->response($this->getDoctrine()->getRepository(Preference::class)->get(Preference::DASHBOARD_ANNOUNCEMENT));
     }
 }

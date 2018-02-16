@@ -1,9 +1,8 @@
 <template>
     <md-empty-state
-            md-rounded
-            md-icon="access_time"
-            md-label="无投票"
-            md-description="目前没有可以投票的项目">
+            md-icon="new_release"
+            md-label="开发中"
+            md-description="此功能正在开发中">
     </md-empty-state>
 </template>
 
