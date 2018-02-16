@@ -16,27 +16,22 @@ class PageController extends AbstractController
     /**
      * @Route("/",name="index",methods="GET")
      */
-    public function index()
+    public function index(Request $request)
     {
-        if ($_ENV["APP_ENV"] == "dev")
+        if ($_ENV["APP_ENV"] == "dev"){
             return $this->render("index.debug.html.twig");
-        return $this->render("index.html.twig");
-    }
+        } else {
+            if($request->cookies->get("continue") == "true")
+                return $this->render("index.html.twig");
+            $dd = new DeviceDetector($request->headers->get("user-agent"));
+            $dd->parse();
+            if($dd->getClient("name") == "Chrome" && version_compare($dd->getClient("version"),"50.0",">="))
+                return $this->render("index.html.twig");
+            if($dd->getClient("name") == "Chrome Mobile" && version_compare($dd->getClient("version"),"50.0",">="))
+                return $this->render("index.html.twig");
+            return $this->render("unsupported.html.twig");
+        }
 
-    /**
-     * @Route("/un")
-     */
-    public function un() {
-        return $this->render("unsupported.html.twig");
-    }
-    /**
-     * @Route("/device")
-     */
-    public function getBrowser(Request $request) {
-        $dd = new DeviceDetector($request->headers->get("user-agent"));
-        $dd->parse();
-        dump($dd);
-        return $this->response()->response(null);
     }
 
     /**
