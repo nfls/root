@@ -46,6 +46,8 @@ class AbstractController extends Controller
     const CSRF_MEDIA_GALLERY = "media.gallery";
 
     public function verfityCsrfToken($token,$id) {
+        if(is_null($this->getUser()))
+            return false;
         if(is_null($token))
             return false;
         else
