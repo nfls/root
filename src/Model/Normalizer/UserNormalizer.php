@@ -41,6 +41,8 @@ class UserNormalizer implements NormalizerInterface{
         );
         if($this->realname){
             $info["htmlUsername"] = $object->htmlUsername ?? $info["username"];
+        }else{
+            $info["htmlUsername"] = $info["username"];
         }
         if($info["admin"]){
             $info["htmlUsername"] = "<span style='background-color: #F57EB6'>管理员</span>&nbsp;".$info["htmlUsername"];
