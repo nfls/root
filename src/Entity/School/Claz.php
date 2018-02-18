@@ -190,6 +190,12 @@ class Claz
             $this->notices->removeElement($notice);
     }
 
+    public function removeFuture(){
+        $this->notices = $this->notices->filter(function ($val){
+            /** @var $val Notice */
+            return $val->getTime() <= new \DateTime();
+        });
+    }
     /**
      * @return array
      */

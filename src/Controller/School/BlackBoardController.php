@@ -56,8 +56,10 @@ class BlackBoardController extends AbstractController
         /** @var $class  Claz*/
         $class = $repo->findOneBy(["id"=>$id]);
         if(!is_null($class) & ($class->getStudents()->contains($this->getUser()) || $this->getUser()->hasRole(Permission::IS_ADMIN))){
-            if($class->getTeacher() === $this->getUser())
+            if($class->getTeacher() === $this->getUser()  || $this->getUser()->hasRole(Permission::IS_ADMIN))
                 $class->admin = true;
+            if(!$class->admin)
+                $class->removeFuture();
             if(!$request->query->has("page")){
                 return $this->response()->responseEntity($class);
             }else{
@@ -184,15 +186,25 @@ class BlackBoardController extends AbstractController
             $notice = new Notice();
             $notice->setContent($request->request->get("content"));
             $notice->setAttachment($request->request->get("files"));
-            $time = \DateTime::createFromFormat("Y-m-d\TH:i:s\.???\Z",$request->request->get("time"));
-            if($time === false || $time < new \DateTime())
+            $time = \DateTime::createFromFormat("Y-m-d\TH:i:s\.???\Z",$request->request->get("time"),new \DateTimeZone("UTC"));
+            if($time === false || $time < new \DateTime()){
                 $time = new \DateTime();
+            }else{
+                $time->setTimezone(new \DateTimeZone($request->request->get("timezone")));
+                if($time < new \DateTime())
+                    $time = new \DateTime();
+            }
+
             $notice->setTime($time);
-            $ddl = \DateTime::createFromFormat("Y-m-d\TH:i:s\.???\Z",$request->request->get("deadline"));
-            if($ddl === false || $ddl < new \DateTime())
+            $ddl = \DateTime::createFromFormat("Y-m-d\TH:i:s\.???\Z",$request->request->get("deadline"),new \DateTimeZone("UTC"));
+            if($ddl === false)
                 $ddl = null;
-            else
+            else {
                 $notice->setTitle($request->request->get("title"));
+                $ddl->setTimezone(new \DateTimeZone($request->request->get("timezone")));
+                if($ddl < new \DateTime())
+                    $ddl = new \DateTime();
+            }
             $notice->setDeadline($ddl);
             $notice->setClaz($class);
             $em = $this->getDoctrine()->getManager();

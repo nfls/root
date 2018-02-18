@@ -51,6 +51,7 @@
                         <md-button class="md-primary" v-for="href in notice.attachment" :href="href.href" :key="href.href" target="_blank">{{href.name}}</md-button>
                     </div>
                     <md-divider></md-divider>
+                    <span class="md-caption" v-if="notice.preview">未发布&nbsp;</span>
                     <span class="md-caption">{{notice.time | moment("lll")}}</span>
                 </md-card-content>
                 <md-card-actions v-if="classInfo.admin">
@@ -222,7 +223,8 @@
                 title: "",
                 announcement: ""
             },
-            studentsInfo:[]
+            studentsInfo:[],
+            moment: require('moment-timezone')
         }),
         mounted: function (){
             this.$emit("changeTitle","Blackboard")
@@ -244,6 +246,10 @@
                     var moment = require('moment-timezone');
                     this.classInfo.deadlines = this.classInfo.deadlines.map(function(val){
                         val.startDate = moment(val.time).toDate()
+                        return val
+                    })
+                    this.classInfo.notices.map(function(val){
+                        val.preview = moment(val.time).toDate() > new Date()
                         return val
                     })
                     this.info.title = this.classInfo.title
@@ -314,7 +320,8 @@
                     time: "",
                     toUpload: [],
                     file: [],
-                    files: []
+                    files: [],
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
                 }
             },
             randomString(len) {
