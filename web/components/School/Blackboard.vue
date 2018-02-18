@@ -35,10 +35,6 @@
                             @setShowDate="setShowDate"
                     />
                 </md-card-content>
-                <md-card-actions>
-                    <md-button @click="showDate.setMonth(showDate.getMonth() + 1) ">上一个月</md-button>
-                    <md-button>下一个月</md-button>
-                </md-card-actions>
             </md-card>
             <md-card v-for="notice in classInfo.notices" :key="notice.id">
                 <md-card-content style="text-align:left;align:left;">
@@ -95,6 +91,10 @@
                         <span>发布日期（留空为立即发布）<datetime v-model="post.time" type="datetime" :disabled="sending"></datetime></span>
                     </form>
                 </md-dialog-content>
+                <md-dialog-actions>
+                    <md-button class="md-primary" @click="close" :disabled="sending">取消</md-button>
+                    <md-button class="md-primary" @click="submit" :disabled="sending">发布</md-button>
+                </md-dialog-actions>
             </md-dialog>
             <md-dialog :md-active.sync="showAdmin" style="width:80%">
                 <md-dialog-title>管理</md-dialog-title>
