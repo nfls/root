@@ -61,7 +61,7 @@ class AlumniRepository extends ServiceEntityRepository
         $query = $this->addQuery("juniorSchool",$request,$query);
         $query = $this->addQuery("seniorSchool",$request,$query);
         $query = $this->addQuery("juniorRegistration",$request,$query);
-        $query = $this->addQuery("juniorSchool",$request,$query);
+        $query = $this->addQuery("seniorRegistration",$request,$query);
         $query = $this->addLikeQuery("university",$request,$query);
         $query = $this->addLikeQuery("major",$request,$query);
         $query = $this->addLikeQuery("workInfo",$request,$query);
