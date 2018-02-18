@@ -59,17 +59,21 @@
                 </md-card-actions>
             </md-card>
             <!-- Admin Part-->
-            <md-speed-dial class="md-bottom-right" md-effect="opacity" md-direction="top" v-if="classInfo.admin">
+            <md-speed-dial class="md-bottom-right" md-effect="opacity" md-direction="top" v-if="eligibility">
                 <md-speed-dial-target class="md-plain">
                     <md-icon>edit</md-icon>
                 </md-speed-dial-target>
 
                 <md-speed-dial-content>
-                    <md-button class="md-icon-button" @click="showNewPost = !showNewPost">
+                    <md-button class="md-icon-button" @click="showNewClass = !showNewClass">
+                        <md-icon>fiber_new</md-icon>
+                    </md-button>
+
+                    <md-button class="md-icon-button" @click="showNewPost = !showNewPost" v-if="classInfo.admin">
                         <md-icon>create</md-icon>
                     </md-button>
 
-                    <md-button class="md-icon-button" @click="showAdmin = !showAdmin">
+                    <md-button class="md-icon-button" @click="showAdmin = !showAdmin" v-if="classInfo.admin">
                         <md-icon>person</md-icon>
                     </md-button>
                 </md-speed-dial-content>
@@ -172,6 +176,15 @@
                 </md-dialog-actions>
 
             </md-dialog>
+            <md-dialog-prompt
+                    :md-active.sync="showNewClass"
+                    v-model="classTitle"
+                    md-title="创建一个新黑板"
+                    md-input-maxlength="30"
+                    md-input-placeholder="起个名字吧"
+                    md-confirm-text="提交"
+                    md-cancel-text="取消"
+                    @md-confirm="newClass"/>
             <md-snackbar :md-active.sync="showSnackBar" md-persistent>
                 <span>{{message}}</span>
             </md-snackbar>
@@ -203,12 +216,15 @@
             datetime: Datetime
         },
         data: () => ({
+            eligibility: false,
             showDate: new Date(),
             currentClass: null,
             empty: true,
             claz: [],
+            classTitle: [],
             classInfo: null,
             showNewPost: false,
+            showNewClass: false,
             post: {},
             sending: false,
             message: "",
@@ -234,14 +250,21 @@
         },
         methods: {
             init() {
+
+                this.check()
                 this.axios.get("/school/blackboard/list").then((response) => {
                     this.claz = response.data["data"]
                     this.list()
                 })
             },
+            check(){
+                this.axios.get("/school/blackboard/eligibility").then((response) => {
+                    this.eligibility = response.data["data"]
+                })
+            },
             list() {
+                this.empty = true
                 this.axios.get("/school/blackboard/detail?id="+this.currentClass).then((response) => {
-                    this.empty = false
                     this.classInfo = response.data["data"]
                     var moment = require('moment-timezone');
                     this.classInfo.deadlines = this.classInfo.deadlines.map(function(val){
@@ -254,6 +277,7 @@
                     })
                     this.info.title = this.classInfo.title
                     this.info.announcement = this.classInfo.announcement
+                    this.empty = false
                 }).catch((error) => {
                     if(this.claz.length > 0)
                         this.currentClass = this.claz[0].id
@@ -405,6 +429,14 @@
             setShowDate(d) {
                 this.showDate = d;
             },
+            newClass(val) {
+                //console.log(val)
+                this.axios.post("/school/blackboard/create",{
+                    title: this.classTitle
+                }).then((response) => {
+                    this.init()
+                })
+            }
         },
         watch: {
             currentClass: {

@@ -54,6 +54,8 @@ class BlackBoardController extends AbstractController
         $id = $request->query->get("id");
         $repo = $this->getDoctrine()->getManager()->getRepository(Claz::class);
         /** @var $class  Claz*/
+        if($id == "undefined")
+            throw $this->createAccessDeniedException();
         $class = $repo->findOneBy(["id"=>$id]);
         if(!is_null($class) & ($class->getStudents()->contains($this->getUser()) || $this->getUser()->hasRole(Permission::IS_ADMIN))){
             if($class->getTeacher() === $this->getUser()  || $this->getUser()->hasRole(Permission::IS_ADMIN))
@@ -182,6 +184,7 @@ class BlackBoardController extends AbstractController
         $repo = $this->getDoctrine()->getManager()->getRepository(Claz::class);
         /** @var $class  Claz*/
         $class = $repo->findOneBy(["id"=>$id]);
+
         if(!is_null($class) & ($class->getTeacher() === $this->getUser() || $this->getUser()->hasRole(Permission::IS_ADMIN))){
             $notice = new Notice();
             $notice->setContent($request->request->get("content"));
@@ -214,5 +217,13 @@ class BlackBoardController extends AbstractController
         }else{
             throw $this->createAccessDeniedException();
         }
+    }
+
+    /**
+     * @Route("/school/blackboard/eligibility", methods="GET")
+     */
+    public function eligibility(){
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        return $this->response()->response(($this->getUser()->hasRole(Permission::IS_ADMIN) || ($this->getUser()->hasRole(Permission::IS_TEACHER))));
     }
 }
