@@ -11,7 +11,6 @@ class SMSService {
     private $redis;
 
 
-
     private function storeCode(PhoneNumber $phone){
 
     }

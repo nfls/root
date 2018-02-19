@@ -3,7 +3,7 @@
 namespace App\Controller\Basic;
 
 use App\Controller\AbstractController;
-use App\Entity\Feedback;
+use App\Entity\User\Feedback;
 use App\Entity\Preference;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
