@@ -3,13 +3,16 @@
 namespace App\Controller\User;
 
 use App\Controller\AbstractController;
-use App\Entity\Alumni;
+use App\Entity\School\Alumni;
 use App\Entity\User\Chat;
 use App\Entity\User\Code;
 use App\Model\ApiResponse;
 use App\Model\Permission;
-use App\Service\NexmoNotification;
-use App\Service\CodeVerificationService;
+use App\Service\Notification\NotificationService;
+use libphonenumber\NumberParseException;
+use libphonenumber\PhoneNumber;
+use libphonenumber\PhoneNumberFormat;
+use libphonenumber\PhoneNumberUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -74,10 +77,9 @@ class UserController extends AbstractController
             return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
         $em = $this->getDoctrine()->getManager();
         $user = new User();
-        $sms = new CodeVerificationService($this->getDoctrine()->getManager());
-        $phone = $request->request->get("phone");
-        $country = $request->request->get("country");
-        $code = $request->request->get("code");
+        $target = $this->getTarget($request);
+        if(is_null($target))
+            return $this->response()->response("手机或邮箱不正确",Response::HTTP_UNAUTHORIZED);
         $username = $request->request->get("username");
         if ($this->verifyUsername($username)) {
             $user->setUsername($username);
@@ -90,20 +92,16 @@ class UserController extends AbstractController
         } else {
             return $this->response()->response("密码不合法", Response::HTTP_UNAUTHORIZED);
         }
-        if (intval($phone) > 0) {
-            $phoneE164 = $sms->validate($country, $phone, $code, "register");
-            if ($phoneE164 === false)
-                return $this->response()->response("手机验证码不正确", Response::HTTP_UNAUTHORIZED);
-            $user->setPhone($phoneE164);
-        } else {
-            $email = $request->request->get("email");
-            if ($sms->verify($email, $code, "register")) {
-                $user->setEmail($email);
-            } else {
-                return $this->response()->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
+        if($this->notification()->verify($target,$request->request->get("code"),NotificationService::ACTION_REGISTERING)){
+            if($target instanceof PhoneNumber){
+                $util = PhoneNumberUtil::getInstance();
+                $user->setPhone($util->format($target,PhoneNumberFormat::E164));
+            }else{
+                $user->setEmail($target);
             }
+        }else{
+            return $this->response()->response("动态码不正确",Response::HTTP_UNAUTHORIZED);
         }
-
         $em->persist($user);
         $em->flush();
         $user = $em->getRepository(User::class)->findByUsername($username);
@@ -151,24 +149,23 @@ class UserController extends AbstractController
     {
         if (!$this->verifyCaptcha($request->request->get("captcha")))
             return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
-        $sms = new CodeVerificationService($this->getDoctrine()->getManager());
-        $phone = $request->request->get("phone");
-        $country = $request->request->get("country");
+
+        $target = $this->getTarget($request);
+        if(is_null($target))
+            return $this->response()->response("手机或邮箱不正确",Response::HTTP_UNAUTHORIZED);
         $code = $request->request->get("code");
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(User::class);
-        if (intval($phone) > 0) {
-            $phoneE164 = $sms->validate($country, $phone, $code, "reset");
-            if ($phoneE164 === false)
-                return $this->response()->response("手机验证码不正确", Response::HTTP_UNAUTHORIZED);
-            $user = $repo->findByPhone($phoneE164);
-        } else {
-            $email = $request->request->get("email");
-            if ($sms->verify($email, $code, "reset")) {
-                $user = $repo->findByEmail($email);
-            } else {
-                return $this->response()->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
+        if($this->notification()->verify($target,$request->request->get("code"),NotificationService::ACTION_RESET)){
+            if($target instanceof PhoneNumber){
+                $util = PhoneNumberUtil::getInstance();
+                $phone = $util->format($target,PhoneNumberFormat::E164);
+                $user = $repo->findOneBy(["phone" => $phone]);
+            }else{
+                $user = $repo->findOneBy(["email" => $target]);
             }
+        }else{
+            return $this->response()->response("动态码不正确",Response::HTTP_UNAUTHORIZED);
         }
         $password = $request->request->get("password");
         if ($this->verifyPassword($user, $password)) {
@@ -217,7 +214,7 @@ class UserController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if (null === $this->getUser())
-            return $this->response->response(null, Response::HTTP_NO_CONTENT);
+            return $this->response()->response(null, Response::HTTP_NO_CONTENT);
         return new JsonResponse(array("user"=>$this->getUser()->getInfoArray()));
     }
 
@@ -261,7 +258,6 @@ class UserController extends AbstractController
             $country = $request->request->get("country");
             $code = $request->request->get("code");
             $user = $this->getUser();
-            $sms = new CodeVerificationService($this->getDoctrine()->getManager());
             if ($newPassword) {
                 if (!$this->verifyPassword($user, $newPassword))
                     return $this->response()->response("密码太弱！", Response::HTTP_UNAUTHORIZED);
@@ -274,11 +270,10 @@ class UserController extends AbstractController
                     return $this->response()->response("您没有绑定手机！");
                 }
             } else if ($newEmail) {
-                if ($sms->verify($newEmail, $code, "bind")) {
+                if($this->notification()->verify($newEmail,$code,NotificationService::ACTION_BIND))
                     $user->setEmail($newEmail);
-                } else {
-                    return $this->response()->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
-                }
+                else
+                    return $this->response()->response("动态码错误！", Response::HTTP_UNAUTHORIZED);
             } else if ($unbindPhone) {
                 if ($user->getEmail()) {
                     $user->setPhone(null);
@@ -286,10 +281,16 @@ class UserController extends AbstractController
                     return $this->response()->response("您没有绑定邮箱！", Response::HTTP_UNAUTHORIZED);
                 }
             } else if ($newPhone) {
-                $phoneE164 = $sms->validate($country, $newPhone, $code, "bind");
-                if ($phoneE164 === false)
-                    return $this->response()->response("邮箱验证码不正确", Response::HTTP_UNAUTHORIZED);
-                $user->setPhone($phoneE164);
+                $util = PhoneNumberUtil::getInstance();
+                try {
+                    $phone = $util->parse($newPhone,$country);
+                    if($this->notification()->verify($phone,$code,NotificationService::ACTION_BIND))
+                        $user->setPhone($util->format($phone,PhoneNumberFormat::E164));
+                    else
+                        return $this->response()->response("动态码错误！", Response::HTTP_UNAUTHORIZED);
+                }catch(NumberParseException $e){
+                    return $this->response()->response("手机号不正确！", Response::HTTP_UNAUTHORIZED);
+                }
             }
             $this->writeLog("UserSecurityChanged");
             $em = $this->getDoctrine()->getManager();
@@ -388,5 +389,22 @@ class UserController extends AbstractController
             return false;
 
         return true;
+    }
+
+    private function getTarget(Request $request){
+        $phone = intval($request->request->get("phone"));
+        if($phone > 0){
+            $country = $request->request->get("country");
+            $util = PhoneNumberUtil::getInstance();
+            try {
+                $phoneObject = $util->parse($phone,$country);
+                return $phoneObject;
+            }catch(NumberParseException $e){
+                return null;
+            }
+        }else{
+            $email = $request->request->get("email");
+            return $email;
+        }
     }
 }

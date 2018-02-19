@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Notification;
+namespace App\Service\Notification\Provider;
 
 use libphonenumber\PhoneNumber;
 use libphonenumber\PhoneNumberFormat;
@@ -33,7 +33,7 @@ abstract class AbstractNotificationService
      */
     protected function getDomesticNumber(PhoneNumber $phone)
     {
-        return $this->util->format($phone, PhoneNumberFormat::NATIONAL);
+        return $phone->getNationalNumber();
     }
 
     /**

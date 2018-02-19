@@ -7,6 +7,7 @@ use App\Entity\Preference;
 use App\Entity\User\User;
 use App\Model\ApiResponse;
 use App\Model\Permission;
+use App\Service\Notification\NotificationService;
 use App\Service\SettingService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -30,6 +31,12 @@ class AbstractController extends Controller
 
     public function setting(){
         return $this->getDoctrine()->getManager()->getRepository(Preference::class);
+    }
+
+    public function notification(){
+        $service = new NotificationService();
+        $service->set($this->get('snc_redis.default'));
+        return $service;
     }
 
     public function verifyCaptcha($captcha){

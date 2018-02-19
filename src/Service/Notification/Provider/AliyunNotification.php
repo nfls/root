@@ -2,7 +2,6 @@
 
 namespace App\Service\Notification\Provider;
 
-use App\Service\Notification\AbstractNotificationService;
 use libphonenumber\PhoneNumber;
 use libphonenumber\PhoneNumberFormat;
 use Mrgoon\AliSms\AliSms;
@@ -36,10 +35,11 @@ class AliyunNotification extends AbstractNotificationService {
 
     private function sendCode(PhoneNumber $phone,string $template){
         $code = (string)mt_rand(100000, 999999);
-        $this->sms->sendSms(
+        $rsp = $this->sms->sendSms(
             $this->getDomesticNumber($phone),
             $template,
-            ["code" => $code]
+            ["code" => $code],
+            $this->config
         );
         return $code;
     }

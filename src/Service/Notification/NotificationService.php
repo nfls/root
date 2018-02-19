@@ -1,5 +1,5 @@
 <?php
-namespace App\Service;
+namespace App\Service\Notification;
 
 use App\Service\Notification\Provider\AliyunNotification;
 use App\Service\Notification\Provider\MailNotification;
@@ -17,7 +17,7 @@ class NotificationService {
     const ACTION_RESET = 1;
     const ACTION_BIND = 2;
 
-    public function __construct(Client $client)
+    public function set(Client $client)
     {
         $this->redis = $client;
     }
@@ -25,7 +25,7 @@ class NotificationService {
     public function code($target,$action){
         $client = $this->getClient($target);
         if($this->redis->exists($client->getIdentifier($target))){
-            //todo
+            $this->redis->del([$client->getIdentifier($target)]);
         }
         switch($action){
             case self::ACTION_REGISTERING:
@@ -38,7 +38,7 @@ class NotificationService {
                 $code = $client->sendReset($target);
                 break;
             default:
-                return;
+                return false;
         }
         if(!is_null($code)){
             $this->redis->set($client->getIdentifier($target),json_encode(array(
@@ -46,6 +46,9 @@ class NotificationService {
                 "rsp" => $code
             )));
             $this->redis->expire($client->getIdentifier($target),600);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -71,7 +74,7 @@ class NotificationService {
      */
     private function getClient($target){
         if($target instanceof PhoneNumber){
-            if($target->getCountryCode() == "86"){
+            if($target->getCountryCode() == 86){
                 return new AliyunNotification();
             }else{
                 return new NexmoNotification();

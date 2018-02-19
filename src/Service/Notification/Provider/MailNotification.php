@@ -21,11 +21,25 @@ class MailNotification {
     }
 
     public function send($target,$title,$message){
+        $banDomain = ['chacuo','027168','bccto','a7996','zv68','sohus','piaa',
+            'deiie','zhewei88','11163','svip520','ado0','haida-edu',
+            'sian','jy5201','chaichuang','xtianx','zymuying','dayone',
+            'tianfamh','zhaoyuanedu','cuirushi','6gmu','yopmail',
+            'mailinator','www.', '.cm', 'pp.com', 'loaoa', 'oiqas', 'dawin', 'instalapple', '+'];
+        foreach($banDomain as $od){
+            if(stripos($target, $od)!==false)
+                return null;
+        }
+        $re = '/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD';
+        if(!preg_match($re,$target)){
+            return null;
+        }
         try {
             $this->mail->setFrom("no-reply@nfls.io");
             $this->mail->addAddress($target);
             $this->mail->isHTML(true);
-            $this->mail->Subject = $title;
+            $this->mail->Subject = "=?utf-8?B?" . base64_encode($title) . "?=";
+            $this->mail->CharSet = "UTF-8";
             $this->mail->Body = $message;
             $this->mail->send();
         } catch (Exception $e) {
@@ -40,8 +54,8 @@ class MailNotification {
         $this->send($email,
             "【NFLS.IO/南外人】账户注册 Account Registering",
             $this->renderer->renderCodePage(
-                "使用当前邮箱注册馨账户",
-                "registering a new account with this email",
+                "注册新账户",
+                "registering a new account",
                 $token
             )
         );

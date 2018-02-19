@@ -1,6 +1,5 @@
 <?php
 namespace App\Service\Notification\Provider;
-use App\Service\Notification\AbstractNotificationService;
 use Doctrine\ORM\EntityManager;
 use libphonenumber\PhoneNumber;
 use Nexmo;
@@ -101,6 +100,7 @@ class NexmoNotification extends AbstractNotificationService {
         try{
             $verification = new Nexmo\Verify\Verification($id);
             $result = $this->client->verify()->check($verification,$code);
+
             if($result->getStatus() == 0){
                 return true;
             }else{

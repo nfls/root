@@ -6,10 +6,13 @@ use App\Controller\AbstractController;
 use App\Entity\User\Code;
 use App\Entity\User\User;
 use App\Model\ApiResponse;
-use App\Service\AliyunSMS;
-use App\Service\MailNotification;
-use App\Service\NexmoNotification;
-use App\Service\NotificationService;
+use App\Model\Permission;
+
+use App\Service\Notification\NotificationService;
+use libphonenumber\NumberParseException;
+use libphonenumber\PhoneNumber;
+use libphonenumber\PhoneNumberFormat;
+use libphonenumber\PhoneNumberUtil;
 use PHPMailer\PHPMailer\Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -45,15 +48,11 @@ class CodeController extends AbstractController
     public function sendRegisterCode(Request $request){
         if(!$this->verifyCaptcha($request->request->get("captcha")))
             return $this->response()->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
-        $phone = intval($request->request->get("phone"));
-        if($phone > 0){
-            $country = $request->request->get("country");
-            return $this->send($country,$phone,"register",AliyunSMS::REGISTER);
-        }else{
-            $email = $request->request->get("email");
-            return $this->sendMail($email,"register","registering a new account");
-        }
-
+        $target = $this->getTarget($request,true);
+        if(is_null($target))
+            return $this->response()->response("不正确或已被使用！",Response::HTTP_BAD_REQUEST);
+        if($this->notification()->code($target,NotificationService::ACTION_REGISTERING))
+        return $this->response()->response(null);
     }
 
     /**
@@ -63,47 +62,55 @@ class CodeController extends AbstractController
         if(!$this->verifyCaptcha($request->request->get("captcha")))
             return $this->response()->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
         $em = $this->getDoctrine()->getManager()->getRepository(User::class);
-        $phone = intval($request->request->get("phone"));
-        $email = $request->request->get("email");
-        $country = $request->request->get("country");
-        if($phone > 0){
-            $util = \libphonenumber\PhoneNumberUtil::getInstance();
-            try {
-                $phoneObject = $util->parse($phone,$country);
-                $phoneE164 = $util->format($phoneObject,\libphonenumber\PhoneNumberFormat::E164);
-                $user = $em->findByPhone($phoneE164);
-                if(@is_null($user))
-                    return $this->response()->response("用户不存在",400);
-                else
-                    return $this->directlySend($user->getPhone(),"reset",AliyunSMS::RECOVER);
-            }catch(\libphonenumber\NumberParseException $e){
-                return $this->response()->response("手机号格式错误",400);
-            }
-        }else{
-            $user = $em->findByEmail($email);
-            if(@is_null($user))
-                return $this->response()->response("用户不存在",400);
-            else
-                return $this->sendMail($user->getEmail(),"reset","resetting your password",false);
-        }
+        $target = $this->getTarget($request,false);
+        if(is_null($target))
+            return $this->response()->response("不正确！",Response::HTTP_BAD_REQUEST);
+        $this->notification()->code($target,NotificationService::ACTION_RESET);
+        return $this->response()->response(null);
     }
 
     /**
      * @Route("/code/bind", methods="POST", name="sendBindCode")
      */
     public function sendBindCode(Request $request){
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if(!$this->verifyCaptcha($request->request->get("captcha")))
             return $this->response()->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
+        $target = $this->getTarget($request,true);
+        if(is_null($target))
+            return $this->response()->response("不正确或已被使用！",Response::HTTP_BAD_REQUEST);
+        $this->notification()->code($target,NotificationService::ACTION_BIND);
+        return $this->response()->response(null);
+    }
+
+    private function getTarget(Request $request,$checkUsed){
         $phone = intval($request->request->get("phone"));
         if($phone > 0){
             $country = $request->request->get("country");
-            return $this->send($country,$phone,"bind",AliyunSMS::BIND);
+            $util = PhoneNumberUtil::getInstance();
+            try {
+                $phoneObject = $util->parse($phone,$country);
+                $used = $this->checkUsedPhone($util->format($phoneObject,PhoneNumberFormat::E164));
+                if($checkUsed && $used){
+                    return null;
+                }else if(!$checkUsed && !$used){
+                    return null;
+                }
+                return $phoneObject;
+            }catch(NumberParseException $e){
+                return null;
+            }
         }else{
             $email = $request->request->get("email");
-            return $this->sendMail($email,"bind","linking your email with an account");
+            $used = $this->checkUsedEmail($email);
+            if($checkUsed && $used){
+                return null;
+            }else if(!$checkUsed && !$used){
+                return null;
+            }
+            return $email;
         }
     }
-
 
     private function checkUsedEmail($email){
         $em = $this->getDoctrine()->getManager()->getRepository(User::class);
@@ -123,87 +130,10 @@ class CodeController extends AbstractController
         }
     }
 
-    /**
-     * @param $phoneObject \libphonenumber\PhoneNumber
-     * @param $action
-     * @param $type
-     * @return JsonResponse
-     */
-    private function directlySend($phone,$action,$type){
-        $util = \libphonenumber\PhoneNumberUtil::getInstance();
-        if($phone->getCountryCode() == 86){
-            $this->sendDomestic($phone->getNationalNumber(),$action,$type);
-        }else{
-            $this->sendInternational($util->format($phone,\libphonenumber\PhoneNumberFormat::E164),$action);
-        }
-        return $this->response()->response(null,200);
-
-    }
-
-    private function send($country,$phone,$action,$type,$checkUsed = true){
-        $util = \libphonenumber\PhoneNumberUtil::getInstance();
-        try {
-            $phoneObject = $util->parse($phone,$country);
-            $phoneE164 = $util->format($phoneObject,\libphonenumber\PhoneNumberFormat::E164);
-            if($checkUsed && $this->checkUsedPhone($phoneE164))
-                return $this->response()->response("phone.repeated",Response::HTTP_BAD_REQUEST);
-            $em = $this->getDoctrine()->getManager()->getRepository(User::class);
-            if($phoneObject->getCountryCode() == 86){
-                $this->sendDomestic($phone,$action,$type);
-            }else{
-                $this->sendInternational($phoneE164,$action);
-            }
-            return $this->response()->response(null,200);
-        }catch(\libphonenumber\NumberParseException $e){
-            return $this->response()->response($e->getMessage(),403);
-        }
-    }
-
-    private function sendInternational($phone,$action){
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository(Code::class);
-        $id = $repo->getRequestId($phone,$action);
-        if(null !== $id){
-            $this->nexmoService->cancel($id->getCode());
-            $em->remove($id);
-        }
-        $code = new Code();
-        $code->setAction($action);
-        $code->setCode($this->nexmoService->send($phone,"NFLS.IO"));
-        $code->setDestination($phone);
-        $code->setType("phone.international");
-        $em->persist($code);
-        $em->flush();
-    }
-
-    private function sendDomestic($phone,$action,$type){
-        $code = new Code();
-        $code->setAction($action);
-        $code->setCode((string)$this->code);
-        $code->setDestination($phone);
-        $code->setType("phone.domestic");
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($code);
-        $em->flush();
-        $this->aliyunService->sendCode($phone,$this->code,$type);
-    }
-
     private function sendMail($target,$action,$readableAction,$checkUsed = true){
         if($checkUsed && $this->checkUsedEmail($target))
             return $this->response()->response("email.repeated",Response::HTTP_BAD_REQUEST);
-        $banDomain = ['chacuo','027168','bccto','a7996','zv68','sohus','piaa',
-            'deiie','zhewei88','11163','svip520','ado0','haida-edu',
-            'sian','jy5201','chaichuang','xtianx','zymuying','dayone',
-            'tianfamh','zhaoyuanedu','cuirushi','6gmu','yopmail',
-            'mailinator','www.', '.cm', 'pp.com', 'loaoa', 'oiqas', 'dawin', 'instalapple', '+'];
-        foreach($banDomain as $od){
-            if(stripos($target, $od)!==false)
-                return $this->response()->response("email.notAllowed",Response::HTTP_FORBIDDEN);
-        }
-        $re = '/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD';
-        if(!preg_match($re,$target)){
-            return $this->response()->response("email.notAllowed",Response::HTTP_FORBIDDEN);
-        }
+
         $code = new Code();
         $code->setAction($action);
         $code->setDestination($target);
