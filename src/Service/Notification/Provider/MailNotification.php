@@ -106,5 +106,10 @@ class MailNotification {
         // TODO: Implement verify() method.
     }
 
+    public function getIdentifier(string $email)
+    {
+        return $email;
+    }
+
 
 }

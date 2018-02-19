@@ -108,4 +108,9 @@ abstract class AbstractNotificationService
      * @return boolean
      */
     abstract public function verify(PhoneNumber $phone, string $code, array $ticket);
+
+    public function getIdentifier(PhoneNumber $target)
+    {
+        return $this->util->format($target,PhoneNumberFormat::E164);
+    }
 }

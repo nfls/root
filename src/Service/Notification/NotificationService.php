@@ -1,0 +1,69 @@
+<?php
+namespace App\Service;
+
+use App\Service\Notification\Provider\AliyunNotification;
+use App\Service\Notification\Provider\MailNotification;
+use App\Service\Notification\Provider\NexmoNotification;
+use libphonenumber\PhoneNumber;
+use Predis\Client;
+
+class NotificationService {
+    /**
+     * @var $redis Client
+     */
+    private $redis;
+
+    const ACTION_REGISTERING = 0;
+    const ACTION_RESET = 1;
+    const ACTION_BIND = 2;
+
+    public function __construct(Client $client)
+    {
+        $this->redis = $client;
+    }
+
+    public function code($target,$action){
+
+        $client = $this->getClient($target);
+        if($this->redis->exists($client->getIdentifier($target))){
+            //todo
+        }
+        switch($action){
+            case self::ACTION_REGISTERING:
+                $code = $client->sendRegistration($target);
+                break;
+            case self::ACTION_BIND:
+                $code = $client->sendBind($target);
+                break;
+            case self::ACTION_RESET:
+                $code = $client->sendReset($target);
+                break;
+            default:
+                return;
+        }
+        if(!is_null($code)){
+            $this->redis->set($client->getIdentifier($target),json_encode(array(
+                "action" => $action,
+                "rsp" => $code
+            )));
+            $this->redis->expire($client->getIdentifier($target),600);
+        }
+    }
+
+    /**
+     * @param $target
+     * @return AliyunNotification|MailNotification|NexmoNotification
+     */
+    private function getClient($target){
+        if($target instanceof PhoneNumber){
+            if($target->getCountryCode() == "86"){
+                return new AliyunNotification();
+            }else{
+                return new NexmoNotification();
+            }
+        }else{
+            return new MailNotification();
+        }
+    }
+
+}
