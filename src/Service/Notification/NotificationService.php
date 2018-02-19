@@ -23,7 +23,6 @@ class NotificationService {
     }
 
     public function code($target,$action){
-
         $client = $this->getClient($target);
         if($this->redis->exists($client->getIdentifier($target))){
             //todo
@@ -48,6 +47,22 @@ class NotificationService {
             )));
             $this->redis->expire($client->getIdentifier($target),600);
         }
+    }
+
+    public function verify($target,$code,$action){
+        $client = $this->getClient($target);
+        if($this->redis->exists($client->getIdentifier($target))){
+            $ticket = json_decode($this->redis->get($client->getIdentifier($target)),true);
+            if($ticket["action"] != $action)
+                return false;
+            if($client->verify($target,$code,$ticket)){
+                $this->redis->del([$client->getIdentifier($target)]);
+                return true;
+            }else{
+                return false;
+            }
+        }
+        return false;
     }
 
     /**

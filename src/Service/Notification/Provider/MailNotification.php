@@ -101,9 +101,9 @@ class MailNotification {
         // TODO: Implement sendDeadlineReminder() method.
     }
 
-    public function verify(PhoneNumber $phone, string $code, array $ticket)
+    public function verify(string $target, string $code, array $ticket)
     {
-        // TODO: Implement verify() method.
+        return $ticket["rsp"] == $code;
     }
 
     public function getIdentifier(string $email)

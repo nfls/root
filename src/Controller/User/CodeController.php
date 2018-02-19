@@ -9,6 +9,7 @@ use App\Model\ApiResponse;
 use App\Service\AliyunSMS;
 use App\Service\MailNotification;
 use App\Service\NexmoNotification;
+use App\Service\NotificationService;
 use PHPMailer\PHPMailer\Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,54 +20,16 @@ use Symfony\Component\HttpFoundation\Request;
 class CodeController extends AbstractController
 {
     /**
-     * @var AliyunSMS
+     * @var NotificationService
      */
-    private $aliyunService;
-
-    /**
-     * @var NexmoNotification
-     */
-    private $nexmoService;
-
-    /**
-     * @var MailNotification
-     */
-    private $mailService;
-
-    /**
-     * @var ApiResponse
-     */
-
-    private $api;
-
-    /**
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @var integer
-     */
-    private $code;
-
-    /**
-     * @var string
-     */
-    private $token;
-
+    private $service;
 
     /**
      * CodeController constructor.
      */
-    public function __construct()
+    public function __construct(NotificationService $notifcation)
     {
-        $this->aliyunService = new AliyunSMS();
-        $this->nexmoService = new NexmoNotification();
-        $this->mailService = new MailNotification();
-        $this->api = new ApiResponse();
-        $this->code = mt_rand(100000, 999999);
-        $this->token = base64_encode(random_bytes(16));
-        //parent::__construct();
+        $this->service = $notifcation;
     }
 
     /**
