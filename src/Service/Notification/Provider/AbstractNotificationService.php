@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Service\SMS;
+namespace App\Service\Notification;
 
 use libphonenumber\PhoneNumber;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
+use Predis\Client;
 
 /**
  * Class AbstractSmsService
- * @package App\Service\SMS
+ * @package App\Service\Notification
  */
-abstract class AbstractSmsService
+abstract class AbstractNotificationService
 {
 
     /**
@@ -103,7 +104,8 @@ abstract class AbstractSmsService
     /**
      * @param PhoneNumber $phone
      * @param string $code
+     * @param array $ticket
      * @return boolean
      */
-    abstract public function verify(PhoneNumber $phone, string $code, string $id);
+    abstract public function verify(PhoneNumber $phone, string $code, array $ticket);
 }

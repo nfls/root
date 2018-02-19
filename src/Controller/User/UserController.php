@@ -8,7 +8,7 @@ use App\Entity\User\Chat;
 use App\Entity\User\Code;
 use App\Model\ApiResponse;
 use App\Model\Permission;
-use App\Service\NexmoSMS;
+use App\Service\NexmoNotification;
 use App\Service\CodeVerificationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

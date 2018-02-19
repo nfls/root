@@ -7,8 +7,8 @@ use App\Entity\User\Code;
 use App\Entity\User\User;
 use App\Model\ApiResponse;
 use App\Service\AliyunSMS;
-use App\Service\MailService;
-use App\Service\NexmoSMS;
+use App\Service\MailNotification;
+use App\Service\NexmoNotification;
 use PHPMailer\PHPMailer\Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -24,12 +24,12 @@ class CodeController extends AbstractController
     private $aliyunService;
 
     /**
-     * @var NexmoSMS
+     * @var NexmoNotification
      */
     private $nexmoService;
 
     /**
-     * @var MailService
+     * @var MailNotification
      */
     private $mailService;
 
@@ -61,8 +61,8 @@ class CodeController extends AbstractController
     public function __construct()
     {
         $this->aliyunService = new AliyunSMS();
-        $this->nexmoService = new NexmoSMS();
-        $this->mailService = new MailService();
+        $this->nexmoService = new NexmoNotification();
+        $this->mailService = new MailNotification();
         $this->api = new ApiResponse();
         $this->code = mt_rand(100000, 999999);
         $this->token = base64_encode(random_bytes(16));

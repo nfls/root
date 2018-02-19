@@ -13,7 +13,7 @@ class CodeVerificationService {
 
     public function __construct(ObjectManager $em)
     {
-        $this->nexmoService = new NexmoSMS();
+        $this->nexmoService = new NexmoNotification();
         $this->aliyunService = new AliyunSMS();
         $this->em = $em;
     }

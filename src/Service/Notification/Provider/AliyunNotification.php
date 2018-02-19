@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Service\SMS;
+namespace App\Service\Notification\Provider;
 
-use App\Service\SMS\AbstractSmsService;
+use App\Service\Notification\AbstractNotificationService;
 use libphonenumber\PhoneNumber;
 use libphonenumber\PhoneNumberFormat;
 use Mrgoon\AliSms\AliSms;
+use Predis\Client;
 
-class AliyunSMS extends AbstractSmsService {
+class AliyunNotification extends AbstractNotificationService {
 
     const SIGN_NAME = "南外人";
 
@@ -113,9 +114,9 @@ class AliyunSMS extends AbstractSmsService {
         );
     }
 
-    public function verify(PhoneNumber $phone, string $code, string $id)
+    public function verify(PhoneNumber $phone, string $code, array $ticket)
     {
-        return true;
+        return $ticket["rsp"] == $code;
     }
 
 

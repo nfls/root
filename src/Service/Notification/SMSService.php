@@ -10,11 +10,6 @@ class SMSService {
      */
     private $redis;
 
-
-    private function storeCode(PhoneNumber $phone){
-
-    }
-
     public function __construct(Client $client)
     {
         $this->redis = $client;
