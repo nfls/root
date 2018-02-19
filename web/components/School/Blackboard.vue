@@ -1,6 +1,6 @@
 <template>
-    <div class="class">
-        <div class="info" v-if="!empty">
+    <div class="class" v-infinite-scroll="loadMore">
+        <div class="info" v-if="!empty" >
             <md-card>
                 <md-card-content style="align:left;">
                     <md-field>
@@ -205,9 +205,11 @@
     import vueJsonEditor from 'vue-json-editor'
     import { Datetime } from 'vue-datetime'
     import CalendarView from "vue-simple-calendar"
+    import infiniteScroll from 'vue-infinite-scroll'
     export default {
         name: "Blackboard",
         props: ["admin","verified",'loggedIn'],
+        directives: {infiniteScroll},
         components: {
             VueMarkdown,
             MarkdownPalettes,
@@ -231,6 +233,7 @@
             showSnackBar: false,
             showAdmin: false,
             active: "",
+            page: 1,
             form: {
                 seniorSchool: "2",
                 seniorRegistration: "2019"
@@ -265,6 +268,7 @@
             list() {
                 this.empty = true
                 this.axios.get("/school/blackboard/detail?id="+this.currentClass).then((response) => {
+                    this.page = 2
                     this.classInfo = response.data["data"]
                     var moment = require('moment-timezone');
                     this.classInfo.deadlines = this.classInfo.deadlines.map(function(val){
@@ -435,6 +439,23 @@
                     title: this.classTitle
                 }).then((response) => {
                     this.init()
+                })
+            },
+            loadMore(){
+                console.log("aa")
+                this.axios.get("/school/blackboard/detail",{
+                    params: {
+                        id: this.currentClass,
+                        page: this.page
+                    }
+                }).then((response) => {
+                    this.page ++
+                    var moment = require('moment-timezone');
+                    var info = response.data["data"].map(function(val){
+                        val.preview = moment(val.time).toDate() > new Date()
+                        return val
+                    })
+                    this.classInfo.notices.concat(info)
                 })
             }
         },
