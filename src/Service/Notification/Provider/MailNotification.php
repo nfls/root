@@ -94,17 +94,17 @@ class MailNotification
         return $token;
     }
 
-    public function sendRealnameFailed(PhoneNumber $phone)
+    public function sendRealnameFailed(string $email)
     {
         // TODO: Implement sendRealnameFailed() method.
     }
 
-    public function sendRealnameSucceeded(PhoneNumber $phone, string $status, string $expiry)
+    public function sendRealnameSucceeded(string $email, string $status, string $expiry)
     {
         // TODO: Implement sendRealnameSucceeded() method.
     }
 
-    public function sendNewMessage(PhoneNumber $phone)
+    public function sendNewMessage(string $email)
     {
         // TODO: Implement sendNewMessage() method.
     }

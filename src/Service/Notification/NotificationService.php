@@ -2,6 +2,7 @@
 
 namespace App\Service\Notification;
 
+use App\Entity\User\User;
 use App\Service\Notification\Provider\AliyunNotification;
 use App\Service\Notification\Provider\MailNotification;
 use App\Service\Notification\Provider\NexmoNotification;
@@ -13,6 +14,7 @@ class NotificationService
     const ACTION_REGISTERING = 0;
     const ACTION_RESET = 1;
     const ACTION_BIND = 2;
+
     /**
      * @var $redis Client
      */
@@ -88,7 +90,19 @@ class NotificationService
         return false;
     }
 
-    public function notify($target, $action, $info)
+    public function notifyRealnamePassed(User $user, string $status, \DateTime $expiry)
+    {
+        $client = $this->getClient($target);//todo
+        $client->sendRealnameSucceeded($target,$status,$expiry->format('Y-m-d'));
+    }
+
+    public function notifyRealnameFailed($target)
+    {
+        $client = $this->getClient($target);
+        $client->sendRealnameFailed($target);
+    }
+
+    public function notifyNewNotice($target, $t)
     {
 
     }
