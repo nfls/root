@@ -73,6 +73,7 @@ class NotificationService
         }
     }
 
+
     public function verify($target, $code, $action)
     {
         $client = $this->getClient($target);
@@ -92,19 +93,29 @@ class NotificationService
 
     public function notifyRealnamePassed(User $user, string $status, \DateTime $expiry)
     {
-        $client = $this->getClient($target);//todo
-        $client->sendRealnameSucceeded($target,$status,$expiry->format('Y-m-d'));
+        if($user->getEmail())
+            $this->getClient($user->getEmail())->sendRealnameSucceeded($user->getEmail(),$status,$expiry->format('Y-m-d'));
+        if($user->getPhone())
+            $this->getClient($user->getPhone())->sendRealnameSucceeded($user->getPhone(),$status,$expiry->format('Y-m-d'));
     }
 
-    public function notifyRealnameFailed($target)
+    public function notifyRealnameFailed(User $user)
     {
-        $client = $this->getClient($target);
-        $client->sendRealnameFailed($target);
+        if($user->getEmail())
+            $this->getClient($user->getEmail())->sendRealnameFailed($user->getEmail());
+        if($user->getPhone())
+            $this->getClient($user->getPhone())->sendRealnameFailed($user->getPhone());
     }
 
-    public function notifyNewNotice($target, $t)
+    public function sendNewMessage(User $user)
     {
 
+    }
+
+    public function notifyNewNotice(User $user, string $teacher, string $class)
+    {
+        if($user->getEmail())
+            $this->getClient($user->getEmail())->sendNewNotice($user->getEmail(),$teacher,$class);
     }
 
 }
