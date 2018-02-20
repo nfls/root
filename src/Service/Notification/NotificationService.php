@@ -2,6 +2,9 @@
 
 namespace App\Service\Notification;
 
+use App\Entity\School\Claz;
+use App\Entity\School\Notice;
+use App\Entity\User\Chat;
 use App\Entity\User\User;
 use App\Service\Notification\Provider\AliyunNotification;
 use App\Service\Notification\Provider\MailNotification;
@@ -107,15 +110,29 @@ class NotificationService
             $this->getClient($user->getPhone())->sendRealnameFailed($user->getPhone());
     }
 
-    public function sendNewMessage(User $user)
+    public function sendNewMessage(Chat $message)
     {
-
+        $user = $message->getReceiver();
+        if($user->getEmail())
+            $this->getClient($user->getEmail())->sendNewMessage($user->getEmail(),$message->getSender()->getUsername(),$message->getContent());
+        if($user->getPhone())
+            $this->getClient($user->getPhone())->sendNewMessage($user->getPhone());
     }
 
-    public function notifyNewNotice(User $user, string $teacher, string $class)
+    public function notifyNewNotice(User $user, $teacher, Claz $class, Notice $notice)
     {
         if($user->getEmail())
-            $this->getClient($user->getEmail())->sendNewNotice($user->getEmail(),$teacher,$class);
+            $this->getClient($user->getEmail())->sendNewNotice($user->getEmail(),$teacher,$class->getTitle(),$notice->getContent());
+        if($user->getPhone())
+            $this->getClient($user->getPhone())->sendNewNotice($user->getPhone(),$teacher,$class->getTitle());
     }
 
+    public function notifyDeadline(User $user, string $teacher, Notice $notice){
+        if($user->getEmail())
+            $this->getClient($user->getEmail())->sendDeadlineReminder($user->getEmail(),$teacher,$notice->getTitle(),$notice->getDeadline()->format("Y-m-d H:i:s"),$notice->getContent());
+        if($user->getPhone())
+            $this->getClient($user->getPhone())->sendDeadlineReminder($user->getPhone(),$teacher,$notice->getTitle(),$notice->getDeadline()->format("Y-m-d H:i:s"));
+    }
+
+    //TODO Security setting changes
 }

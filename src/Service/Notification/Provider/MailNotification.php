@@ -96,27 +96,41 @@ class MailNotification
 
     public function sendRealnameFailed(string $email)
     {
-        // TODO: Implement sendRealnameFailed() method.
+        $this->send($email,
+            "【NFLS.IO/南外人】实名认证 Verification",
+            $this->renderer->renderRealnameFailed()
+        );
     }
 
-    public function sendRealnameSucceeded(string $email, string $status, string $expiry)
+    public function sendRealnameSucceeded(string $email, string $statusCN, string $statusEN, string $expiry)
     {
-        // TODO: Implement sendRealnameSucceeded() method.
+        $this->send($email,
+            "【NFLS.IO/南外人】实名认证 Verification",
+            $this->renderer->renderRealnameSucceeded($statusCN,$statusEN,$expiry)
+        );
     }
 
-    public function sendNewMessage(string $email)
+    public function sendNewMessage(string $email, string $sender, string $content)
     {
-        // TODO: Implement sendNewMessage() method.
+        $this->send($email,
+            "【NFLS.IO/南外人】私信 PM",
+            $this->renderer->renderNewMessagePage($sender,$content)
+        );
     }
 
-    public function sendNewNotice(PhoneNumber $phone, string $teacher, string $class)
+    public function sendNewNotice(string $email, string $teacher, string $class, string $notice)
     {
-        // TODO: Implement sendNewNotice() method.
+        $this->send($email,
+            "【NFLS.IO/南外人】New Notice",
+            $this->renderer->renderNoticePage($teacher,$class,$notice)
+        );
     }
 
-    public function sendDeadlineReminder(PhoneNumber $phone, string $teacher, string $project, string $time)
+    public function sendDeadlineReminder(string $email, string $teacher, string $project, string $time, string $notice)
     {
-        // TODO: Implement sendDeadlineReminder() method.
+        $this->send($email,
+            "【NFLS.IO/南外人】Deadline Reminder",
+            $this->renderer->renderDeadlinePage($teacher,$project,$time,$notice));
     }
 
     public function verify(string $target, string $code, array $ticket)

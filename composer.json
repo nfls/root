@@ -6,6 +6,7 @@
         "ext-iconv": "*",
         "aliyuncs/oss-sdk-php": "^2.3",
         "aliyunsts/aliyun-sts": "^1.0",
+        "erusev/parsedown": "^1.6",
         "giggsey/libphonenumber-for-php": "^8.8",
         "league/oauth2-server": "^6.1",
         "mrgoon/aliyun-sms": "dev-master",
@@ -31,6 +32,7 @@
         "symfony/security-bundle": "^4.0",
         "symfony/security-csrf": "^4.0",
         "symfony/serializer": "^4.0",
+        "symfony/translation": "^4.0",
         "symfony/validator": "^4.0",
         "symfony/yaml": "^4.0",
         "zendframework/zend-diactoros": "^1.6"
