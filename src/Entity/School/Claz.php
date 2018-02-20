@@ -178,7 +178,7 @@ class Claz
      * @return ArrayCollection
      */
     public function nextNotices($page){
-        return $this->notices->slice(($page - 1)*10,10);
+        return array_values($this->notices->slice(($page - 1)*10,10));
     }
 
     /**

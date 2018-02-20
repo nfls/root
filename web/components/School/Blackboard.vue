@@ -1,5 +1,5 @@
 <template>
-    <div class="class" v-infinite-scroll="loadMore">
+    <div class="class" v-infinite-scroll="loadMore" :infinite-scroll-disabled="empty || loading">
         <div class="info" v-if="!empty" >
             <md-card>
                 <md-card-content style="align:left;">
@@ -232,6 +232,7 @@
             message: "",
             showSnackBar: false,
             showAdmin: false,
+            loading: false,
             active: "",
             page: 1,
             form: {
@@ -268,7 +269,7 @@
             list() {
                 this.empty = true
                 this.axios.get("/school/blackboard/detail?id="+this.currentClass).then((response) => {
-                    this.page = 2
+                    this.page = 1
                     this.classInfo = response.data["data"]
                     var moment = require('moment-timezone');
                     this.classInfo.deadlines = this.classInfo.deadlines.map(function(val){
@@ -442,20 +443,24 @@
                 })
             },
             loadMore(){
-                console.log("aa")
+                //console.log("aa")
+                this.loading = true
+                this.page ++
                 this.axios.get("/school/blackboard/detail",{
                     params: {
                         id: this.currentClass,
                         page: this.page
                     }
                 }).then((response) => {
-                    this.page ++
+                    this.loading = false
                     var moment = require('moment-timezone');
                     var info = response.data["data"].map(function(val){
                         val.preview = moment(val.time).toDate() > new Date()
                         return val
                     })
-                    this.classInfo.notices.concat(info)
+                    //console.log(info)
+                    this.classInfo.notices = this.classInfo.notices.concat(info)
+                        //console.log(this.classInfo.notices)
                 })
             }
         },
