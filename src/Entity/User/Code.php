@@ -2,9 +2,9 @@
 
 namespace App\Entity\User;
 
-use Doctrine\ORM\Mapping as ORM;
-use DateTime;
 use DateInterval;
+use DateTime;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\User\CodeRepository")
@@ -76,14 +76,6 @@ class Code
     }
 
     /**
-     * @param mixed $code
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-    }
-
-    /**
      * @param mixed $action
      */
     public function setAction($action)
@@ -107,6 +99,13 @@ class Code
         return $this->code;
     }
 
+    /**
+     * @param mixed $code
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+    }
 
 
 }

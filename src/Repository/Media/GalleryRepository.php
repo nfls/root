@@ -14,13 +14,13 @@ class GalleryRepository extends ServiceEntityRepository
         parent::__construct($registry, Gallery::class);
     }
 
-    public function getList($page,$canViewPrivate = false,$canViewAll = false)
+    public function getList($page, $canViewPrivate = false, $canViewAll = false)
     {
         $query = $this->createQueryBuilder("u");
-        if(!$canViewPrivate){
+        if (!$canViewPrivate) {
             $query = $query->where("u.isPublic = true");
         }
-        if(!$canViewAll){
+        if (!$canViewAll) {
             $query = $query->andWhere("u.isVisible = true");
         }
 
@@ -30,21 +30,23 @@ class GalleryRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getAllList(){
+    public function getAllList()
+    {
         return $this->createQueryBuilder("u")
             ->setMaxResults(10)
             ->getQuery()
             ->getResult();
     }
 
-    public function getGallery($id,$canViewPrivate = false,$canViewAll = false){
-        $gallery = $this->findOneBy(["id"=>$id]);
-        if(null === $gallery)
+    public function getGallery($id, $canViewPrivate = false, $canViewAll = false)
+    {
+        $gallery = $this->findOneBy(["id" => $id]);
+        if (null === $gallery)
             return null;
-        $photos = new ArrayCollection(array_filter($gallery->getPhotos()->toArray(),function($val)use($canViewAll,$canViewPrivate){
-            if(!$canViewAll)
+        $photos = new ArrayCollection(array_filter($gallery->getPhotos()->toArray(), function ($val) use ($canViewAll, $canViewPrivate) {
+            if (!$canViewAll)
                 return $val->isVisible();
-            if(!$canViewPrivate)
+            if (!$canViewPrivate)
                 return $val->isPublic();
             return true;
         }));

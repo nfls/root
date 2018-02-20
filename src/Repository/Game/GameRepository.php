@@ -14,12 +14,14 @@ class GameRepository extends ServiceEntityRepository
     }
 
 
-    public function listAll(){
+    public function listAll()
+    {
         //return $this->findAll();
     }
 
-    public function findGame($id){
-        return $this->findOneBy(["id"=>$id]);
+    public function findGame($id)
+    {
+        return $this->findOneBy(["id" => $id]);
     }
 
 

@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Model;
 
-class Permission {
+class Permission
+{
 
     //ADMIN permissions
     const IS_ADMIN = "ROLE_ADMIN";

@@ -86,7 +86,6 @@ class Photo
     private $isPublic = false;
 
 
-
     public function __construct()
     {
         $this->time = new \DateTime();
@@ -105,7 +104,7 @@ class Photo
      */
     public function getGallery()
     {
-        if(@is_null(@$this->gallery))
+        if (@is_null(@$this->gallery))
             return null;
         else
             return $this->gallery->getTitle();
@@ -255,9 +254,6 @@ class Photo
     {
         $this->height = $height;
     }
-
-
-
 
 
     // add your own fields

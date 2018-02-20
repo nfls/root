@@ -5,48 +5,46 @@ namespace App\Controller\Game;
 use App\Controller\AbstractController;
 use App\Entity\Game\Game;
 use App\Entity\Game\Rank;
-use App\Model\ApiResponse;
 use App\Model\Normalizer\GameNormalizer;
 use App\Model\Permission;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class AbstractRankController extends AbstractController
 {
     /**
      * @Route("/game/rank")
      */
-    public function rank(Request $request){
+    public function rank(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $gameRepo = $this->getDoctrine()->getManager()->getRepository(Game::class);
         $rankRepo = $this->getDoctrine()->getManager()->getRepository(Rank::class);
         $game = $gameRepo->findGame($request->query->get("game"));
-        if(null === $game)
-            return $this->response()->response(null,204);
-        if($request->request->has("score") && $this->getUser()->hasRole(Permission::IS_AUTHENTICATED)){
+        if (null === $game)
+            return $this->response()->response(null, 204);
+        if ($request->request->has("score") && $this->getUser()->hasRole(Permission::IS_AUTHENTICATED)) {
             $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-            $current = $rankRepo->getCurrentRankByGame($game,$this->getUser());
+            $current = $rankRepo->getCurrentRankByGame($game, $this->getUser());
             $score = $request->request->get("score");
-            if(count($current) == 0){
-                $this->updateScore($game,$this->getUser(),$score);
-            }else{
-                if($game->isPreferBigger()){
-                    if($current[0]->getScore() <= $score){
-                        foreach($current as $rank){
+            if (count($current) == 0) {
+                $this->updateScore($game, $this->getUser(), $score);
+            } else {
+                if ($game->isPreferBigger()) {
+                    if ($current[0]->getScore() <= $score) {
+                        foreach ($current as $rank) {
                             $em->remove($rank);
                         }
                         $em->flush();
-                        $this->updateScore($game,$this->getUser(),$score);
+                        $this->updateScore($game, $this->getUser(), $score);
                     }
-                }else{
-                    if($current[0]->getScore() >= $score){
-                        foreach($current as $rank) {
+                } else {
+                    if ($current[0]->getScore() >= $score) {
+                        foreach ($current as $rank) {
                             $em->remove($rank);
                         }
                         $em->flush();
-                        $this->updateScore($game,$this->getUser(),$score);
+                        $this->updateScore($game, $this->getUser(), $score);
                     }
                 }
             }
@@ -55,7 +53,7 @@ class AbstractRankController extends AbstractController
         return $this->response()->responseEntity($result);
     }
 
-    private function updateScore($game,$user,$score)
+    private function updateScore($game, $user, $score)
     {
         $em = $this->getDoctrine()->getManager();
         if (@!is_null($score)) {
@@ -68,18 +66,19 @@ class AbstractRankController extends AbstractController
         }
     }
 
-    private function phaseRank($ranks){
+    private function phaseRank($ranks)
+    {
         $previous = -1;
         $pos = 1;
         $final = array();
-        foreach ($ranks as $key => $rank){
-            if($previous != $rank->getScore()){
+        foreach ($ranks as $key => $rank) {
+            if ($previous != $rank->getScore()) {
                 $previous = $rank->getScore();
                 $pos = $key + 1;
             }
             $rank->setRank($pos);
             $rank->setGame((new GameNormalizer())->normalize($rank->getGame()));
-            array_push($final,$rank);
+            array_push($final, $rank);
         }
         return $final;
     }

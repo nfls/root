@@ -9,6 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Preference
 {
+    const SCHOOL_PASTPAPER_HEADER = "school.pastpaper.header";
+    const DASHBOARD_ANNOUNCEMENT = "dashboard.announcement";
+    const ABOUT_DEVS = "about.devs";
+    const ALL = [self::SCHOOL_PASTPAPER_HEADER, self::ABOUT_DEVS];
     /**
      * @var string
      *
@@ -16,21 +20,18 @@ class Preference
      * @ORM\Column(type="string", length=128)
      */
     private $identifier;
-
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=128)
      */
     private $remark;
-
     /**
      * @var string
      *
      * @ORM\Column(type="string", length=128)
      */
     private $type;
-
     /**
      * @var string
      *
@@ -77,10 +78,4 @@ class Preference
     {
         $this->content = $content;
     }
-
-    const SCHOOL_PASTPAPER_HEADER = "school.pastpaper.header";
-    const DASHBOARD_ANNOUNCEMENT = "dashboard.announcement";
-    const ABOUT_DEVS = "about.devs";
-
-    const ALL = [self::SCHOOL_PASTPAPER_HEADER,self::ABOUT_DEVS];
 }

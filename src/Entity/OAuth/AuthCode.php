@@ -6,7 +6,6 @@ use App\Model\Token;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
-use League\OAuth2\Server\Entities\ScopeEntityInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OAuth\AuthCodeRepository")

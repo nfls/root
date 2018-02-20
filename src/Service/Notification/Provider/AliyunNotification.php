@@ -3,11 +3,10 @@
 namespace App\Service\Notification\Provider;
 
 use libphonenumber\PhoneNumber;
-use libphonenumber\PhoneNumberFormat;
 use Mrgoon\AliSms\AliSms;
-use Predis\Client;
 
-class AliyunNotification extends AbstractNotificationService {
+class AliyunNotification extends AbstractNotificationService
+{
 
     const SIGN_NAME = "南外人";
 
@@ -33,7 +32,13 @@ class AliyunNotification extends AbstractNotificationService {
         parent::__construct();
     }
 
-    private function sendCode(PhoneNumber $phone,string $template){
+    public function sendRegistration(PhoneNumber $phone)
+    {
+        return $this->sendCode($phone, "SMS_119080912");
+    }
+
+    private function sendCode(PhoneNumber $phone, string $template)
+    {
         $code = (string)mt_rand(100000, 999999);
         $rsp = $this->sms->sendSms(
             $this->getDomesticNumber($phone),
@@ -44,14 +49,9 @@ class AliyunNotification extends AbstractNotificationService {
         return $code;
     }
 
-    public function sendRegistration(PhoneNumber $phone)
-    {
-        return $this->sendCode($phone, "SMS_119080912");
-    }
-
     public function sendBind(PhoneNumber $phone)
     {
-        return $this->sendCode($phone,"SMS_119085892");
+        return $this->sendCode($phone, "SMS_119085892");
     }
 
     public function sendReset(PhoneNumber $phone)

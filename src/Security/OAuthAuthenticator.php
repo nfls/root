@@ -4,8 +4,6 @@ namespace App\Security;
 
 use App\Controller\OAuthController;
 use App\Service\OAuthService;
-use Doctrine\ORM\EntityManager;
-use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\ResourceServer;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,7 +28,7 @@ class OAuthAuthenticator extends AbstractGuardAuthenticator
 
     public function supports(Request $request)
     {
-        return (($request->headers->has("Authorization") && strpos($request->headers->get("Authorization"),"Bearer") === 0 )|| $request->query->has("access_token"));
+        return (($request->headers->has("Authorization") && strpos($request->headers->get("Authorization"), "Bearer") === 0) || $request->query->has("access_token"));
     }
 
     public function getCredentials(Request $request)
@@ -45,7 +43,7 @@ class OAuthAuthenticator extends AbstractGuardAuthenticator
             $auth = $this->server->validateAuthenticatedRequest($credentials);
             $id = $auth->getAttribute("oauth_user_id");
             return $userProvider->loadUserByUsername($id);
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             return null;
         }
 
@@ -58,7 +56,7 @@ class OAuthAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        return new JsonResponse(array("code"=>400,"message"=>"Incorrect Information"),400);
+        return new JsonResponse(array("code" => 400, "message" => "Incorrect Information"), 400);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)

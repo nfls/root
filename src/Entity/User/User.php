@@ -3,121 +3,108 @@
 namespace App\Entity\User;
 
 use App\Entity\School\Alumni;
-use App\Entity\Media\Gallery;
-use App\Entity\Media\Photo;
 use App\Entity\School\Claz;
 use App\Model\Permission;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\User\UserRepository")
  */
-class User implements UserInterface,UserEntityInterface,\JsonSerializable
+class User implements UserInterface, UserEntityInterface, \JsonSerializable
 {
 
+    /**
+     * @var bool
+     */
+    public $isOAuth = false;
+    /**
+     * @var bool
+     */
+    public $disableAdmin = false;
+    /**
+     * @var string
+     */
+    public $realUsername = null;
+    /**
+     * @var string
+     */
+    public $htmlUsername = null;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer", unique=true)
      */
     private $id;
-
     /**
      * @var string
      *
      * @ORM\Column(type="string", unique=true)
      */
     private $username;
-
     /**
      * @var string
      *
      * @ORM\Column(type="string", unique=true, nullable = true)
      */
     private $email;
-
     /**
      * @var string
      *
      * @ORM\Column(type="string")
      */
     private $password;
-
     /**
      * @var integer
      *
      * @ORM\Column(type="bigint", unique=true, nullable = true)
      */
     private $phone;
-
     /**
      * @var integer
      *
      * @ORM\Column(type="string", unique=true)
      */
     private $token;
-
     /**
      * @var boolean
      *
      * @ORM\Column(type="boolean")
      */
     private $admin = false;
-
     /**
      * @var integer
      *
      * @ORM\Column(type="integer", options={"unsigned":true, "default":0})
      */
     private $point = 0;
-
     /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime", options={"default":"CURRENT_TIMESTAMP"})
      */
     private $readTime;
-
     /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime", options={"default":"CURRENT_TIMESTAMP"})
      */
     private $joinTime;
-
     /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="App\Entity\School\Alumni", mappedBy="user")
      */
     private $authTickets;
-
     /**
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="App\Entity\School\Claz", inversedBy="students")
      */
     private $classes;
-
-    /**
-     * @var bool
-     */
-    public $isOAuth = false;
-
-    /**
-     * @var string
-     */
-    public $realUsername = null;
-
-    /**
-     * @var string
-     */
-    public $htmlUsername = null;
 
     public function __construct()
     {
@@ -126,7 +113,7 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
         $this->authTickets = new ArrayCollection();
         $this->classes = new ArrayCollection();
     }
-    
+
     /**
      * @return string
      */
@@ -167,6 +154,14 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
         return $this->password;
     }
 
+    /**
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+        $this->token = uniqid("nfls_", true);
+    }
 
     /**
      * @return \libphonenumber\PhoneNumber
@@ -177,7 +172,7 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
         try {
             $phoneObject = $util->parse("+" . $this->phone);
             return $phoneObject;
-        }catch(\libphonenumber\NumberParseException $e){
+        } catch (\libphonenumber\NumberParseException $e) {
             return null;
         }
     }
@@ -199,15 +194,6 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
     }
 
     /**
-     * @param string $password
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-        $this->token = uniqid("nfls_",true);
-    }
-
-    /**
      * @return \DateTime
      */
     public function getReadTime()
@@ -223,14 +209,6 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
         $this->readTime = $readTime;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
     public function getInfoArray()
     {
         return array(
@@ -243,6 +221,29 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
             "admin" => $this->isAdmin(),
             "verified" => $this->isVerified()
         );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->admin;
+    }
+
+    public function isVerified()
+    {
+        $valid = array_filter($this->authTickets->toArray(), array($this, "getValid"));
+        if (count($valid) > 0) {
+            /** @var $auth Alumni */
+            $auth = array_values($valid)[0];
+            $this->realUsername = $this->username . "( " . $auth->getEnglishName() . " | " . $auth->getChineseName() . " )";
+            $this->htmlUsername = $this->username . "&nbsp;<span style='background-color:#3CDBC0;'>" . $auth->getEnglishName() . "</span>&nbsp;<span style='background-color:#2DCCD3;'>" . $auth->getChineseName() . "</span>";
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     /**
@@ -264,7 +265,8 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
     /**
      * @param int $point
      */
-    public function minusPoints($point){
+    public function minusPoints($point)
+    {
         $this->point -= $point;
     }
 
@@ -276,70 +278,56 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
         return $this->joinTime;
     }
 
+    /**
+     * @param \DateTime $joinTime
+     */
+    public function setJoinTime(\DateTime $joinTime): void
+    {
+        $this->joinTime = $joinTime;
+    }
+
     public function getSalt()
     {
         return null;
     }
 
-    public function eraseCredentials(){}
+    public function eraseCredentials()
+    {
+    }
+
+    public function hasRole($role)
+    {
+        $roles = $this->getRoles();
+        if (in_array($role, $roles))
+            return true;
+        else
+            return false;
+    }
 
     public function getRoles()
     {
-        if($this->isAdmin())
+        if ($this->isAdmin())
             $permissions = [Permission::IS_ADMIN];
         else
             $permissions = [];
-        $valid = array_filter($this->authTickets->toArray(),array($this,"getValid"));
-        if(count($valid) > 0){
-            array_push($permissions,Permission::IS_AUTHENTICATED);
-            foreach(array_values($valid) as $value){
-                array_push($permissions,$this->getAlumniPermission($value));
+        $valid = array_filter($this->authTickets->toArray(), array($this, "getValid"));
+        if (count($valid) > 0) {
+            array_push($permissions, Permission::IS_AUTHENTICATED);
+            foreach (array_values($valid) as $value) {
+                array_push($permissions, $this->getAlumniPermission($value));
             }
 
         }
         return $permissions;
     }
 
-    public function isVerified(){
-        $valid = array_filter($this->authTickets->toArray(),array($this,"getValid"));
-        if(count($valid) > 0){
-            /** @var $auth Alumni*/
-            $auth = array_values($valid)[0];
-            $this->realUsername = $this->username . "( " . $auth->getEnglishName() . " | " . $auth->getChineseName() . " )";
-            $this->htmlUsername = $this->username."&nbsp;<span style='background-color:#3CDBC0;'>".$auth->getEnglishName()."</span>&nbsp;<span style='background-color:#2DCCD3;'>". $auth->getChineseName() ."</span>";
-            return true;
-        }
-        else{
-            return false;
-        }
-
-    }
-
-    public function hasRole($role){
-        $roles = $this->getRoles();
-        if(in_array($role,$roles))
-            return true;
-        else
-            return false;
-    }
-
     /**
      * @param $val Alumni
      * @return bool
      */
-    public function getValid($val){
-        if($val->getStatus() == Alumni::STATUS_PASSED)
-            return true;
-        else
-            return false;
-    }
-
-    /**
-     * @param $val Alumni
-     * @return bool
-     */
-    public function getAlumniPermission($val){
-        switch($val->getUserStatus()){
+    public function getAlumniPermission($val)
+    {
+        switch ($val->getUserStatus()) {
             case 0:
             case 1:
                 return Permission::IS_STUDENT;
@@ -352,13 +340,16 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
     }
 
     /**
+     * @param $val Alumni
      * @return bool
      */
-    public function isAdmin(): bool
+    public function getValid($val)
     {
-        return $this->admin;
+        if ($val->getStatus() == Alumni::STATUS_PASSED)
+            return true;
+        else
+            return false;
     }
-
 
     public function getIdentifier()
     {
@@ -371,11 +362,11 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
     }
 
     /**
-     * @param \DateTime $joinTime
+     * @return mixed
      */
-    public function setJoinTime(\DateTime $joinTime): void
+    public function getId()
     {
-        $this->joinTime = $joinTime;
+        return $this->id;
     }
 
     /**
@@ -386,19 +377,22 @@ class User implements UserInterface,UserEntityInterface,\JsonSerializable
         return $this->classes;
     }
 
-    public function addClass(Claz $class){
-        if(!$this->classes->contains($class)){
+    public function addClass(Claz $class)
+    {
+        if (!$this->classes->contains($class)) {
             $this->classes->add($class);
         }
     }
 
-    public function removeClass(Claz $class){
-        if($this->classes->contains($class)){
+    public function removeClass(Claz $class)
+    {
+        if ($this->classes->contains($class)) {
             $this->classes->removeElement($class);
         }
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->username;
     }
 }

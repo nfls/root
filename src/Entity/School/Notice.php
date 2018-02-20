@@ -2,7 +2,6 @@
 
 namespace App\Entity\School;
 
-use App\Entity\User\User;
 use App\Service\AliyunOSS;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
@@ -144,12 +143,12 @@ class Notice
     public function getAttachment(): array
     {
         $oss = new AliyunOSS();
-        return array_map(function($val)use($oss){
+        return array_map(function ($val) use ($oss) {
             return array(
                 "name" => $val,
                 "href" => $oss->privateDownloadSignature($val)
             );
-        },$this->attachment);
+        }, $this->attachment);
     }
 
     /**
@@ -175,9 +174,6 @@ class Notice
     {
         $this->deadline = $deadline;
     }
-
-
-
 
 
 }

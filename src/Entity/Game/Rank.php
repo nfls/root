@@ -57,7 +57,7 @@ class Rank
     /** @ORM\PostLoad */
     public function calcRank(LifecycleEventArgs $args)
     {
-        if($this->game->isPreferBigger()){
+        if ($this->game->isPreferBigger()) {
             $count = $args->getEntityManager()->getRepository(Rank::class)->createQueryBuilder("u")
                 ->select("count(u.id)")
                 ->where("u.score > :score")
@@ -66,7 +66,7 @@ class Rank
                 ->setParameter("game", $this->game)
                 ->getQuery()
                 ->getSingleScalarResult();
-        }else{
+        } else {
             $count = $args->getEntityManager()->getRepository(Rank::class)->createQueryBuilder("u")
                 ->select("count(u.id)")
                 ->where("u.score < :score")
@@ -89,35 +89,19 @@ class Rank
     }
 
     /**
-     * @return User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * @return int
-     */
-    public function getScore(): int
-    {
-        return $this->score;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getTime()
-    {
-        return $this->time;
-    }
-
-    /**
      * @param Game $game
      */
     public function setGame($game)
     {
         $this->game = $game;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 
     /**
@@ -129,11 +113,27 @@ class Rank
     }
 
     /**
+     * @return int
+     */
+    public function getScore(): int
+    {
+        return $this->score;
+    }
+
+    /**
      * @param int $score
      */
     public function setScore($score)
     {
         $this->score = $score;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getTime()
+    {
+        return $this->time;
     }
 
     /**
@@ -151,10 +151,6 @@ class Rank
     {
         $this->rank = $rank;
     }
-
-
-
-
 
 
 }

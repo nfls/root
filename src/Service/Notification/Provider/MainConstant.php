@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Service\Notification\Provider;
 
-class MainConstant {
-    function renderCodePage($actionCN,$actionEN,$code,$language = "zh-cn"){
+class MainConstant
+{
+    function renderCodePage($actionCN, $actionEN, $code, $language = "zh-cn")
+    {
         $text =
-<<<EOD
+            <<<EOD
 <div style="position:relative;margin:0px auto;width:600px;overflow:hidden">
     <div><img src="https://nfls-public.oss-cn-shanghai.aliyuncs.com/uploads/64FhtpS2nn7dSNwMNkBtrGcsWn2dfihm.png" width="50">
         <div style="display:inline-block;float:right;color:inherit;text-decoration:inherit;">NFLSIO / 南外人 <br><a href="https://nfls.io/">https://nfls.io </a>

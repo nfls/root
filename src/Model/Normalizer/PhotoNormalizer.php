@@ -3,13 +3,11 @@
 namespace App\Model\Normalizer;
 
 use App\Entity\Media\Photo;
-use Symfony\Component\Serializer\Exception\CircularReferenceException;
-use Symfony\Component\Serializer\Exception\InvalidArgumentException;
-use Symfony\Component\Serializer\Exception\LogicException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\scalar;
 
-class PhotoNormalizer implements NormalizerInterface{
+class PhotoNormalizer implements NormalizerInterface
+{
     /**
      * @param Photo $object
      * @param null $format

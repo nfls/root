@@ -9,19 +9,18 @@ use App\Entity\User\User;
 use App\Model\Permission;
 use App\Service\AliyunOSS;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class BlackBoardController extends AbstractController
 {
     /**
      * @Route("/school/blackboard/list",methods="GET")
      */
-    public function list(Request $request){
+    public function list(Request $request)
+    {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
 
-        return $this->response()->responseEntity($this->getUser()->getClasses()->map(function($val){
+        return $this->response()->responseEntity($this->getUser()->getClasses()->map(function ($val) {
             /** @var $val Claz */
             return array(
                 "id" => $val->getId(),
@@ -33,9 +32,10 @@ class BlackBoardController extends AbstractController
     /**
      * @Route("/school/blackboard/create", methods="POST")
      */
-    public function create(Request $request){
+    public function create(Request $request)
+    {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        if(!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
+        if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
             throw $this->createAccessDeniedException();
         $class = new Claz();
         $class->setTitle($request->request->get("title"));
@@ -50,24 +50,25 @@ class BlackBoardController extends AbstractController
     /**
      * @Route("/school/blackboard/detail", methods="GET")
      */
-    public function detail(Request $request) {
+    public function detail(Request $request)
+    {
         $id = $request->query->get("id");
         $repo = $this->getDoctrine()->getManager()->getRepository(Claz::class);
-        /** @var $class  Claz*/
-        if($id == "undefined")
+        /** @var $class  Claz */
+        if ($id == "undefined")
             throw $this->createAccessDeniedException();
-        $class = $repo->findOneBy(["id"=>$id]);
-        if(!is_null($class) & ($class->getStudents()->contains($this->getUser()) || $this->getUser()->hasRole(Permission::IS_ADMIN))){
-            if($class->getTeacher() === $this->getUser()  || $this->getUser()->hasRole(Permission::IS_ADMIN))
+        $class = $repo->findOneBy(["id" => $id]);
+        if (!is_null($class) & ($class->getStudents()->contains($this->getUser()) || $this->getUser()->hasRole(Permission::IS_ADMIN))) {
+            if ($class->getTeacher() === $this->getUser() || $this->getUser()->hasRole(Permission::IS_ADMIN))
                 $class->admin = true;
-            if(!$class->admin)
+            if (!$class->admin)
                 $class->removeFuture();
-            if(!$request->query->has("page")){
+            if (!$request->query->has("page")) {
                 return $this->response()->responseEntity($class);
-            }else{
-                return $this->response()->responseEntity($class->nextNotices($request->query->getInt("page",0)));
+            } else {
+                return $this->response()->responseEntity($class->nextNotices($request->query->getInt("page", 0)));
             }
-        }else{
+        } else {
             throw $this->createAccessDeniedException();
         }
     }
@@ -75,27 +76,28 @@ class BlackBoardController extends AbstractController
     /**
      * @Route("/school/blackboard/edit", methods="POST")
      */
-    public function edit(Request $request){
+    public function edit(Request $request)
+    {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        if(!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
+        if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
             throw $this->createAccessDeniedException();
         $id = $request->query->get("id");
         $repo = $this->getDoctrine()->getManager()->getRepository(Claz::class);
-        /** @var $class  Claz*/
-        $class = $repo->findOneBy(["id"=>$id]);
-        if(!is_null($class) & ($class->getTeacher() === $this->getUser() || $this->getUser()->hasRole(Permission::IS_ADMIN))){
+        /** @var $class  Claz */
+        $class = $repo->findOneBy(["id" => $id]);
+        if (!is_null($class) & ($class->getTeacher() === $this->getUser() || $this->getUser()->hasRole(Permission::IS_ADMIN))) {
             $uid = $request->request->get("id");
             $userRepo = $this->getDoctrine()->getManager()->getRepository(User::class);
             $user = $userRepo->find($uid);
-            if($request->request->has("add"))
+            if ($request->request->has("add"))
                 $class->addStudent($user);
-            else if($request->request->has("remove"))
+            else if ($request->request->has("remove"))
                 $class->removeStudent($user);
             $em = $this->getDoctrine()->getManager();
             $em->persist($class);
             $em->flush();
             return $this->response()->response(null);
-        }else{
+        } else {
             throw $this->createAccessDeniedException();
         }
     }
@@ -103,15 +105,16 @@ class BlackBoardController extends AbstractController
     /**
      * @Route("/school/blackboard/delete", methods="POST")
      */
-    public function delete(Request $request){
+    public function delete(Request $request)
+    {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        if(!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
+        if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
             throw $this->createAccessDeniedException();
         $id = $request->query->get("id");
         $repo = $this->getDoctrine()->getManager()->getRepository(Claz::class);
-        /** @var $class  Claz*/
-        $class = $repo->findOneBy(["id"=>$id]);
-        if(!is_null($class) & ($class->getTeacher() === $this->getUser() || $this->getUser()->hasRole(Permission::IS_ADMIN))){
+        /** @var $class  Claz */
+        $class = $repo->findOneBy(["id" => $id]);
+        if (!is_null($class) & ($class->getTeacher() === $this->getUser() || $this->getUser()->hasRole(Permission::IS_ADMIN))) {
             $uid = $request->request->get("id");
             $noticeRepo = $this->getDoctrine()->getManager()->getRepository(Notice::class);
             $notice = $noticeRepo->find($uid);
@@ -121,7 +124,7 @@ class BlackBoardController extends AbstractController
             $em->persist($class);
             $em->flush();
             return $this->response()->response(null);
-        }else{
+        } else {
             throw $this->createAccessDeniedException();
         }
     }
@@ -129,21 +132,22 @@ class BlackBoardController extends AbstractController
     /**
      * @Route("/school/blackboard/preference", methods="POST")
      */
-    public function preference(Request $request){
+    public function preference(Request $request)
+    {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        if(!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
+        if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
             throw $this->createAccessDeniedException();
         $id = $request->query->get("id");
         $repo = $this->getDoctrine()->getManager()->getRepository(Claz::class);
-        /** @var $class  Claz*/
-        $class = $repo->findOneBy(["id"=>$id]);
-        if(!is_null($class) & ($class->getTeacher() === $this->getUser() || $this->getUser()->hasRole(Permission::IS_ADMIN))){
+        /** @var $class  Claz */
+        $class = $repo->findOneBy(["id" => $id]);
+        if (!is_null($class) & ($class->getTeacher() === $this->getUser() || $this->getUser()->hasRole(Permission::IS_ADMIN))) {
             $em = $this->getDoctrine()->getManager();
-            if($request->request->has("delete")){
-                foreach($class->getNotices() as $val){
+            if ($request->request->has("delete")) {
+                foreach ($class->getNotices() as $val) {
                     $em->remove($val);
                 }
-                foreach($class->getStudents() as $val){
+                foreach ($class->getStudents() as $val) {
                     /** @var $val User */
                     $val->removeClass($class);
                     $em->persist($val);
@@ -157,7 +161,7 @@ class BlackBoardController extends AbstractController
 
             $em->flush();
             return $this->response()->response(null);
-        }else{
+        } else {
             throw $this->createAccessDeniedException();
         }
     }
@@ -165,47 +169,49 @@ class BlackBoardController extends AbstractController
     /**
      * @Route("/school/blackboard/signature", methods="GET")
      */
-    public function signature(Request $request){
+    public function signature(Request $request)
+    {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        if(!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
+        if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
             throw $this->createAccessDeniedException();
         $oss = new AliyunOSS();
-        return $this->response()->response($oss->privateUploadSignature($request->query->get("object"),$request->query->get("type")));
+        return $this->response()->response($oss->privateUploadSignature($request->query->get("object"), $request->query->get("type")));
     }
 
     /**
      * @Route("/school/blackboard/post", methods="POST")
      */
-    public function post(Request $request){
+    public function post(Request $request)
+    {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        if(!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
+        if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
             throw $this->createAccessDeniedException();
         $id = $request->query->get("id");
         $repo = $this->getDoctrine()->getManager()->getRepository(Claz::class);
-        /** @var $class  Claz*/
-        $class = $repo->findOneBy(["id"=>$id]);
+        /** @var $class  Claz */
+        $class = $repo->findOneBy(["id" => $id]);
 
-        if(!is_null($class) & ($class->getTeacher() === $this->getUser() || $this->getUser()->hasRole(Permission::IS_ADMIN))){
+        if (!is_null($class) & ($class->getTeacher() === $this->getUser() || $this->getUser()->hasRole(Permission::IS_ADMIN))) {
             $notice = new Notice();
             $notice->setContent($request->request->get("content"));
             $notice->setAttachment($request->request->get("files"));
-            $time = \DateTime::createFromFormat("Y-m-d\TH:i:s\.???\Z",$request->request->get("time"),new \DateTimeZone("UTC"));
-            if($time === false || $time < new \DateTime()){
+            $time = \DateTime::createFromFormat("Y-m-d\TH:i:s\.???\Z", $request->request->get("time"), new \DateTimeZone("UTC"));
+            if ($time === false || $time < new \DateTime()) {
                 $time = new \DateTime();
-            }else{
+            } else {
                 $time->setTimezone(new \DateTimeZone($request->request->get("timezone")));
-                if($time < new \DateTime())
+                if ($time < new \DateTime())
                     $time = new \DateTime();
             }
 
             $notice->setTime($time);
-            $ddl = \DateTime::createFromFormat("Y-m-d\TH:i:s\.???\Z",$request->request->get("deadline"),new \DateTimeZone("UTC"));
-            if($ddl === false)
+            $ddl = \DateTime::createFromFormat("Y-m-d\TH:i:s\.???\Z", $request->request->get("deadline"), new \DateTimeZone("UTC"));
+            if ($ddl === false)
                 $ddl = null;
             else {
                 $notice->setTitle($request->request->get("title"));
                 $ddl->setTimezone(new \DateTimeZone($request->request->get("timezone")));
-                if($ddl < new \DateTime())
+                if ($ddl < new \DateTime())
                     $ddl = new \DateTime();
             }
             $notice->setDeadline($ddl);
@@ -214,7 +220,7 @@ class BlackBoardController extends AbstractController
             $em->persist($notice);
             $em->flush();
             return $this->response()->response(null);
-        }else{
+        } else {
             throw $this->createAccessDeniedException();
         }
     }
@@ -222,7 +228,8 @@ class BlackBoardController extends AbstractController
     /**
      * @Route("/school/blackboard/eligibility", methods="GET")
      */
-    public function eligibility(){
+    public function eligibility()
+    {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         return $this->response()->response(($this->getUser()->hasRole(Permission::IS_ADMIN) || ($this->getUser()->hasRole(Permission::IS_TEACHER))));
     }

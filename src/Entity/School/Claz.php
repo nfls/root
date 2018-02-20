@@ -12,6 +12,7 @@ use Ramsey\Uuid\Uuid;
  */
 class Claz
 {
+    public $admin = false;
     /**
      * @var Uuid
      *
@@ -21,14 +22,12 @@ class Claz
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private $id;
-
     /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User\User")
      */
     private $teacher;
-
     /**
      * @var ArrayCollection
      *
@@ -36,7 +35,6 @@ class Claz
      * @ORM\JoinTable(name="user")
      */
     private $students;
-
     /**
      * @var ArrayCollection
      *
@@ -44,14 +42,12 @@ class Claz
      * @ORM\OrderBy({"time":"DESC"})
      */
     private $notices;
-
     /**
      * @var string
      *
      * @ORM\Column(type="string")
      */
     private $title;
-
     /**
      * @var string
      *
@@ -59,7 +55,6 @@ class Claz
      */
     private $announcement;
 
-    public $admin = false;
     /**
      * Claz constructor.
      */
@@ -113,29 +108,11 @@ class Claz
     }
 
     /**
-     * @param User $student
+     * @return User
      */
-    public function addStudent(User $student): void
+    public function getTeacher()
     {
-        if(!$this->students->contains($student)){
-            $this->students->add($student);
-            $student->addClass($this);
-        }
-
-    }
-
-    /**
-     * @param User $student
-     */
-    public function removeStudent(User $student): void
-    {
-        if($this->teacher === $student)
-            return;
-        if($this->students->contains($student)){
-            $this->students->removeElement($student);
-            $student->removeClass($this);
-        }
-
+        return $this->teacher;
     }
 
     /**
@@ -143,19 +120,36 @@ class Claz
      */
     public function setTeacher(User $teacher): void
     {
-        if(null !== $this->teacher)
+        if (null !== $this->teacher)
             $this->removeStudent($this->teacher);
         $this->teacher = $teacher;
         $this->addStudent($teacher);
     }
 
+    /**
+     * @param User $student
+     */
+    public function removeStudent(User $student): void
+    {
+        if ($this->teacher === $student)
+            return;
+        if ($this->students->contains($student)) {
+            $this->students->removeElement($student);
+            $student->removeClass($this);
+        }
+
+    }
 
     /**
-     * @return User
+     * @param User $student
      */
-    public function getTeacher()
+    public function addStudent(User $student): void
     {
-        return $this->teacher;
+        if (!$this->students->contains($student)) {
+            $this->students->add($student);
+            $student->addClass($this);
+        }
+
     }
 
     /**
@@ -171,14 +165,15 @@ class Claz
      */
     public function getNotices()
     {
-        return $this->notices->slice(0,10);
+        return $this->notices->slice(0, 10);
     }
 
     /**
      * @return ArrayCollection
      */
-    public function nextNotices($page){
-        return array_values($this->notices->slice(($page - 1)*10,10));
+    public function nextNotices($page)
+    {
+        return array_values($this->notices->slice(($page - 1) * 10, 10));
     }
 
     /**
@@ -186,34 +181,37 @@ class Claz
      */
     public function removeNotice(Notice $notice): void
     {
-        if($this->notices->contains($notice))
+        if ($this->notices->contains($notice))
             $this->notices->removeElement($notice);
     }
 
-    public function removeFuture(){
-        $this->notices = $this->notices->filter(function ($val){
+    public function removeFuture()
+    {
+        $this->notices = $this->notices->filter(function ($val) {
             /** @var $val Notice */
             return $val->getTime() <= new \DateTime();
         });
     }
+
     /**
      * @return array
      */
-    public function getDeadlines(){
-        return array_values(array_slice($this->notices->filter(function($val){
+    public function getDeadlines()
+    {
+        return array_values(array_slice($this->notices->filter(function ($val) {
             /** @var $val Notice */
-            if(is_null($val->getDeadline()))
+            if (is_null($val->getDeadline()))
                 return false;
             else
                 return true;
-        })->map(function($val){
+        })->map(function ($val) {
             /** @var $val Notice */
             return array(
-                "id"=>$val->getId(),
-                "title"=>$val->getTitle(),
-                "time"=>$val->getDeadline()
+                "id" => $val->getId(),
+                "title" => $val->getTitle(),
+                "time" => $val->getDeadline()
             );
-        })->toArray(),0,20));
+        })->toArray(), 0, 20));
     }
 
 

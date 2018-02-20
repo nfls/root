@@ -4,8 +4,8 @@ namespace App\Repository\OAuth;
 
 use App\Entity\OAuth\Client;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class ClientRepository extends ServiceEntityRepository implements ClientRepositoryInterface
 {
@@ -18,17 +18,18 @@ class ClientRepository extends ServiceEntityRepository implements ClientReposito
     {
 
         $client = $this->getClientById($clientIdentifier);
-        if(@null === $client)
+        if (@null === $client)
             return null;
-        if(!in_array($grantType,$client->getGrantType()))
+        if (!in_array($grantType, $client->getGrantType()))
             return null;
-        if($mustValidateSecret && $clientSecret != $client->getSecret())
+        if ($mustValidateSecret && $clientSecret != $client->getSecret())
             return null;
 
         return $client;
     }
 
-    public function getClientById($id){
-        return $this->findOneBy(["clientId"=>$id]);
+    public function getClientById($id)
+    {
+        return $this->findOneBy(["clientId" => $id]);
     }
 }

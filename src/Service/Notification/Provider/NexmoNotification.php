@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Service\Notification\Provider;
-use Doctrine\ORM\EntityManager;
+
 use libphonenumber\PhoneNumber;
 use Nexmo;
-use Predis\Client;
 
-class NexmoNotification extends AbstractNotificationService {
+class NexmoNotification extends AbstractNotificationService
+{
 
     /**
      * @var Nexmo\Client
@@ -17,18 +18,20 @@ class NexmoNotification extends AbstractNotificationService {
         $this->client = new Nexmo\Client(new Nexmo\Client\Credentials\Basic($_SERVER["NEXMO_KEY_ID"], $_SERVER["NEXMO_KEY_SECRET"]));
         parent::__construct();
     }
-    public function sendCode(PhoneNumber $phone){
+
+    public function sendRegistration(PhoneNumber $phone)
+    {
+        return $this->sendCode($phone);
+    }
+
+    public function sendCode(PhoneNumber $phone)
+    {
         $verification = $this->client->verify()->start([
             'number' => $this->getInternationalNumber($phone),
             'code_length' => 6,
             'brand' => "NFLS.IO"
         ]);
         return $verification->getRequestId();
-    }
-
-    public function sendRegistration(PhoneNumber $phone)
-    {
-        return $this->sendCode($phone);
     }
 
     public function sendBind(PhoneNumber $phone)
@@ -50,7 +53,7 @@ class NexmoNotification extends AbstractNotificationService {
         );
         try {
             $this->client->message()->send($text);
-        } catch (Nexmo\Client\Exception\Exception $e){
+        } catch (Nexmo\Client\Exception\Exception $e) {
 
         }
 
@@ -65,7 +68,7 @@ class NexmoNotification extends AbstractNotificationService {
         );
         try {
             $this->client->message()->send($text);
-        } catch (Nexmo\Client\Exception\Exception $e){
+        } catch (Nexmo\Client\Exception\Exception $e) {
 
         }
     }
@@ -79,7 +82,7 @@ class NexmoNotification extends AbstractNotificationService {
         );
         try {
             $this->client->message()->send($text);
-        } catch (Nexmo\Client\Exception\Exception $e){
+        } catch (Nexmo\Client\Exception\Exception $e) {
 
         }
     }
@@ -97,16 +100,16 @@ class NexmoNotification extends AbstractNotificationService {
     public function verify(PhoneNumber $phone, string $code, array $ticket)
     {
         $id = $ticket["rsp"];
-        try{
+        try {
             $verification = new Nexmo\Verify\Verification($id);
-            $result = $this->client->verify()->check($verification,$code);
+            $result = $this->client->verify()->check($verification, $code);
 
-            if($result->getStatus() == 0){
+            if ($result->getStatus() == 0) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }catch (Nexmo\Client\Exception\Exception $e){
+        } catch (Nexmo\Client\Exception\Exception $e) {
             return false;
         }
     }

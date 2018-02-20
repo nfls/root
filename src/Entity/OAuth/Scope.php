@@ -2,7 +2,6 @@
 
 namespace App\Entity\OAuth;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 
@@ -26,14 +25,14 @@ class Scope implements ScopeEntityInterface
      */
     private $role;
 
-    public function getIdentifier()
-    {
-       return $this->token;
-    }
-
     function jsonSerialize()
     {
         return $this->getIdentifier();
+    }
+
+    public function getIdentifier()
+    {
+        return $this->token;
     }
 
 

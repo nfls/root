@@ -90,15 +90,6 @@ class Gallery
      */
     private $em;
 
-    /**
-     * @ORM\PostLoad
-     * @ORM\PostPersist
-     */
-    public function fetchEntityManager(LifecycleEventArgs $args)
-    {
-        $this->em = $args->getEntityManager();
-    }
-
     public function __construct()
     {
         $this->photos = new ArrayCollection();
@@ -108,19 +99,12 @@ class Gallery
     }
 
     /**
-     * @param string $title
+     * @ORM\PostLoad
+     * @ORM\PostPersist
      */
-    public function setTitle($title)
+    public function fetchEntityManager(LifecycleEventArgs $args)
     {
-        $this->title = $title;
-    }
-
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
+        $this->em = $args->getEntityManager();
     }
 
     /**
@@ -156,6 +140,14 @@ class Gallery
     }
 
     /**
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
      * @return string
      */
     public function getDescription()
@@ -164,17 +156,27 @@ class Gallery
     }
 
     /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
      * @return integer
      */
-    public function getPhotoCount(){
+    public function getPhotoCount()
+    {
         return count($this->photos);
     }
 
     /**
      * @return integer
      */
-    public function getOriginCount(){
-        return count($this->photos->filter(function($val){
+    public function getOriginCount()
+    {
+        return count($this->photos->filter(function ($val) {
             return !(null === $val->getOrigin());
         }));
     }
@@ -185,6 +187,14 @@ class Gallery
     public function getPhotos()
     {
         return $this->photos;
+    }
+
+    /**
+     * @param ArrayCollection $photos
+     */
+    public function setPhotos(ArrayCollection $photos): void
+    {
+        $this->photos = $photos;
     }
 
     /**
@@ -212,21 +222,19 @@ class Gallery
     }
 
     /**
-     * @return bool
-     */
-    public function isPublic()
-    {
-        return $this->isPublic;
-    }
-
-
-
-    /**
      * @param bool $isVisible
      */
     public function setIsVisible($isVisible)
     {
         $this->isVisible = $isVisible;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublic()
+    {
+        return $this->isPublic;
     }
 
     /**
@@ -246,59 +254,6 @@ class Gallery
     }
 
     /**
-     * @return array
-     */
-    public function getLikes()
-    {
-        if(null === $this->likes){
-            $this->likes = json_encode([]);
-        }
-        $repo = $this->em->getRepository(User::class);
-        return array_map(function($id)use($repo){
-            return $repo->findOneBy(["id"=>$id]);
-        },json_decode($this->likes,true));
-    }
-
-
-    /**
-     * @param User $user
-     *
-     * @return boolean
-     */
-    public function likeStatus($user){
-        $repo = $this->em->getRepository(User::class);
-        if(null === $this->likes){
-            $this->likes = json_encode([]);
-        }
-        $likes = array_map(function($id)use($repo){
-            return $repo->findOneBy(["id"=>$id]);
-        },json_decode($this->likes,true));
-        if(null === $user){
-            $status = false;
-        }else if(in_array($user,$likes)){
-            $status = true;
-        }else{
-            $status = false;
-        }
-        return $status;
-    }
-    /**
-     * @param User $user
-     */
-    public function like($user){
-        if(null === $this->likes){
-            $this->likes = json_encode([]);
-        }
-        $likes = json_decode($this->likes);
-        if (($key = array_search($user->getId(), $likes)) !== false) {
-            unset($likes[$key]);
-        }else{
-            array_push($likes,$user->getId());
-        }
-        $this->likes = json_encode($likes);
-    }
-
-    /**
      * @param Photo $cover
      */
     public function setCover($cover)
@@ -306,18 +261,65 @@ class Gallery
         $this->cover = $cover;
     }
 
-    public function removeAllComments(){
-        $this->comments = new ArrayCollection();
+    /**
+     * @return array
+     */
+    public function getLikes()
+    {
+        if (null === $this->likes) {
+            $this->likes = json_encode([]);
+        }
+        $repo = $this->em->getRepository(User::class);
+        return array_map(function ($id) use ($repo) {
+            return $repo->findOneBy(["id" => $id]);
+        }, json_decode($this->likes, true));
     }
 
     /**
-     * @param ArrayCollection $photos
+     * @param User $user
+     *
+     * @return boolean
      */
-    public function setPhotos(ArrayCollection $photos): void
+    public function likeStatus($user)
     {
-        $this->photos = $photos;
+        $repo = $this->em->getRepository(User::class);
+        if (null === $this->likes) {
+            $this->likes = json_encode([]);
+        }
+        $likes = array_map(function ($id) use ($repo) {
+            return $repo->findOneBy(["id" => $id]);
+        }, json_decode($this->likes, true));
+        if (null === $user) {
+            $status = false;
+        } else if (in_array($user, $likes)) {
+            $status = true;
+        } else {
+            $status = false;
+        }
+        return $status;
     }
 
+    /**
+     * @param User $user
+     */
+    public function like($user)
+    {
+        if (null === $this->likes) {
+            $this->likes = json_encode([]);
+        }
+        $likes = json_decode($this->likes);
+        if (($key = array_search($user->getId(), $likes)) !== false) {
+            unset($likes[$key]);
+        } else {
+            array_push($likes, $user->getId());
+        }
+        $this->likes = json_encode($likes);
+    }
+
+    public function removeAllComments()
+    {
+        $this->comments = new ArrayCollection();
+    }
 
 
 }

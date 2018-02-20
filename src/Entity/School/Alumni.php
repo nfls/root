@@ -5,15 +5,21 @@ namespace App\Entity\School;
 use App\Entity\User\User;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\School\AlumniRepository")
  */
 class Alumni
 {
+    const STATUS_NOT_SUBMITTED = 0;
+    const STATUS_SUBMITTED = 1;
+    const STATUS_CANCELED = 2;
+    const STATUS_REVIEWING = 3;
+    const STATUS_REJECTED = 4;
+    const STATUS_PASSED = 5;
+    const STATUS_EXPIRED = 6;
     /**
      * @var Uuid
      *
@@ -23,36 +29,24 @@ class Alumni
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private $id;
-
     /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User\User",inversedBy="authTickets")
      */
     private $user;
-
     /**
      * @var \DateTime|null
      *
      * @ORM\Column(type="datetimetz", nullable=true)
      */
     private $submitTime;
-
     /**
      * @var integer
      *
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $status = 0;
-
-    const STATUS_NOT_SUBMITTED = 0;
-    const STATUS_SUBMITTED = 1;
-    const STATUS_CANCELED = 2;
-    const STATUS_REVIEWING = 3;
-    const STATUS_REJECTED = 4;
-    const STATUS_PASSED = 5;
-    const STATUS_EXPIRED = 6;
-
     /**
      * @var integer
      *
@@ -161,7 +155,7 @@ class Alumni
 
     /**
      * @var string|null
-     *  @Assert\NotBlank(message="alumni.auth.error.personalInfo.blank")
+     * @Assert\NotBlank(message="alumni.auth.error.personalInfo.blank")
      * @ORM\Column(type="string",length=500, nullable=true)
      */
     private $personalInfo;
@@ -235,11 +229,19 @@ class Alumni
     }
 
     /**
+     * @param \DateTime|null $submitTime
+     */
+    public function setSubmitTime(?\DateTime $submitTime): void
+    {
+        $this->submitTime = $submitTime;
+    }
+
+    /**
      * @return int
      */
     public function getStatus(): int
     {
-        if($this->expireAt && $this->expireAt < new \DateTime())
+        if ($this->expireAt && $this->expireAt < new \DateTime())
             return self::STATUS_EXPIRED;
         return $this->status;
     }
@@ -557,14 +559,6 @@ class Alumni
     }
 
     /**
-     * @param \DateTime|null $submitTime
-     */
-    public function setSubmitTime(?\DateTime $submitTime): void
-    {
-        $this->submitTime = $submitTime;
-    }
-
-    /**
      * @return \DateTime|null
      */
     public function getExpireAt(): ?\DateTime
@@ -584,12 +578,13 @@ class Alumni
     /**
      * @Assert\IsTrue(message="alumni.auth.error.notInNfls")
      */
-    public function isAtNflsOnce(){
-        if($this->userStatus == 4)
+    public function isAtNflsOnce()
+    {
+        if ($this->userStatus == 4)
             return true;
-        if($this->juniorSchool > 0)
+        if ($this->juniorSchool > 0)
             return true;
-        if(null != $this->seniorSchool && $this->seniorSchool > 0)
+        if (null != $this->seniorSchool && $this->seniorSchool > 0)
             return true;
         else
             return false;

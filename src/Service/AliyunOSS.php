@@ -1,29 +1,26 @@
 <?php
+
 namespace App\Service;
+
 //use AliyunSts\Core;
 
-use Nexmo\Client\Exception\Exception;
+use OSS\Core\OssException;
+use OSS\OssClient;
 use Sts\AssumeRoleRequest;
-use Sts\Core\AcsRequest;
 use Sts\Core\DefaultAcsClient;
 use Sts\Core\Exception\ClientException;
 use Sts\Core\Profile\DefaultProfile;
-use OSS\Http\RequestCore;
-use OSS\Http\ResponseCore;
-use OSS\OssClient;
-use OSS\Core\OssException;
 
-class AliyunOSS {
-    /**
-     * @var DefaultAcsClient
-     */
-    private $client;
-
+class AliyunOSS
+{
     const DOWNLOAD_ROLE = "acs:ram::1978482396280799:role/past-papers";
     const UPLOAD_ROLE = "acs:ram::1978482396280799:role/upload-users";
     const HOST = "https://nfls-public.oss-cn-shanghai.aliyuncs.com";
     const UPLOAD_DIR = "uploads/";
-
+    /**
+     * @var DefaultAcsClient
+     */
+    private $client;
     private $key_id;
     private $key_secret;
 
@@ -32,47 +29,39 @@ class AliyunOSS {
     {
         $this->key_id = $_SERVER["ALIYUN_KEY_ID"];
         $this->key_secret = $_SERVER["ALIYUN_KEY_SECRET"];
-        $profile = DefaultProfile::getProfile("cn-hangzhou",$this->key_id,$this->key_secret);
+        $profile = DefaultProfile::getProfile("cn-hangzhou", $this->key_id, $this->key_secret);
         $this->client = new DefaultAcsClient($profile);
     }
-    public function getDownloadListToken($id){
+
+    public function getDownloadListToken($id)
+    {
         $request = new AssumeRoleRequest();
         $request->setRoleSessionName("api");
         $request->setRoleArn(self::DOWNLOAD_ROLE);
         $request->setDurationSeconds(3600);
-        try{
+        try {
             $response = $this->client->doAction($request);
-            return json_decode($response->getBody(),true)["Credentials"];
-        }catch(ClientException $e){
+            return json_decode($response->getBody(), true)["Credentials"];
+        } catch (ClientException $e) {
             return false;
         }
     }
-    public function getUploadToken(){
-        $request = new AssumeRoleRequest();
-        $request->setRoleSessionName("api");
-        $request->setRoleArn(self::UPLOAD_ROLE);
-        $request->setDurationSeconds(3600);
-        try{
-            $response = $this->client->doAction($request);
-            return json_decode($response->getBody(),true)["Credentials"];
-        }catch(ClientException $e){
-            return false;
-        }
-    }
-    public function getSignature(){
+
+    public function getSignature()
+    {
         $token = $this->getUploadToken();
         $now = time();
         $expire = 30; //设置该policy超时时间是10s. 即这个policy过了这个有效时间，将不能访问
         $end = $now + $expire;
         $expiration = $this->gmt_iso8601($end);
 
-        $condition = array(0=>'content-length-range', 1=>0, 2=>1048576000);
+        $condition = array(0 => 'content-length-range', 1 => 0, 2 => 1048576000);
         $conditions[] = $condition;
 
-        $start = array(0=>'starts-with', 1=>'$key', 2=>self::UPLOAD_DIR);
+        $start = array(0 => 'starts-with', 1 => '$key', 2 => self::UPLOAD_DIR);
         $conditions[] = $start;
 
-        $arr = array('expiration'=>$expiration,'conditions'=>$conditions);
+        $arr = array('expiration' => $expiration, 'conditions' => $conditions);
         $policy = json_encode($arr);
         $base64_policy = base64_encode($policy);
         $string_to_sign = $base64_policy;
@@ -88,29 +77,46 @@ class AliyunOSS {
         return $response;
     }
 
-    private function gmt_iso8601($time) {
+    public function getUploadToken()
+    {
+        $request = new AssumeRoleRequest();
+        $request->setRoleSessionName("api");
+        $request->setRoleArn(self::UPLOAD_ROLE);
+        $request->setDurationSeconds(3600);
+        try {
+            $response = $this->client->doAction($request);
+            return json_decode($response->getBody(), true)["Credentials"];
+        } catch (ClientException $e) {
+            return false;
+        }
+    }
+
+    private function gmt_iso8601($time)
+    {
         $dtStr = date("c", $time);
         $mydatetime = new \DateTime($dtStr);
         $expiration = $mydatetime->format(\DateTime::ISO8601);
         $pos = strpos($expiration, '+');
         $expiration = substr($expiration, 0, $pos);
-        return $expiration."Z";
+        return $expiration . "Z";
     }
 
-    public function privateUploadSignature($object,$type){
+    public function privateUploadSignature($object, $type)
+    {
         try {
             $ossClient = new OssClient($this->key_id, $this->key_secret, "https://oss-cn-shanghai.aliyuncs.com");
             $options = array('Content-Type' => $type);
-            return $ossClient->signUrl("nfls-private",$object,360,OssClient::OSS_HTTP_PUT,$options);
+            return $ossClient->signUrl("nfls-private", $object, 360, OssClient::OSS_HTTP_PUT, $options);
         } catch (OssException $e) {
             return null;
         }
     }
 
-    public function privateDownloadSignature($object){
+    public function privateDownloadSignature($object)
+    {
         try {
             $ossClient = new OssClient($this->key_id, $this->key_secret, "https://oss-cn-shanghai.aliyuncs.com");
-            return $ossClient->signUrl("nfls-private",$object,600,OssClient::OSS_HTTP_GET);
+            return $ossClient->signUrl("nfls-private", $object, 600, OssClient::OSS_HTTP_GET);
         } catch (OssException $e) {
             return null;
         }

@@ -1,24 +1,25 @@
 <?php
+
 namespace App\Service;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use League\OAuth2\Server\Grant\RefreshTokenGrant;
-use League\OAuth2\Server\ResourceServer;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Entity\OAuth\AccessToken;
 use App\Entity\OAuth\AuthCode;
 use App\Entity\OAuth\Client;
 use App\Entity\OAuth\RefreshToken;
 use App\Entity\OAuth\Scope;
 use App\Entity\User\User;
+use DateInterval;
+use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\ImplicitGrant;
 use League\OAuth2\Server\Grant\PasswordGrant;
-use \DateInterval;
+use League\OAuth2\Server\Grant\RefreshTokenGrant;
+use League\OAuth2\Server\ResourceServer;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class OAuthService extends Controller{
+class OAuthService extends Controller
+{
 
     const PrivateKey = "/etc/cert/oauth.key";
     const EncryptionKey = "/etc/cert/oauth.pub";
@@ -29,7 +30,8 @@ class OAuthService extends Controller{
         $this->em = $entityManager;
     }
 
-    public function getServer(){
+    public function getServer()
+    {
         $em = $this->em;
         $clientRepo = $em->getRepository(Client::class);
         $accessTokenRepo = $em->getRepository(AccessToken::class);
@@ -43,10 +45,10 @@ class OAuthService extends Controller{
         $authCodeExpiry = new DateInterval("PT15M");
         $accessTokenExpiry = new DateInterval("P1D");
 
-        $authCodeGrant = new AuthCodeGrant($authCodeRepo,$refreshTokenRepo,$authCodeExpiry);
+        $authCodeGrant = new AuthCodeGrant($authCodeRepo, $refreshTokenRepo, $authCodeExpiry);
         $authCodeGrant->setRefreshTokenTTL($refreshTokenExpiry);
 
-        $passwordGrant = new PasswordGrant($userRepo,$refreshTokenRepo);
+        $passwordGrant = new PasswordGrant($userRepo, $refreshTokenRepo);
         $passwordGrant->setRefreshTokenTTL($refreshTokenExpiry);
 
         $implicitGrant = new ImplicitGrant($accessTokenExpiry);
@@ -54,19 +56,20 @@ class OAuthService extends Controller{
         $refreshTokenGrant = new RefreshTokenGrant($refreshTokenRepo);
         $refreshTokenGrant->setRefreshTokenTTL($refreshTokenExpiry);
         //$refreshTokenGrant->canRespondToAccessTokenRequest();
-        $server = new AuthorizationServer($clientRepo,$accessTokenRepo,$scopeRepo,self::PrivateKey,self::EncryptionKey);
-        $server->enableGrantType($passwordGrant,$accessTokenExpiry);
-        $server->enableGrantType($authCodeGrant,$accessTokenExpiry);
-        $server->enableGrantType($implicitGrant,$accessTokenExpiry);
-        $server->enableGrantType($refreshTokenGrant,$accessTokenExpiry);
+        $server = new AuthorizationServer($clientRepo, $accessTokenRepo, $scopeRepo, self::PrivateKey, self::EncryptionKey);
+        $server->enableGrantType($passwordGrant, $accessTokenExpiry);
+        $server->enableGrantType($authCodeGrant, $accessTokenExpiry);
+        $server->enableGrantType($implicitGrant, $accessTokenExpiry);
+        $server->enableGrantType($refreshTokenGrant, $accessTokenExpiry);
 
         return $server;
     }
 
-    public function getValidator(){
+    public function getValidator()
+    {
         $em = $this->em;
         $accessTokenRepo = $em->getRepository(AccessToken::class);
-        $server = new ResourceServer($accessTokenRepo,self::EncryptionKey);
+        $server = new ResourceServer($accessTokenRepo, self::EncryptionKey);
         return $server;
     }
 }

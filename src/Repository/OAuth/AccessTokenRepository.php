@@ -6,8 +6,6 @@ use App\Entity\OAuth\AccessToken;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Entities\ScopeEntityInterface;
-use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -18,8 +16,9 @@ class AccessTokenRepository extends ServiceEntityRepository implements AccessTok
         parent::__construct($registry, AccessToken::class);
     }
 
-    public function getTokenById($tokenId){
-        return $this->findOneBy(["token"=>$tokenId]);
+    public function getTokenById($tokenId)
+    {
+        return $this->findOneBy(["token" => $tokenId]);
     }
 
 
@@ -27,7 +26,7 @@ class AccessTokenRepository extends ServiceEntityRepository implements AccessTok
     {
         $accessToken = new AccessToken();
         $accessToken->setClient($clientEntity);
-        foreach ($scopes as $scope){
+        foreach ($scopes as $scope) {
             $accessToken->addScope($scope);
         }
         $accessToken->setUserIdentifier($userIdentifier);
@@ -45,7 +44,7 @@ class AccessTokenRepository extends ServiceEntityRepository implements AccessTok
     public function revokeAccessToken($tokenId)
     {
         $token = $this->findOneBy(["token" => $tokenId]);
-        if(null !== $token) {
+        if (null !== $token) {
             $this->getEntityManager()->remove($token);
             $this->getEntityManager()->flush();
         }
@@ -55,7 +54,7 @@ class AccessTokenRepository extends ServiceEntityRepository implements AccessTok
     public function isAccessTokenRevoked($tokenId)
     {
         $token = $this->findOneBy(["token" => $tokenId]);
-        if(@null === $token)
+        if (@null === $token)
             return true;
         else
             return false;

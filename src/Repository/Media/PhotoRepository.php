@@ -23,30 +23,33 @@ class PhotoRepository extends ServiceEntityRepository
      * @param $endTime \DateTime
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getList($page,$pagesize,$showAll = true, $belongTo = null,$startTime = null,$endTime = null){
+    public function getList($page, $pagesize, $showAll = true, $belongTo = null, $startTime = null, $endTime = null)
+    {
         $query = $this->createQueryBuilder("u");
-        if(!$showAll){
-            if(@is_null($belongTo))
+        if (!$showAll) {
+            if (@is_null($belongTo))
                 $query = $query->where("u.gallery is NULL");
             else
-                $query = $query->where("u.gallery = :gallery")->setParameter("gallery",$belongTo);
+                $query = $query->where("u.gallery = :gallery")->setParameter("gallery", $belongTo);
         }
         return $query->setMaxResults($pagesize)->setFirstResult(($pagesize) * ($page - 1))->getQuery()->getResult();
     }
 
-    public function getListCount($page,$pagesize,$showAll = true, $belongTo = null,$startTime = null,$endTime = null){
+    public function getListCount($page, $pagesize, $showAll = true, $belongTo = null, $startTime = null, $endTime = null)
+    {
         $query = $this->createQueryBuilder("u");
-        if(!$showAll){
-            if(@is_null($belongTo))
+        if (!$showAll) {
+            if (@is_null($belongTo))
                 $query = $query->where("u.gallery is NULL");
             else
-                $query = $query->where("u.gallery = :gallery")->setParameter("gallery",$belongTo);
+                $query = $query->where("u.gallery = :gallery")->setParameter("gallery", $belongTo);
         }
         return intval($query->select("count(u)")->getQuery()->getSingleScalarResult());
     }
 
-    public function getPhoto($id){
-        return $this->findOneBy(["id"=>$id]);
+    public function getPhoto($id)
+    {
+        return $this->findOneBy(["id" => $id]);
     }
 }
 

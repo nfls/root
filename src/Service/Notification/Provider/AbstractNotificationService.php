@@ -5,7 +5,6 @@ namespace App\Service\Notification\Provider;
 use libphonenumber\PhoneNumber;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
-use Predis\Client;
 
 /**
  * Class AbstractSmsService
@@ -25,24 +24,6 @@ abstract class AbstractNotificationService
     public function __construct()
     {
         $this->util = PhoneNumberUtil::getInstance();
-    }
-
-    /**
-     * @param PhoneNumber $phone
-     * @return string
-     */
-    protected function getDomesticNumber(PhoneNumber $phone)
-    {
-        return $phone->getNationalNumber();
-    }
-
-    /**
-     * @param PhoneNumber $phone
-     * @return string
-     */
-    protected function getInternationalNumber(PhoneNumber $phone)
-    {
-        return $this->util->format($phone, PhoneNumberFormat::E164);
     }
 
     /**
@@ -100,7 +81,6 @@ abstract class AbstractNotificationService
      */
     abstract public function sendDeadlineReminder(PhoneNumber $phone, string $teacher, string $project, string $time);
 
-
     /**
      * @param PhoneNumber $phone
      * @param string $code
@@ -111,6 +91,24 @@ abstract class AbstractNotificationService
 
     public function getIdentifier(PhoneNumber $target)
     {
-        return $this->util->format($target,PhoneNumberFormat::E164);
+        return $this->util->format($target, PhoneNumberFormat::E164);
+    }
+
+    /**
+     * @param PhoneNumber $phone
+     * @return string
+     */
+    protected function getDomesticNumber(PhoneNumber $phone)
+    {
+        return $phone->getNationalNumber();
+    }
+
+    /**
+     * @param PhoneNumber $phone
+     * @return string
+     */
+    protected function getInternationalNumber(PhoneNumber $phone)
+    {
+        return $this->util->format($phone, PhoneNumberFormat::E164);
     }
 }

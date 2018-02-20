@@ -14,32 +14,35 @@ class ChatRepository extends ServiceEntityRepository
         parent::__construct($registry, Chat::class);
     }
 
-    public function getInbox(User $user,$page){
+    public function getInbox(User $user, $page)
+    {
         return $this->createQueryBuilder("u")
             ->where("u.receiver = :receiver")
             ->setParameter("receiver", $user)
-            ->orderBy("u.time","DESC")
-            ->setFirstResult(($page - 1)*20)
+            ->orderBy("u.time", "DESC")
+            ->setFirstResult(($page - 1) * 20)
             ->setMaxResults(20)
             ->getQuery()
             ->getResult();
     }
 
-    public function getOutbox(User $user,$page){
+    public function getOutbox(User $user, $page)
+    {
         return $this->createQueryBuilder("u")
             ->where("u.sender = :sender")
             ->setParameter("sender", $user)
-            ->orderBy("u.time","DESC")
-            ->setFirstResult(($page - 1)*20)
+            ->orderBy("u.time", "DESC")
+            ->setFirstResult(($page - 1) * 20)
             ->setMaxResults(20)
             ->getQuery()
             ->getResult();
     }
 
-    public function getInboxCount(User $user){
+    public function getInboxCount(User $user)
+    {
         return intval($this->createQueryBuilder("u")
             ->where("u.receiver = :receiver")
-            ->setParameter("receiver",$user)
+            ->setParameter("receiver", $user)
             ->andWhere("u.time > :time")
             ->setParameter("time", $user->getReadTime())
             ->select("count(u)")

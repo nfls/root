@@ -6,17 +6,11 @@ use App\Controller\AbstractController;
 use App\Entity\Media\Comment;
 use App\Entity\Media\Gallery;
 use App\Entity\Media\Photo;
-use App\Model\ApiResponse;
 use App\Model\Permission;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class GalleryController extends AbstractController
 {
@@ -28,44 +22,47 @@ class GalleryController extends AbstractController
     /**
      * @Route("/media/gallery/list", methods="GET")
      */
-    public function getList(Request $request){
-        if(null === $this->getUser()){
+    public function getList(Request $request)
+    {
+        if (null === $this->getUser()) {
             $canViewPrivate = false;
             $canViewAll = false;
-        }else{
+        } else {
             $canViewPrivate = $this->getUser()->hasRole(Permission::IS_AUTHENTICATED);
             $canViewAll = $this->getUser()->hasRole(Permission::IS_ADMIN);
         }
 
         $page = $request->query->get("page") ?? 1;
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
-        return $this->response()->responseEntity($repo->getList($page,$canViewPrivate,$canViewAll));
+        return $this->response()->responseEntity($repo->getList($page, $canViewPrivate, $canViewAll));
     }
 
     /**
      * @Route("/media/gallery/detail", methods="GET")
      */
-    public function getDetail(Request $request){
-        if(null === $this->getUser()){
+    public function getDetail(Request $request)
+    {
+        if (null === $this->getUser()) {
             $canViewPrivate = false;
             $canViewAll = false;
-        }else{
+        } else {
             $canViewPrivate = $this->getUser()->hasRole(Permission::IS_AUTHENTICATED);
             $canViewAll = $this->getUser()->hasRole(Permission::IS_ADMIN);
         }
 
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
-        return $this->response()->responseEntity($repo->getGallery($request->query->get("id"),$canViewPrivate,$canViewAll));
+        return $this->response()->responseEntity($repo->getGallery($request->query->get("id"), $canViewPrivate, $canViewAll));
     }
 
     /**
      * @Route("/media/gallery/comment", methods="POST")
      */
-    public function comment(Request $request){
+    public function comment(Request $request)
+    {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
-        if(!$this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_MEDIA_GALLERY))
-            return $this->response()->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
+        if (!$this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_MEDIA_GALLERY))
+            return $this->response()->response("csrf.invalid", Response::HTTP_BAD_REQUEST);
         $content = $request->request->get("content");
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
         $comment = new Comment();
@@ -81,11 +78,12 @@ class GalleryController extends AbstractController
     /**
      * @Route("media/gallery/like", methods="POST")
      */
-    public function like(Request $request){
+    public function like(Request $request)
+    {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        if(!$this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_MEDIA_GALLERY))
-            return $this->response()->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
-        $repo = $this->getDoctrine()->getManager()->getRepository( Gallery::class);
+        if (!$this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_MEDIA_GALLERY))
+            return $this->response()->response("csrf.invalid", Response::HTTP_BAD_REQUEST);
+        $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
         $gallery = $repo->getGallery($request->request->get("id"));
         $gallery->like($this->getUser());
         $em = $this->getDoctrine()->getManager();
@@ -97,9 +95,10 @@ class GalleryController extends AbstractController
     /**
      * @Route("media/gallery/like", methods="GET")
      */
-    public function likeStatus(Request $request){
+    public function likeStatus(Request $request)
+    {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        $repo = $this->getDoctrine()->getManager()->getRepository( Gallery::class);
+        $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
         $gallery = $repo->getGallery($request->query->get("id"));
         return $this->response()->response($gallery->likeStatus($this->getUser()));
     }
@@ -107,7 +106,8 @@ class GalleryController extends AbstractController
     /**
      * @Route("admin/media/comment", methods="GET")
      */
-    public function commentPage(){
+    public function commentPage()
+    {
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         return $this->render("admin/media/comment.html.twig");
     }
@@ -115,7 +115,8 @@ class GalleryController extends AbstractController
     /**
      * @Route("/admin/media/upload", methods="GET")
      */
-    public function uploadPage(){
+    public function uploadPage()
+    {
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         return $this->render("admin/media/upload.html.twig");
     }
@@ -126,16 +127,17 @@ class GalleryController extends AbstractController
     public function managePhotos(Request $request)
     {
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
-        if($request->query->has("gallery_id"))
-            return $this->render("admin/media/photo.html.twig",["gallery_id"=>$request->query->get("gallery_id")]);
+        if ($request->query->has("gallery_id"))
+            return $this->render("admin/media/photo.html.twig", ["gallery_id" => $request->query->get("gallery_id")]);
         else
-            return $this->render("admin/media/photo.html.twig",["gallery_id"=>0]);
+            return $this->render("admin/media/photo.html.twig", ["gallery_id" => 0]);
     }
 
     /**
      * @Route("admin/media/gallery", methods="GET")
      */
-    public function manageGallery(){
+    public function manageGallery()
+    {
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         return $this->render("admin/media/gallery.html.twig");
     }
@@ -143,47 +145,49 @@ class GalleryController extends AbstractController
     /**
      * @Route("/admin/media/comment/edit", methods="POST")
      */
-    public function editComment(Request $request){
+    public function editComment(Request $request)
+    {
         $page = $request->request->get("page") ?? 1;
         $rows = $request->request->get("rows") ?? 10;
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Comment::class);
-        if($request->request->has("delete")){
-            if(!$this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_MEDIA_GALLERY))
-                return $this->response()->response("csrf.invalid",Response::HTTP_BAD_REQUEST);
-            $items = json_decode($request->request->get("delete"),true);
-            foreach ($items as $item){
-                $em->remove($repo->findOneBy(["id"=>$item]));
+        if ($request->request->has("delete")) {
+            if (!$this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_MEDIA_GALLERY))
+                return $this->response()->response("csrf.invalid", Response::HTTP_BAD_REQUEST);
+            $items = json_decode($request->request->get("delete"), true);
+            foreach ($items as $item) {
+                $em->remove($repo->findOneBy(["id" => $item]));
             }
             $em->flush();
         }
-        return $this->response()->responseRowEntity($repo->getList($page,$rows),$repo->getCount(),Response::HTTP_OK);
+        return $this->response()->responseRowEntity($repo->getList($page, $rows), $repo->getCount(), Response::HTTP_OK);
     }
 
     /**
      * @Route("/admin/media/gallery/edit", methods="POST")
      */
-    public function editGallery(Request $request){
+    public function editGallery(Request $request)
+    {
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Gallery::class);
         $photoRepo = $em->getRepository(Photo::class);
-        if($request->request->has("id")){
-            $gallery = $repo->getGallery($request->request->get("id"),true,true) ?? new Gallery();
-            if($request->request->get("delete") == "true"){
+        if ($request->request->has("id")) {
+            $gallery = $repo->getGallery($request->request->get("id"), true, true) ?? new Gallery();
+            if ($request->request->get("delete") == "true") {
                 //var_dump($gallery->getPhotos());
                 $em->remove($gallery->getCover() ?? new Photo());
-                foreach ($gallery->getPhotos() as $photo){
+                foreach ($gallery->getPhotos() as $photo) {
                     $photo->setGallery(null);
                     $em->remove($photo);
                 }
-                foreach ($gallery->getComments() as $comment){
+                foreach ($gallery->getComments() as $comment) {
                     $em->remove($comment);
                 }
                 $gallery->removeAllComments();
                 $em->flush();
                 $em->remove($gallery);
-            }else{
+            } else {
                 $title = $request->request->get("title") ?? "";
                 $description = $request->request->get("description") ?? "";
                 $photo = $photoRepo->getPhoto($request->request->get("cover"));
@@ -197,13 +201,14 @@ class GalleryController extends AbstractController
             $em->flush();
         }
         $list = $repo->getAllList();
-        return $this->response()->responseEntity($list,200);
+        return $this->response()->responseEntity($list, 200);
     }
 
     /**
      * @Route("/admin/media/photo/edit", methods="POST")
      */
-    public function editPhotos(Request $request){
+    public function editPhotos(Request $request)
+    {
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         $em = $this->getDoctrine()->getManager();
         $photoRepo = $em->getRepository(Photo::class);
@@ -211,13 +216,13 @@ class GalleryController extends AbstractController
         $page = $request->request->get("page") ?? 1;
         $rows = $request->request->get("rows") ?? 10;
         $filter = $request->query->get("filter");
-        $content = json_decode($request->getContent(),true);
-        if(@!is_null($content)){
-            foreach($content["id"] as $id){
+        $content = json_decode($request->getContent(), true);
+        if (@!is_null($content)) {
+            foreach ($content["id"] as $id) {
                 $photo = $photoRepo->getPhoto($id);
-                if(isset($content["delete"])){
+                if (isset($content["delete"])) {
                     $em->remove($photo);
-                }else{
+                } else {
                     $gallery = $galleryRepo->getGallery($content["gallery"]);
                     $photo->setGallery($gallery);
                     $photo->setIsPublic($content["public"]);
@@ -228,27 +233,28 @@ class GalleryController extends AbstractController
             }
             $em->flush();
         }
-        if($filter == "all"){
+        if ($filter == "all") {
             $showAll = true;
             $name = null;
-        }else{
+        } else {
             $showAll = false;
-            if($filter == "null"){
+            if ($filter == "null") {
                 $name = null;
-            }else{
+            } else {
                 $name = $filter;
             }
         }
         $repo = $this->getDoctrine()->getRepository(Photo::class);
-        $list = $repo->getList($page,$rows,$showAll,$name);
-        $count = $repo->getListCount($page,$rows,$showAll,$name);
-        return $this->response()->responseRowEntity($list,$count,200);
+        $list = $repo->getList($page, $rows, $showAll, $name);
+        $count = $repo->getListCount($page, $rows, $showAll, $name);
+        return $this->response()->responseRowEntity($list, $count, 200);
     }
 
     /**
      * @Route("media/gallery/upload", methods="POST")
      */
-    publiC function addPhoto(Request $request){
+    publiC function addPhoto(Request $request)
+    {
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         $allowOrigin = $request->request->get("allowOrigin");
         $originalPhoto = $request->files->get("photo");
@@ -257,27 +263,27 @@ class GalleryController extends AbstractController
         $thumb = new \Imagick($path);
         $hd = new \Imagick($path);
 
-        $thumb->thumbnailImage(300,300,true);
-        $hd->resizeImage(2048,2048,\Imagick::FILTER_LANCZOS,1,true);
+        $thumb->thumbnailImage(300, 300, true);
+        $hd->resizeImage(2048, 2048, \Imagick::FILTER_LANCZOS, 1, true);
 
         $thumb->setImageFormat("png");
         $hd->setImageFormat("png");
 
 
-        $thumb->writeImage($path.".thumb.png");
-        $hd->writeImage($path.".hd.png");
+        $thumb->writeImage($path . ".thumb.png");
+        $hd->writeImage($path . ".hd.png");
 
-        exec("cwebp -q 80 ".$path.".thumb.png -o ".$path.".thumb.webp ");
-        exec("cwebp -q 90 ".$path.".hd.png -o ".$path.".hd.webp ");
+        exec("cwebp -q 80 " . $path . ".thumb.png -o " . $path . ".thumb.webp ");
+        exec("cwebp -q 90 " . $path . ".hd.png -o " . $path . ".hd.webp ");
 
-        $thumbPhoto = new File($path.".thumb.webp");
-        $hdPhoto = new File($path.".hd.webp");
+        $thumbPhoto = new File($path . ".thumb.webp");
+        $hdPhoto = new File($path . ".hd.webp");
 
-        unlink($path.".thumb.png");
-        unlink($path.".hd.png");
+        unlink($path . ".thumb.png");
+        unlink($path . ".hd.png");
 
-        $thumbName = bin2hex(random_bytes(64)).".webp";
-        $hdName = bin2hex(random_bytes(64)).".webp";
+        $thumbName = bin2hex(random_bytes(64)) . ".webp";
+        $hdName = bin2hex(random_bytes(64)) . ".webp";
 
         $thumbPhoto->move(self::THUMB_FOLDER, $thumbName);
         $hdPhoto->move(self::HD_FOLDER, $hdName);
@@ -289,10 +295,10 @@ class GalleryController extends AbstractController
         $photo->setHeight($hd->getImageHeight());
         $photo->setWidth($hd->getImageWidth());
 
-        if($allowOrigin == "true"){
-            exec("cwebp -q 100 ".$path." -o ".$path.".webp ");
-            $originName = bin2hex(random_bytes(64)).".webp";
-            $originPhoto = new File($path.".webp");
+        if ($allowOrigin == "true") {
+            exec("cwebp -q 100 " . $path . " -o " . $path . ".webp ");
+            $originName = bin2hex(random_bytes(64)) . ".webp";
+            $originPhoto = new File($path . ".webp");
             $originPhoto->move(self::ORIGIN_FOLDER, $originName);
             $photo->setOrigin($originName);
         }
@@ -304,6 +310,6 @@ class GalleryController extends AbstractController
         return $this->response()->response(array(
             "hd" => $hdName,
             "thumb" => $thumbName
-        ),200);
+        ), 200);
     }
 }

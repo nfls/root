@@ -1,24 +1,22 @@
 <?php
+
 namespace App\Model;
+
+use App\Entity\OAuth\Client;
 use App\Entity\OAuth\Scope;
+use App\Entity\User\User;
 use App\Service\ScopeService;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectManagerAware;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use League\OAuth2\Server\Entities\TokenInterface;
-use App\Entity\OAuth\Client;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
-use Mrgoon\AliyunSmsSdk\Exception\ClientException;
-use App\Entity\User\User;
+use League\OAuth2\Server\Entities\TokenInterface;
 
 
-abstract class Token implements TokenInterface {
+abstract class Token implements TokenInterface
+{
 
     /**
      * @var string
@@ -63,6 +61,11 @@ abstract class Token implements TokenInterface {
      */
     protected $em;
 
+    public function __construct()
+    {
+        $this->scopes = json_encode([]);
+    }
+
     /**
      * @ORM\PostLoad
      * @ORM\PostPersist
@@ -73,16 +76,12 @@ abstract class Token implements TokenInterface {
     }
 
     /** @ORM\PreFlush */
-    public function fetchUser(PreFlushEventArgs $args){
-        if(!($this->user instanceof \App\Entity\User\User)){
-            $em = $args->getEntityManager()->getRepository(User::class);
-            $this->user = $em->findOneBy(["id"=>$this->user]);
-        }
-    }
-
-    public function __construct()
+    public function fetchUser(PreFlushEventArgs $args)
     {
-        $this->scopes = json_encode([]);
+        if (!($this->user instanceof \App\Entity\User\User)) {
+            $em = $args->getEntityManager()->getRepository(User::class);
+            $this->user = $em->findOneBy(["id" => $this->user]);
+        }
     }
 
     public function getIdentifier()
@@ -128,18 +127,18 @@ abstract class Token implements TokenInterface {
     public function addScope(ScopeEntityInterface $scope)
     {
         $scopes = json_decode($this->scopes, true);
-        if(!in_array($scope->getIdentifier(),$scopes)){
-            array_push($scopes,$scope->getIdentifier());
+        if (!in_array($scope->getIdentifier(), $scopes)) {
+            array_push($scopes, $scope->getIdentifier());
         }
         $this->scopes = json_encode($scopes);
     }
 
     public function getScopes()
     {
-        $scopes = json_decode($this->scopes,true);
+        $scopes = json_decode($this->scopes, true);
         $repo = $this->em->getRepository(Scope::class);
-        return array_map(function($scope)use($repo){
-            return $repo->findOneBy(["token"=>$scope]);
-        },$scopes);
+        return array_map(function ($scope) use ($repo) {
+            return $repo->findOneBy(["token" => $scope]);
+        }, $scopes);
     }
 }

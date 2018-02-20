@@ -1,14 +1,13 @@
 <?php
+
 namespace App\Model\Normalizer;
 
 use App\Entity\User\User;
-use Symfony\Component\Serializer\Exception\CircularReferenceException;
-use Symfony\Component\Serializer\Exception\InvalidArgumentException;
-use Symfony\Component\Serializer\Exception\LogicException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\scalar;
 
-class UserNormalizer implements NormalizerInterface{
+class UserNormalizer implements NormalizerInterface
+{
 
     private $realname;
 
@@ -20,7 +19,6 @@ class UserNormalizer implements NormalizerInterface{
     {
         $this->realname = $realname;
     }
-
 
 
     /**
@@ -39,13 +37,13 @@ class UserNormalizer implements NormalizerInterface{
             "admin" => $object->isAdmin(),
             "verified" => $object->isVerified()
         );
-        if($this->realname){
+        if ($this->realname) {
             $info["htmlUsername"] = $object->htmlUsername ?? $info["username"];
-        }else{
+        } else {
             $info["htmlUsername"] = $info["username"];
         }
-        if($info["admin"]){
-            $info["htmlUsername"] = "<span style='background-color: #F57EB6'>管理员</span>&nbsp;".$info["htmlUsername"];
+        if ($info["admin"]) {
+            $info["htmlUsername"] = "<span style='background-color: #F57EB6'>管理员</span>&nbsp;" . $info["htmlUsername"];
         }
         return $info;
 

@@ -3,7 +3,6 @@
 namespace App\Entity\Media;
 
 use App\Entity\User\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -49,7 +48,6 @@ class Comment
     private $time;
 
 
-
     public function __construct()
     {
         $this->time = new \DateTime();
@@ -72,11 +70,27 @@ class Comment
     }
 
     /**
+     * @param string $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
+    /**
      * @return User
      */
     public function getPostUser()
     {
         return $this->postUser;
+    }
+
+    /**
+     * @param User $postUser
+     */
+    public function setPostUser($postUser)
+    {
+        $this->postUser = $postUser;
     }
 
     /**
@@ -88,29 +102,12 @@ class Comment
     }
 
     /**
-     * @param string $content
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
-    }
-
-    /**
      * @param Gallery $gallery
      */
     public function setGallery($gallery)
     {
         $this->gallery = $gallery;
     }
-
-    /**
-     * @param User $postUser
-     */
-    public function setPostUser($postUser)
-    {
-        $this->postUser = $postUser;
-    }
-
 
 
     // add your own fields

@@ -3,13 +3,11 @@
 namespace App\Model\Normalizer;
 
 use App\Entity\Game\Game;
-use Symfony\Component\Serializer\Exception\CircularReferenceException;
-use Symfony\Component\Serializer\Exception\InvalidArgumentException;
-use Symfony\Component\Serializer\Exception\LogicException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\scalar;
 
-class GameNormalizer implements NormalizerInterface{
+class GameNormalizer implements NormalizerInterface
+{
     /**
      * @param Photo $object
      * @param null $format

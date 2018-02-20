@@ -5,20 +5,14 @@ namespace App\Controller\User;
 use App\Controller\AbstractController;
 use App\Entity\User\Code;
 use App\Entity\User\User;
-use App\Model\ApiResponse;
 use App\Model\Permission;
-
 use App\Service\Notification\NotificationService;
 use libphonenumber\NumberParseException;
-use libphonenumber\PhoneNumber;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
-use PHPMailer\PHPMailer\Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CodeController extends AbstractController
 {
@@ -38,101 +32,109 @@ class CodeController extends AbstractController
     /**
      * @Route("/code/available", methods="GET")
      */
-    public function getAvailableRegion(Request $request){
-        return $this->response()->response(json_decode(file_get_contents($this->get('kernel')->getRootDir()."/Files/Phone.json")));
+    public function getAvailableRegion(Request $request)
+    {
+        return $this->response()->response(json_decode(file_get_contents($this->get('kernel')->getRootDir() . "/Files/Phone.json")));
     }
 
     /**
      * @Route("/code/register", methods="POST", name="sendRegisterCode")
      */
-    public function sendRegisterCode(Request $request){
-        if(!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response()->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
-        $target = $this->getTarget($request,true);
-        if(is_null($target))
-            return $this->response()->response("不正确或已被使用！",Response::HTTP_BAD_REQUEST);
-        if($this->notification()->code($target,NotificationService::ACTION_REGISTERING))
-        return $this->response()->response(null);
+    public function sendRegisterCode(Request $request)
+    {
+        if (!$this->verifyCaptcha($request->request->get("captcha")))
+            return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
+        $target = $this->getTarget($request, true);
+        if (is_null($target))
+            return $this->response()->response("不正确或已被使用！", Response::HTTP_BAD_REQUEST);
+        if ($this->notification()->code($target, NotificationService::ACTION_REGISTERING))
+            return $this->response()->response(null);
     }
 
-    /**
-     * @Route("/code/reset", methods="POST", name="sendResetCode")
-     */
-    public function sendResetCode(Request $request){
-        if(!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response()->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
-        $em = $this->getDoctrine()->getManager()->getRepository(User::class);
-        $target = $this->getTarget($request,false);
-        if(is_null($target))
-            return $this->response()->response("不正确！",Response::HTTP_BAD_REQUEST);
-        $this->notification()->code($target,NotificationService::ACTION_RESET);
-        return $this->response()->response(null);
-    }
-
-    /**
-     * @Route("/code/bind", methods="POST", name="sendBindCode")
-     */
-    public function sendBindCode(Request $request){
-        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        if(!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response()->response("验证码不正确",Response::HTTP_UNAUTHORIZED);
-        $target = $this->getTarget($request,true);
-        if(is_null($target))
-            return $this->response()->response("不正确或已被使用！",Response::HTTP_BAD_REQUEST);
-        $this->notification()->code($target,NotificationService::ACTION_BIND);
-        return $this->response()->response(null);
-    }
-
-    private function getTarget(Request $request,$checkUsed){
+    private function getTarget(Request $request, $checkUsed)
+    {
         $phone = intval($request->request->get("phone"));
-        if($phone > 0){
+        if ($phone > 0) {
             $country = $request->request->get("country");
             $util = PhoneNumberUtil::getInstance();
             try {
-                $phoneObject = $util->parse($phone,$country);
-                $used = $this->checkUsedPhone($util->format($phoneObject,PhoneNumberFormat::E164));
-                if($checkUsed && $used){
+                $phoneObject = $util->parse($phone, $country);
+                $used = $this->checkUsedPhone($util->format($phoneObject, PhoneNumberFormat::E164));
+                if ($checkUsed && $used) {
                     return null;
-                }else if(!$checkUsed && !$used){
+                } else if (!$checkUsed && !$used) {
                     return null;
                 }
                 return $phoneObject;
-            }catch(NumberParseException $e){
+            } catch (NumberParseException $e) {
                 return null;
             }
-        }else{
+        } else {
             $email = $request->request->get("email");
             $used = $this->checkUsedEmail($email);
-            if($checkUsed && $used){
+            if ($checkUsed && $used) {
                 return null;
-            }else if(!$checkUsed && !$used){
+            } else if (!$checkUsed && !$used) {
                 return null;
             }
             return $email;
         }
     }
 
-    private function checkUsedEmail($email){
+    private function checkUsedPhone($phone)
+    {
         $em = $this->getDoctrine()->getManager()->getRepository(User::class);
-        if(@!is_null($em->findByEmail($email))){
+        if (@!is_null($em->findByPhone($phone))) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    private function checkUsedPhone($phone){
+    private function checkUsedEmail($email)
+    {
         $em = $this->getDoctrine()->getManager()->getRepository(User::class);
-        if(@!is_null($em->findByPhone($phone))){
+        if (@!is_null($em->findByEmail($email))) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    private function sendMail($target,$action,$readableAction,$checkUsed = true){
-        if($checkUsed && $this->checkUsedEmail($target))
-            return $this->response()->response("email.repeated",Response::HTTP_BAD_REQUEST);
+    /**
+     * @Route("/code/reset", methods="POST", name="sendResetCode")
+     */
+    public function sendResetCode(Request $request)
+    {
+        if (!$this->verifyCaptcha($request->request->get("captcha")))
+            return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
+        $em = $this->getDoctrine()->getManager()->getRepository(User::class);
+        $target = $this->getTarget($request, false);
+        if (is_null($target))
+            return $this->response()->response("不正确！", Response::HTTP_BAD_REQUEST);
+        $this->notification()->code($target, NotificationService::ACTION_RESET);
+        return $this->response()->response(null);
+    }
+
+    /**
+     * @Route("/code/bind", methods="POST", name="sendBindCode")
+     */
+    public function sendBindCode(Request $request)
+    {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if (!$this->verifyCaptcha($request->request->get("captcha")))
+            return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
+        $target = $this->getTarget($request, true);
+        if (is_null($target))
+            return $this->response()->response("不正确或已被使用！", Response::HTTP_BAD_REQUEST);
+        $this->notification()->code($target, NotificationService::ACTION_BIND);
+        return $this->response()->response(null);
+    }
+
+    private function sendMail($target, $action, $readableAction, $checkUsed = true)
+    {
+        if ($checkUsed && $this->checkUsedEmail($target))
+            return $this->response()->response("email.repeated", Response::HTTP_BAD_REQUEST);
 
         $code = new Code();
         $code->setAction($action);
@@ -142,6 +144,6 @@ class CodeController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->persist($code);
         $em->flush();
-        return $this->response()->response($this->mailService->sendCode($target,"NFLS.IO Email Verification","The verification code for ".$readableAction." is ".$this->token));
+        return $this->response()->response($this->mailService->sendCode($target, "NFLS.IO Email Verification", "The verification code for " . $readableAction . " is " . $this->token));
     }
 }

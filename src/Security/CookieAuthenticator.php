@@ -5,14 +5,12 @@ namespace App\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 
 class CookieAuthenticator extends AbstractGuardAuthenticator
 {
@@ -39,7 +37,7 @@ class CookieAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        $response = new JsonResponse(array("code"=>400,"message"=>"Login required with Cookie."),Response::HTTP_UNAUTHORIZED);
+        $response = new JsonResponse(array("code" => 400, "message" => "Login required with Cookie."), Response::HTTP_UNAUTHORIZED);
         $response->headers->clearCookie("remember_token");
         return $response;
     }
@@ -48,7 +46,7 @@ class CookieAuthenticator extends AbstractGuardAuthenticator
     {
         $session = $request->getSession() ?? new Session();
         $session->start();
-        $session->set("user_token",$request->cookies->get("remember_token"));
+        $session->set("user_token", $request->cookies->get("remember_token"));
         return;
     }
 
