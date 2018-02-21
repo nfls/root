@@ -175,5 +175,12 @@ class Notice
         $this->deadline = $deadline;
     }
 
+    /**
+     * @return Claz $class
+     */
+    public function claz(){
+        return $this->claz;
+    }
+
 
 }

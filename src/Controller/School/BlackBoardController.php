@@ -229,6 +229,30 @@ class BlackBoardController extends AbstractController
     }
 
     /**
+     * @Route("/school/blackboard/notify", methods="POST")
+     */
+    public function notify(Request $request){
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
+            throw $this->createAccessDeniedException();
+        if(!$this->verifyCaptcha($request->request->get("captcha")))
+            $this->createAccessDeniedException();
+        $id = $request->query->get("id");
+        $classRepo = $this->getDoctrine()->getManager()->getRepository(Claz::class);
+        /** @var $class  Claz */
+        $class = $classRepo->find($id);
+        $noticeRepo = $this->getDoctrine()->getManager()->getRepository(Notice::class);
+        $notice = $noticeRepo->find($request->request->get("id"));
+        if(!is_null($notice->getDeadline()) && $notice->claz() === $class)
+        {
+            $this->notification()->notifyDeadline($class,$notice);
+        }else{
+            throw $this->createAccessDeniedException();
+        }
+        return $this->response()->response(null);
+    }
+
+    /**
      * @Route("/school/blackboard/eligibility", methods="GET")
      */
     public function eligibility()

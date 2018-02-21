@@ -55,6 +55,7 @@
                     <span class="md-caption">{{notice.time | moment("lll")}}</span>
                 </md-card-content>
                 <md-card-actions v-if="classInfo.admin">
+                    <md-button @click="deadline(notice.id)" v-if="notice.deadline">截止日期提醒</md-button>
                     <md-button @click="removeNotice(notice.id)">删除</md-button>
                 </md-card-actions>
             </md-card>
@@ -210,7 +211,7 @@
     import infiniteScroll from 'vue-infinite-scroll'
     export default {
         name: "Blackboard",
-        props: ["admin","verified",'loggedIn'],
+        props: ["admin","verified",'loggedIn','gResponse'],
         directives: {infiniteScroll},
         components: {
             VueMarkdown,
@@ -237,6 +238,7 @@
             loading: false,
             active: "",
             page: 1,
+            sendId: null,
             form: {
                 seniorSchool: "2",
                 seniorRegistration: "2019"
@@ -250,6 +252,7 @@
         }),
         mounted: function (){
             this.$emit("changeTitle","Blackboard")
+            this.$emit("prepareRecaptcha")
             this.currentClass = this.$route.params["id"]
             this.init()
             this.resetForm()
@@ -464,6 +467,10 @@
                     this.classInfo.notices = this.classInfo.notices.concat(info)
                         //console.log(this.classInfo.notices)
                 })
+            },
+            deadline(id) {
+                this.sendId = id
+                grecaptcha.execute()
             }
         },
         watch: {
@@ -471,6 +478,18 @@
                 handler: function(newVal){
                     this.$router.push("/school/blackboard/"+newVal)
                     this.list()
+                }
+            },
+            gResponse: {
+                handler: function(newVal){
+                    this.axios.post("/school/blackboard/notify?id="+this.currentClass, {
+                        captcha: grecaptcha.getResponse(),
+                        id: this.sendId
+                    }).then((response) => {
+                        this.showMsg("发送成功")
+                    }).catch((error) => {
+                        this.showMsg("发送失败")
+                    })
                 }
             }
         }
