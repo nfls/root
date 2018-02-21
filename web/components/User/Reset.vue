@@ -22,13 +22,21 @@
                                         </md-select>
                                         <span class="md-error" v-if="$v.form.country && !$v.form.country.required">入力必須項目です。</span>
                                     </md-field>
-                                    <md-field :class="getValidationClass('phone')">
-                                        <label for="phone">Phone Number</label>
-                                        <md-input name="phone" id="phone" autocomplete="phone" v-model="form.phone" :disabled="sending"  />
-                                        <span class="md-error" v-if="$v.form.phone && !$v.form.phone.required">入力必須項目です。</span>
-                                        <span class="md-error" v-else-if="$v.form.phone && !$v.form.phone.numeric">無効な携帯電話番号</span>
-                                        <md-button class="md-primary" @click="sendSMS">センド</md-button>
-                                    </md-field>
+                                    <div class="md-layout">
+                                        <div class="md-layout-item md-size-80">
+                                            <md-field :class="getValidationClass('phone')">
+                                                <label for="phone">Phone Number</label>
+                                                <md-input name="phone" id="phone" autocomplete="phone" v-model="form.phone" :disabled="sending"  />
+                                                <span class="md-error" v-if="$v.form.phone && !$v.form.phone.required">入力必須項目です。</span>
+                                                <span class="md-error" v-else-if="$v.form.phone && !$v.form.phone.numeric">無効な携帯電話番号</span>
+                                            </md-field>
+                                        </div>
+                                        <div class="md-layout-item md-size-20">
+                                            <md-button class="md-icon-button">
+                                                <md-icon>send</md-icon>
+                                            </md-button>
+                                        </div>
+                                    </div>
                                 </div>
                             </md-tab>
                             <md-tab id="tab-home" md-label="Email">
