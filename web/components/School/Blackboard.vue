@@ -83,10 +83,10 @@
                 </md-dialog-actions>
             </md-dialog>
 
-            <md-dialog :md-active.sync="showAdmin" style="width:80%">
+            <md-dialog :md-active.sync="showAdmin" style="width:80%" class="admin-class">
                 <md-dialog-title>管理</md-dialog-title>
                 <md-dialog-content>
-                    <md-tabs md-dynamic-height :md-active-tab="active">
+                    <md-tabs md-dynamic-height :md-active-tab="active" @md-changed="tabChanged">
                         <md-tab id="tab-list" md-label="列表" >
                             <span class="md-caption">警告：请不要将自己移出课堂之外！</span><br/>
                             <md-list>
@@ -133,7 +133,7 @@
                                 </md-list-item>
                             </md-list>
                         </md-tab>
-                        <md-tab id="tab-edit" md-label="配置">
+                        <md-tab id="tab-edit" md-label="配置" >
                             <md-card>
                                 <md-card-content>
                                     <form>
@@ -180,7 +180,7 @@
         <md-snackbar :md-active.sync="showSnackBar" md-persistent>
             <span>{{message}}</span>
         </md-snackbar>
-        <md-speed-dial class="md-bottom-right" md-effect="opacity" md-direction="top" v-if="eligibility">
+        <md-speed-dial class="md-top-right" style="margin-top: 60px;" md-effect="opacity" md-direction="bottom" v-if="eligibility">
             <md-speed-dial-target class="md-plain">
                 <md-icon>edit</md-icon>
             </md-speed-dial-target>
@@ -471,6 +471,17 @@
             deadline(id) {
                 this.sendId = id
                 grecaptcha.execute()
+            },
+            tabChanged(newVal){
+                console.log(newVal)
+                if(newVal == "tab-edit"){
+                    var old = this.info.announcement
+                    this.info.announcement = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+                    setTimeout( () => {
+                        this.info.announcement = old;
+                },500)
+
+                }
             }
         },
         watch: {
@@ -498,6 +509,9 @@
 
 <style scoped>
     .new-post{
+        min-width: 500px;
+    }
+    .admin-class{
         min-width: 500px;
     }
     .md-card{

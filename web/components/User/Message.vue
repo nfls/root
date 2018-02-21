@@ -44,7 +44,7 @@
                             <label>收件用户ID</label>
                             <md-input v-model="receiver"></md-input>
                         </md-field>
-                        <markdown-palettes v-model="content"></markdown-palettes>
+                        <markdown-palettes v-model="content" ></markdown-palettes>
                     </md-card-content>
                     <md-card-actions>
                         <md-button @click="send">发送</md-button>
@@ -76,7 +76,7 @@
             inboxPage: 1,
             outboxPage: 1,
             active: "tab-inbox",
-            content: "",
+            content: "\n\n\n\n\n\n\n\n\n\n\n\n\n",
             receiver: null,
             inbox: [],
             outbox: [],
@@ -134,6 +134,7 @@
             },
             reply(id){
                 this.active = "tab-new"
+                this.content = ""
                 this.receiver = id
             },
             showMsg(message) {
@@ -142,6 +143,8 @@
             },
             change(id){
                 this.active = id
+                if (id == "tab-new")
+                    this.content = ""
             },
             loadMore(){
                 if(this.active == "tab-inbox"){
@@ -159,5 +162,8 @@
 <style scoped>
     .md-card{
         margin:10px;
+    }
+    .CodeMirror-gutters{
+        width:29px;
     }
 </style>
