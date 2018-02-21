@@ -123,19 +123,28 @@ class NotificationService
             $this->getClient($user->getPhone())->sendNewMessage($user->getPhone());
     }
 
-    public function notifyNewNotice(User $user, $teacher, Claz $class, Notice $notice)
+    public function notifyNewNotice(Claz $class, Notice $notice)
     {
-        if($user->getEmail())
-            $this->getClient($user->getEmail())->sendNewNotice($user->getEmail(),$teacher,$class->getTitle(),$notice->getContent());
-        if($user->getPhone())
-            $this->getClient($user->getPhone())->sendNewNotice($user->getPhone(),$teacher,$class->getTitle());
+        foreach ($class->getStudents()->toArray() as $user){
+            /**  @var $user User*/
+            if($user->getEmail())
+                $this->getClient($user->getEmail())->sendNewNotice($user->getEmail(),$class->getTeacher()->getValidAuth()->getEnglishName(),$class->getTitle(),$notice->getContent());
+            if($user->getPhone())
+                $this->getClient($user->getPhone())->sendNewNotice($user->getPhone(),$class->getTeacher()->getValidAuth()->getEnglishName(),$class->getTitle());
+        }
+
     }
 
-    public function notifyDeadline(User $user, string $teacher, Notice $notice){
-        if($user->getEmail())
-            $this->getClient($user->getEmail())->sendDeadlineReminder($user->getEmail(),$teacher,$notice->getTitle(),$notice->getDeadline()->format("Y-m-d H:i:s"),$notice->getContent());
-        if($user->getPhone())
-            $this->getClient($user->getPhone())->sendDeadlineReminder($user->getPhone(),$teacher,$notice->getTitle(),$notice->getDeadline()->format("Y-m-d H:i:s"));
+    public function notifyDeadline(Claz $class, Notice $notice){
+        if(is_null($notice->getDeadline()))
+            return;
+        foreach ($class->getStudents()->toArray() as $user) {
+            /**  @var $user User */
+            if($user->getEmail())
+                $this->getClient($user->getEmail())->sendDeadlineReminder($user->getEmail(),$class->getTeacher()->getValidAuth()->getEnglishName(),$notice->getTitle(),$notice->getDeadline()->format("Y-m-d H:i:s"),$notice->getContent());
+            if($user->getPhone())
+                $this->getClient($user->getPhone())->sendDeadlineReminder($user->getPhone(),$class->getTeacher()->getValidAuth()->getEnglishName(),$notice->getTitle(),$notice->getDeadline()->format("Y-m-d H:i:s"));
+        }
     }
 
     //TODO Security setting changes

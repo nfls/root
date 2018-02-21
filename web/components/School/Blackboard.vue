@@ -171,7 +171,7 @@
                 :md-active.sync="showNewClass"
                 v-model="classTitle"
                 md-title="创建一个新黑板"
-                md-input-maxlength="30"
+                md-input-maxlength="20"
                 md-input-placeholder="起个名字吧"
                 md-confirm-text="提交"
                 md-cancel-text="取消"

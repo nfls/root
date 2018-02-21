@@ -94,6 +94,7 @@ class AliyunNotification extends AbstractNotificationService
 
     public function sendNewNotice(PhoneNumber $phone, string $teacher, string $class)
     {
+        $class = mb_substr($class,0,20);
         $this->sms->sendSms(
             $this->getDomesticNumber($phone),
             "SMS_125018518",
@@ -107,6 +108,8 @@ class AliyunNotification extends AbstractNotificationService
 
     public function sendDeadlineReminder(PhoneNumber $phone, string $teacher, string $project, string $time)
     {
+        $teacher = mb_substr($teacher,0,20);
+        $project = mb_substr($project,0,20);
         $this->sms->sendSms(
             $this->getDomesticNumber($phone),
             "SMS_125028511",

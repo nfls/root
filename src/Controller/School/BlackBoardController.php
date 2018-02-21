@@ -195,16 +195,8 @@ class BlackBoardController extends AbstractController
             $notice = new Notice();
             $notice->setContent($request->request->get("content"));
             $notice->setAttachment($request->request->get("files"));
-            $time = \DateTime::createFromFormat("Y-m-d\TH:i:s\.???\Z", $request->request->get("time"), new \DateTimeZone("UTC"));
-            if ($time === false || $time < new \DateTime()) {
-                $time = new \DateTime();
-            } else {
-                $time->setTimezone(new \DateTimeZone($request->request->get("timezone")));
-                if ($time < new \DateTime())
-                    $time = new \DateTime();
-            }
+            $notice->setClaz($class);
 
-            $notice->setTime($time);
             $ddl = \DateTime::createFromFormat("Y-m-d\TH:i:s\.???\Z", $request->request->get("deadline"), new \DateTimeZone("UTC"));
             if ($ddl === false)
                 $ddl = null;
@@ -215,10 +207,21 @@ class BlackBoardController extends AbstractController
                     $ddl = new \DateTime();
             }
             $notice->setDeadline($ddl);
-            $notice->setClaz($class);
+
+            $time = \DateTime::createFromFormat("Y-m-d\TH:i:s\.???\Z", $request->request->get("time"), new \DateTimeZone("UTC"));
+            if ($time === false) {
+                $time = new \DateTime();
+            } else {
+                $time->setTimezone(new \DateTimeZone($request->request->get("timezone")));
+                if ($time < new \DateTime())
+                    $time = new \DateTime();
+            }
+            $notice->setTime($time);
             $em = $this->getDoctrine()->getManager();
             $em->persist($notice);
             $em->flush();
+            if($time <= new \DateTime())
+                $this->notification()->notifyNewNotice($class,$notice);
             return $this->response()->response(null);
         } else {
             throw $this->createAccessDeniedException();
