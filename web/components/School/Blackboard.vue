@@ -83,7 +83,7 @@
                 </md-dialog-actions>
             </md-dialog>
 
-            <md-dialog :md-active.sync="showAdmin" style="width:80%" class="admin-class">
+            <md-dialog :md-active.sync="showAdmin" class="admin-class">
                 <md-dialog-title>管理</md-dialog-title>
                 <md-dialog-content>
                     <md-tabs md-dynamic-height :md-active-tab="active" @md-changed="tabChanged">
@@ -107,18 +107,15 @@
                             </md-list>
                         </md-tab>
                         <md-tab id="tab-add" md-label="添加">
-                            <form>
-                                <div>
-                                    <md-radio v-model="form.seniorSchool" value="2">南外IB国际部</md-radio>
-                                    <md-radio v-model="form.seniorSchool" value="3">南外剑桥国际部</md-radio>
-                                </div>
-                                <md-field>
-                                    <label for="seniorSchool">高中毕业年份</label>
-                                    <md-input v-model="form.seniorRegistration" id="seniorRegistration" name="seniorRegistration"/>
-                                </md-field>
-                                <md-button @click="search">搜索</md-button>
-                            </form>
-                            <md-divider></md-divider>
+                            <div>
+                                <md-radio v-model="form.seniorSchool" value="2">南外IB国际部</md-radio>
+                                <md-radio v-model="form.seniorSchool" value="3">南外剑桥国际部</md-radio>
+                            </div>
+                            <md-field style="width:200px;">
+                                <label for="seniorSchool">高中毕业年份</label>
+                                <md-input v-model="form.seniorRegistration" id="seniorRegistration" name="seniorRegistration"/>
+                            </md-field>
+                            <md-button @click="search">搜索</md-button><br/>
                             <md-list>
                                 <md-list-item v-for="student in studentsInfo" :key="student.id">
                                     <md-avatar>
@@ -156,7 +153,6 @@
                 <md-dialog-actions>
                     <md-button class="md-primary" @click="showAdmin = false">关闭</md-button>
                 </md-dialog-actions>
-
             </md-dialog>
         </div>
         <div v-else>
@@ -512,7 +508,7 @@
         min-width: 500px;
     }
     .admin-class{
-        min-width: 500px;
+        min-width: 200px;
     }
     .md-card{
         margin:10px;
@@ -521,6 +517,11 @@
         .header {
             display: none
         }
+    }
+    .md-list {
+        max-width: 100%;
+        display: inline-block;
+        vertical-align: top;
     }
 
 </style>

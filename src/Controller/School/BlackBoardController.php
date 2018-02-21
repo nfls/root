@@ -58,7 +58,7 @@ class BlackBoardController extends AbstractController
         if ($id == "undefined")
             throw $this->createAccessDeniedException();
         $class = $repo->findOneBy(["id" => $id]);
-        if (!is_null($class) & ($class->getStudents()->contains($this->getUser()) || $this->getUser()->hasRole(Permission::IS_ADMIN))) {
+        if (!is_null($class) && ($class->getStudents()->contains($this->getUser()) || $this->getUser()->hasRole(Permission::IS_ADMIN))) {
             if ($class->getTeacher() === $this->getUser() || $this->getUser()->hasRole(Permission::IS_ADMIN))
                 $class->admin = true;
             if (!$class->admin)
