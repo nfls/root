@@ -590,5 +590,39 @@ class Alumni
             return false;
     }
 
+    /**
+     * @return array
+     */
+    public function readableUserStatus()
+    {
+        switch($this->userStatus){
+            case 0:
+                return array(
+                    "zh" => "初中在读",
+                    "en" => "a current junior student"
+                );
+            case 1:
+                return array(
+                    "zh" => "高中在读",
+                    "en" => "a current senior student"
+                );
+            case 2:
+                return array(
+                    "zh" => "大学在读",
+                    "en" => "a current university student"
+                );
+            case 3:
+                return array(
+                    "zh" => "已工作",
+                    "en" => "a working graduate"
+                );
+            case 4:
+                return array(
+                    "zh" => "在校老师",
+                    "en" => "a current teacher"
+                );
+        }
+    }
+
 
 }

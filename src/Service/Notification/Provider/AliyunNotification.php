@@ -64,7 +64,8 @@ class AliyunNotification extends AbstractNotificationService
         $this->sms->sendSms(
             $this->getDomesticNumber($phone),
             "SMS_125028515",
-            []
+            [],
+            $this->config
         );
     }
 
@@ -76,7 +77,8 @@ class AliyunNotification extends AbstractNotificationService
             [
                 "status" => $status,
                 "time" => $expiry
-            ]
+            ],
+            $this->config
         );
     }
 
@@ -85,7 +87,8 @@ class AliyunNotification extends AbstractNotificationService
         $this->sms->sendSms(
             $this->getDomesticNumber($phone),
             "SMS_125028504",
-            []
+            [],
+            $this->config
         );
     }
 
@@ -97,7 +100,8 @@ class AliyunNotification extends AbstractNotificationService
             [
                 "person" => $teacher,
                 "group" => $class
-            ]
+            ],
+            $this->config
         );
     }
 
@@ -110,7 +114,8 @@ class AliyunNotification extends AbstractNotificationService
                 "user" => $teacher,
                 "project" => $project,
                 "time" => $time
-            ]
+            ],
+            $this->config
         );
     }
 

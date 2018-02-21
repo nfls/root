@@ -254,10 +254,12 @@ class AlumniController extends AbstractController
         switch ($action) {
             case "reject":
                 $ticket->setStatus(Alumni::STATUS_REJECTED);
+                $this->notification()->notifyRealnameFailed($ticket->getUser());
                 break;
             case "accept":
                 $ticket->setStatus(Alumni::STATUS_PASSED);
                 $ticket->setExpireAt($time);
+                $this->notification()->notifyRealnamePassed($ticket->getUser(),$ticket->readableUserStatus(),$ticket->getExpireAt());
                 break;
             default:
                 break;

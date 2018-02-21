@@ -94,12 +94,16 @@ class NotificationService
         return false;
     }
 
-    public function notifyRealnamePassed(User $user, string $status, \DateTime $expiry)
+    public function notifyRealnamePassed(User $user, array $status, ?\DateTime $expiry)
     {
+        if($expiry)
+            $expiry = $expiry->format('Y-m-d');
+        else
+            $expiry = "无期限";
         if($user->getEmail())
-            $this->getClient($user->getEmail())->sendRealnameSucceeded($user->getEmail(),$status,$expiry->format('Y-m-d'));
+            $this->getClient($user->getEmail())->sendRealnameSucceeded($user->getEmail(),$status["zh"],$status["en"],$expiry);
         if($user->getPhone())
-            $this->getClient($user->getPhone())->sendRealnameSucceeded($user->getPhone(),$status,$expiry->format('Y-m-d'));
+            $this->getClient($user->getPhone())->sendRealnameSucceeded($user->getPhone(),$status["zh"],$expiry);
     }
 
     public function notifyRealnameFailed(User $user)
