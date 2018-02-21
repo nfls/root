@@ -1,6 +1,6 @@
 <template>
     <div id="game-list">
-        <div v-if="verified" style="margin:20px;">
+        <div v-if="!verified" style="margin:20px;">
             <span class="md-display-1">请尽快完成实名认证，否则您游戏中的成绩将<strong>不会</strong>计入排行榜！</span>
         </div>
         <div style="row">
