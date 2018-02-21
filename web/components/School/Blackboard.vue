@@ -58,27 +58,7 @@
                     <md-button @click="removeNotice(notice.id)">删除</md-button>
                 </md-card-actions>
             </md-card>
-            <!-- Admin Part-->
-            <md-speed-dial class="md-bottom-right" md-effect="opacity" md-direction="top" v-if="eligibility">
-                <md-speed-dial-target class="md-plain">
-                    <md-icon>edit</md-icon>
-                </md-speed-dial-target>
-
-                <md-speed-dial-content>
-                    <md-button class="md-icon-button" @click="showNewClass = !showNewClass">
-                        <md-icon>fiber_new</md-icon>
-                    </md-button>
-
-                    <md-button class="md-icon-button" @click="showNewPost = !showNewPost" v-if="classInfo.admin">
-                        <md-icon>create</md-icon>
-                    </md-button>
-
-                    <md-button class="md-icon-button" @click="showAdmin = !showAdmin" v-if="classInfo.admin">
-                        <md-icon>person</md-icon>
-                    </md-button>
-                </md-speed-dial-content>
-            </md-speed-dial>
-
+            <!--Admin-->
             <md-dialog :md-active.sync="showNewPost" class="new-post" style="width:80%" :md-close-on-esc="false" :md-click-outside-to-close="false">
                 <md-dialog-title>新的公告</md-dialog-title>
                 <md-dialog-content>
@@ -91,7 +71,7 @@
                         <span>截止日期（留空为没有）<datetime v-model="post.deadline" type="datetime" :disabled="sending"></datetime></span>
                         <md-field>
                             <label>用于提示截止日期的小标题</label>
-                            <md-input v-model="post.title" :disabled="sending" />
+                            <md-input v-model="post.title" :disabled="sending" :md-counter="20"/>
                         </md-field>
                         <span>发布日期（留空为立即发布）<datetime v-model="post.time" type="datetime" :disabled="sending"></datetime></span>
                     </form>
@@ -101,6 +81,7 @@
                     <md-button class="md-primary" @click="submit" :disabled="sending">发布</md-button>
                 </md-dialog-actions>
             </md-dialog>
+
             <md-dialog :md-active.sync="showAdmin" style="width:80%">
                 <md-dialog-title>管理</md-dialog-title>
                 <md-dialog-content>
@@ -176,18 +157,6 @@
                 </md-dialog-actions>
 
             </md-dialog>
-            <md-dialog-prompt
-                    :md-active.sync="showNewClass"
-                    v-model="classTitle"
-                    md-title="创建一个新黑板"
-                    md-input-maxlength="30"
-                    md-input-placeholder="起个名字吧"
-                    md-confirm-text="提交"
-                    md-cancel-text="取消"
-                    @md-confirm="newClass"/>
-            <md-snackbar :md-active.sync="showSnackBar" md-persistent>
-                <span>{{message}}</span>
-            </md-snackbar>
         </div>
         <div v-else>
             <md-empty-state
@@ -195,7 +164,40 @@
                     md-label="什么都没有发现"
                     md-description="看起来你还没有加入任何课堂呢，或者再等等？">
             </md-empty-state>
+
         </div>
+        <!-- Admin Part-->
+        <md-dialog-prompt
+                :md-active.sync="showNewClass"
+                v-model="classTitle"
+                md-title="创建一个新黑板"
+                md-input-maxlength="30"
+                md-input-placeholder="起个名字吧"
+                md-confirm-text="提交"
+                md-cancel-text="取消"
+                @md-confirm="newClass"/>
+        <md-snackbar :md-active.sync="showSnackBar" md-persistent>
+            <span>{{message}}</span>
+        </md-snackbar>
+        <md-speed-dial class="md-bottom-right" md-effect="opacity" md-direction="top" v-if="eligibility">
+            <md-speed-dial-target class="md-plain">
+                <md-icon>edit</md-icon>
+            </md-speed-dial-target>
+
+            <md-speed-dial-content>
+                <md-button class="md-icon-button" @click="showNewClass = !showNewClass">
+                    <md-icon>fiber_new</md-icon>
+                </md-button>
+                <md-button class="md-icon-button" @click="showNewPost = !showNewPost" v-if="classInfo && classInfo.admin">
+                    <md-icon>create</md-icon>
+                </md-button>
+                <md-button class="md-icon-button" @click="showAdmin = !showAdmin" v-if="classInfo && classInfo.admin">
+                    <md-icon>person</md-icon>
+                </md-button>
+            </md-speed-dial-content>
+        </md-speed-dial>
+
+
     </div>
 </template>
 
