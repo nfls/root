@@ -86,6 +86,11 @@
                 md-confirm-text="提交"
                 md-cancel-text="取消"
                 @md-confirm="submit" />
+        <md-dialog-alert
+                :md-active.sync="error"
+                md-title="表格内容填写错误"
+                :md-content="errors"
+                md-confirm-text="确认" />
     </div>
 </template>
 
@@ -121,7 +126,9 @@
             active: false,
             message: "",
             adminMode: false,
-            csrf: null
+            csrf: null,
+            error: false,
+            errors: ""
         }),
         validations() {
             return {
@@ -221,18 +228,20 @@
                     this.isDisabled = true
                     if(data.code == 200){
                         this.message = "提交成功，请等待审核！"
+                        this.showMessage = true
                         var self = this
                         setTimeout(function(){
                             self.$router.push("/alumni/auth")
-                        },3000)
+                        },2000)
                     }else{
-                        self.message = ""
+                        self.errors = ""
                         Object.values(response.data["data"]).forEach(function(val){
-                            self.message += val
+                            self.errors = self.errors + ", " + val
                         })
+                        self.errors = self.errors.substring(1)
+                        self.error = true
                         this.isDisabled = false
                     }
-                    this.showMessage = true
 
                 })
             }, cancel(){
