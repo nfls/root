@@ -141,9 +141,9 @@ class NotificationService
         foreach ($class->getStudents()->toArray() as $user) {
             /**  @var $user User */
             if($user->getEmail())
-                $this->getClient($user->getEmail())->sendDeadlineReminder($user->getEmail(),$class->getTeacher()->getValidAuth()->getEnglishName(),$notice->getTitle(),$notice->getDeadline()->format("Y-m-d H:i:s"),$notice->getContent());
+                $this->getClient($user->getEmail())->sendDeadlineReminder($user->getEmail(),$class->getTeacher()->getValidAuth()->getEnglishName(),$notice->getTitle(),$notice->getDeadline()->format("Y-m-d H:i"),$notice->getContent());
             if($user->getPhone())
-                $this->getClient($user->getPhone())->sendDeadlineReminder($user->getPhone(),$class->getTeacher()->getValidAuth()->getEnglishName(),$notice->getTitle(),$notice->getDeadline()->format("Y-m-d H:i:s"));
+                $this->getClient($user->getPhone())->sendDeadlineReminder($user->getPhone(),$class->getTeacher()->getValidAuth()->getEnglishName(),$notice->getTitle(),$notice->getDeadline()->format("Y-m-d H:i"));
         }
     }
 
