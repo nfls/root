@@ -12,37 +12,35 @@
 
                 <md-card-content>
                     <div class="md-layout-row md-layout-wrap md-gutter">
-                        <md-tabs class="md-flex md-flex-small-100" md-sync-route>
-                            <md-tab id="tab-pages" :md-label="$t('phone')">
-                                <div class="md-flex md-flex-small-100">
-                                    <md-field  :class="getValidationClass('country')">
-                                        <label for="country">{{ $t('country') }}</label>
-                                        <md-select name="country" id="country" v-model="form.country">
-                                            <md-option v-for="country in countries" :key="country.code" :value="country.code">{{country.code}} +{{country.prefix}}</md-option>
-                                        </md-select>
-                                        <span class="md-error" v-if="$v.form.country && !$v.form.country.required">{{ $t('required') }}</span>
-                                    </md-field>
-                                    <md-field :class="getValidationClass('phone')">
-                                        <label for="phone">{{ $t('phone') }}</label>
-                                        <md-input name="phone" id="phone" autocomplete="phone" v-model="form.phone" :disabled="sending"  />
-                                        <span class="md-error" v-if="$v.form.phone && !$v.form.phone.required">{{ $t('required') }}</span>
-                                        <span class="md-error" v-else-if="$v.form.phone && !$v.form.phone.numeric">{{ $t('phone-invalid') }}</span>
-                                        <md-button class="md-primary" @click="sendSMS">{{$t('send')}}</md-button>
-                                    </md-field>
-                                </div>
-                            </md-tab>
-                            <md-tab id="tab-home" :md-label="$t('email')">
-                                <div class="md-flex md-flex-small-100">
-                                    <md-field :class="getValidationClass('email')">
-                                        <label for="">{{ $t('email') }}</label>
-                                        <md-input name="email" id="email" autocomplete="email" v-model="form.email" :disabled="sending"  />
-                                        <md-button class="md-primary" @click="sendEmail">{{$t('send')}}</md-button>
-                                        <span class="md-error" v-if="$v.form.email && !$v.form.email.required">{{ $t('required') }}</span>
-                                        <span class="md-error" v-else-if="$v.form.email && !$v.form.email.email"></span>
-                                    </md-field>
-                                </div>
-                            </md-tab>
-                        </md-tabs>
+                        <div class="md-flex md-flex-small-100">
+                            <md-radio v-model="way" value="phone">{{ $t("phone") }}</md-radio>
+                            <md-radio v-model="way" value="email">{{ $t("email") }}</md-radio>
+                        </div>
+                        <div class="md-flex md-flex-small-100" v-if="way == 'phone'">
+                            <md-field  :class="getValidationClass('country')">
+                                <label for="country">{{ $t('country') }}</label>
+                                <md-select name="country" id="country" v-model="form.country">
+                                    <md-option v-for="country in countries" :key="country.code" :value="country.code">{{country.code}} +{{country.prefix}}</md-option>
+                                </md-select>
+                                <span class="md-error" v-if="$v.form.country && !$v.form.country.required">{{ $t('required') }}</span>
+                            </md-field>
+                            <md-field :class="getValidationClass('phone')">
+                                <label for="phone">{{ $t('phone') }}</label>
+                                <md-input name="phone" id="phone" autocomplete="phone" v-model="form.phone" :disabled="sending"  />
+                                <span class="md-error" v-if="$v.form.phone && !$v.form.phone.required">{{ $t('required') }}</span>
+                                <span class="md-error" v-else-if="$v.form.phone && !$v.form.phone.numeric">{{ $t('phone-invalid') }}</span>
+                                <md-button class="md-primary" @click="sendSMS">{{$t('send')}}</md-button>
+                            </md-field>
+                        </div>
+                        <div class="md-flex md-flex-small-100" v-else-if="way == 'email'">
+                            <md-field :class="getValidationClass('email')">
+                                <label for="">{{ $t('email') }}</label>
+                                <md-input name="email" id="email" autocomplete="email" v-model="form.email" :disabled="sending"  />
+                                <md-button class="md-primary" @click="sendEmail">{{$t('send')}}</md-button>
+                                <span class="md-error" v-if="$v.form.email && !$v.form.email.required">{{ $t('required') }}</span>
+                                <span class="md-error" v-else-if="$v.form.email && !$v.form.email.email"></span>
+                            </md-field>
+                        </div>
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('code')">
                                 <label for="username">{{ $t('code') }}</label>
@@ -153,7 +151,8 @@
             message: '',
             text: '',
             warning: false,
-            task: ''
+            task: '',
+            way: "phone"
         }),
         validations() {
             return {
@@ -176,7 +175,7 @@
                         this.form["captcha"] = grecaptcha.getResponse()
                         this.axios.post("/user/register",this.form).then((response) => {
                             if(response.data["code"] == 200){
-                                this.showMsg("正常に登録")
+                                this.showMsg(this.$t("succeeded"))
                                 window.setTimeout(() => {
                                     this.$router.push("/user/login");
                                 },3000)
@@ -194,7 +193,7 @@
                         }).then((response) => {
                             this.sending = false
                             if(response.data["code"] == 200){
-                                this.showMsg("正常に送信")
+                                this.showMsg(this.$t("send-succeeded"))
                             }else{
                                 this.showMsg(response.data["data"])
                             }
@@ -207,7 +206,7 @@
                         }).then((response) => {
                             this.sending = false
                             if (response.data["code"] == 200) {
-                                this.showMsg("送信成功")
+                                this.showMsg(this.$t("send-succeeded"))
                             } else {
                                 this.showMsg(response.data["data"])
                             }
@@ -239,10 +238,10 @@
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
                     if(!this.form.tos || !this.form.privacy){
-                        this.text = "あなたは条件に同意する必要があります。"
+                        this.text = this.$t("not-agree")
                         this.warning = true
                     }else if(this.form.password != this.form.repass){
-                        this.text = "パスワードが一致している必要があります"
+                        this.text = this.$t("password-mismatch")
                         this.warning = true
                     }else{
                         this.task = "register"
