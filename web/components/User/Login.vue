@@ -1,4 +1,4 @@
-<i18n src="../../translation/user.json"></i18n>
+<i18n src="../../translation/User/Login.json"></i18n>
 <template>
     <div class="login">
         <form novalidate class="md-layout-row md-gutter" @submit.prevent="validate">
@@ -129,8 +129,6 @@
         }, mounted: function() {
             this.$emit("changeTitle","Login")
             this.$emit("prepareRecaptcha")
-            this.$i18n.locale = "zh-cn"
-
         }, watch: {
             gResponse: {
                 handler: function(val,newVal){

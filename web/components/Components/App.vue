@@ -202,6 +202,7 @@
             this.reload()
             this.initReCaptcha()
             this.loadWebP()
+            this.$i18n.locale = "zh"
         }, watch: {
             $route () {
                 document.getElementById('recaptcha').style.visibility = 'hidden';

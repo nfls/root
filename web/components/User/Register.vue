@@ -1,92 +1,92 @@
-/* eslint-disable */
+<i18n src="../../translation/User/Register.json"></i18n>
 <template>
     <div class="login">
         <form novalidate class="md-layout-row md-gutter" @submit.prevent="register">
             <md-card class="md-flex-50 md-flex-small-100 login-card">
                 <md-card-header>
                     <md-card-header-text>
-                        <div class="md-title">新規登録</div>
-                        <div class="md-subtitle">NFLS.IO 会員登録</div>
+                        <div class="md-title">{{ $t('title') }}</div>
+                        <div class="md-subtitle">{{ $t('subtitle') }}</div>
                     </md-card-header-text>
                 </md-card-header>
 
                 <md-card-content>
                     <div class="md-layout-row md-layout-wrap md-gutter">
                         <md-tabs class="md-flex md-flex-small-100" md-sync-route>
-                            <md-tab id="tab-pages" md-label="携帯電話">
+                            <md-tab id="tab-pages" :md-label="$t('phone')">
                                 <div class="md-flex md-flex-small-100">
                                     <md-field  :class="getValidationClass('country')">
-                                        <label for="country">国家</label>
+                                        <label for="country">{{ $t('country') }}</label>
                                         <md-select name="country" id="country" v-model="form.country">
-                                            <md-option v-for="country in countries" :key="country.code" :value="country.code">{{country.name}} +{{country.prefix}}</md-option>
+                                            <md-option v-for="country in countries" :key="country.code" :value="country.code">{{country.code}} +{{country.prefix}}</md-option>
                                         </md-select>
-                                        <span class="md-error" v-if="$v.form.country && !$v.form.country.required">入力必須項目です。</span>
+                                        <span class="md-error" v-if="$v.form.country && !$v.form.country.required">{{ $t('required') }}</span>
                                     </md-field>
                                     <md-field :class="getValidationClass('phone')">
-                                        <label for="phone">携帯電話番号</label>
+                                        <label for="phone">{{ $t('phone') }}</label>
                                         <md-input name="phone" id="phone" autocomplete="phone" v-model="form.phone" :disabled="sending"  />
-                                        <span class="md-error" v-if="$v.form.phone && !$v.form.phone.required">入力必須項目です。</span>
-                                        <span class="md-error" v-else-if="$v.form.phone && !$v.form.phone.numeric">無効な携帯電話番号</span>
-                                        <md-button class="md-primary" @click="sendSMS">センド</md-button>
+                                        <span class="md-error" v-if="$v.form.phone && !$v.form.phone.required">{{ $t('required') }}</span>
+                                        <span class="md-error" v-else-if="$v.form.phone && !$v.form.phone.numeric">{{ $t('phone-invalid') }}</span>
+                                        <md-button class="md-primary" @click="sendSMS">{{$t('send')}}</md-button>
                                     </md-field>
                                 </div>
                             </md-tab>
-                            <md-tab id="tab-home" md-label="メール">
+                            <md-tab id="tab-home" :md-label="$t('email')">
                                 <div class="md-flex md-flex-small-100">
                                     <md-field :class="getValidationClass('email')">
-                                        <label for="">メールアドレス</label>
+                                        <label for="">{{ $t('email') }}</label>
                                         <md-input name="email" id="email" autocomplete="email" v-model="form.email" :disabled="sending"  />
-                                        <md-button class="md-primary" @click="sendEmail">センド</md-button>
-                                        <span class="md-error" v-if="$v.form.email && !$v.form.email.required">入力必須項目です。</span>
-                                        <span class="md-error" v-else-if="$v.form.email && !$v.form.email.email">無効なメールアドレスです</span>
+                                        <md-button class="md-primary" @click="sendEmail">{{$t('send')}}</md-button>
+                                        <span class="md-error" v-if="$v.form.email && !$v.form.email.required">{{ $t('required') }}</span>
+                                        <span class="md-error" v-else-if="$v.form.email && !$v.form.email.email"></span>
                                     </md-field>
                                 </div>
                             </md-tab>
                         </md-tabs>
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('code')">
-                                <label for="username">認証コード</label>
+                                <label for="username">{{ $t('code') }}</label>
                                 <md-input name="code" id="code" autocomplete="code" v-model="form.code" :disabled="sending"  />
-                                <span class="md-error" v-if="$v.form.code && !$v.form.code.required">入力必須項目です。</span>
+                                <span class="md-error" v-if="$v.form.code && !$v.form.code.required">{{ $t('required') }}</span>
                             </md-field>
                         </div>
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('username')">
-                                <label for="username">ニックネーム</label>
+                                <label for="username">{{ $t('username') }}</label>
                                 <md-input name="username" id="username" autocomplete="username" v-model="form.username" :disabled="sending"  />
-                                <span class="md-error" v-if="$v.form.username && !$v.form.username.required">入力必須項目です。</span>
-                                <span class="md-error" v-else-if="$v.form.code && !$v.form.username.maxLength">ニックネームが長</span>
-                                <span class="md-error" v-else-if="$v.form.code && !$v.form.username.minLength">ニックネームが短</span>
+                                <span class="md-error" v-if="$v.form.username && !$v.form.username.required">{{ $t('required') }}</span>
+                                <span class="md-error" v-else-if="$v.form.code && !$v.form.username.maxLength">{{ $t('username-too-long') }}</span>
+                                <span class="md-error" v-else-if="$v.form.code && !$v.form.username.minLength">{{ $t('username-too-short') }}</span>
                             </md-field>
                         </div>
 
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('password')">
-                                <label for="password">パスワード</label>
+                                <label for="password">{{ $t('password') }}</label>
                                 <md-input name="password" id="password" autocomplete="password" v-model="form.password" :disabled="sending" type="password" />
-                                <span class="md-error" v-if="$v.form.password && !$v.form.password.required">入力必須項目です。</span>
-                                <span class="md-error" v-else-if="$v.form.code && !$v.form.password.maxLength">パスワードの最大長20</span>
-                                <span class="md-error" v-else-if="$v.form.code && !$v.form.password.minLength">パスワードの最小長8</span>
+                                <span class="md-error" v-if="$v.form.password && !$v.form.password.required">{{ $t('required') }}</span>
+                                <span class="md-error" v-else-if="$v.form.code && !$v.form.password.maxLength">{{ $t('password-too-long') }}</span>
+                                <span class="md-error" v-else-if="$v.form.code && !$v.form.password.minLength"></span>
                             </md-field>
                         </div>
 
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('repass')">
-                                <label for="password">パスワードの再入力</label>
+                                <label for="password">{{ $t('password-repeat') }}</label>
                                 <md-input name="repass" id="repass" autocomplete="repass" v-model="form.repass" :disabled="sending" type="password" />
-                                <span class="md-error" v-if="$v.form.repass && !$v.form.repass.required">入力必須項目です。</span>
-                                <span class="md-error" v-else-if="passwordMismatch">パスワードが一致しません。もう一度入力してください。</span>
+                                <span class="md-error" v-if="$v.form.repass && !$v.form.repass.required">{{ $t('required') }}</span>
+                                <span class="md-error" v-else-if="passwordMismatch">{{ $t('password-mismatch') }}</span>
                             </md-field>
                         </div>
-                        下記の規約に同意：
+                        {{ $t('i-agree') }}
                         <div class="md-flex md-flex-small-100" >
-                            <md-checkbox v-model="form.tos" :disabled="sending" style="width:100%" class="md-primary">NFLS.IO 利用規約</md-checkbox>
+                            <md-checkbox v-model="form.tos" :disabled="sending" style="width:100%" class="md-primary">{{ $t('tos') }}</md-checkbox>
                         </div>
                         <div class="md-flex md-flex-small-100">
-                            <md-checkbox v-model="form.privacy" :disabled="sending" style="width:100%" class="md-primary">NFLS.IO プライバシーポリシー</md-checkbox>
+                            <md-checkbox v-model="form.privacy" :disabled="sending" style="width:100%" class="md-primary">{{ $t('privacy') }}</md-checkbox>
                         </div>
                         <div class="md-flex md-flex-small-100">
-                            <md-button type="submit" class="md-raised md-primary" @click="register" :disabled="sending">登録</md-button>
+                            <md-button type="submit" class="md-raised md-primary" @click="register" :disabled="sending">{{ $t('register') }}</md-button>
                         </div>
                     </div>
 
