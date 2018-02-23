@@ -8,22 +8,28 @@ use App\Entity\User\User;
 use App\Model\Permission;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ChatController extends AbstractController
 {
 
     /**
-     * @Route("/chat/inbox", methods="GET")
+     * @Route("/chat/list", methods="GET")
      */
-    public function inbox(Request $request)
+    public function list(Request $request)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->updateUser();
+        $list = $this->getDoctrine()->getManager()->getRepository(Chat::class)->list(
+            $this->getUser(),
+            $request->query->getInt("page", 1)
+        );
+        foreach ($list as $message) {
+            /** @var $message Chat */
+            $message->canReply = $message->getReceiver() !== $this->getUser();
+        }
         return $this->response()->responseEntity(
-            $this->getDoctrine()->getManager()->getRepository(Chat::class)->getInbox(
-                $this->getUser(),
-                $request->query->getInt("page", 1)
-            )
+            $list
         );
     }
 
@@ -35,19 +41,6 @@ class ChatController extends AbstractController
         $em->flush();
     }
 
-    /**
-     * @Route("/chat/outbox", methods="GET")
-     */
-    public function outbox(Request $request)
-    {
-        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        return $this->response()->responseEntity(
-            $this->getDoctrine()->getManager()->getRepository(Chat::class)->getOutbox(
-                $this->getUser(),
-                $request->query->getInt("page", 1)
-            )
-        );
-    }
 
     /**
      * @Route("/chat/send", methods="POST")
@@ -64,6 +57,8 @@ class ChatController extends AbstractController
         $chat = new Chat();
         $chat->setSender($this->getUser());
         $chat->setReceiver($user);
+        if($chat->getReceiver() === $chat->getSender())
+            return $this->response()->response("不能给自己发信息！",Response::HTTP_FORBIDDEN);
         $chat->setContent($request->request->get("content"));
         $em = $this->getDoctrine()->getManager();
         $em->persist($chat);

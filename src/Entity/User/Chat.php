@@ -48,6 +48,11 @@ class Chat
      */
     private $content;
 
+    /**
+     * @var boolean
+     */
+    public $canReply = false;
+
     public function __construct()
     {
         $this->time = new \DateTime();
