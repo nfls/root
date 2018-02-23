@@ -1,7 +1,8 @@
+<i18n src="../../translation/User.json"></i18n>
 <template>
     <div align="left" v-infinite-scroll="loadMore">
         <span class="md-title" v-if="!verified">
-            您尚未完成实名认证，将无法进行发送消息等操作！
+            {{ $t('not-realname' )}}
         </span>
         <div>
             <md-card v-for="chat in list" :key="chat.id">
@@ -15,22 +16,22 @@
                 </span>
                 </md-card-content>
                 <md-card-actions>
-                    <md-button @click="reply(chat.sender.id)" v-if="chat.canReply">回复</md-button>
+                    <md-button @click="reply(chat.sender.id)" v-if="chat.canReply">{{ $t('reply') }}</md-button>
                 </md-card-actions>
             </md-card>
         </div>
 
-        <md-dialog :md-active.sync="showDialog" style="min-width:300px;">
+        <md-dialog :md-active.sync="showDialog">
             <md-dialog-content>
                 <md-field>
-                    <label>收件用户ID</label>
+                    <label>{{ $t('receiver') }}</label>
                     <md-input v-model="receiver"></md-input>
                 </md-field>
                 <markdown-palettes v-model="content" ></markdown-palettes>
             </md-dialog-content>
             <md-dialog-actions>
-                <md-button class="md-primary" @click="showDialog = false">关闭</md-button>
-                <md-button class="md-primary" @click="send">发送</md-button>
+                <md-button class="md-primary" @click="showDialog = false">{{ $t('cancel') }}</md-button>
+                <md-button class="md-primary" @click="send">{{ $t('submit') }}</md-button>
             </md-dialog-actions>
 
         </md-dialog>
@@ -71,7 +72,6 @@
             this.$emit("changeTitle","消息")
             if(this.$route.params["id"] != null){
                 this.receiver = this.$route.params["id"]
-                this.active = "tab-new"
             }
         },
         methods: {
@@ -93,14 +93,14 @@
                     id: this.receiver,
                     content: this.content
                 }).then((response) => {
-                    this.showMsg("发送成功")
+                    this.showMsg(this.$t('send-succeeded'))
                     this.receiver = null
                     this.content = ""
                     this.showDialog = false
                     this.page = 1
                     this.load()
                 }).catch((error) => {
-                    this.showMsg("发送失败，请检查您是否完成实名认证，或是接受用户是否存在！")
+                    this.showMsg(this.$t("send-failed"))
                 })
             },
             reply(id){
