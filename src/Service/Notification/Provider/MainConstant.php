@@ -48,7 +48,7 @@ EOD;
         $paser = new Parsedown();
         $notice = $paser->parse($notice);
         $text = <<<EOD
-        <p>Your teacher <strong>$teacher</strong> posted a new note on the blackboard for group <strong>$class</strong>:</p>
+        <p><strong>$teacher</strong> posted a new note on the blackboard for group <strong>$class</strong>:</p>
         $notice
         <p>&nbsp;</p>
 EOD;
@@ -60,7 +60,7 @@ EOD;
         $paser = new Parsedown();
         $notice = $paser->parse($notice);
         $text = <<<EOD
-        <p>Your teacher <strong>$teacher</strong> wants to remind you that the deadline for <strong>$project</strong> is <strong>$time</strong>.</p>
+        <p><strong>$teacher</strong> wants to remind you that the deadline for <strong>$project</strong> is <strong>$time</strong>.</p>
         $notice
         <p>Please schedule your time wisely, and we hope that you can finish all the work in time.</p>
         <p>&nbsp;</p>
