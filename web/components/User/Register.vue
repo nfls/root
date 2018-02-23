@@ -5,8 +5,8 @@
             <md-card class="md-flex-50 md-flex-small-100 login-card">
                 <md-card-header>
                     <md-card-header-text>
-                        <div class="md-title">{{ $t('title') }}</div>
-                        <div class="md-subtitle">{{ $t('subtitle') }}</div>
+                        <div class="md-title">{{ $t('register-title') }}</div>
+                        <div class="md-subtitle">{{ $t('register-subtitle') }}</div>
                     </md-card-header-text>
                 </md-card-header>
 
@@ -64,7 +64,7 @@
                                 <md-input name="password" id="password" autocomplete="password" v-model="form.password" :disabled="sending" type="password" />
                                 <span class="md-error" v-if="$v.form.password && !$v.form.password.required">{{ $t('required') }}</span>
                                 <span class="md-error" v-else-if="$v.form.code && !$v.form.password.maxLength">{{ $t('password-too-long') }}</span>
-                                <span class="md-error" v-else-if="$v.form.code && !$v.form.password.minLength"></span>
+                                <span class="md-error" v-else-if="$v.form.code && !$v.form.password.minLength">{{ $t('password-too-short') }}</span>
                             </md-field>
                         </div>
 
@@ -91,7 +91,7 @@
                 </md-card-content>
                 <md-divider></md-divider>
                 <md-card-actions md-alignment="left">
-                    <md-button to="/user/login">Login</md-button>
+                    <md-button to="/user/login">{{ $t('login') }}</md-button>
                 </md-card-actions>
 
                 <md-progress-bar md-mode="indeterminate" v-if="sending" />
