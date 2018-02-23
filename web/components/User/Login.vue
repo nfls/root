@@ -1,12 +1,12 @@
-<i18n src="../../translation/User/Login.json"></i18n>
+<i18n src="../../translation/User.json"></i18n>
 <template>
     <div class="login">
         <form novalidate class="md-layout-row md-gutter" @submit.prevent="validate">
             <md-card class="md-flex-50 md-flex-small-100 login-card">
                 <md-card-header>
                     <md-card-header-text>
-                        <div class="md-title"> {{ $t('title') }} </div>
-                        <div class="md-subtitle">{{ $t('subtitle') }}</div>
+                        <div class="md-title"> {{ $t('login-title') }} </div>
+                        <div class="md-subtitle">{{ $t('login-subtitle') }}</div>
 
                     </md-card-header-text>
                 </md-card-header>
@@ -31,14 +31,14 @@
                             <md-checkbox v-model="form.remember" :disabled="sending" style="width:100%" class="md-primary">{{ $t('remember') }}</md-checkbox>
                         </div>
                         <div class="md-flex md-flex-small-100">
-                            <md-button type="submit" class="md-raised md-primary">{{ $t('submit') }}</md-button>
+                            <md-button type="submit" class="md-raised md-primary">{{ $t('login') }}</md-button>
                         </div>
                     </div>
 
                 </md-card-content>
                 <md-divider></md-divider>
                 <md-card-actions md-alignment="left">
-                    <md-button to="/user/register">{{ $t('reg') }}</md-button>
+                    <md-button to="/user/register">{{ $t('register') }}</md-button>
                     <md-button to="/user/reset">{{ $t('reset') }}</md-button>
                 </md-card-actions>
 
@@ -106,7 +106,7 @@
                 }).then((response) => {
                     if (response.data.code === 200) {
                         this.userSaved = true
-                        this.message = 'Login succeeded.'
+                        this.message = this.$t('logged-in')
                         window.setTimeout(() => {
                             var uri = this.$route.query.redirect
                             if(uri)
@@ -116,7 +116,7 @@
                         },1500)
                     } else {
                         this.userSaved = true
-                        this.message = 'Invalid Username or Password.'
+                        this.message = this.$t('password-incorrect')
                         grecaptcha.reset()
                         window.setTimeout(() => {
                             this.userSaved = false

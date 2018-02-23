@@ -1,4 +1,4 @@
-<i18n src="../../translation/User/Register.json"></i18n>
+<i18n src="../../translation/User.json"></i18n>
 <template>
     <div class="login">
         <form novalidate class="md-layout-row md-gutter" @submit.prevent="register">
@@ -175,7 +175,7 @@
                         this.form["captcha"] = grecaptcha.getResponse()
                         this.axios.post("/user/register",this.form).then((response) => {
                             if(response.data["code"] == 200){
-                                this.showMsg(this.$t("succeeded"))
+                                this.showMsg(this.$t("registered"))
                                 window.setTimeout(() => {
                                     this.$router.push("/user/login");
                                 },3000)

@@ -1,4 +1,4 @@
-<i18n src="../../translation/User/Register.json"></i18n>
+<i18n src="../../translation/User.json"></i18n>
 <template>
     <div class="login">
         <form novalidate class="md-layout-row md-gutter" @submit.prevent="register">
@@ -157,7 +157,7 @@
                         this.form["captcha"] = grecaptcha.getResponse()
                         this.axios.post("/user/reset",this.form).then((response) => {
                             if(response.data["code"] == 200){
-                            this.showMsg("You have successfully changed your password.")
+                            this.showMsg(this.$t("resetted"))
                             window.setTimeout(() => {
                                 this.$router.push("/user/login");
                             },3000)
@@ -175,7 +175,7 @@
                         }).then((response) => {
                             this.sending = false
                             if(response.data["code"] == 200){
-                                this.showMsg("SMS sent.")
+                                this.showMsg(this.$t("send-succeeded"))
                             }else{
                                 this.showMsg(response.data["data"])
                             }
@@ -188,7 +188,7 @@
                         }).then((response) => {
                             this.sending = false
                             if (response.data["code"] == 200) {
-                                this.showMsg("Email sent.")
+                                this.showMsg(this.$t("send-succeeded"))
                             } else {
                                 this.showMsg(response.data["data"])
                             }
