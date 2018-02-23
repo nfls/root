@@ -1,3 +1,4 @@
+<i18n src="../../translation/Media.json"></i18n>
 <template>
     <div class="md-layout md-gutter md-alignment-center">
         <div class="md-layout-item md-size-50 md-small-size-100 md-xsmall-size-100 gallery-card" v-for="item in items" :key="item.id">
