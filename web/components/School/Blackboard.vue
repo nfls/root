@@ -91,46 +91,10 @@
 
                         </md-tab>
                         <md-tab id="tab-add" md-label="添加">
-                            <div>
-                                <md-radio v-model="form.seniorSchool" value="2">南外IB国际部</md-radio>
-                                <md-radio v-model="form.seniorSchool" value="3">南外剑桥国际部</md-radio>
-                            </div>
-                            <md-field style="width:200px;">
-                                <label for="seniorSchool">高中毕业年份</label>
-                                <md-input v-model="form.seniorRegistration" id="seniorRegistration" name="seniorRegistration"/>
-                            </md-field>
-                            <md-button @click="search">搜索</md-button><br/>
-                            <md-list>
-                                <md-list-item v-for="student in studentsInfo" :key="student.id">
-                                    <md-avatar>
-                                        <img :src="'/avatar/' + student.id + '.png'" alt="Avatar">
-                                    </md-avatar>
-                                    <div class="md-list-item-text">
-                                        <span v-html="student.htmlUsername"></span>
-                                    </div>
-                                    <md-button class="md-icon-button md-list-action" @click="add(student.id)">
-                                        <md-icon>add</md-icon>
-                                    </md-button>
-                                </md-list-item>
-                            </md-list>
+
                         </md-tab>
                         <md-tab id="tab-edit" md-label="配置" >
-                            <md-card>
-                                <md-card-content>
-                                    <form>
-                                        <md-field>
-                                            <label for="seniorSchool">标题</label>
-                                            <md-input v-model="info.title" id="title" name="title"/>
-                                        </md-field>
-                                        <span class="md-caption">公告</span>
-                                        <markdown-palettes v-model="info.announcement"></markdown-palettes>
-                                    </form>
-                                </md-card-content>
-                                <md-card-actions>
-                                    <md-button class="md-accent" @click="destroy">删除本黑板</md-button>
-                                    <md-button @click="preference">提交</md-button>
-                                </md-card-actions>
-                            </md-card>
+
                         </md-tab>
                     </md-tabs>
                 </md-dialog-content>
@@ -214,15 +178,6 @@
             active: "",
             page: 1,
             sendId: null,
-            form: {
-                seniorSchool: "2",
-                seniorRegistration: "2019"
-            },
-            info: {
-                title: "",
-                announcement: ""
-            },
-            studentsInfo:[],
             moment: require('moment-timezone')
         }),
         mounted: function (){
@@ -385,26 +340,6 @@
                     add: true
                 }).then((response)=>{
                     this.list()
-                })
-            },
-            destroy(){
-                this.axios.post("/school/blackboard/preference?id="+this.currentClass,{
-                    "delete":true
-                }).then((response)=>{
-                    this.showAdmin = false
-                    this.init()
-                })
-            },
-            preference(){
-                this.axios.post("/school/blackboard/preference?id="+this.currentClass,this.info).then((response)=>{
-                    this.list()
-                })
-            },
-            search(){
-                this.active = "tab-list"
-                this.axios.post("/alumni/directory/search",this.form).then((response) => {
-                    this.studentsInfo = response.data["data"]
-                    this.active = "tab-add"
                 })
             },
             send(id){
