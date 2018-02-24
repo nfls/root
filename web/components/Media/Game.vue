@@ -1,19 +1,20 @@
+<i18n src="../../translation/Media.json"></i18n>
 <template>
     <div id="game-list">
         <div v-if="!verified" style="margin:20px;">
-            <span class="md-display-1">请尽快完成实名认证，否则您游戏中的成绩将<strong>不会</strong>计入排行榜！</span>
+            <span class="md-display-1" v-html="$t('game-not-realname')"></span>
         </div>
         <div style="row">
             <md-table v-model="ranks" md-card v-if="loggedIn">
                 <md-table-toolbar>
-                    <h1 class="md-title">我的排名</h1>
+                    <h1 class="md-title">{{ $t('my-rank') }}</h1>
                 </md-table-toolbar>
 
                 <md-table-row slot="md-table-row" slot-scope="{ item }" style="text-align: left;">
-                    <md-table-cell md-label="游戏" md-sort-by="id" md-numeric>{{ item.game.title }}</md-table-cell>
-                    <md-table-cell md-label="得分" md-sort-by="name">{{ item.score }}</md-table-cell>
-                    <md-table-cell md-label="排名" md-sort-by="name">{{ item.rank }}</md-table-cell>
-                    <md-table-cell md-label="时间" md-sort-by="name">{{ item.time | moment("lll") }}</md-table-cell>
+                    <md-table-cell :md-label="$t('game')" md-sort-by="id" md-numeric>{{ item.game.title }}</md-table-cell>
+                    <md-table-cell :md-label="$t('score')" md-sort-by="name">{{ item.score }}</md-table-cell>
+                    <md-table-cell :md-label="$t('rank')" md-sort-by="name">{{ item.rank }}</md-table-cell>
+                    <md-table-cell :md-label="$t('time')" md-sort-by="name">{{ item.time | moment("lll") }}</md-table-cell>
                 </md-table-row>
             </md-table>
         </div>
