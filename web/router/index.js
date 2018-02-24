@@ -15,6 +15,7 @@ import Gallery from '../components/Media/Gallery'
 import Album from '../components/Media/Album'
 
 import Blackboard from '../components/School/Blackboard'
+import Management from '../components/School/Management'
 import PastPaper from '../components/School/PastPaper'
 import Vote from '../components/School/Vote'
 
@@ -75,6 +76,9 @@ export default new Router({
                 }, {
                     path: 'school/blackboard/:id',
                     component: Blackboard
+                }, {
+                    path: 'school/blackboard/:id/admin',
+                    component: Management
                 }, {
                     path: 'user/security',
                     component: Security
