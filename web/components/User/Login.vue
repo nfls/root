@@ -44,8 +44,6 @@
 
                 <md-progress-bar md-mode="indeterminate" v-if="sending" />
             </md-card>
-
-            <md-snackbar :md-active.sync="userSaved">{{message}}</md-snackbar>
         </form>
     </div>
 </template>
@@ -66,10 +64,7 @@
                 remember: false,
                 password: null
             },
-            sending: false,
-            userSaved: false,
-            lastUser: '',
-            message: ''
+            sending: false
         }),
         validations: {
             form: {
@@ -105,8 +100,7 @@
                     captcha: grecaptcha.getResponse()
                 }).then((response) => {
                     if (response.data.code === 200) {
-                        this.userSaved = true
-                        this.message = this.$t('logged-in')
+                        this.$emit("showMsg", this.$t('logged-in'))
                         window.setTimeout(() => {
                             var uri = this.$route.query.redirect
                             if(uri)
@@ -115,8 +109,7 @@
                                 this.$emit("reload")
                         },1500)
                     } else {
-                        this.userSaved = true
-                        this.message = this.$t('password-incorrect')
+                        this.$emit("showMsg", this.$t('password-incorrect'))
                         grecaptcha.reset()
                         window.setTimeout(() => {
                             this.userSaved = false

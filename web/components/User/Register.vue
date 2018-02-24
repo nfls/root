@@ -96,8 +96,6 @@
 
                 <md-progress-bar md-mode="indeterminate" v-if="sending" />
             </md-card>
-
-            <md-snackbar :md-active.sync="showMessage">{{message}}</md-snackbar>
             <md-dialog-alert
                     :md-active.sync="warning"
                     :md-content="text"
@@ -145,10 +143,7 @@
             },
             countries: [],
             sending: false,
-            showMessage: false,
-            lastUser: '',
             passwordMismatch: false,
-            message: '',
             text: '',
             warning: false,
             task: '',
@@ -279,8 +274,7 @@
                 }
             },
             showMsg(msg){
-                this.message = msg
-                this.showMessage = true
+                this.$emit("showMsg",msg)
             }
         },
         mounted: function(){

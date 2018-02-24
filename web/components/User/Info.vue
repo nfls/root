@@ -86,10 +86,8 @@
                         <md-button type="submit" class="md-primary">{{ $t('submit') }}</md-button>
                     </md-card-actions>
                 </md-card>
-
             </form>
         </md-dialog>
-        <md-snackbar :md-active.sync="showMessage">{{message}}</md-snackbar>
     </div>
 </template>
 
@@ -102,9 +100,7 @@
             info: [],
             usernameDialog: false,
             avatarDialog: false,
-            username: null,
-            message: null,
-            showMessage: false
+            username: null
         }),
         mounted: function() {
             this.$emit("changeTitle","User Info")
@@ -144,14 +140,11 @@
                     username: username
                 }).then((response) => {
                     if(response.data["code"] != 200){
-                        this.showMsg(response.data["data"])
+                        this.$emit("showMsg", response.data["data"])
                     }
                     this.$emit("reload")
                     this.load()
                 })
-            }, showMsg(msg){
-                this.showMessage = true
-                this.message = msg
             }
         }
     }

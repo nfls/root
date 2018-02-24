@@ -40,7 +40,6 @@
                 <md-icon>create</md-icon>
             </md-speed-dial-target>
         </md-speed-dial>
-        <md-snackbar :md-active.sync="showMessage">{{message}}</md-snackbar>
     </div>
 </template>
 
@@ -58,8 +57,6 @@
         },
         directives: {infiniteScroll},
         data: () => ({
-            message: "",
-            showMessage: false,
             page: 1,
             content: "",
             receiver: null,
@@ -93,24 +90,24 @@
                     id: this.receiver,
                     content: this.content
                 }).then((response) => {
-                    this.showMsg(this.$t('send-succeeded'))
-                    this.receiver = null
-                    this.content = ""
-                    this.showDialog = false
-                    this.page = 1
-                    this.load()
+                    if(response.data["code"] != 200){
+                        this.$emit("showMsg",response.data["data"])
+                    }else{
+                        this.$emit("showMsg",this.$t('send-succeeded'))
+                        this.receiver = null
+                        this.content = ""
+                        this.showDialog = false
+                        this.page = 1
+                        this.load()
+                    }
                 }).catch((error) => {
-                    this.showMsg(this.$t("send-failed"))
+                    this.$emit("showMsg",this.$t("send-failed"))
                 })
             },
             reply(id){
                 this.showDialog = true
                 this.content = ""
                 this.receiver = id
-            },
-            showMsg(message) {
-                this.message = message
-                this.showMessage = true
             },
             loadMore(){
                 this.page ++
