@@ -173,9 +173,6 @@
                 md-confirm-text="提交"
                 md-cancel-text="取消"
                 @md-confirm="newClass"/>
-        <md-snackbar :md-active.sync="showSnackBar" md-persistent>
-            <span>{{message}}</span>
-        </md-snackbar>
         <md-speed-dial class="md-top-right" style="margin-top: 60px;" md-effect="opacity" md-direction="bottom" v-if="eligibility">
             <md-speed-dial-target class="md-plain">
                 <md-icon>edit</md-icon>
@@ -228,8 +225,6 @@
             showNewClass: false,
             post: {},
             sending: false,
-            message: "",
-            showSnackBar: false,
             showAdmin: false,
             loading: false,
             active: "",
@@ -381,8 +376,7 @@
                 return suffix;
             },
             showMsg(msg){
-                this.showSnackBar = true
-                this.message = msg
+                this.$emit("showMsg",msg)
             },
             remove(id){
                 this.active = "tab-add"

@@ -84,8 +84,6 @@
                     </md-field>
                 </md-card-content>
 
-                <md-snackbar :md-active.sync="showMessage">{{message}}</md-snackbar>
-
                 <md-progress-bar md-mode="indeterminate" v-if="sending" />
 
                 <md-card-actions>
@@ -105,8 +103,6 @@
             sending: false,
             countries: [],
             task: "",
-            showMessage: false,
-            message: "",
             email: "",
             phone: "",
             oauth: false,
@@ -206,8 +202,7 @@
                 grecaptcha.reset()
             },
             showMsg(message) {
-                this.message = message
-                this.showMessage = true
+                this.$emit("showMsg",msg)
             }
         },
         watch: {

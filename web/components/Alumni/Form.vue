@@ -75,7 +75,6 @@
                         <md-button type="button" class="md-raised md-primary" style="width:90%" disabled>此验证只读</md-button>
                     </div>
                     <md-progress-bar md-mode="indeterminate" v-if="sending" />
-                    <md-snackbar :md-active.sync="showMessage">{{message}}</md-snackbar>
                 </form>
             </md-card-content>
         </md-card>
@@ -122,9 +121,7 @@
             status: 0,
             sending: false,
             changed: false,
-            showMessage: false,
             active: false,
-            message: "",
             adminMode: false,
             csrf: null,
             error: false,
@@ -207,8 +204,7 @@
                             if(!this.adminMode)
                                 this.changed = false
                             this.sending = false
-                            this.message = "保存成功，您可以提交了"
-                            this.showMessage = true
+                            this.$emit("showMsg", "保存成功，您可以提交了")
                         })
                     }else{
                         this.active = true
@@ -227,8 +223,7 @@
                     this.sending = false
                     this.isDisabled = true
                     if(data.code == 200){
-                        this.message = "提交成功，请等待审核！"
-                        this.showMessage = true
+                        this.$emit("showMsg", "提交成功，请等待审核！")
                         var self = this
                         setTimeout(function(){
                             self.$router.push("/alumni/auth")
@@ -247,8 +242,7 @@
             }, cancel(){
                 this.form._csrf = this.csrf;
                 this.axios.post("alumni/cancel?id="+this.$route.params["id"],this.form).then((response) => {
-                    this.message = "本次验证已被取消，您可以重新提交了。"
-                    this.showMessage = true
+                    this.$emit("showMsg", "本次验证已被取消，您可以重新提交了。")
                     var self = this
                     setTimeout(function(){
                         self.$router.push("/alumni/auth")
