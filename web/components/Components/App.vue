@@ -94,8 +94,11 @@
                 </md-list>
             </md-app-drawer>
 
-            <md-app-content v-infinite-scroll="loadMore" >
-                <router-view :gResponse='gResponse' :webpSupported='webpSupported' :loggedIn='loggedIn' :admin='admin' :verified='verified' :avatar="avatar" @changeTitle="changeTitle" @prepareRecaptcha="prepareRecaptcha" @reload="reload" @renderWebp="renderWebp"/>
+            <md-app-content>
+                <router-view :gResponse='gResponse' :webpSupported='webpSupported' :loggedIn='loggedIn' :admin='admin' :verified='verified' :avatar="avatar" @changeTitle="changeTitle" @prepareRecaptcha="prepareRecaptcha" @reload="reload" @renderWebp="renderWebp" @showMsg="showMsg"/>
+                <md-snackbar md-positoin="center" :md-active.sync="showSnackbar" md-persistent>
+                    <span>{{message}}</span>
+                </md-snackbar>
             </md-app-content>
         </md-app>
     </div>
@@ -116,7 +119,9 @@
             avatar: "/avatar/0.png",
             gResponse: '',
             reloadC: 0,
-            webpSupported: true
+            webpSupported: true,
+            showSnackbar: false,
+            message: false
         }),
         methods: {
             initReCaptcha() {
@@ -193,8 +198,9 @@
                     }
                 };
                 WebP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
-            }, loadMore(){
-                console.log(11)
+            }, showMsg(msg) {
+                this.message = msg
+                this.showSnackbar = true
             }
         },created: function(){
             document.getElementById('recaptcha').style.visibility = 'hidden';

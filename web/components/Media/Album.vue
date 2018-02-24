@@ -95,9 +95,6 @@
                 </md-button>
             </md-speed-dial-content>
         </md-speed-dial>
-        <md-snackbar md-positoin="center" :md-active.sync="showSnackbar" md-persistent>
-            <span>{{message}}</span>
-        </md-snackbar>
     </div>
 </template>
 
@@ -128,9 +125,7 @@
             comment: null,
             active: false,
             isLiked: false,
-            showSnackbar: false,
             onlyOrigin: true,
-            message: "",
             showDebug: false,
             csrf: null,
             worker: null,
@@ -229,11 +224,9 @@
                 }).then((response) => {
                     this.loadData(false)
                     this.showSidepanel = true
-                    this.message = this.$t("comment-succeeded")
-                    this.showSnackbar = true
+                    this.$emit("showMsg",this.$t("comment-succeeded"))
                 }).catch((error) => {
-                    this.message = this.$t("comment-failed")
-                    this.showSnackbar = true
+                    this.$emit("showMsg",this.$t("comment-failed"))
                 })
             },
             like: function(){
@@ -242,21 +235,19 @@
                     _csrf: this.csrf
                 }).then((response) => {
                     if(this.isLiked){
-                        this.message = this.$t("dislike-succeeded")
+                        this.$emit("showMsg",this.$t("dislike-succeeded"))
                     }else{
-                        this.message = this.$t("like-succeeded")
+                        this.$emit("showMsg",this.$t("like-succeeded"))
                     }
-                    this.showSnackbar = true
                     this.loadData(false)
                 })
             },
             switchPreference: function(){
                 this.onlyOrigin = !this.onlyOrigin
                 if(this.onlyOrigin)
-                    this.message = this.$t("show-featured")
+                    this.$emit("showMsg",this.$t("show-featured"))
                 else
-                    this.message = this.$t("show-all")
-                this.showSnackbar = true
+                    this.$emit("showMsg",this.$t("show-all"))
                 this.loadData(true)
             },
             deleteComment: function(id){
