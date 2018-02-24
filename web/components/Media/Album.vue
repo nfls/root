@@ -3,12 +3,12 @@
     <div>
         <md-drawer class="md-right" :md-active.sync="showSidepanel" v-if="showSidepanel" >
             <md-toolbar class="md-transparent" md-elevation="0">
-                <span class="md-title">Comments</span>
+                <span class="md-title">{{ $t('comment') }}</span>
             </md-toolbar>
             <md-button class="md-icon-button" @click="writeComments()" v-if="verified">
                 <md-icon>add</md-icon>
             </md-button>
-            <span v-else>只有实名认证后的账户才能发表评论！</span>
+            <span v-else>{{ $t('comment-not-realname') }}</span>
             <md-divider></md-divider>
             <div style="margin-top:20px">
                 <md-card v-for="comment in comments" :key="comment.id">
@@ -21,7 +21,7 @@
                         {{comment.content}}
                     </md-card-content>
                     <md-card-actions v-if="admin">
-                        <md-button class="md-accent" @click="deleteComment(comment.id)">Delete</md-button>
+                        <md-button class="md-accent" @click="deleteComment(comment.id)">{{ $t('admin-delete') }}</md-button>
                     </md-card-actions>
                 </md-card>
             </div>
@@ -31,11 +31,12 @@
         <md-dialog-prompt
                 :md-active.sync="active"
                 v-model="comment"
-                md-title="Write a comment"
-                md-content="Please abide by the relevant policies and regulations of the Internet in China. We strictly prohibit any pornography, violence or reactionary information."
+                :md-title="$t('write-comment')"
+                :md-content="$t('write-comment-tips')"
                 md-input-maxlength="128"
-                md-input-placeholder="Your thoughts on these photos"
-                md-confirm-text="Submit"
+                :md-input-placeholder="$t('write-comment-placeholder')"
+                :md-confirm-text="$t('submit')"
+                :md-cancel-text="$t('cancel')"
                 @md-confirm="submitComment()"
         />
         <md-card class="gist">
@@ -47,10 +48,10 @@
             <md-card-content>
                 <span>{{info.description}}</span><br/>
                 <span>Total count: {{info.photoCount}} / Featured count: {{info.originCount}}</span><br/>
-                <span v-if="!verified">实名认证后即可查看更多照片！</span>
+                <span v-if="!verified">{{ $t('photo-not-realname') }}</span>
                 <span v-else>{{ $t('view-full-tip') }}</span>
                 <br/>
-                <span v-if="!webpSupported"><strong>您的浏览器不支持WebP格式图片的渲染。</strong>正在使用备用渲染方案，可能会无法正常显示，仅前五张将会被显示。</span>
+                <span v-if="!webpSupported" v-html="$t('webp-not-supported')"></span>
             </md-card-content>
         </md-card>
         <md-progress-spinner md-mode="indeterminate" v-if="!loaded"></md-progress-spinner>
@@ -70,26 +71,26 @@
 
             <md-speed-dial-content>
                 <md-button class="md-icon-button" @click="like()" v-if="loggedIn">
-                    <md-tooltip v-if="isLiked">Dislike</md-tooltip>
-                    <md-tooltip v-else>Like</md-tooltip>
+                    <md-tooltip v-if="isLiked">{{ $t('dislike') }}</md-tooltip>
+                    <md-tooltip v-else>{{ $t('like') }}</md-tooltip>
                     <md-icon v-if="isLiked">thumb_down</md-icon>
                     <md-icon v-else>thumb_up</md-icon>
                 </md-button>
 
                 <md-button class="md-icon-button" @click="showComments()">
-                    <md-tooltip>Comment</md-tooltip>
+                    <md-tooltip>{{ $t('comment') }}</md-tooltip>
                     <md-icon>comment</md-icon>
                 </md-button>
 
                 <md-button class="md-icon-button" @click="switchPreference()">
-                    <md-tooltip v-if="onlyOrigin">Show all the photos</md-tooltip>
-                    <md-tooltip v-else>Show only featured photos</md-tooltip>
+                    <md-tooltip v-if="onlyOrigin">{{ $t('show-all') }}</md-tooltip>
+                    <md-tooltip v-else>{{ $t('show-featured') }}</md-tooltip>
                     <md-icon v-if="onlyOrigin">launch</md-icon>
                     <md-icon v-else>featured_video</md-icon>
                 </md-button>
 
                 <md-button class="md-icon-button" @click="showDebug = !showDebug" v-if="admin">
-                    <md-tooltip>Debug</md-tooltip>
+                    <md-tooltip>{{ $t('debug') }}</md-tooltip>
                     <md-icon>report_problem</md-icon>
                 </md-button>
             </md-speed-dial-content>
@@ -228,7 +229,10 @@
                 }).then((response) => {
                     this.loadData(false)
                     this.showSidepanel = true
-                    this.message = "You have successfully submmited your comment."
+                    this.message = this.$t("comment-succeeded")
+                    this.showSnackbar = true
+                }).catch((error) => {
+                    this.message = this.$t("comment-failed")
                     this.showSnackbar = true
                 })
             },
@@ -238,9 +242,9 @@
                     _csrf: this.csrf
                 }).then((response) => {
                     if(this.isLiked){
-                        this.message = "You have canceled your like to this gallery."
+                        this.message = this.$t("dislike-succeeded")
                     }else{
-                        this.message = "You liked this gallery!"
+                        this.message = this.$t("like-succeeded")
                     }
                     this.showSnackbar = true
                     this.loadData(false)
@@ -249,9 +253,9 @@
             switchPreference: function(){
                 this.onlyOrigin = !this.onlyOrigin
                 if(this.onlyOrigin)
-                    this.message = "Only featured photos will be shown!"
+                    this.message = this.$t("show-featured")
                 else
-                    this.message = "All the photos will be shown."
+                    this.message = this.$t("show-all")
                 this.showSnackbar = true
                 this.loadData(true)
             },
