@@ -34,7 +34,36 @@
             </tr>
             </thead>
         </table>
-
+        <div id="dd" hidden>
+            <form id="ff" method="post" style="padding: 5px;width: 100%">
+                <div>
+                    <label for="name">标题：</label>
+                    <input id="title" class="easyui-validatebox" type="text" name="title" style="width:90%"/>
+                </div>
+                <div>
+                    <label for="name">介绍：</label>
+                    <textarea id="description" class="easyui-validatebox" name="description"  style="width:90%"></textarea>
+                </div>
+                <div>
+                    <label for="name">封面：</label>
+                    <input id="cover" class="easyui-validatebox" type="text" name="cover" style="width:90%"/>
+                </div>
+                <div>
+                    <label for="public">公开： </label>
+                    <input id="public" name="public" type="checkbox" />
+                </div>
+                <div>
+                    <label for="visible">可见： </label>
+                    <input id="visible" name="visible" type="checkbox" />
+                </div>
+                <div>
+                    <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="editPhotos()">提交</a>
+                    <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="removePhotos()">删除</a>
+                    <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="viewPhotos()">查看</a>
+                    <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-filter'" onclick="goToPhotos()">照片</a>
+                </div>
+            </form>
+        </div>
 
 
     </div>
@@ -119,7 +148,8 @@
             $.post( "/admin/media/gallery/edit", function( data ) {
                 console.log(data.data);
                 $('#dg').datagrid({
-                    data: data.data
+                    data: data.data,
+                    onClickRow: edit
                 });
             });
         }
