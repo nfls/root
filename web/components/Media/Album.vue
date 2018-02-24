@@ -224,9 +224,11 @@
                 }).then((response) => {
                     this.loadData(false)
                     this.showSidepanel = true
-                    this.$emit("showMsg",this.$t("comment-succeeded"))
-                }).catch((error) => {
-                    this.$emit("showMsg",this.$t("comment-failed"))
+                    if(response.data["code"] == 200){
+                        this.$emit("showMsg",this.$t("comment-succeeded"))
+                    } else {
+                        this.$emit("showMsg",response.data["data"])
+                    }
                 })
             },
             like: function(){

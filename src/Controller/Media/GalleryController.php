@@ -67,8 +67,10 @@ class GalleryController extends AbstractController
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
         $comment = new Comment();
         $comment->setContent($content);
+        if(is_null($comment->getContent()))
+            return $this->response()->response("评论内容为空！",Response::HTTP_FORBIDDEN);
         $comment->setPostUser($this->getUser());
-        $comment->setGallery($repo->getGallery($request->request->get("id")));
+        $comment->setGallery($repo->find($request->request->get("id")));
         $em = $this->getDoctrine()->getManager();
         $em->persist($comment);
         $em->flush();
