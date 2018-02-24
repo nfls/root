@@ -1,11 +1,11 @@
 <template>
     <div class="security">
 
-        <form novalidate class="md-layout" @submit.prevent="submit">
+        <form novalidate class="md-layout" @submit.prevent="submit" style="align:left;text-align:left;">
             <md-card class="md-layout-item md-size-100">
                 <md-card-header>
                     <div class="md-title">安全设置</div>
-                    <div class="md-subtitle" style="align:left;text-align:left;">
+                    <div class="md-subtitle">
                         <p align="left">
                             <span class="md-body-2" v-if="oauth"><strong>清先绑定邮箱后再使用论坛或百科功能！</strong></span><br/>
                             <span class="md-body-1">您可以在此处修改您的账户安全设置。</span><br/>
@@ -20,64 +20,56 @@
                 </md-card-header>
 
                 <md-card-content>
-                    <md-tabs md-sync-route>
-                        <md-tab id="tab-home" md-label="密码">
-
-                            <md-field>
-                                <label for="newPassword">新的密码</label>
-                                <md-input type="password" name="newPassword" id="newPassword" v-model="form.newPassword"/>
-                            </md-field>
-                            <md-field>
-                                <label for="repeatPassword">重复密码</label>
-                                <md-input type="password" name="repeatPassword" id="repeatPassword" v-model="form.repeatPassword"/>
-                            </md-field>
-                        </md-tab>
-                        <md-tab id="tab-pages" md-label="邮箱">
-                            <md-checkbox v-model="form.unbindEmail" :disabled="phone === '未绑定' || email === '未绑定'">仅解除绑定，不更换新邮箱</md-checkbox>
-                            <md-field>
-                                <label for="email">当前邮箱</label>
-                                <md-input name="email" id="email" autocomplete="email" v-model="email" disabled/>
-                            </md-field>
-                            <md-field>
-                                <label for="">新的邮箱</label>
-                                <md-input name="newEmail" id="newEmail" v-model="form.newEmail" :disabled="form.unbind"/>
-                                <md-button class="md-primary" @click="sendEmail" :disabled="form.unbind">Send</md-button>
-                            </md-field>
-                            <md-field>
-                                <label for="emailCode">验证码</label>
-                                <md-input name="emailCode" id="emailCode" v-model="form.code" :disabled="form.unbind"/>
-                            </md-field>
-                        </md-tab>
-                        <md-tab id="tab-posts" md-label="手机">
-                            <md-checkbox v-model="form.unbindPhone"  :disabled="phone === '未绑定' || email === '未绑定'">仅解除绑定，不更换新手机</md-checkbox>
-                            <md-field>
-                                <label for="phone">当前手机</label>
-                                <md-input name="phone" id="phone" autocomplete="phone" v-model="phone" disabled/>
-                            </md-field>
-                            <md-field>
-                                <label for="country">国家</label>
-                                <md-select name="country" id="country" v-model="form.country" :disabled="form.unbind">
-                                    <md-option v-for="country in countries" :key="country.code" :value="country.code">{{country.name}} +{{country.prefix}}</md-option>
-                                </md-select>
-                            </md-field>
-                            <md-field>
-                                <label for="">新的手机号</label>
-                                <md-input name="newPhone" id="newPhone" v-model="form.newPhone" :disabled="form.unbind"/>
-                                <md-button class="md-primary" @click="sendSMS()" :disabled="form.unbind">Send</md-button>
-                            </md-field>
-                            <md-field>
-                                <label for="phoneCode">验证码</label>
-                                <md-input name="phoneCode" id="phoneCode" v-model="form.code" :disabled="form.unbind"/>
-                            </md-field>
-                        </md-tab>
-                        <md-tab id="tab-settings" md-label="隐私">
-                            <md-empty-state
-                                    md-icon="new_releases"
-                                    md-label="开发中"
-                                    md-description="此功能正在开发中">
-                            </md-empty-state>
-                        </md-tab>
-                    </md-tabs>
+                    <span class="md-caption">修改密码</span><br/>
+                    <md-divider></md-divider>
+                    <md-field>
+                        <label for="newPassword">新的密码</label>
+                        <md-input type="password" name="newPassword" id="newPassword" v-model="form.newPassword"/>
+                    </md-field>
+                    <md-field>
+                        <label for="repeatPassword">重复密码</label>
+                        <md-input type="password" name="repeatPassword" id="repeatPassword" v-model="form.repeatPassword"/>
+                    </md-field>
+                    <span class="md-caption">修改邮箱</span><br/>
+                    <md-divider></md-divider>
+                    <md-checkbox v-model="form.unbindEmail" v-if="phone !== '未绑定' && email !== '未绑定'">仅解除绑定</md-checkbox>
+                    <md-field>
+                        <label for="email">当前邮箱</label>
+                        <md-input name="email" id="email" autocomplete="email" v-model="email" disabled/>
+                    </md-field>
+                    <md-field  v-if="!form.unbindEmail">
+                        <label for="">新的邮箱</label>
+                        <md-input name="newEmail" id="newEmail" v-model="form.newEmail"/>
+                        <md-button class="md-primary" @click="sendEmail">Send</md-button>
+                    </md-field>
+                    <md-field v-if="!form.unbindEmail">
+                        <label for="emailCode">验证码</label>
+                        <md-input name="emailCode" id="emailCode" v-model="form.code" />
+                    </md-field>
+                    <span class="md-caption">修改手机</span><br/>
+                    <md-divider></md-divider>
+                    <md-checkbox v-model="form.unbindPhone"  v-if="phone !== '未绑定' && email !== '未绑定'">仅解除绑定</md-checkbox>
+                    <md-field>
+                        <label for="phone">当前手机</label>
+                        <md-input name="phone" id="phone" autocomplete="phone" v-model="phone" disabled/>
+                    </md-field>
+                    <md-field v-if="!form.unbindPhone">
+                        <label for="country">国家</label>
+                        <md-select name="country" id="country" v-model="form.country">
+                            <md-option v-for="country in countries" :key="country.code" :value="country.code">{{country.name}} +{{country.prefix}}</md-option>
+                        </md-select>
+                    </md-field>
+                    <md-field v-if="!form.unbindPhone">
+                        <label for="newPhone">新的手机号</label>
+                        <md-input name="newPhone" id="newPhone" v-model="form.newPhone" />
+                        <md-button class="md-primary" @click="sendSMS()">Send</md-button>
+                    </md-field>
+                    <md-field v-if="!form.unbindPhone">
+                        <label for="phoneCode">验证码</label>
+                        <md-input name="phoneCode" id="phoneCode" v-model="form.code"/>
+                    </md-field>
+                    <span class="md-caption">验证</span>
+                    <md-divider></md-divider>
                     <md-field>
                         <label for="password">当前密码</label>
                         <md-input type="password" name="password" id="password" autocomplete="password" v-model="form.password"/>
