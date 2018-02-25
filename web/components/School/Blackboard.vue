@@ -417,7 +417,9 @@
 </script>
 
 <style scoped>
-
+    .new-post{
+        min-width: 500px;
+    }
     .admin-class{
         min-width: 200px;
     }

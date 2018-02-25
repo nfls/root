@@ -1,5 +1,5 @@
 <template>
-    <div class="management" align="left">
+    <div class="management">
         <span class="md-caption">警告：请不要将自己移出课堂之外！</span><br/>
         <md-list>
             <md-list-item v-for="student in classInfo.students" :key="student.id">
@@ -17,7 +17,7 @@
                 </md-button>
             </md-list-item>
         </md-list>
-        <md-dialog :md-active.sync="showAdd" class="card">
+        <md-dialog>
             <md-dialog-content>
                 <div>
                     <md-radio v-model="form.seniorSchool" value="2">南外IB国际部</md-radio>
@@ -43,60 +43,34 @@
                 </md-list>
             </md-dialog-content>
         </md-dialog>
-        <md-dialog :md-active.sync="showManage">
-            <md-dialog-title>
-                一般设置
-            </md-dialog-title>
-            <md-dialog-content>
-                <md-card>
-                    <md-card-content>
-                        <form>
-                            <md-field>
-                                <label for="seniorSchool">标题</label>
-                                <md-input v-model="info.title" id="title" name="title"/>
-                            </md-field>
-                            <span class="md-caption">公告</span>
-                            <markdown-palettes v-model="info.announcement"></markdown-palettes>
-                        </form>
-                    </md-card-content>
-                </md-card>
-            </md-dialog-content>
-            <md-dialog-actions>
-                <md-button class="md-accent" @click="destroy">删除本黑板</md-button>
-                <md-button @click="preference">提交</md-button>
-                <md-button @click="showManage = false">取消</md-button>
-            </md-dialog-actions>
+        <md-dialog>
+            <md-card>
+                <md-card-content>
+                    <form>
+                        <md-field>
+                            <label for="seniorSchool">标题</label>
+                            <md-input v-model="info.title" id="title" name="title"/>
+                        </md-field>
+                        <span class="md-caption">公告</span>
+                        <markdown-palettes v-model="info.announcement"></markdown-palettes>
+                    </form>
+                </md-card-content>
+                <md-card-actions>
+                    <md-button class="md-accent" @click="destroy">删除本黑板</md-button>
+                    <md-button @click="preference">提交</md-button>
+                </md-card-actions>
+            </md-card>
         </md-dialog>
-        <md-speed-dial class="md-bottom-right" md-effect="opacity" md-direction="top">
-            <md-speed-dial-target class="md-plain">
-                <md-icon>edit</md-icon>
-            </md-speed-dial-target>
-
-            <md-speed-dial-content>
-                <md-button class="md-icon-button" @click="showManage = !showManage">
-                    <md-icon>build</md-icon>
-                </md-button>
-                <md-button class="md-icon-button" @click="showAdd = !showAdd">
-                    <md-icon>person</md-icon>
-                </md-button>
-            </md-speed-dial-content>
-        </md-speed-dial>
     </div>
 </template>
 
 <script>
-    import MarkdownPalettes from 'markdown-palettes'
     export default {
         name: "Management",
-        components: {
-            MarkdownPalettes
-        },
         data: () => ({
             currentClass: null,
             classInfo: [],
-            studentsInfo: [],
-            showAdd: false,
-            showManage: false,
+            studentsInfo:[],
             info: {
                 title: "",
                 deadline: ""
@@ -146,7 +120,5 @@
 </script>
 
 <style scoped>
-    .card{
-        min-width: 500px;
-    }
+
 </style>
