@@ -86,72 +86,75 @@
             <md-dialog :md-active.sync="showAdmin" class="admin-class">
                 <md-dialog-title>管理</md-dialog-title>
                 <md-dialog-content>
-                    <md-tabs md-dynamic-height :md-active-tab="active" @md-changed="tabChanged">
-                        <md-tab id="tab-list" md-label="列表" >
-                            <span class="md-caption">警告：请不要将自己移出课堂之外！</span><br/>
-                            <md-list>
-                                <md-list-item v-for="student in classInfo.students" :key="student.id">
-                                    <md-avatar>
-                                        <img :src="'/avatar/' + student.id + '.png'" alt="Avatar">
-                                    </md-avatar>
-                                    <div class="md-list-item-text">
-                                        <span v-html="student.htmlUsername"></span>
-                                    </div>
-                                    <md-button class="md-icon-button md-list-action" @click="remove(student.id)">
-                                        <md-icon>delete</md-icon>
-                                    </md-button>
-                                    <md-button class="md-icon-button md-list-action" @click="send(student.id)">
-                                        <md-icon>send</md-icon>
-                                    </md-button>
-                                </md-list-item>
-                            </md-list>
-                        </md-tab>
-                        <md-tab id="tab-add" md-label="添加">
-                            <div>
-                                <md-radio v-model="form.seniorSchool" value="2">南外IB国际部</md-radio>
-                                <md-radio v-model="form.seniorSchool" value="3">南外剑桥国际部</md-radio>
-                            </div>
-                            <md-field style="width:200px;">
-                                <label for="seniorSchool">高中毕业年份</label>
-                                <md-input v-model="form.seniorRegistration" id="seniorRegistration" name="seniorRegistration"/>
-                            </md-field>
-                            <md-button @click="search">搜索</md-button><br/>
-                            <md-list>
-                                <md-list-item v-for="student in studentsInfo" :key="student.id">
-                                    <md-avatar>
-                                        <img :src="'/avatar/' + student.id + '.png'" alt="Avatar">
-                                    </md-avatar>
-                                    <div class="md-list-item-text">
-                                        <span v-html="student.htmlUsername"></span>
-                                    </div>
-                                    <md-button class="md-icon-button md-list-action" @click="add(student.id)">
-                                        <md-icon>add</md-icon>
-                                    </md-button>
-                                </md-list-item>
-                            </md-list>
-                        </md-tab>
-                        <md-tab id="tab-edit" md-label="配置" >
-                            <md-card>
-                                <md-card-content>
-                                    <form>
-                                        <md-field>
-                                            <label for="seniorSchool">标题</label>
-                                            <md-input v-model="info.title" id="title" name="title"/>
-                                        </md-field>
-                                        <span class="md-caption">公告</span>
-                                        <markdown-palettes v-model="info.announcement"></markdown-palettes>
-                                    </form>
-                                </md-card-content>
-                                <md-card-actions>
-                                    <md-button class="md-accent" @click="destroy">删除本黑板</md-button>
-                                    <md-button @click="preference">提交</md-button>
-                                </md-card-actions>
-                            </md-card>
-                        </md-tab>
-                    </md-tabs>
+                    <form>
+                        <md-field>
+                            <label for="seniorSchool">标题</label>
+                            <md-input v-model="info.title" id="title" name="title"/>
+                        </md-field>
+                        <span class="md-caption">公告</span>
+                        <markdown-palettes v-model="info.announcement"></markdown-palettes>
+                    </form>
                 </md-dialog-content>
                 <md-dialog-actions>
+                    <md-button class="md-accent" @click="destroy">删除本黑板</md-button>
+                    <md-button class="md-primary" @click="preference">提交</md-button>
                     <md-button class="md-primary" @click="showAdmin = false">关闭</md-button>
+                </md-dialog-actions>
+            </md-dialog>
+            <md-dialog :md-active.sync="showListStu">
+                <md-dialog-title>用户列表</md-dialog-title>
+                <md-dialog-content>
+                    <span class="md-caption">警告：请不要将自己移出课堂之外！</span><br/>
+                    <md-list>
+                        <md-list-item v-for="student in classInfo.students" :key="student.id">
+                            <md-avatar>
+                                <img :src="'/avatar/' + student.id + '.png'" alt="Avatar">
+                            </md-avatar>
+                            <div class="md-list-item-text">
+                                <span v-html="student.htmlUsername"></span>
+                            </div>
+                            <md-button class="md-icon-button md-list-action" @click="remove(student.id)">
+                                <md-icon>delete</md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button md-list-action" @click="send(student.id)">
+                                <md-icon>send</md-icon>
+                            </md-button>
+                        </md-list-item>
+                    </md-list>
+                </md-dialog-content>
+                <md-dialog-actions>
+                    <md-button @click="showAddStu = true">添加新学生</md-button>
+                    <md-button @click="showListStu = false">关闭</md-button>
+                </md-dialog-actions>
+            </md-dialog>
+            <md-dialog :md-active.sync="showAddStu">
+                <md-dialog-title>添加</md-dialog-title>
+                <md-dialog-content>
+                    <div>
+                        <md-radio v-model="form.seniorSchool" value="2">南外IB国际部</md-radio>
+                        <md-radio v-model="form.seniorSchool" value="3">南外剑桥国际部</md-radio>
+                    </div>
+                    <md-field style="width:200px;">
+                        <label for="seniorSchool">高中毕业年份</label>
+                        <md-input v-model="form.seniorRegistration" id="seniorRegistration" name="seniorRegistration"/>
+                    </md-field>
+                    <md-button @click="search">搜索</md-button><br/>
+                    <md-list>
+                        <md-list-item v-for="student in studentsInfo" :key="student.id">
+                            <md-avatar>
+                                <img :src="'/avatar/' + student.id + '.png'" alt="Avatar">
+                            </md-avatar>
+                            <div class="md-list-item-text">
+                                <span v-html="student.htmlUsername"></span>
+                            </div>
+                            <md-button class="md-icon-button md-list-action" @click="add(student.id)">
+                                <md-icon>add</md-icon>
+                            </md-button>
+                        </md-list-item>
+                    </md-list>
+                </md-dialog-content>
+                <md-dialog-actions>
+                    <md-button @click="showAddStu = false">完成</md-button>
                 </md-dialog-actions>
             </md-dialog>
         </div>
@@ -185,8 +188,11 @@
                 <md-button class="md-icon-button" @click="showNewPost = !showNewPost" v-if="classInfo && classInfo.admin">
                     <md-icon>create</md-icon>
                 </md-button>
-                <md-button class="md-icon-button" @click="showAdmin = !showAdmin" v-if="classInfo && classInfo.admin">
+                <md-button class="md-icon-button" @click="showListStu = !showListStu" v-if="classInfo && classInfo.admin">
                     <md-icon>person</md-icon>
+                </md-button>
+                <md-button class="md-icon-button" @click="showAdmin = !showAdmin" v-if="classInfo && classInfo.admin">
+                    <md-icon>build</md-icon>
                 </md-button>
             </md-speed-dial-content>
         </md-speed-dial>
@@ -223,11 +229,12 @@
             classInfo: null,
             showNewPost: false,
             showNewClass: false,
+            showAdmin: false,
+            showAddStu: false,
+            showListStu: false,
             post: {},
             sending: false,
-            showAdmin: false,
             loading: false,
-            active: "",
             page: 1,
             sendId: null,
             form: {
@@ -400,6 +407,7 @@
                     id: id,
                     add: true
                 }).then((response)=>{
+                    this.$emit("showMsg","添加学生成功！")
                     this.list()
                 })
             },
@@ -461,17 +469,6 @@
             deadline(id) {
                 this.sendId = id
                 grecaptcha.execute()
-            },
-            tabChanged(newVal){
-                console.log(newVal)
-                if(newVal == "tab-edit"){
-                    var old = this.info.announcement
-                    this.info.announcement = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
-                    setTimeout( () => {
-                        this.info.announcement = old;
-                },500)
-
-                }
             }
         },
         watch: {
