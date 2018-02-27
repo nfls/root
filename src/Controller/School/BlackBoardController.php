@@ -201,12 +201,13 @@ class BlackBoardController extends AbstractController
             if ($ddl === false)
                 $ddl = null;
             else {
-                $notice->setTitle($request->request->get("title"));
                 $ddl->setTimezone(new \DateTimeZone($request->request->get("timezone")));
-                if ($ddl < new \DateTime())
-                    $ddl = new \DateTime();
+                if ($ddl >= new \DateTime()){
+                    $notice->setDeadline($ddl);
+                    $notice->setTitle($request->request->get("title"));
+                }
             }
-            $notice->setDeadline($ddl);
+
 
             $time = \DateTime::createFromFormat("Y-m-d\TH:i:s\.???\Z", $request->request->get("time"), new \DateTimeZone("UTC"));
             if ($time === false) {

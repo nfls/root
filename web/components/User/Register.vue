@@ -83,8 +83,8 @@
                         </div>
                         <div class="md-flex md-flex-small-100" align="left">
                             <span>
-                                <a href="https://dev.nfls.io/confluence/pages/viewpage.action?pageId=917520">{{ $t('tos') }}</a><br/>
-                                <a href="https://dev.nfls.io/confluence/pages/viewpage.action?pageId=917516">{{ $t('privacy') }}</a>
+                                <a href="https://dev.nfls.io/confluence/x/EAAO">{{ $t('tos') }}</a><br/>
+                                <a href="https://dev.nfls.io/confluence/x/DAAO">{{ $t('privacy') }}</a>
                             </span>
                         </div>
                         <div class="md-flex md-flex-small-100">

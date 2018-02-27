@@ -62,7 +62,9 @@
             <!--Admin-->
             <md-dialog :md-active.sync="showNewPost" class="new-post" style="width:80%" :md-close-on-esc="false" :md-click-outside-to-close="false">
                 <md-dialog-title>新的公告</md-dialog-title>
+
                 <md-dialog-content>
+                    <span>我们提供Google Docs无障碍服务，您可以通过本功能发送文档或是问卷。详情请见<a href="https://dev.nfls.io/confluence/x/AQAO" target="_blank">Confluence公告</a>。</span>
                     <markdown-palettes v-model="post.content" :disabled="sending"></markdown-palettes>
                     <form>
                         <md-field>
@@ -193,6 +195,9 @@
                 </md-button>
                 <md-button class="md-icon-button" @click="showAdmin = !showAdmin" v-if="classInfo && classInfo.admin">
                     <md-icon>build</md-icon>
+                </md-button>
+                <md-button class="md-icon-button md-raised" href='https://dev.nfls.io/confluence/x/GAAO'>
+                    <md-icon>help</md-icon>
                 </md-button>
             </md-speed-dial-content>
         </md-speed-dial>
