@@ -76,12 +76,16 @@
                                 <span class="md-error" v-else-if="passwordMismatch">{{ $t('password-mismatch') }}</span>
                             </md-field>
                         </div>
-                        {{ $t('i-agree') }}
+
                         <div class="md-flex md-flex-small-100" >
-                            <md-checkbox v-model="form.tos" :disabled="sending" style="width:100%" class="md-primary">{{ $t('tos') }}</md-checkbox>
+                            <md-checkbox v-model="form.tos" :disabled="sending" style="width:100%" class="md-primary">{{ $t('i-agree') }}</md-checkbox>
+
                         </div>
-                        <div class="md-flex md-flex-small-100">
-                            <md-checkbox v-model="form.privacy" :disabled="sending" style="width:100%" class="md-primary">{{ $t('privacy') }}</md-checkbox>
+                        <div class="md-flex md-flex-small-100" align="left">
+                            <span>
+                                <a href="https://dev.nfls.io/confluence/pages/viewpage.action?pageId=917520">{{ $t('tos') }}</a><br/>
+                                <a href="https://dev.nfls.io/confluence/pages/viewpage.action?pageId=917516">{{ $t('privacy') }}</a>
+                            </span>
                         </div>
                         <div class="md-flex md-flex-small-100">
                             <md-button type="submit" class="md-raised md-primary" @click="register" :disabled="sending">{{ $t('register') }}</md-button>
@@ -129,7 +133,6 @@
                 username: null,
                 password: null,
                 repass: null,
-                privacy: false,
                 tos: false
             },
             validateItems: {
@@ -232,7 +235,7 @@
                 }
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
-                    if(!this.form.tos || !this.form.privacy){
+                    if(!this.form.tos){
                         this.text = this.$t("not-agree")
                         this.warning = true
                     }else if(this.form.password != this.form.repass){
