@@ -18,6 +18,7 @@ class AbstractController extends Controller
     const CSRF_USER = "user";
     const CSRF_ALUMNI_FORM = "alumni.form";
     const CSRF_MEDIA_GALLERY = "media.gallery";
+    const CSRF_SCHOOL_BLACKBOARD = "school.blackboard";
 
     public function __construct()
     {
@@ -64,9 +65,9 @@ class AbstractController extends Controller
     public function verfityCsrfToken($token, $id)
     {
         if (is_null($this->getUser()))
-            return false;
+            throw $this->createAccessDeniedException("Csrf Invalid.");
         if (is_null($token))
-            return false;
+            throw $this->createAccessDeniedException("Csrf Invalid.");
         else
             if ($this->getUser()->isOAuth) {
                 return true;
@@ -76,7 +77,7 @@ class AbstractController extends Controller
                 if ($csrf->isTokenValid(new CsrfToken($id, $token)))
                     return true;
                 else
-                    return false;
+                    throw $this->createAccessDeniedException("Csrf Invalid.");
             }
     }
 

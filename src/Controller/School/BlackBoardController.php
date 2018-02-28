@@ -8,6 +8,7 @@ use App\Entity\School\Notice;
 use App\Entity\User\User;
 use App\Model\Permission;
 use App\Service\AliyunOSS;
+use App\Service\Notification\Provider\AbstractNotificationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -27,24 +28,6 @@ class BlackBoardController extends AbstractController
                 "title" => $val->getTitle()
             );
         }));
-    }
-
-    /**
-     * @Route("/school/blackboard/create", methods="POST")
-     */
-    public function create(Request $request)
-    {
-        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
-            throw $this->createAccessDeniedException();
-        $class = new Claz();
-        $class->setTitle($request->request->get("title"));
-        $class->setTeacher($this->getUser());
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($class);
-        $em->persist($this->getUser());
-        $em->flush();
-        return $this->response()->response(null);
     }
 
     /**
@@ -74,11 +57,32 @@ class BlackBoardController extends AbstractController
     }
 
     /**
+     * @Route("/school/blackboard/create", methods="POST")
+     */
+    public function create(Request $request)
+    {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_SCHOOL_BLACKBOARD);
+        if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
+            throw $this->createAccessDeniedException();
+        $class = new Claz();
+        $class->setTitle($request->request->get("title"));
+        $class->setTeacher($this->getUser());
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($class);
+        $em->persist($this->getUser());
+        $em->flush();
+        return $this->response()->response(null);
+    }
+
+
+    /**
      * @Route("/school/blackboard/edit", methods="POST")
      */
     public function edit(Request $request)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_SCHOOL_BLACKBOARD);
         if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
             throw $this->createAccessDeniedException();
         $id = $request->query->get("id");
@@ -108,6 +112,7 @@ class BlackBoardController extends AbstractController
     public function delete(Request $request)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_SCHOOL_BLACKBOARD);
         if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
             throw $this->createAccessDeniedException();
         $id = $request->query->get("id");
@@ -135,6 +140,7 @@ class BlackBoardController extends AbstractController
     public function preference(Request $request)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_SCHOOL_BLACKBOARD);
         if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
             throw $this->createAccessDeniedException();
         $id = $request->query->get("id");
@@ -184,6 +190,7 @@ class BlackBoardController extends AbstractController
     public function post(Request $request)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_SCHOOL_BLACKBOARD);
         if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
             throw $this->createAccessDeniedException();
         $id = $request->query->get("id");
@@ -234,6 +241,7 @@ class BlackBoardController extends AbstractController
      */
     public function notify(Request $request){
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_SCHOOL_BLACKBOARD);
         if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
             throw $this->createAccessDeniedException();
         if(!$this->verifyCaptcha($request->request->get("captcha")))

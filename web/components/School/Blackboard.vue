@@ -242,6 +242,7 @@
             loading: false,
             page: 1,
             sendId: null,
+            csrf: null,
             form: {
                 seniorSchool: "2",
                 seniorRegistration: "2019"
@@ -291,6 +292,7 @@
                     this.info.title = this.classInfo.title
                     this.info.announcement = this.classInfo.announcement
                     this.empty = false
+                    this.getCsrf()
                 }).catch((error) => {
                     if(this.claz.length > 0)
                         this.currentClass = this.claz[0].id
@@ -331,6 +333,7 @@
                 })
             },
             sendPost(){
+                this.post._csrf = this.csrf
                 this.axios.post("/school/blackboard/post?id="+this.currentClass,this.post).then((response) => {
                     this.resetForm()
                     this.showNewPost = false
@@ -394,7 +397,8 @@
                 this.active = "tab-add"
                 this.axios.post("/school/blackboard/edit?id="+this.currentClass,{
                     id: id,
-                    remove: true
+                    remove: true,
+                    _csrf: this.csrf
                 }).then((response)=>{
                     this.active = "tab-list"
                     this.list()
@@ -402,7 +406,8 @@
             },
             removeNotice(id){
                 this.axios.post("/school/blackboard/delete?id="+this.currentClass,{
-                    id: id
+                    id: id,
+                    _csrf: this.csrf
                 }).then((response)=>{
                     this.list()
                 })
@@ -410,7 +415,8 @@
             add(id){
                 this.axios.post("/school/blackboard/edit?id="+this.currentClass,{
                     id: id,
-                    add: true
+                    add: true,
+                    _csrf: this.csrf
                 }).then((response)=>{
                     this.$emit("showMsg","添加学生成功！")
                     this.list()
@@ -418,19 +424,22 @@
             },
             destroy(){
                 this.axios.post("/school/blackboard/preference?id="+this.currentClass,{
-                    "delete":true
+                    "delete":true,
+                    _csrf: this.csrf
                 }).then((response)=>{
                     this.showAdmin = false
                     this.init()
                 })
             },
             preference(){
+                this.info._csrf = this.csrf
                 this.axios.post("/school/blackboard/preference?id="+this.currentClass,this.info).then((response)=>{
                     this.list()
                 })
             },
             search(){
                 this.active = "tab-list"
+                this.form._csrf = this.csrf
                 this.axios.post("/alumni/directory/search",this.form).then((response) => {
                     this.studentsInfo = response.data["data"]
                     this.active = "tab-add"
@@ -445,7 +454,8 @@
             newClass(val) {
                 //console.log(val)
                 this.axios.post("/school/blackboard/create",{
-                    title: this.classTitle
+                    title: this.classTitle,
+                    _csrf: this.csrf
                 }).then((response) => {
                     this.init()
                 })
@@ -466,14 +476,22 @@
                         val.preview = moment(val.time).toDate() > new Date()
                         return val
                     })
-                    //console.log(info)
                     this.classInfo.notices = this.classInfo.notices.concat(info)
-                        //console.log(this.classInfo.notices)
+                    this.getCsrf()
                 })
             },
             deadline(id) {
                 this.sendId = id
                 grecaptcha.execute()
+            },
+            getCsrf() {
+                this.axios.get("user/csrf",{
+                    params: {
+                        name: "school.blackboard"
+                    }
+                }).then((response) => {
+                    this.csrf = response.data["data"]
+                })
             }
         },
         watch: {
@@ -487,7 +505,8 @@
                 handler: function(newVal){
                     this.axios.post("/school/blackboard/notify?id="+this.currentClass, {
                         captcha: grecaptcha.getResponse(),
-                        id: this.sendId
+                        id: this.sendId,
+                        _csrf: this.csrf
                     }).then((response) => {
                         this.showMsg("发送成功")
                     }).catch((error) => {
