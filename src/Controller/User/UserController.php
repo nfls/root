@@ -226,7 +226,8 @@ class UserController extends AbstractController
      */
     public function logout(Request $request)
     {
-        $this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_USER);
+        if (!$this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_USER))
+            return $this->response()->response("csrf.invalid", Response::HTTP_BAD_REQUEST);
         $response = $this->response()->response(null, 200);
         $time = new \DateTime();
         $time->sub(new \DateInterval("P1M"));
@@ -290,7 +291,6 @@ class UserController extends AbstractController
     public function change(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        $this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_USER);
         if ($passwordEncoder->isPasswordValid($this->getUser(), $request->request->get("password"))) {
             $newPassword = $request->request->get("newPassword");
             $unbindEmail = $request->request->get("unbindEmail");

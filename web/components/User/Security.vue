@@ -98,8 +98,8 @@
             email: "",
             phone: "",
             oauth: false,
-            form:{},
-            csrf:null
+            form:{
+            }
         }),
         created: function () {
             this.resetForm()
@@ -142,14 +142,8 @@
                     this.showMsg("Passwords mismatch.")
                     return
                 }
-                this.axios.get("user/csrf",{
-                    params: {
-                        name: "user"
-                    }
-                }).then((response) => {
-                    this.form._csrf = response.data["data"]
-                    this.axios.post("/user/change",this.form).then((response) => {
-                        if(response.data["code"] == 200){
+                this.axios.post("/user/change",this.form).then((response) => {
+                    if(response.data["code"] == 200){
                         this.showMsg("Operation succeeded.")
                         this.resetForm()
                     }else{
@@ -157,10 +151,8 @@
                             this.showMsg(response.data["data"])
                         else
                             this.showMsg("Password incorrect.")
-                        }
-                    })
+                    }
                 })
-
             },
             sendEmail() {
                 this.task = "email"
@@ -201,7 +193,7 @@
                 this.task = ""
                 grecaptcha.reset()
             },
-            showMsg(msg) {
+            showMsg(message) {
                 this.$emit("showMsg",msg)
             }
         },
