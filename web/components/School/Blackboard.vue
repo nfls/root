@@ -453,7 +453,6 @@
                 this.showDate = d;
             },
             newClass(val) {
-                //console.log(val)
                 this.axios.post("/school/blackboard/create",{
                     title: this.classTitle,
                     _csrf: this.csrf
