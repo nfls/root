@@ -62,7 +62,8 @@
             receiver: null,
             list: [],
             active: null,
-            showDialog: false
+            showDialog: false,
+            csrf: ""
         }),
         mounted: function() {
             this.load()
@@ -82,13 +83,15 @@
                         this.list = response.data["data"]
                     else
                         this.list = this.list.concat(response.data["data"])
+                    this.getCsrf()
                 })
 
             },
             send(){
                 this.axios.post("/chat/send",{
                     id: this.receiver,
-                    content: this.content
+                    content: this.content,
+                    _csrf: this.csrf
                 }).then((response) => {
                     if(response.data["code"] != 200){
                         this.$emit("showMsg",response.data["data"])
@@ -112,6 +115,15 @@
             loadMore(){
                 this.page ++
                 this.load()
+            },
+            getCsrf() {
+                this.axios.get("user/csrf",{
+                    params: {
+                        name: "user"
+                    }
+                }).then((response) => {
+                    this.csrf = response.data["data"]
+                })
             }
         }
     }

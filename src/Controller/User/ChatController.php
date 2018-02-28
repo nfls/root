@@ -26,7 +26,7 @@ class ChatController extends AbstractController
         );
         foreach ($list as $message) {
             /** @var $message Chat */
-            $message->canReply = $message->getReceiver() !== $this->getUser();
+            $message->canReply = $message->getSender() !== $this->getUser();
         }
         return $this->response()->responseEntity(
             $list
@@ -49,6 +49,7 @@ class ChatController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
+        $this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_USER);
         $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find(
             $request->request->getInt("id")
         );
