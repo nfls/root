@@ -434,7 +434,8 @@
             preference(){
                 this.info._csrf = this.csrf
                 this.axios.post("/school/blackboard/preference?id="+this.currentClass,this.info).then((response)=>{
-                    this.list()
+                    this.init()
+                    this.showAdmin = false
                 })
             },
             search(){
