@@ -47,11 +47,14 @@
 
             <md-card-content>
                 <span>{{info.description}}</span><br/>
-                <span>Total count: {{info.photoCount}} / Featured count: {{info.originCount}}</span><br/>
-                <span v-if="!verified">{{ $t('photo-not-realname') }}</span>
-                <span v-else>{{ $t('view-full-tip') }}</span>
-                <br/>
-                <span v-if="!webpSupported" v-html="$t('webp-not-supported')"></span>
+                <span>Total count: {{info.photoCount}} / Featured count: {{info.originCount}}<br/></span>
+                <span v-if="!verified">{{ $t('photo-not-realname') }}<br/></span>
+                <span v-else>{{ $t('view-full-tip') }}<br/></span>
+                <span v-if="!webpSupported" v-html="$t('webp-not-supported')"><br/></span>
+                <md-divider></md-divider>
+                <p align="left">
+                    <span class="md-caption" v-if="info.likes.length > 0"><span v-for="like in info.likes" :key="like.username">&nbsp;{{ like.username }}</span> 赞了本相册。</span>
+                </p>
             </md-card-content>
         </md-card>
         <md-progress-spinner md-mode="indeterminate" v-if="!loaded"></md-progress-spinner>
@@ -119,7 +122,8 @@
                 photoCount: 0,
                 isPublic: false,
                 isVisible: false,
-                time: null
+                time: null,
+                likes: [],
             },
             showSidepanel: false,
             comment: null,
@@ -193,13 +197,7 @@
                     }
                     this.comments = response.data["data"]["comments"]
                     this.$emit('changeTitle', "相册 " + response.data["data"]["title"])
-                    this.info.title = response.data["data"]["title"]
-                    this.info.description = response.data["data"]["description"]
-                    this.info.originCount = response.data["data"]["originCount"]
-                    this.info.photoCount = response.data["data"]["photoCount"]
-                    this.info.isPublic = response.data["data"]["public"]
-                    this.info.isVisible = response.data["data"]["visible"]
-                    this.info.time = response.data["data"]["time"]
+                    this.info = response.data["data"]
                 })
                 this.axios.get("/media/gallery/like",{
                     params: {
@@ -349,7 +347,7 @@
                         this.counter[1] --
                         break
                 }
-                //console.log(this.counter)
+                console.log(this.counter)
                 if(this.counter[0] == 0){
                     this.current ++
                     this.decodeToPNG()

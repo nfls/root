@@ -51,7 +51,7 @@ class Gallery
     private $comments;
 
     /**
-     * @var string
+     * @var array
      *
      * @ORM\Column(type="json")
      */
@@ -95,7 +95,7 @@ class Gallery
         $this->photos = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->time = new \DateTime();
-        $this->likes = json_encode([]);
+        $this->likes = [];
     }
 
     /**
@@ -266,13 +266,10 @@ class Gallery
      */
     public function getLikes()
     {
-        if (null === $this->likes) {
-            $this->likes = json_encode([]);
-        }
         $repo = $this->em->getRepository(User::class);
         return array_map(function ($id) use ($repo) {
             return $repo->findOneBy(["id" => $id]);
-        }, json_decode($this->likes, true));
+        }, $this->likes);
     }
 
     /**
@@ -283,12 +280,9 @@ class Gallery
     public function likeStatus($user)
     {
         $repo = $this->em->getRepository(User::class);
-        if (null === $this->likes) {
-            $this->likes = json_encode([]);
-        }
         $likes = array_map(function ($id) use ($repo) {
             return $repo->findOneBy(["id" => $id]);
-        }, json_decode($this->likes, true));
+        }, $this->likes);
         if (null === $user) {
             $status = false;
         } else if (in_array($user, $likes)) {
@@ -304,16 +298,11 @@ class Gallery
      */
     public function like($user)
     {
-        if (null === $this->likes) {
-            $this->likes = json_encode([]);
-        }
-        $likes = json_decode($this->likes);
-        if (($key = array_search($user->getId(), $likes)) !== false) {
-            unset($likes[$key]);
+        if (($key = array_search($user->getId(), $this->likes)) !== false) {
+            unset($this->likes[$key]);
         } else {
-            array_push($likes, $user->getId());
+            array_push($this->likes, $user->getId());
         }
-        $this->likes = json_encode($likes);
     }
 
     public function removeAllComments()
