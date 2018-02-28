@@ -46,9 +46,11 @@ class CodeController extends AbstractController
             return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
         $target = $this->getTarget($request, true);
         if (is_null($target))
-            return $this->response()->response("不正确或已被使用！", Response::HTTP_BAD_REQUEST);
+            return $this->response()->response("不正确或已被使用", Response::HTTP_BAD_REQUEST);
         if ($this->notification()->code($target, NotificationService::ACTION_REGISTERING))
             return $this->response()->response(null);
+        else
+            return $this->response()->response("有未过期的验证请求，请检查您的手机，或稍后再试", Response::HTTP_BAD_REQUEST);
     }
 
     private function getTarget(Request $request, $checkUsed)
@@ -111,9 +113,11 @@ class CodeController extends AbstractController
         $em = $this->getDoctrine()->getManager()->getRepository(User::class);
         $target = $this->getTarget($request, false);
         if (is_null($target))
-            return $this->response()->response("不正确！", Response::HTTP_BAD_REQUEST);
-        $this->notification()->code($target, NotificationService::ACTION_RESET);
-        return $this->response()->response(null);
+            return $this->response()->response("格式不正确", Response::HTTP_BAD_REQUEST);
+        if($this->notification()->code($target, NotificationService::ACTION_RESET))
+            return $this->response()->response(null);
+        else
+            return $this->response()->response("有未过期的验证请求，请检查您的手机，或稍后再试", Response::HTTP_BAD_REQUEST);
     }
 
     /**
@@ -126,9 +130,11 @@ class CodeController extends AbstractController
             return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
         $target = $this->getTarget($request, true);
         if (is_null($target))
-            return $this->response()->response("不正确或已被使用！", Response::HTTP_BAD_REQUEST);
-        $this->notification()->code($target, NotificationService::ACTION_BIND);
-        return $this->response()->response(null);
+            return $this->response()->response("不正确或已被使用", Response::HTTP_BAD_REQUEST);
+        if($this->notification()->code($target, NotificationService::ACTION_BIND))
+            return $this->response()->response(null);
+        else
+            return $this->response()->response("有未过期的验证请求，请检查您的手机，或稍后再试", Response::HTTP_BAD_REQUEST);
     }
 
     private function sendMail($target, $action, $readableAction, $checkUsed = true)

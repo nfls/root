@@ -26,12 +26,17 @@ class NexmoNotification extends AbstractNotificationService
 
     public function sendCode(PhoneNumber $phone)
     {
-        $verification = $this->client->verify()->start([
-            'number' => $this->getInternationalNumber($phone),
-            'code_length' => 6,
-            'brand' => "NFLS.IO"
-        ]);
-        return $verification->getRequestId();
+        try {
+            $verification = $this->client->verify()->start([
+                'number' => $this->getInternationalNumber($phone),
+                'code_length' => 6,
+                'brand' => "NFLS.IO"
+            ]);
+            return $verification->getRequestId();
+        } catch (Nexmo\Client\Exception\Exception $e){
+            return null;
+        }
+
     }
 
     public function sendBind(PhoneNumber $phone)
@@ -112,6 +117,20 @@ class NexmoNotification extends AbstractNotificationService
         } catch (Nexmo\Client\Exception\Exception $e) {
             return false;
         }
+    }
+
+    public function cancel(array $ticket)
+    {
+        /*
+        $id = $ticket["rsp"];
+        try {
+            $verification = new Nexmo\Verify\Verification($id);
+            $this->client->verify()->cancel($verification);
+        } catch (Nexmo\Client\Exception\Exception $e) {
+
+        }
+        */
+
     }
 
 

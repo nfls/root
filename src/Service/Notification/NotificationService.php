@@ -32,6 +32,8 @@ class NotificationService
     {
         $client = $this->getClient($target);
         if ($this->redis->exists($client->getIdentifier($target))) {
+            if($client instanceof NexmoNotification)
+                $client->cancel(json_decode($this->redis->get($client->getIdentifier($target)), true));
             $this->redis->del([$client->getIdentifier($target)]);
         }
         switch ($action) {
@@ -66,7 +68,7 @@ class NotificationService
     private function getClient($target)
     {
         if ($target instanceof PhoneNumber) {
-            if ($target->getCountryCode() == 86) {
+            if ($target->getCountryCode() != 86) {
                 return new AliyunNotification();
             } else {
                 return new NexmoNotification();
