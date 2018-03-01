@@ -50,9 +50,6 @@ class OAuthController extends AbstractController
             $authRequest->setUser($user);
             $authRequest->setAuthorizationApproved(true);
             $response = $httpFoundationFactory->createResponse($this->server->completeAuthorizationRequest($authRequest, $psrResponse));
-            $response_array = json_decode($response->getContent(),true);
-            $response_array["id_token"] = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1MTk4NjQxNTUsImV4cCI6MTU1MTQwMDE1NSwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSJ9.M_2dughXyVmbuem2_EQFh0Cjw7Kutcqt6rSi1I7jR1I';
-            $response->setContent(json_encode($response_array));
             return $response;
         } catch (OAuthServerException $e) {
             return $this->response()->response($e->getMessage(), 404);
@@ -70,7 +67,11 @@ class OAuthController extends AbstractController
         $psrResponse = $factory->createResponse(new Response());
         $psrRequest = $factory->createRequest($request);
         try {
-            return $httpFoundationFactory->createResponse($this->server->respondToAccessTokenRequest($psrRequest, $psrResponse));
+            $response = $httpFoundationFactory->createResponse($this->server->respondToAccessTokenRequest($psrRequest, $psrResponse));
+            $response_array = json_decode($response->getContent(),true);
+            $response_array["id_token"] = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1MTk4NjQxNTUsImV4cCI6MTU1MTQwMDE1NSwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSJ9.M_2dughXyVmbuem2_EQFh0Cjw7Kutcqt6rSi1I7jR1I';
+            $response->setContent(json_encode($response_array));
+            return $response;
         } catch (OAuthServerException $e) {
             return $httpFoundationFactory->createResponse($e->generateHttpResponse($psrResponse));
 
