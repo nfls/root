@@ -21,7 +21,9 @@
         并发数（尚未支持）：
         <input id="ss" class="easyui-numberspinner" style="width:80px;"
                required="required" data-options="min:1,max:4,editable:false" disabled>
-        <a id="submit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="upload(0)">开始上传</a>
+        <a id="submit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="upload(0)">开始上传</a><br/>
+        自动精选：
+        <input id="more" type="file" multiple accept="image/*">
     </div>
     <br/>
 
@@ -57,7 +59,7 @@
                 ]]
         }
     );
-    $('input[type="file"]').change(function(e){
+    $('#myFile').change(function(e){
         data = new Array();
 
         var files = e.target.files;
@@ -73,7 +75,17 @@
         });
 
         reloadData();
-    })
+    });
+    $('#more').change(function(e){
+        var files = e.target.files;
+        $('#dg').datagrid("unselectAll");
+        $.each(files, function (fileIndex, fileValue) {
+            $.each(data, function(dataIndex,dataValue) {
+                if(fileValue["name"] === dataValue["filename"])
+                    $('#dg').datagrid("selectRow", dataIndex);
+            });
+        });
+    });
 
 
 
