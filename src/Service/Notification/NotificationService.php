@@ -69,7 +69,7 @@ class NotificationService
     private function getClient($target)
     {
         if ($target instanceof PhoneNumber) {
-            if ($target->getCountryCode() != 86) {
+            if ($target->getCountryCode() == 86) {
                 return new AliyunNotification();
             } else {
                 return new NexmoNotification();
