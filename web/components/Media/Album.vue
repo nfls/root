@@ -39,6 +39,7 @@
                 :md-cancel-text="$t('cancel')"
                 @md-confirm="submitComment()"
         />
+
         <md-card class="gist">
             <md-card-header>
                 <div class="md-title">{{info.title}}</div>
@@ -57,7 +58,9 @@
                 </p>
             </md-card-content>
         </md-card>
+
         <md-progress-spinner md-mode="indeterminate" v-if="!loaded"></md-progress-spinner>
+
         <div class="md-row" style="display:inline-block;margin:0px;min-width:90%" v-if="loaded">
             <figure v-for="(item, index) in items" class="photo">
                 <img class="preview-img"  :src="item.msrc" @click="$preview.open(index, items, options)" style="display:inline;">
@@ -65,6 +68,11 @@
             </figure>
         </div>
 
+        <md-dialog-alert
+                :md-active.sync="noFeature"
+                :md-title="$t('no-featured')"
+                :md-content="$t('no-featured-text')"
+                :md-confirm-text="$t('confirm')"/>
 
         <md-speed-dial class="md-top-right back-button" md-direction="bottom" md-event="click">
             <md-speed-dial-target>
@@ -132,6 +140,7 @@
             onlyOrigin: true,
             showDebug: false,
             csrf: null,
+            noFeature: false,
             worker: null,
             loaded: true,
             counter: [0],
@@ -167,8 +176,11 @@
                         this.loaded = false
                         var items = Object.values(response.data["data"]["photos"])
                         if(this.onlyOrigin){
-                            //console.log(items)
                             items = items.filter(item => item.osrc != null)
+                            if(items.length == 0){
+                                this.noFeature = true
+                                this.switchPreference()
+                            }
                         }
                         this.items = items.map(function(val){
                             val.msrc = "/storage/photos/thumb/" + val.msrc
