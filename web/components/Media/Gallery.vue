@@ -55,9 +55,9 @@
         margin-bottom: 10px;
     }
     img {
-        width:100%;
-        height:100%;
-        object-fit: cover;
+        width:100% !important;
+        height:100% !important;
+        object-fit: cover !important;
         overflow: hidden;
         margin:0px;
         padding:0px;
