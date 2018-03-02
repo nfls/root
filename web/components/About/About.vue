@@ -4,7 +4,7 @@
             <span class="md-title">NFLS.IO 南外人</span><br/>
             © 2016-2018 NFLS.IO Dev Group. All rights reserved.<br/>
             <del>谨以此项目纪念即将过去的高中生活。 —— 胡清阳</del><br/>
-            <md-button class="md-raised text" @click="showDialog = !showDialog">反馈</md-button>
+            <md-button class="md-raised text" href="https://dev.nfls.io/jira/servicedesk/customer/portal/1">反馈</md-button>
         </p>
         <p class="text">
             <span class="md-title">App</span><br/>
@@ -42,27 +42,6 @@
                 </md-card-header>
             </md-card>
         </div>
-        <md-dialog :md-active.sync="showDialog">
-            <form novalidate class="md-layout" @submit.prevent="submit">
-                <md-card class="md-size-100">
-                    <md-card-content>
-                        <span class="md-caption">您可以通过本表格与开发组取得联系。注意，我们可能需要与您进行进一步交流，或是要求提供额外信息，所以请务必准确填写好自己的联系方式。此外，问题反馈请注明问题发生时间，及您的相关操作，以便我们进行调试。</span>
-                        <br/>
-                        <md-field>
-                            <label>联系方式</label>
-                            <md-textarea v-model="contact"></md-textarea>
-                        </md-field>
-                        <md-field>
-                            <label>反馈</label>
-                            <md-textarea v-model="content"></md-textarea>
-                        </md-field>
-                    </md-card-content>
-                    <md-card-actions>
-                        <md-button type="submit" class="md-primary">提交</md-button>
-                    </md-card-actions>
-                </md-card>
-            </form>
-        </md-dialog>
 
     </div>
 </template>
@@ -77,7 +56,6 @@
         data: () => ({
             version: "aaa",
             loaded: false,
-            showDialog: false,
             contact: null,
             content: null,
             devs: null
