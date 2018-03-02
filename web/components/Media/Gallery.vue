@@ -1,7 +1,7 @@
 <i18n src="../../translation/Media.json"></i18n>
 <template>
     <div class="md-layout md-gutter md-alignment-center">
-        <div class="md-layout-item md-size-50 md-small-size-100 md-xsmall-size-100 gallery-card" v-for="item in items" :key="item.id">
+        <div class="md-layout-item md-xlarge-size-20 md-large-size-33 md-medium-size-50 md-small-size-100 md-xsmall-size-100 gallery-card" v-for="item in items" :key="item.id">
             <md-card @click.native="onclick(item.id)" v-if="item.cover !== null">
                 <md-card-media-cover md-solid>
                     <md-card-media md-ratio="4:3">
@@ -32,7 +32,7 @@
                 var items = response.data["data"]
                 this.items = items.filter(function(val){
                     if (val.cover !== null){
-                        val.cover.src = "/storage/photos/thumb/" + val.cover.msrc
+                        val.cover.src = "/storage/photos/hd/" + val.cover.src
                     }
                     return val
                 })
@@ -59,5 +59,7 @@
         height:100%;
         object-fit: cover;
         overflow: hidden;
+        margin:0px;
+        padding:0px;
     }
 </style>

@@ -16,7 +16,7 @@ class GalleryRepository extends ServiceEntityRepository
 
     public function getList($page, $canViewPrivate = false, $canViewAll = false)
     {
-        $query = $this->createQueryBuilder("u");
+        $query = $this->createQueryBuilder("u")->orderBy("u.time","DESC");
         if (!$canViewPrivate) {
             $query = $query->where("u.isPublic = true");
         }
