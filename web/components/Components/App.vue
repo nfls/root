@@ -23,7 +23,10 @@
                                 <md-list-item to='/user/security'><md-icon>security</md-icon><span class='md-list-item-text'>Security</span></md-list-item>
                                 <md-list-item to='/user/message'><md-icon>chat</md-icon><span class='md-list-item-text'>Message</span><md-chip class="md-accent" v-if="unread > 0">{{unread}}</md-chip></md-list-item>
                                 <md-divider></md-divider>
+                                <md-list-item href="https://dev.nfls.io/jira/openid/login/2"><md-icon>help_outline</md-icon><span class='md-list-item-text'>Support</span></md-list-item>
+                                <md-divider></md-divider>
                                 <md-list-item @click="logout"><md-icon>exit_to_app</md-icon><span class='md-list-item-text'>Logout</span></md-list-item>
+
                             </md-list>
                             <md-list v-else>
                                 <md-list-item to='/user/login'>
@@ -41,7 +44,7 @@
                 </div>
             </md-app-toolbar>
 
-            <md-app-drawer :md-active.sync='menuVisible' md-persistent='mini'>
+            <md-app-drawer :md-active.sync='menuVisible' md-persistent='full'>
                 <md-toolbar class='md-transparent' md-elevation='0'>
                     NFLS.IO
                     <div class='md-toolbar-section-end'>
@@ -52,45 +55,34 @@
                 </md-toolbar>
 
                 <md-list>
-                    <md-list-item to='/user/dashboard'>
-                        <md-icon>dashboard</md-icon>
-                        <span class='md-list-item-text'>Dashboard</span>
-                    </md-list-item>
+                    <md-list-item to='/user/dashboard'><md-icon>dashboard</md-icon><span class='md-list-item-text'>Dashboard</span></md-list-item>
 
-                    <md-list-item md-expand>
-                        <md-icon>class</md-icon>
-                        <span class='md-list-item-text'>School</span>
-                        <md-list slot='md-expand'>
-                            <md-list-item class='md-inset' to='/school/pastpaper'><md-icon>book</md-icon><span class='md-list-item-text'>PP</span></md-list-item>
-                            <md-list-item class='md-inset' to='/school/blackboard'><md-icon>speaker_notes</md-icon><span class='md-list-item-text'>Blackboard</span></md-list-item>
-                            <md-list-item class='md-inset' to='/school/vote'><md-icon>plus_one</md-icon><span class='md-list-item-text'>Vote</span></md-list-item>
-                        </md-list>
-                    </md-list-item>
+                    <md-divider></md-divider>
 
-                    <md-list-item md-expand>
-                        <md-icon>school</md-icon>
-                        <span class='md-list-item-text'>Alumni</span>
-                        <md-list slot='md-expand'>
-                            <md-list-item class='md-inset' to='/alumni/auth'><md-icon>perm_identity</md-icon><span class='md-list-item-text'>Realname</span></md-list-item>
-                            <md-list-item class='md-inset' to='/alumni/directory'><md-icon>info</md-icon><span class='md-list-item-text'>Directory</span></md-list-item>
-                        </md-list>
-                    </md-list-item>
+                    <md-list-item to='/school/pastpaper'><md-icon>book</md-icon><span class='md-list-item-text'>PP</span></md-list-item>
+                    <md-list-item to='/school/blackboard'><md-icon>speaker_notes</md-icon><span class='md-list-item-text'>Blackboard</span></md-list-item>
+                    <md-list-item to='/school/vote'><md-icon>plus_one</md-icon><span class='md-list-item-text'>Vote</span></md-list-item>
 
+                    <md-divider></md-divider>
 
+                    <md-list-item to='/alumni/auth'><md-icon>perm_identity</md-icon><span class='md-list-item-text'>Realname</span></md-list-item>
+                    <md-list-item to='/alumni/directory'><md-icon>info</md-icon><span class='md-list-item-text'>Directory</span></md-list-item>
 
-                    <md-list-item md-expand>
-                        <md-icon>video_library</md-icon>
-                        <span class='md-list-item-text'>Media</span>
-                        <md-list slot='md-expand'>
-                            <md-list-item class='md-inset' to='/media/game'><md-icon>gamepad</md-icon><span class='md-list-item-text'>Game</span></md-list-item>
-                            <md-list-item class='md-inset' to='/media/gallery'><md-icon>photo_library</md-icon><span class='md-list-item-text'>Gallery</span></md-list-item>
-                        </md-list>
-                    </md-list-item>
+                    <md-divider></md-divider>
+
+                    <md-list-item to='/media/game'><md-icon>gamepad</md-icon><span class='md-list-item-text'>Game</span></md-list-item>
+                    <md-list-item to='/media/gallery'><md-icon>photo_library</md-icon><span class='md-list-item-text'>Gallery</span></md-list-item>
+
+                    <md-divider></md-divider>
 
                     <md-list-item href='https://forum.nfls.io'><md-icon>forum</md-icon><span class='md-list-item-text'>Forum</span></md-list-item>
                     <md-list-item href='https://wiki.nfls.io'><md-icon>library_books</md-icon><span class='md-list-item-text'>Wiki</span></md-list-item>
+                    <md-list-item href='https://dev.nfls.io'><md-icon>developer_mode</md-icon><span class='md-list-item-text'>Development</span></md-list-item>
+
+                    <md-divider></md-divider>
+
                     <md-list-item to='/about'><md-icon>adb</md-icon><span class='md-list-item-text'>About</span></md-list-item>
-                    <md-list-item href='/admin' v-if="admin"><md-icon>developer_mode</md-icon><span class='md-list-item-text'>Admin</span></md-list-item>
+                    <md-list-item href='/admin' v-if="admin"><md-icon>build</md-icon><span class='md-list-item-text'>Admin</span></md-list-item>
                 </md-list>
             </md-app-drawer>
 
@@ -154,6 +146,7 @@
             }, ct(response){
                 this.gResponse = response
             }, changeTitle(title) {
+                document.title = title + " - 南外人 NFLS.IO "
                 this.title = title
             }, prepareRecaptcha() {
                 document.getElementById('recaptcha').style.visibility = 'visible';

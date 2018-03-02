@@ -4,7 +4,7 @@
             <span class="md-title">NFLS.IO 南外人</span><br/>
             © 2016-2018 NFLS.IO Dev Group. All rights reserved.<br/>
             <del>谨以此项目纪念即将过去的高中生活。 —— 胡清阳</del><br/>
-            <md-button class="md-raised text" href="https://dev.nfls.io/jira/servicedesk/customer/portal/1">反馈</md-button>
+            <md-button class="md-raised text" href="https://dev.nfls.io/jira/openid/login/2">反馈</md-button>
         </p>
         <p class="text">
             <span class="md-title">App</span><br/>
