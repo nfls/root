@@ -98,7 +98,7 @@
                     </form>
                 </md-dialog-content>
                 <md-dialog-actions>
-                    <md-button class="md-accent" @click="destroy">删除本黑板</md-button>
+                    <md-button class="md-accent" @click="showAdmin = false;showDestroy = true">删除本黑板</md-button>
                     <md-button class="md-primary" @click="preference">提交</md-button>
                     <md-button class="md-primary" @click="showAdmin = false">关闭</md-button>
                 </md-dialog-actions>
@@ -178,6 +178,16 @@
                 md-confirm-text="提交"
                 md-cancel-text="取消"
                 @md-confirm="newClass"/>
+
+        <md-dialog-confirm
+                :md-active.sync="showDestroy"
+                md-title="删除确认"
+                md-content="您确认要删除当前黑板吗？您所有上传的的任务都将被删除。此操作不可逆。"
+                md-confirm-text="确认"
+                md-cancel-text="取消"
+                @md-confirm="destroy" />
+
+
         <md-speed-dial class="md-top-right" style="margin-top: 60px;" md-effect="opacity" md-direction="bottom" v-if="eligibility">
             <md-speed-dial-target class="md-plain">
                 <md-icon>edit</md-icon>
@@ -252,7 +262,8 @@
                 announcement: ""
             },
             studentsInfo:[],
-            moment: require('moment-timezone')
+            moment: require('moment-timezone'),
+            showDestroy: false
         }),
         mounted: function (){
             this.$emit("changeTitle","Blackboard")
