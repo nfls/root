@@ -152,7 +152,10 @@ class NotificationService
 
     public function notifyNewVerification(Alumni $ticket){
         $info = "【通知】新的实名认证请求，来自 " . $ticket->getChineseName();
-        file_get_contents("http://127.0.0.1:20001/openqq/send_group_message?uid=683275012&content=".urlencode($info));
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1:20001/openqq/send_group_message?uid=683275012&content=".urlencode($info));
+        curl_exec($ch);
+        curl_close($ch);
     }
 
     //TODO Security setting changes
