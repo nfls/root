@@ -159,7 +159,7 @@ class AlumniController extends AbstractController
             array_push($error_ids, $error->getMessage());
         }
         $normalizer = new ObjectNormalizer();
-        $normalizer->setCircularReferenceLimit(2);
+        $normalizer->setCircularReferenceLimit(1);
         $normalizer->setCircularReferenceHandler(function ($object) {
             return null;
         });
