@@ -310,5 +310,10 @@ class Gallery
         $this->comments = new ArrayCollection();
     }
 
+    public function removeAllPhotos()
+    {
+        $this->photos = new ArrayCollection();
+    }
+
 
 }

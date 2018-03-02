@@ -7,6 +7,7 @@ use App\Entity\Media\Comment;
 use App\Entity\Media\Gallery;
 use App\Entity\Media\Photo;
 use App\Model\Permission;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
@@ -181,12 +182,17 @@ class GalleryController extends AbstractController
                 $em->remove($gallery->getCover() ?? new Photo());
                 foreach ($gallery->getPhotos() as $photo) {
                     $photo->setGallery(null);
+                    $em->persist($photo);
                     $em->remove($photo);
                 }
                 foreach ($gallery->getComments() as $comment) {
+                    $comment->setGallery(null);
+                    $em->persist($comment);
                     $em->remove($comment);
                 }
                 $gallery->removeAllComments();
+                $gallery->removeAllPhotos();
+                $gallery->setCover(null);
                 $em->flush();
                 $em->remove($gallery);
             } else {
