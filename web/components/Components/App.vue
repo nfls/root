@@ -24,6 +24,8 @@
                                 <md-list-item to='/user/message'><md-icon>chat</md-icon><span class='md-list-item-text'>Message</span><md-chip class="md-accent" v-if="unread > 0">{{unread}}</md-chip></md-list-item>
                                 <md-divider></md-divider>
                                 <md-list-item href="https://dev.nfls.io/jira/openid/login/2"><md-icon>help_outline</md-icon><span class='md-list-item-text'>Support</span></md-list-item>
+                                <md-list-item v-if="admin" @click="dropAdmin"><md-icon>delete</md-icon><span class='md-list-item-text'>Drop Admin</span></md-list-item>
+                                <md-list-item v-else-if="dropEnabled" @click="recover"><md-icon>autorenew</md-icon><span class='md-list-item-text'>Recover Admin</span></md-list-item>
                                 <md-divider></md-divider>
                                 <md-list-item @click="logout"><md-icon>exit_to_app</md-icon><span class='md-list-item-text'>Logout</span></md-list-item>
 
@@ -106,6 +108,7 @@
             loggedIn: false,
             username: '未登录',
             admin: false,
+            dropEnabled: false,
             verified: false,
             unread: 0,
             avatar: "/avatar/0.png",
@@ -166,6 +169,8 @@
                         this.avatar = "/avatar/" + response.data['data']['id'] + ".png?" + this.reloadC
                         this.loggedIn = true
                         this.reloadC++
+                        if(this.$cookie.get("drop") === "true")
+                            this.dropEnabled = true
                         var path = this.$route.fullPath
                         if ( path === "/user/login" || path === "/user/register" || path === "user/reset")
                             this.$router.push("/dashboard")
@@ -194,6 +199,12 @@
             }, showMsg(msg) {
                 this.message = msg
                 this.showSnackbar = true
+            }, dropAdmin() {
+                this.$cookie.set('drop', 'true')
+                window.location.reload()
+            }, recover() {
+                this.$cookie.delete("drop")
+                window.location.reload()
             }
         },created: function(){
             document.getElementById('recaptcha').style.visibility = 'hidden';

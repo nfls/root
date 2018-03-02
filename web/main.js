@@ -39,6 +39,8 @@ Vue.use(VueAnalytics, {
     }
 })
 Vue.use(VueWorker)
+var VueCookie = require('vue-cookie');
+Vue.use(VueCookie);
 var i18n = new VueI18n({
     locale: 'en',
     messages:

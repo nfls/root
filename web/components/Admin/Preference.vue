@@ -48,6 +48,7 @@
             }
         },
         mounted: function() {
+            this.$emit("changeTitle","Preference")
             this.update()
         },
         watch: {
