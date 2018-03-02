@@ -2,6 +2,7 @@
 
 namespace App\Service\Notification;
 
+use App\Entity\School\Alumni;
 use App\Entity\School\Claz;
 use App\Entity\School\Notice;
 use App\Entity\User\Chat;
@@ -147,6 +148,11 @@ class NotificationService
             if($user->getPhone())
                 $this->getClient($user->getPhone())->sendDeadlineReminder($user->getPhone(),$class->getTeacher()->getValidAuth()->getEnglishName(),$notice->getTitle(),$notice->getDeadline()->format("Y-m-d H:i"));
         }
+    }
+
+    public function notifyNewVerification(Alumni $ticket){
+        $info = "【通知】新的实名认证请求，来自 " . $ticket->getChineseName();
+        file_get_contents("http://127.0.0.1:20001/openqq/send_group_message?uid=683275012&content=".urlencode($info));
     }
 
     //TODO Security setting changes

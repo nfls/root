@@ -186,6 +186,7 @@ class AlumniController extends AbstractController
 
         $form->setStatus(1);
         $form->setSubmitTime(new \DateTime());
+        $this->notification()->notifyNewVerification($form);
         $em->persist($form);
         $em->flush();
         return $this->response()->responseEntity(null, 200);
