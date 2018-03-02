@@ -33,7 +33,6 @@ class GalleryRepository extends ServiceEntityRepository
     public function getAllList()
     {
         return $this->createQueryBuilder("u")
-            ->setMaxResults(10)
             ->getQuery()
             ->getResult();
     }
