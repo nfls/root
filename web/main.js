@@ -56,14 +56,14 @@ Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
-  i18n,
-  el: '#app',
-  router,
-  components: {
-    App
-  },
-  directives: {infiniteScroll},
-  template: '<App/>'
+    i18n,
+    el: '#app',
+    router,
+    components: {
+        App
+    },
+    directives: {infiniteScroll},
+    template: '<App/>'
 })
 
 

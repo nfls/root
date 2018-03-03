@@ -5,30 +5,34 @@
             <md-card class="md-flex-50 md-flex-small-100 login-card">
                 <md-card-header>
                     <md-card-header-text>
-                        <div class="md-title"> {{ $t('login-title') }} </div>
+                        <div class="md-title"> {{ $t('login-title') }}</div>
                         <div class="md-subtitle">{{ $t('login-subtitle') }}</div>
 
                     </md-card-header-text>
                 </md-card-header>
 
                 <md-card-content>
-                   <div class="md-layout-row md-layout-wrap md-gutter">
+                    <div class="md-layout-row md-layout-wrap md-gutter">
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('username')">
                                 <label for="username">{{ $t('login-username') }}</label>
-                                <md-input name="username" id="username" autocomplete="username" v-model="form.username" :disabled="sending"  />
+                                <md-input name="username" id="username" autocomplete="username" v-model="form.username"
+                                          :disabled="sending"/>
                                 <span class="md-error" v-if="!$v.form.username.required">{{ $t('required') }}</span>
                             </md-field>
                         </div>
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('password')">
                                 <label for="password">{{ $t('password') }}</label>
-                                <md-input name="password" id="password" autocomplete="password" v-model="form.password" :disabled="sending" type="password" />
+                                <md-input name="password" id="password" autocomplete="password" v-model="form.password"
+                                          :disabled="sending" type="password"/>
                                 <span class="md-error" v-if="!$v.form.password.required">{{ $t('required') }}</span>
                             </md-field>
                         </div>
                         <div class="md-flex md-flex-small-100">
-                            <md-checkbox v-model="form.remember" :disabled="sending" style="width:100%" class="md-primary">{{ $t('remember') }}</md-checkbox>
+                            <md-checkbox v-model="form.remember" :disabled="sending" style="width:100%"
+                                         class="md-primary">{{ $t('remember') }}
+                            </md-checkbox>
                         </div>
                         <div class="md-flex md-flex-small-100">
                             <md-button type="submit" class="md-raised md-primary">{{ $t('login') }}</md-button>
@@ -42,14 +46,14 @@
                     <md-button to="/user/reset">{{ $t('reset') }}</md-button>
                 </md-card-actions>
 
-                <md-progress-bar md-mode="indeterminate" v-if="sending" />
+                <md-progress-bar md-mode="indeterminate" v-if="sending"/>
             </md-card>
         </form>
     </div>
 </template>
 
 <script>
-    import { validationMixin } from 'vuelidate'
+    import {validationMixin} from 'vuelidate'
     import {
         required
     } from 'vuelidate/lib/validators'
@@ -77,7 +81,7 @@
             }
         },
         methods: {
-            getValidationClass (fieldName) {
+            getValidationClass(fieldName) {
                 const field = this.$v.form[fieldName]
                 if (field) {
                     return {
@@ -91,7 +95,7 @@
                     grecaptcha.execute()
                 }
             },
-            ct () {
+            ct() {
                 this.sending = true
                 this.axios.post('/user/login', {
                     username: this.form.username,
@@ -103,11 +107,11 @@
                         this.$emit("showMsg", this.$t('logged-in'))
                         window.setTimeout(() => {
                             var uri = this.$route.query.redirect
-                            if(uri)
+                            if (uri)
                                 window.location.href = uri
                             else
                                 this.$emit("reload")
-                        },1500)
+                        }, 1500)
                     } else {
                         this.$emit("showMsg", this.$t('password-incorrect'))
                         grecaptcha.reset()
@@ -119,12 +123,12 @@
                 })
 
             }
-        }, mounted: function() {
-            this.$emit("changeTitle","Login")
+        }, mounted: function () {
+            this.$emit("changeTitle", "Login")
             this.$emit("prepareRecaptcha")
         }, watch: {
             gResponse: {
-                handler: function(val,newVal){
+                handler: function (val, newVal) {
                     this.ct();
                 }
             }
@@ -139,13 +143,14 @@
         right: 0;
         left: 0;
     }
+
     .login {
         margin-top: 80px;
         margin-left: auto;
         margin-right: auto;
-        width:70%;
-        height:100%;
-        min-width:260px;
-        max-width:500px;
+        width: 70%;
+        height: 100%;
+        min-width: 260px;
+        max-width: 500px;
     }
 </style>

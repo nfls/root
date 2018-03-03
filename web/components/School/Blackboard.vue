@@ -1,6 +1,6 @@
 <template>
     <div class="class" v-infinite-scroll="loadMore" :infinite-scroll-disabled="empty || loading">
-        <div class="info" v-if="!empty" >
+        <div class="info" v-if="!empty">
             <md-card>
                 <md-card-content style="align:left;">
                     <md-field>
@@ -48,7 +48,9 @@
                     <div v-if="notice.attachment.length > 0">
                         <md-divider></md-divider>
                         <span class="md-caption">附件</span>
-                        <md-button class="md-primary" v-for="href in notice.attachment" :href="href.href" :key="href.href" target="_blank">{{href.name}}</md-button>
+                        <md-button class="md-primary" v-for="href in notice.attachment" :href="href.href"
+                                   :key="href.href" target="_blank">{{href.name}}
+                        </md-button>
                     </div>
                     <md-divider></md-divider>
                     <span class="md-caption" v-if="notice.preview">未发布&nbsp;</span>
@@ -60,18 +62,21 @@
                 </md-card-actions>
             </md-card>
             <!--Admin-->
-            <md-dialog :md-active.sync="showNewPost" class="new-post" style="width:80%" :md-close-on-esc="false" :md-click-outside-to-close="false">
+            <md-dialog :md-active.sync="showNewPost" class="new-post" style="width:80%" :md-close-on-esc="false"
+                       :md-click-outside-to-close="false">
                 <md-dialog-title>新的公告</md-dialog-title>
 
                 <md-dialog-content>
-                    <span>我们提供Google Docs无障碍服务，您可以通过本功能发送文档或是问卷。详情请见<a href="https://dev.nfls.io/confluence/x/AQAO" target="_blank">Confluence公告</a>。</span>
+                    <span>我们提供Google Docs无障碍服务，您可以通过本功能发送文档或是问卷。详情请见<a href="https://dev.nfls.io/confluence/x/AQAO"
+                                                                       target="_blank">Confluence公告</a>。</span>
                     <markdown-palettes v-model="post.content" :disabled="sending"></markdown-palettes>
                     <form>
                         <md-field>
                             <label>附件</label>
                             <md-file v-model="post.file" multiple @md-change="changeUpload" :disabled="sending"/>
                         </md-field>
-                        <span>截止日期（留空为没有）<datetime v-model="post.deadline" type="datetime" :disabled="sending"></datetime></span>
+                        <span>截止日期（留空为没有）<datetime v-model="post.deadline" type="datetime"
+                                                   :disabled="sending"></datetime></span>
                         <md-field>
                             <label>用于提示截止日期的小标题</label>
                             <md-input v-model="post.title" :disabled="sending" :md-counter="20"/>
@@ -140,7 +145,8 @@
                         <label for="seniorSchool">高中毕业年份</label>
                         <md-input v-model="form.seniorRegistration" id="seniorRegistration" name="seniorRegistration"/>
                     </md-field>
-                    <md-button @click="search">搜索</md-button><br/>
+                    <md-button @click="search">搜索</md-button>
+                    <br/>
                     <md-list>
                         <md-list-item v-for="student in studentsInfo" :key="student.id">
                             <md-avatar>
@@ -185,10 +191,11 @@
                 md-content="您确认要删除当前黑板吗？您所有上传的的任务都将被删除。此操作不可逆。"
                 md-confirm-text="确认"
                 md-cancel-text="取消"
-                @md-confirm="destroy" />
+                @md-confirm="destroy"/>
 
 
-        <md-speed-dial class="md-top-right" style="margin-top: 60px;" md-effect="opacity" md-direction="bottom" v-if="eligibility">
+        <md-speed-dial class="md-top-right" style="margin-top: 60px;" md-effect="opacity" md-direction="bottom"
+                       v-if="eligibility">
             <md-speed-dial-target class="md-plain">
                 <md-icon>edit</md-icon>
             </md-speed-dial-target>
@@ -197,10 +204,12 @@
                 <md-button class="md-icon-button" @click="showNewClass = !showNewClass">
                     <md-icon>fiber_new</md-icon>
                 </md-button>
-                <md-button class="md-icon-button" @click="showNewPost = !showNewPost" v-if="classInfo && classInfo.admin">
+                <md-button class="md-icon-button" @click="showNewPost = !showNewPost"
+                           v-if="classInfo && classInfo.admin">
                     <md-icon>create</md-icon>
                 </md-button>
-                <md-button class="md-icon-button" @click="showListStu = !showListStu" v-if="classInfo && classInfo.admin">
+                <md-button class="md-icon-button" @click="showListStu = !showListStu"
+                           v-if="classInfo && classInfo.admin">
                     <md-icon>person</md-icon>
                 </md-button>
                 <md-button class="md-icon-button" @click="showAdmin = !showAdmin" v-if="classInfo && classInfo.admin">
@@ -220,12 +229,13 @@
     import VueMarkdown from 'vue-markdown'
     import MarkdownPalettes from 'markdown-palettes'
     import vueJsonEditor from 'vue-json-editor'
-    import { Datetime } from 'vue-datetime'
+    import {Datetime} from 'vue-datetime'
     import CalendarView from "vue-simple-calendar"
     import infiniteScroll from 'vue-infinite-scroll'
+
     export default {
         name: "Blackboard",
-        props: ["admin","verified",'loggedIn','gResponse'],
+        props: ["admin", "verified", 'loggedIn', 'gResponse'],
         directives: {infiniteScroll},
         components: {
             VueMarkdown,
@@ -261,12 +271,12 @@
                 title: "",
                 announcement: ""
             },
-            studentsInfo:[],
+            studentsInfo: [],
             moment: require('moment-timezone'),
             showDestroy: false
         }),
-        mounted: function (){
-            this.$emit("changeTitle","Blackboard")
+        mounted: function () {
+            this.$emit("changeTitle", "Blackboard")
             this.$emit("prepareRecaptcha")
             this.currentClass = this.$route.params["id"]
             this.init()
@@ -281,22 +291,22 @@
                     this.list()
                 })
             },
-            check(){
+            check() {
                 this.axios.get("/school/blackboard/eligibility").then((response) => {
                     this.eligibility = response.data["data"]
                 })
             },
             list() {
                 this.empty = true
-                this.axios.get("/school/blackboard/detail?id="+this.currentClass).then((response) => {
+                this.axios.get("/school/blackboard/detail?id=" + this.currentClass).then((response) => {
                     this.page = 1
                     this.classInfo = response.data["data"]
                     var moment = require('moment-timezone');
-                    this.classInfo.deadlines = this.classInfo.deadlines.map(function(val){
+                    this.classInfo.deadlines = this.classInfo.deadlines.map(function (val) {
                         val.startDate = moment(val.time).toDate()
                         return val
                     })
-                    this.classInfo.notices.map(function(val){
+                    this.classInfo.notices.map(function (val) {
                         val.preview = moment(val.time).toDate() > new Date()
                         return val
                     })
@@ -305,23 +315,23 @@
                     this.empty = false
                     this.getCsrf()
                 }).catch((error) => {
-                    if(this.claz.length > 0)
+                    if (this.claz.length > 0)
                         this.currentClass = this.claz[0].id
                 })
             },
             submit() {
                 this.upload(0)
             },
-            upload(index){
+            upload(index) {
                 this.sending = true
-                if(index >= this.post.toUpload.length){
+                if (index >= this.post.toUpload.length) {
                     this.post.toUpload = []
                     this.sendPost()
                     return
                 }
                 var file = this.post.toUpload[index]
                 var name = this.getPreffix(file.name) + "." + this.randomString(8) + this.getSuffix(file.name)
-                this.axios.get("/school/blackboard/signature",{
+                this.axios.get("/school/blackboard/signature", {
                     params: {
                         object: name,
                         type: file.type
@@ -334,18 +344,18 @@
                             "Content-Type": file.type
                         }
                     }
-                    this.axios.put(response.data["data"],file,header).then((response) => {
+                    this.axios.put(response.data["data"], file, header).then((response) => {
                         this.post.files.push(name)
-                        this.upload(index+1)
+                        this.upload(index + 1)
                     }).catch(error => {
                         this.sending = false
                         this.showMsg("文件上传失败")
                     });
                 })
             },
-            sendPost(){
+            sendPost() {
                 this.post._csrf = this.csrf
-                this.axios.post("/school/blackboard/post?id="+this.currentClass,this.post).then((response) => {
+                this.axios.post("/school/blackboard/post?id=" + this.currentClass, this.post).then((response) => {
                     this.resetForm()
                     this.showNewPost = false
                     this.sending = false
@@ -356,7 +366,7 @@
                     this.showMsg("你的公告中存在一些问题，请检查每项是否填写正确")
                 })
             },
-            close(){
+            close() {
                 this.showNewPost = false
             },
             changeUpload(list) {
@@ -397,86 +407,86 @@
                 var pos = filename.lastIndexOf('.');
                 var suffix = '';
                 if (pos != -1) {
-                    suffix = filename.substring(0,pos)
+                    suffix = filename.substring(0, pos)
                 }
                 return suffix;
             },
-            showMsg(msg){
-                this.$emit("showMsg",msg)
+            showMsg(msg) {
+                this.$emit("showMsg", msg)
             },
-            remove(id){
+            remove(id) {
                 this.active = "tab-add"
-                this.axios.post("/school/blackboard/edit?id="+this.currentClass,{
+                this.axios.post("/school/blackboard/edit?id=" + this.currentClass, {
                     id: id,
                     remove: true,
                     _csrf: this.csrf
-                }).then((response)=>{
+                }).then((response) => {
                     this.active = "tab-list"
                     this.list()
                 })
             },
-            removeNotice(id){
-                this.axios.post("/school/blackboard/delete?id="+this.currentClass,{
+            removeNotice(id) {
+                this.axios.post("/school/blackboard/delete?id=" + this.currentClass, {
                     id: id,
                     _csrf: this.csrf
-                }).then((response)=>{
+                }).then((response) => {
                     this.list()
                 })
             },
-            add(id){
-                this.axios.post("/school/blackboard/edit?id="+this.currentClass,{
+            add(id) {
+                this.axios.post("/school/blackboard/edit?id=" + this.currentClass, {
                     id: id,
                     add: true,
                     _csrf: this.csrf
-                }).then((response)=>{
-                    this.$emit("showMsg","添加学生成功！")
+                }).then((response) => {
+                    this.$emit("showMsg", "添加学生成功！")
                     this.list()
                 })
             },
-            destroy(){
-                this.axios.post("/school/blackboard/preference?id="+this.currentClass,{
-                    "delete":true,
+            destroy() {
+                this.axios.post("/school/blackboard/preference?id=" + this.currentClass, {
+                    "delete": true,
                     _csrf: this.csrf
-                }).then((response)=>{
+                }).then((response) => {
                     this.showAdmin = false
                     this.init()
                 })
             },
-            preference(){
+            preference() {
                 this.info._csrf = this.csrf
-                this.axios.post("/school/blackboard/preference?id="+this.currentClass,this.info).then((response)=>{
+                this.axios.post("/school/blackboard/preference?id=" + this.currentClass, this.info).then((response) => {
                     this.init()
                     this.showAdmin = false
                 })
             },
-            search(){
+            search() {
                 this.active = "tab-list"
                 this.form._csrf = this.csrf
-                this.axios.post("/alumni/directory/search",this.form).then((response) => {
+                this.axios.post("/alumni/directory/search", this.form).then((response) => {
                     this.studentsInfo = response.data["data"]
                     this.active = "tab-add"
                 })
             },
-            send(id){
-                this.$router.push("/user/message/"+id)
+            send(id) {
+                this.$router.push("/user/message/" + id)
             },
             setShowDate(d) {
                 this.showDate = d;
             },
             newClass(val) {
                 //console.log(val)
-                this.axios.post("/school/blackboard/create",{
+                this.axios.post("/school/blackboard/create", {
                     title: this.classTitle,
                     _csrf: this.csrf
                 }).then((response) => {
                     this.init()
                 })
             },
-            loadMore(){
+            loadMore() {
                 //console.log("aa")
                 this.loading = true
-                this.page ++
-                this.axios.get("/school/blackboard/detail",{
+                this.page++
+                this.axios.get("/school/blackboard/detail", {
                     params: {
                         id: this.currentClass,
                         page: this.page
@@ -484,7 +494,7 @@
                 }).then((response) => {
                     this.loading = false
                     var moment = require('moment-timezone');
-                    var info = response.data["data"].map(function(val){
+                    var info = response.data["data"].map(function (val) {
                         val.preview = moment(val.time).toDate() > new Date()
                         return val
                     })
@@ -497,7 +507,7 @@
                 grecaptcha.execute()
             },
             getCsrf() {
-                this.axios.get("user/csrf",{
+                this.axios.get("user/csrf", {
                     params: {
                         name: "school.blackboard"
                     }
@@ -508,14 +518,14 @@
         },
         watch: {
             currentClass: {
-                handler: function(newVal){
-                    this.$router.push("/school/blackboard/"+newVal)
+                handler: function (newVal) {
+                    this.$router.push("/school/blackboard/" + newVal)
                     this.list()
                 }
             },
             gResponse: {
-                handler: function(newVal){
-                    this.axios.post("/school/blackboard/notify?id="+this.currentClass, {
+                handler: function (newVal) {
+                    this.axios.post("/school/blackboard/notify?id=" + this.currentClass, {
                         captcha: grecaptcha.getResponse(),
                         id: this.sendId,
                         _csrf: this.csrf
@@ -531,19 +541,24 @@
 </script>
 
 <style scoped>
-    .new-post{
+    .new-post {
         min-width: 500px;
     }
-    .admin-class{
+
+    .admin-class {
         min-width: 200px;
     }
-    .md-card{
-        margin:10px;
+
+    .md-card {
+        margin: 10px;
     }
+
     .calendar-view {
-        .header {
-            display: none
-        }
+
+    .header {
+        display: none
+    }
+
     }
     .md-list {
         max-width: 100%;

@@ -1,7 +1,7 @@
 <i18n src="../../translation/Media.json"></i18n>
 <template>
     <div>
-        <md-drawer class="md-right" :md-active.sync="showSidepanel" v-if="showSidepanel" >
+        <md-drawer class="md-right" :md-active.sync="showSidepanel" v-if="showSidepanel">
             <md-toolbar class="md-transparent" md-elevation="0">
                 <span class="md-title">{{ $t('comment') }}</span>
             </md-toolbar>
@@ -14,14 +14,16 @@
                 <md-card v-for="comment in comments" :key="comment.id">
                     <md-card-header>
                         <md-card-header-text>
-                            <div class="md-subtitle">{{comment.postUser.username}} @ {{comment.time | moment("lll")}}</div>
+                            <div class="md-subtitle">{{comment.postUser.username}} @ {{comment.time | moment("lll")}}
+                            </div>
                         </md-card-header-text>
                     </md-card-header>
                     <md-card-content>
                         {{comment.content}}
                     </md-card-content>
                     <md-card-actions v-if="admin">
-                        <md-button class="md-accent" @click="deleteComment(comment.id)">{{ $t('admin-delete') }}</md-button>
+                        <md-button class="md-accent" @click="deleteComment(comment.id)">{{ $t('admin-delete') }}
+                        </md-button>
                     </md-card-actions>
                 </md-card>
             </div>
@@ -54,7 +56,8 @@
                 <span v-if="!webpSupported" v-html="$t('webp-not-supported')"><br/></span>
                 <md-divider></md-divider>
                 <p align="left">
-                    <span class="md-caption" v-if="info.likes.length > 0"><span v-for="like in info.likes" :key="like.username">&nbsp;{{ like.username }}</span> 赞了本相册。</span>
+                    <span class="md-caption" v-if="info.likes.length > 0"><span v-for="like in info.likes"
+                                                                                :key="like.username">&nbsp;{{ like.username }}</span> 赞了本相册。</span>
                 </p>
             </md-card-content>
         </md-card>
@@ -63,7 +66,8 @@
 
         <div class="md-row" style="display:inline-block;margin:0px;min-width:90%" v-if="loaded">
             <figure v-for="(item, index) in items" class="photo">
-                <img class="preview-img"  :src="item.msrc" @click="$preview.open(index, items, options)" style="display:inline;">
+                <img class="preview-img" :src="item.msrc" @click="$preview.open(index, items, options)"
+                     style="display:inline;">
                 <figcaption v-if="showDebug">ID: {{item.id}}</figcaption>
             </figure>
         </div>
@@ -112,7 +116,7 @@
 <script>
     export default {
         name: "Album",
-        props: ["admin","verified",'loggedIn','webpSupported'],
+        props: ["admin", "verified", 'loggedIn', 'webpSupported'],
         data: () => ({
             items: [],
             comments: [],
@@ -147,7 +151,7 @@
             current: 0
         }),
         mounted: function () {
-            const webp = function(data){
+            const webp = function (data) {
                 //console.log("concurrent!")
                 importScripts("https://nfls.io/js/libwebp-0.1.3.min.js")
                 var decoder = new WebPDecoder()
@@ -159,47 +163,47 @@
                 }
             }
             const actions = [
-                { message: 'worker1', func: webp}
+                {message: 'worker1', func: webp}
             ]
             this.worker = this.$worker.create(actions)
             this.loadData(true)
         },
         methods: {
-            loadData: function(full){
+            loadData: function (full) {
                 this.getCsrf()
-                this.axios.get("/media/gallery/detail",{
+                this.axios.get("/media/gallery/detail", {
                     params: {
                         id: this.$route.params["id"]
                     }
                 }).then((response) => {
-                    if(full){
+                    if (full) {
                         this.loaded = false
                         var items = Object.values(response.data["data"]["photos"])
-                        if(this.onlyOrigin){
+                        if (this.onlyOrigin) {
                             items = items.filter(item => item.osrc != null)
-                            if(items.length == 0){
+                            if (items.length == 0) {
                                 this.noFeature = true
                                 this.switchPreference()
                             }
                         }
-                        this.items = items.map(function(val){
+                        this.items = items.map(function (val) {
                             val.msrc = "/storage/photos/thumb/" + val.msrc
                             val.src = "/storage/photos/hd/" + val.src
-                            if(val.osrc != null){
+                            if (val.osrc != null) {
                                 val.osrc = "/storage/photos/origin/" + val.osrc
-                            }else{
+                            } else {
                                 val.osrc = null
                             }
                             return val
                         })
-                        if(!this.webpSupported) {
+                        if (!this.webpSupported) {
                             this.items = this.items.slice(0, 5);
                             this.current = 0;
                             this.decodeToPNG();
                         } else {
                             this.loaded = true
-                            this.items.map(function(val){
-                                if(val.osrc != null){
+                            this.items.map(function (val) {
+                                if (val.osrc != null) {
                                     val.msrc = val.src
                                     val.src = val.osrc
                                 }
@@ -211,7 +215,7 @@
                     this.$emit('changeTitle', "相册 " + response.data["data"]["title"])
                     this.info = response.data["data"]
                 })
-                this.axios.get("/media/gallery/like",{
+                this.axios.get("/media/gallery/like", {
                     params: {
                         id: this.$route.params["id"]
                     }
@@ -220,13 +224,13 @@
                     //console.log(this.isLiked)
                 })
             },
-            showComments: function(){
+            showComments: function () {
                 this.showSidepanel = true
             },
-            writeComments: function(){
+            writeComments: function () {
                 this.active = true
             },
-            submitComment: function(){
+            submitComment: function () {
                 this.axios.post('/media/gallery/comment', {
                     id: this.$route.params["id"],
                     content: this.comment,
@@ -234,43 +238,43 @@
                 }).then((response) => {
                     this.loadData(false)
                     this.showSidepanel = true
-                    if(response.data["code"] == 200){
-                        this.$emit("showMsg",this.$t("comment-succeeded"))
+                    if (response.data["code"] == 200) {
+                        this.$emit("showMsg", this.$t("comment-succeeded"))
                     } else {
-                        this.$emit("showMsg",response.data["data"])
+                        this.$emit("showMsg", response.data["data"])
                     }
                 })
             },
-            like: function(){
+            like: function () {
                 this.axios.post('/media/gallery/like', {
                     id: this.$route.params["id"],
                     _csrf: this.csrf
                 }).then((response) => {
-                    if(this.isLiked){
-                        this.$emit("showMsg",this.$t("dislike-succeeded"))
-                    }else{
-                        this.$emit("showMsg",this.$t("like-succeeded"))
+                    if (this.isLiked) {
+                        this.$emit("showMsg", this.$t("dislike-succeeded"))
+                    } else {
+                        this.$emit("showMsg", this.$t("like-succeeded"))
                     }
                     this.loadData(false)
                 })
             },
-            switchPreference: function(){
+            switchPreference: function () {
                 this.onlyOrigin = !this.onlyOrigin
-                if(this.onlyOrigin)
-                    this.$emit("showMsg",this.$t("show-featured"))
+                if (this.onlyOrigin)
+                    this.$emit("showMsg", this.$t("show-featured"))
                 else
-                    this.$emit("showMsg",this.$t("show-all"))
+                    this.$emit("showMsg", this.$t("show-all"))
                 this.loadData(true)
             },
-            deleteComment: function(id){
-                this.axios.post("/admin/media/comment/edit",{
+            deleteComment: function (id) {
+                this.axios.post("/admin/media/comment/edit", {
                     "delete": "[" + id + "]",
                     _csrf: this.csrf
                 }).then((response) => {
                     this.loadData(false)
                 })
             }, getCsrf() {
-                this.axios.get("user/csrf",{
+                this.axios.get("user/csrf", {
                     params: {
                         name: "media.gallery"
                     }
@@ -281,10 +285,10 @@
                 this.$emit("renderWebp");
             }, decodeToPNG() {
                 var index = this.current
-                if(index >= this.items.length){
+                if (index >= this.items.length) {
                     this.loaded = true
                     return
-                }else{
+                } else {
                     this.loaded = false
                 }
                 this.axios.get(this.items[index].msrc, {
@@ -292,7 +296,7 @@
                 }).then((response) => {
                     var data = convertBinaryToArray(atob(new Buffer(response.data, 'binary').toString('base64')))
                     var worker = this.getWorker()
-                    this.worker.postMessage(worker,[data]).then((response) => {
+                    this.worker.postMessage(worker, [data]).then((response) => {
                         this.items[index].msrc = this.bitmapToPNGFromCanvas(response.bitmap, response.attribute)
                         this.removeWorker(worker)
                     })
@@ -302,7 +306,7 @@
                 }).then((response) => {
                     var data = convertBinaryToArray(atob(new Buffer(response.data, 'binary').toString('base64')))
                     var worker = this.getWorker()
-                    this.worker.postMessage(worker,[data]).then((response) => {
+                    this.worker.postMessage(worker, [data]).then((response) => {
                         this.items[index].src = this.bitmapToPNGFromCanvas(response.bitmap, response.attribute)
                         this.removeWorker(worker)
                     })
@@ -332,36 +336,36 @@
                     document.body.removeChild(canvas)
                 } else k = attribute.URL;
                 return k
-            }, getWorker(){
+            }, getWorker() {
                 var minC = 100;
                 var pos = 0;
-                for(var i=0;i<=0;i++){
-                    if(this.counter[i] < minC){
+                for (var i = 0; i <= 0; i++) {
+                    if (this.counter[i] < minC) {
                         minC = this.counter[i]
                         pos = i
                     }
                 }
-                this.counter[pos] ++
-                return "worker" + (pos+1)
+                this.counter[pos]++
+                return "worker" + (pos + 1)
 
-            }, removeWorker(name){
-                switch(name){
+            }, removeWorker(name) {
+                switch (name) {
                     case "worker1":
-                        this.counter[0] --
+                        this.counter[0]--
                         break
                     case "worker2":
-                        this.counter[1] --
+                        this.counter[1]--
                         break
                     case "worker3":
-                        this.counter[1] --
+                        this.counter[1]--
                         break
                     case "worker4":
-                        this.counter[1] --
+                        this.counter[1]--
                         break
                 }
                 console.log(this.counter)
-                if(this.counter[0] == 0){
-                    this.current ++
+                if (this.counter[0] == 0) {
+                    this.current++
                     this.decodeToPNG()
                 }
             }
@@ -371,22 +375,25 @@
 
 <style scoped>
     .photo {
-        display:inline-block;
-        float:none;
+        display: inline-block;
+        float: none;
         vertical-align: top;
-        max-width:80px;
-        min-width:250px;
-        width:40%;
-        margin:0px;
+        max-width: 80px;
+        min-width: 250px;
+        width: 40%;
+        margin: 0px;
     }
+
     .avatar {
         max-width: 100%;
         height: auto;
         padding: 10px;
     }
+
     .back-button {
         margin-top: 60px;
     }
+
     .gist {
         margin: 15px;
     }

@@ -14,40 +14,44 @@
                     <md-divider></md-divider>
                     <md-card-content>
                         <md-list>
-                            <md-list-item v-for="title in wiki" :key="title" :href="'https://wiki.nfls.io/w/' + title" target="_blank">
+                            <md-list-item v-for="title in wiki" :key="title" :href="'https://wiki.nfls.io/w/' + title"
+                                          target="_blank">
                                 {{title}}
                             </md-list-item>
                         </md-list>
                     </md-card-content>
                 </md-card>
             </div>
-            <div class="md-layout-item md-xlarge-size-50 md-large-size-50 md-medium-size-50 md-small-size-100 md-xsmall-size-100"">
-                <md-card>
-                    <md-card-header>
-                        <span class="md-title">最新论坛帖子</span>
-                    </md-card-header>
-                    <md-divider></md-divider>
-                    <md-card-content>
-                        <md-list>
-                            <md-list-item v-for="post in forum" :key="post.id" :href="'https://forum.nfls.io/d/' + post.id" target="_blank">
-                                {{post.attributes.title}}
-                            </md-list-item>
-                        </md-list>
-                    </md-card-content>
-                </md-card>
-            </div>
+            <div class="md-layout-item md-xlarge-size-50 md-large-size-50 md-medium-size-50 md-small-size-100 md-xsmall-size-100"
+            ">
+            <md-card>
+                <md-card-header>
+                    <span class="md-title">最新论坛帖子</span>
+                </md-card-header>
+                <md-divider></md-divider>
+                <md-card-content>
+                    <md-list>
+                        <md-list-item v-for="post in forum" :key="post.id" :href="'https://forum.nfls.io/d/' + post.id"
+                                      target="_blank">
+                            {{post.attributes.title}}
+                        </md-list-item>
+                    </md-list>
+                </md-card-content>
+            </md-card>
         </div>
+    </div>
     </div>
 </template>
 
 <script>
     import VueMarkdown from 'vue-markdown'
+
     export default {
         name: "Dashboard",
         components: {
             VueMarkdown
         },
-        props: ["isAdmin","isLoggedIn","isVerified"],
+        props: ["isAdmin", "isLoggedIn", "isVerified"],
         data: () => ({
             wiki: null,
             forum: null,
@@ -55,27 +59,27 @@
             loaded: false
         }),
         mounted: function () {
-            this.$emit("changeTitle","Dashboard")
+            this.$emit("changeTitle", "Dashboard")
             this.axios.get("/message/announcement").then((response) => {
                 this.announcement = response.data["data"]
                 this.loaded = true
             })
             this.axios.get("https://wiki.nfls.io/api.php?action=query&format=json&list=recentchanges&generator=categorymembers&rcshow=!bot&rclimit=50&gcmtitle=Category%3A*&gcmlimit=100").then((response) => {
-                var changes = response.data["query"]["recentchanges"].map(function(val){
+                var changes = response.data["query"]["recentchanges"].map(function (val) {
                     return val.title
-                }).filter(function(val){
-                    if(val.startsWith("用户"))
+                }).filter(function (val) {
+                    if (val.startsWith("用户"))
                         return false
-                    if(val.startsWith("MediaWiki"))
+                    if (val.startsWith("MediaWiki"))
                         return false
-                    if(val.startsWith("文件"))
+                    if (val.startsWith("文件"))
                         return false
                     return true
                 })
-                this.wiki = Array.from(new Set(changes)).slice(0,10)
+                this.wiki = Array.from(new Set(changes)).slice(0, 10)
             })
             this.axios.get("https://forum.nfls.io/api/discussions").then((response) => {
-                this.forum = response.data["data"].slice(0,10)
+                this.forum = response.data["data"].slice(0, 10)
             })
         }
     }
@@ -83,6 +87,6 @@
 
 <style scoped>
     .md-card {
-        margin:10px;
+        margin: 10px;
     }
 </style>

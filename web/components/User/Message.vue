@@ -27,7 +27,7 @@
                     <label>{{ $t('receiver') }}</label>
                     <md-input v-model="receiver"></md-input>
                 </md-field>
-                <markdown-palettes v-model="content" ></markdown-palettes>
+                <markdown-palettes v-model="content"></markdown-palettes>
             </md-dialog-content>
             <md-dialog-actions>
                 <md-button class="md-primary" @click="showDialog = false">{{ $t('cancel') }}</md-button>
@@ -50,7 +50,7 @@
 
     export default {
         name: "Message",
-        props: ["admin","loggedIn","verified","gResponse"],
+        props: ["admin", "loggedIn", "verified", "gResponse"],
         components: {
             VueMarkdown,
             MarkdownPalettes
@@ -65,21 +65,21 @@
             showDialog: false,
             csrf: ""
         }),
-        mounted: function() {
+        mounted: function () {
             this.load()
-            this.$emit("changeTitle","消息")
-            if(this.$route.params["id"] != null){
+            this.$emit("changeTitle", "消息")
+            if (this.$route.params["id"] != null) {
                 this.receiver = this.$route.params["id"]
             }
         },
         methods: {
             load() {
-                this.axios.get("/chat/list",{
+                this.axios.get("/chat/list", {
                     params: {
                         page: this.page
                     }
                 }).then((response) => {
-                    if(this.page == 1)
+                    if (this.page == 1)
                         this.list = response.data["data"]
                     else
                         this.list = this.list.concat(response.data["data"])
@@ -87,16 +87,16 @@
                 })
 
             },
-            send(){
-                this.axios.post("/chat/send",{
+            send() {
+                this.axios.post("/chat/send", {
                     id: this.receiver,
                     content: this.content,
                     _csrf: this.csrf
                 }).then((response) => {
-                    if(response.data["code"] != 200){
-                        this.$emit("showMsg",response.data["data"])
-                    }else{
-                        this.$emit("showMsg",this.$t('send-succeeded'))
+                    if (response.data["code"] != 200) {
+                        this.$emit("showMsg", response.data["data"])
+                    } else {
+                        this.$emit("showMsg", this.$t('send-succeeded'))
                         this.receiver = null
                         this.content = ""
                         this.showDialog = false
@@ -104,20 +104,20 @@
                         this.load()
                     }
                 }).catch((error) => {
-                    this.$emit("showMsg",this.$t("send-failed"))
+                    this.$emit("showMsg", this.$t("send-failed"))
                 })
             },
-            reply(id){
+            reply(id) {
                 this.showDialog = true
                 this.content = ""
                 this.receiver = id
             },
-            loadMore(){
-                this.page ++
+            loadMore() {
+                this.page++
                 this.load()
             },
             getCsrf() {
-                this.axios.get("user/csrf",{
+                this.axios.get("user/csrf", {
                     params: {
                         name: "user"
                     }
@@ -130,10 +130,11 @@
 </script>
 
 <style scoped>
-    .md-card{
-        margin:10px;
+    .md-card {
+        margin: 10px;
     }
-    .CodeMirror-gutters{
-        width:29px;
+
+    .CodeMirror-gutters {
+        width: 29px;
     }
 </style>

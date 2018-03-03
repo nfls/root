@@ -4,7 +4,9 @@
             <md-field>
                 <label for="item">项目</label>
                 <md-select v-model="item" name="item" id="item">
-                    <md-option v-for="preference in info" :value="preference.identifier" :key="preference.identifier">{{preference.remark}}</md-option>
+                    <md-option v-for="preference in info" :value="preference.identifier" :key="preference.identifier">
+                        {{preference.remark}}
+                    </md-option>
                 </md-select>
             </md-field>
         </div>
@@ -20,6 +22,7 @@
 <script>
     import MarkdownPalettes from 'markdown-palettes'
     import vueJsonEditor from 'vue-json-editor'
+
     export default {
         components: {
             MarkdownPalettes,
@@ -35,7 +38,7 @@
         }),
         methods: {
             save() {
-                this.axios.post("/admin/preference",{
+                this.axios.post("/admin/preference", {
                     identifier: this.identifier,
                     content: this.content
                 }).then((response) => {
@@ -47,20 +50,20 @@
                 })
             }
         },
-        mounted: function() {
-            this.$emit("changeTitle","Preference")
+        mounted: function () {
+            this.$emit("changeTitle", "Preference")
             this.update()
         },
         watch: {
             item: {
                 handler(newVal) {
-                    var item = this.info.filter(function(val){
+                    var item = this.info.filter(function (val) {
                         return val.identifier === newVal
                     })
                     this.content = item[0].content
                     this.type = item[0].type
                     this.identifier = item[0].identifier
-                    if(this.type == "json")
+                    if (this.type == "json")
                         this.content = JSON.parse(this.content)
                 }
             }

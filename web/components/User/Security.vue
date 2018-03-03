@@ -28,27 +28,30 @@
                     </md-field>
                     <md-field>
                         <label for="repeatPassword">重复密码</label>
-                        <md-input type="password" name="repeatPassword" id="repeatPassword" v-model="form.repeatPassword"/>
+                        <md-input type="password" name="repeatPassword" id="repeatPassword"
+                                  v-model="form.repeatPassword"/>
                     </md-field>
                     <span class="md-caption">修改邮箱</span><br/>
                     <md-divider></md-divider>
-                    <md-checkbox v-model="form.unbindEmail" v-if="phone !== '未绑定' && email !== '未绑定'">仅解除绑定</md-checkbox>
+                    <md-checkbox v-model="form.unbindEmail" v-if="phone !== '未绑定' && email !== '未绑定'">仅解除绑定
+                    </md-checkbox>
                     <md-field>
                         <label for="email">当前邮箱</label>
                         <md-input name="email" id="email" autocomplete="email" v-model="email" disabled/>
                     </md-field>
-                    <md-field  v-if="!form.unbindEmail">
+                    <md-field v-if="!form.unbindEmail">
                         <label for="">新的邮箱</label>
                         <md-input name="newEmail" id="newEmail" v-model="form.newEmail"/>
                         <md-button class="md-primary" @click="sendEmail">Send</md-button>
                     </md-field>
                     <md-field v-if="!form.unbindEmail">
                         <label for="emailCode">验证码</label>
-                        <md-input name="emailCode" id="emailCode" v-model="form.code" />
+                        <md-input name="emailCode" id="emailCode" v-model="form.code"/>
                     </md-field>
                     <span class="md-caption">修改手机</span><br/>
                     <md-divider></md-divider>
-                    <md-checkbox v-model="form.unbindPhone"  v-if="phone !== '未绑定' && email !== '未绑定'">仅解除绑定</md-checkbox>
+                    <md-checkbox v-model="form.unbindPhone" v-if="phone !== '未绑定' && email !== '未绑定'">仅解除绑定
+                    </md-checkbox>
                     <md-field>
                         <label for="phone">当前手机</label>
                         <md-input name="phone" id="phone" autocomplete="phone" v-model="phone" disabled/>
@@ -56,12 +59,14 @@
                     <md-field v-if="!form.unbindPhone">
                         <label for="country">国家</label>
                         <md-select name="country" id="country" v-model="form.country">
-                            <md-option v-for="country in countries" :key="country.code" :value="country.code">{{country.name}} +{{country.prefix}}</md-option>
+                            <md-option v-for="country in countries" :key="country.code" :value="country.code">
+                                {{country.name}} +{{country.prefix}}
+                            </md-option>
                         </md-select>
                     </md-field>
                     <md-field v-if="!form.unbindPhone">
                         <label for="newPhone">新的手机号</label>
-                        <md-input name="newPhone" id="newPhone" v-model="form.newPhone" />
+                        <md-input name="newPhone" id="newPhone" v-model="form.newPhone"/>
                         <md-button class="md-primary" @click="sendSMS()">Send</md-button>
                     </md-field>
                     <md-field v-if="!form.unbindPhone">
@@ -72,11 +77,12 @@
                     <md-divider></md-divider>
                     <md-field>
                         <label for="password">当前密码</label>
-                        <md-input type="password" name="password" id="password" autocomplete="password" v-model="form.password"/>
+                        <md-input type="password" name="password" id="password" autocomplete="password"
+                                  v-model="form.password"/>
                     </md-field>
                 </md-card-content>
 
-                <md-progress-bar md-mode="indeterminate" v-if="sending" />
+                <md-progress-bar md-mode="indeterminate" v-if="sending"/>
 
                 <md-card-actions>
                     <md-button type="submit" class="md-primary" :disabled="sending">提交</md-button>
@@ -90,7 +96,7 @@
 <script>
     export default {
         name: "Security",
-        props: ["isAdmin","isLoggedIn","isVerified","gResponse"],
+        props: ["isAdmin", "isLoggedIn", "isVerified", "gResponse"],
         data: () => ({
             sending: false,
             countries: [],
@@ -98,29 +104,28 @@
             email: "",
             phone: "",
             oauth: false,
-            form:{
-            }
+            form: {}
         }),
         created: function () {
             this.resetForm()
         },
         mounted: function () {
-            this.$emit("changeTitle","Security")
+            this.$emit("changeTitle", "Security")
             this.$emit("prepareRecaptcha")
             this.axios.get("/code/available").then((response) => {
                 this.countries = response.data["data"]
             })
-            if(this.$route.query.reason == "email")
+            if (this.$route.query.reason == "email")
                 this.oauth = true
         },
         methods: {
             resetForm() {
                 this.axios.get("/user/current").then((response) => {
                     this.email = response.data["data"]["email"]
-                    if(this.email === null)
+                    if (this.email === null)
                         this.email = "未绑定"
                     this.phone = response.data["data"]["phone"]
-                    if(this.phone === null)
+                    if (this.phone === null)
                         this.phone = "未绑定"
                 }).catch((error) => {
                     this.$router.push('/user/login')
@@ -138,16 +143,16 @@
                 }
             },
             submit() {
-                if(this.form.newPassword != this.form.repeatPassword){
+                if (this.form.newPassword != this.form.repeatPassword) {
                     this.showMsg("Passwords mismatch.")
                     return
                 }
-                this.axios.post("/user/change",this.form).then((response) => {
-                    if(response.data["code"] == 200){
+                this.axios.post("/user/change", this.form).then((response) => {
+                    if (response.data["code"] == 200) {
                         this.showMsg("Operation succeeded.")
                         this.resetForm()
-                    }else{
-                        if(response.data["data"])
+                    } else {
+                        if (response.data["data"])
                             this.showMsg(response.data["data"])
                         else
                             this.showMsg("Password incorrect.")
@@ -163,28 +168,28 @@
                 grecaptcha.execute()
             },
             ct() {
-                switch(this.task){
+                switch (this.task) {
                     case "email":
-                        this.axios.post("/code/bind",{
+                        this.axios.post("/code/bind", {
                             "email": this.form.newEmail,
                             "captcha": grecaptcha.getResponse()
                         }).then((response) => {
-                            if(response.data["code"] == 200){
+                            if (response.data["code"] == 200) {
                                 this.showMsg("Email Sent.")
-                            }else{
+                            } else {
                                 this.showMsg(response.data["data"])
                             }
                         })
                         break
                     case "sms":
-                        this.axios.post("/code/bind",{
+                        this.axios.post("/code/bind", {
                             "phone": this.form.newPhone,
                             "country": this.form.country,
                             "captcha": grecaptcha.getResponse()
                         }).then((response) => {
-                            if(response.data["code"] == 200){
+                            if (response.data["code"] == 200) {
                                 this.showMsg("SMS Sent.")
-                            }else{
+                            } else {
                                 this.showMsg(response.data["data"])
                             }
                         })
@@ -194,12 +199,12 @@
                 grecaptcha.reset()
             },
             showMsg(message) {
-                this.$emit("showMsg",msg)
+                this.$emit("showMsg", msg)
             }
         },
         watch: {
             gResponse: {
-                handler: function(val,newVal){
+                handler: function (val, newVal) {
                     this.ct();
                 }
             }

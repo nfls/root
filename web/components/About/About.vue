@@ -3,7 +3,8 @@
         <p class="text">
             <span class="md-title">NFLS.IO 南外人</span><br/>
             © 2016-2018 NFLS.IO Dev Group. All rights reserved.<br/>
-            <del>谨以此项目纪念即将过去的高中生活。 —— 胡清阳</del><br/>
+            <del>谨以此项目纪念即将过去的高中生活。 —— 胡清阳</del>
+            <br/>
             <md-button class="md-raised text" href="https://dev.nfls.io/jira/openid/login/2">反馈</md-button>
         </p>
         <p class="text">
@@ -31,7 +32,7 @@
             <span class="md-caption" style="background-color: #00C389">投资人</span>&nbsp;
             <span class="md-caption" style="background-color: #71C5E8">总负责</span>&nbsp;
         </p>
-        <div v-if="loaded" >
+        <div v-if="loaded">
             <md-card class="md-primary id-card" v-for="dev in devs" :key="dev.title" :md-theme="dev.group">
                 <md-card-media>
                     <img :src="dev.image" alt="People">
@@ -48,6 +49,7 @@
 
 <script>
     import VueMarkdown from 'vue-markdown'
+
     export default {
         name: "About",
         components: {
@@ -60,15 +62,15 @@
             content: null,
             devs: null
         }),
-        mounted: function (){
-            this.$emit("changeTitle","About")
+        mounted: function () {
+            this.$emit("changeTitle", "About")
             this.axios.get("/about/devs").then((response) => {
-                this.devs = response.data["data"].reduce(function(previous,current){
-                    return previous.concat(current.people.map(function(val){
+                this.devs = response.data["data"].reduce(function (previous, current) {
+                    return previous.concat(current.people.map(function (val) {
                         val.group = current.group
                         return val
                     }))
-                },[])
+                }, [])
                 this.axios.get("/about/version").then((response) => {
                     this.version = response.data["data"]
                     this.loaded = true
@@ -78,7 +80,7 @@
         },
         methods: {
             submit() {
-                this.axios.post("/about/feedback",{
+                this.axios.post("/about/feedback", {
                     content: this.content,
                     contact: this.contact
                 }).then((response) => {
@@ -96,31 +98,30 @@
         text-align: left;
     }
 
-
     @import "~vue-material/dist/theme/engine";
 
     @include md-register-theme("ui", (
-        primary: #DD9CDF,
+            primary: #DD9CDF,
     ));
 
     @include md-register-theme("photo", (
-        primary: #3CDBC0
+            primary: #3CDBC0
     ));
 
     @include md-register-theme("game", (
-        primary: #2DCCD3
+            primary: #2DCCD3
     ));
 
     @include md-register-theme("investor", (
-        primary: #00C389
+            primary: #00C389
     ));
 
     @include md-register-theme("leader", (
-        primary: #71C5E8
+            primary: #71C5E8
     ));
 
     @include md-register-theme("pink-card", (
-        primary: #F57EB6
+            primary: #F57EB6
     ));
 
     @import "~vue-material/dist/base/theme";

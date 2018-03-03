@@ -10,19 +10,19 @@
                         <md-checkbox v-model="valid" class="md-primary" readonly disabled>实名用户</md-checkbox>
                         <md-field v-if="valid">
                             <label for="chineseName">中文名</label>
-                            <md-input name="chineseName" id="chineseName" v-model="chineseName" readonly />
+                            <md-input name="chineseName" id="chineseName" v-model="chineseName" readonly/>
                         </md-field>
                         <md-field v-if="valid">
                             <label for="englishName">英文名</label>
-                            <md-input name="englishName" id="englishName" v-model="englishName" readonly />
+                            <md-input name="englishName" id="englishName" v-model="englishName" readonly/>
                         </md-field>
                         <md-field v-if="valid">
                             <label for="submitTime">验证时间</label>
-                            <md-input name="submitTime" id="submitTime" v-model="submitTime" readonly />
+                            <md-input name="submitTime" id="submitTime" v-model="submitTime" readonly/>
                         </md-field>
                         <md-field v-if="valid">
                             <label for="submitTime">过期时间</label>
-                            <md-input name="submitTime" id="submitTime" v-model="expireAt" readonly />
+                            <md-input name="submitTime" id="submitTime" v-model="expireAt" readonly/>
                         </md-field>
                     </div>
                 </form>
@@ -42,14 +42,15 @@
             </md-card-header>
             <md-card-content>
                 <md-list>
-                    <md-list-item v-for="auth in history" :key="auth.id" @click="click(auth.id)">{{auth.readableText}}</md-list-item>
+                    <md-list-item v-for="auth in history" :key="auth.id" @click="click(auth.id)">{{auth.readableText}}
+                    </md-list-item>
                 </md-list>
             </md-card-content>
         </md-card>
         <md-dialog-alert
                 :md-active.sync="error"
                 md-title="错误"
-                md-content="请先登录您的账户！" />
+                md-content="请先登录您的账户！"/>
     </div>
 </template>
 
@@ -67,7 +68,7 @@
             error: false,
             csrf: null,
         }),
-        mounted: function() {
+        mounted: function () {
             this.loadData()
             this.loadStatus()
             this.$emit('changeTitle', "实名认证")
@@ -76,16 +77,16 @@
             loadData() {
                 this.axios.get("/alumni/info").then((response) => {
                     var self = this
-                    this.history = response.data["data"].map(function(val){
+                    this.history = response.data["data"].map(function (val) {
                         val["readableText"] = self.getStatus(val.status)
-                        if(val.submitTime){
+                        if (val.submitTime) {
                             var moment = require('moment-timezone');
                             val["readableText"] += "（提交时间：" + moment(val.submitTime).tz(moment.tz.guess()).format("lll") + "）"
                         }
                         val["readableText"] += " " + val.id
                         return val
                     })
-                    this.allowNew = (this.history.filter(function(val){
+                    this.allowNew = (this.history.filter(function (val) {
                         return val.status <= 1
                     }).length == 0)
                 }).catch((error) => {
@@ -96,17 +97,17 @@
                 this.axios.get("/alumni/current").then((response) => {
                     //var self = this
                     var data = response.data["data"]
-                    if(data){
+                    if (data) {
                         var moment = require('moment-timezone');
                         this.valid = true
                         this.chineseName = data["chineseName"]
                         this.englishName = data["englishName"]
                         this.submitTime = moment(data["submitTime"]).tz(moment.tz.guess()).format("lll")
-                        if(data["expireAt"])
+                        if (data["expireAt"])
                             this.expireAt = moment(data["expireAt"]).tz(moment.tz.guess()).format("L")
                         else
                             this.expireAt = "无期限"
-                    }else{
+                    } else {
                         this.valid = false
                     }
                 })
@@ -115,7 +116,7 @@
                 this.$router.push("/alumni/auth/" + id);
             },
             getStatus(status) {
-                switch(status){
+                switch (status) {
                     case 0:
                         return "未提交"
                     case 1:
@@ -133,12 +134,12 @@
                 }
             },
             newForm() {
-                this.axios.get("user/csrf",{
+                this.axios.get("user/csrf", {
                     params: {
                         name: "alumni.form"
                     }
                 }).then((response) => {
-                    this.axios.post("alumni/new",{
+                    this.axios.post("alumni/new", {
                         _csrf: response.data["data"]
                     }).then((response) => {
                         this.loadData()
@@ -153,6 +154,7 @@
     .md-checkbox {
         display: flex;
     }
+
     .md-card {
         margin: 10px;
     }

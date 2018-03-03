@@ -17,16 +17,19 @@
                             <md-radio v-model="way" value="email">{{ $t("email") }}</md-radio>
                         </div>
                         <div class="md-flex md-flex-small-100" v-if="way == 'phone'">
-                            <md-field  :class="getValidationClass('country')">
+                            <md-field :class="getValidationClass('country')">
                                 <label for="country">{{ $t('country') }}</label>
                                 <md-select name="country" id="country" v-model="form.country">
-                                    <md-option v-for="country in countries" :key="country.code" :value="country.code">{{country.code}} +{{country.prefix}}</md-option>
+                                    <md-option v-for="country in countries" :key="country.code" :value="country.code">
+                                        {{country.code}} +{{country.prefix}}
+                                    </md-option>
                                 </md-select>
                                 <span class="md-error" v-if="$v.form.country && !$v.form.country.required">{{ $t('required') }}</span>
                             </md-field>
                             <md-field :class="getValidationClass('phone')">
                                 <label for="phone">{{ $t('phone') }}</label>
-                                <md-input name="phone" id="phone" autocomplete="phone" v-model="form.phone" :disabled="sending"  />
+                                <md-input name="phone" id="phone" autocomplete="phone" v-model="form.phone"
+                                          :disabled="sending"/>
                                 <span class="md-error" v-if="$v.form.phone && !$v.form.phone.required">{{ $t('required') }}</span>
                                 <span class="md-error" v-else-if="$v.form.phone && !$v.form.phone.numeric">{{ $t('phone-invalid') }}</span>
                                 <md-button class="md-primary" @click="sendSMS">{{$t('send')}}</md-button>
@@ -35,7 +38,8 @@
                         <div class="md-flex md-flex-small-100" v-else-if="way == 'email'">
                             <md-field :class="getValidationClass('email')">
                                 <label for="">{{ $t('email') }}</label>
-                                <md-input name="email" id="email" autocomplete="email" v-model="form.email" :disabled="sending"  />
+                                <md-input name="email" id="email" autocomplete="email" v-model="form.email"
+                                          :disabled="sending"/>
                                 <md-button class="md-primary" @click="sendEmail">{{$t('send')}}</md-button>
                                 <span class="md-error" v-if="$v.form.email && !$v.form.email.required">{{ $t('required') }}</span>
                                 <span class="md-error" v-else-if="$v.form.email && !$v.form.email.email"></span>
@@ -44,14 +48,16 @@
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('code')">
                                 <label for="username">{{ $t('code') }}</label>
-                                <md-input name="code" id="code" autocomplete="code" v-model="form.code" :disabled="sending"  />
+                                <md-input name="code" id="code" autocomplete="code" v-model="form.code"
+                                          :disabled="sending"/>
                                 <span class="md-error" v-if="$v.form.code && !$v.form.code.required">{{ $t('required') }}</span>
                             </md-field>
                         </div>
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('password')">
                                 <label for="password">{{ $t('password') }}</label>
-                                <md-input name="password" id="password" autocomplete="password" v-model="form.password" :disabled="sending" type="password" />
+                                <md-input name="password" id="password" autocomplete="password" v-model="form.password"
+                                          :disabled="sending" type="password"/>
                                 <span class="md-error" v-if="$v.form.password && !$v.form.password.required">{{ $t('required') }}</span>
                                 <span class="md-error" v-else-if="$v.form.code && !$v.form.password.maxLength">{{ $t('password-too-long') }}</span>
                                 <span class="md-error" v-else-if="$v.form.code && !$v.form.password.minLength">{{ $t('password-too-short') }}</span>
@@ -61,14 +67,17 @@
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('repass')">
                                 <label for="password">{{ $t('password-repeat') }}</label>
-                                <md-input name="repass" id="repass" autocomplete="repass" v-model="form.repass" :disabled="sending" type="password" />
+                                <md-input name="repass" id="repass" autocomplete="repass" v-model="form.repass"
+                                          :disabled="sending" type="password"/>
                                 <span class="md-error" v-if="$v.form.repass && !$v.form.repass.required">{{ $t('required') }}</span>
                                 <span class="md-error" v-else-if="passwordMismatch">{{ $t('password-mismatch') }}</span>
                             </md-field>
                         </div>
 
                         <div class="md-flex md-flex-small-100">
-                            <md-button type="submit" class="md-raised md-primary" @click="register" :disabled="sending">{{ $t('reset') }}</md-button>
+                            <md-button type="submit" class="md-raised md-primary" @click="register" :disabled="sending">
+                                {{ $t('reset') }}
+                            </md-button>
                         </div>
                     </div>
 
@@ -78,20 +87,20 @@
                     <md-button to="/user/login">{{ $t('login') }}</md-button>
                 </md-card-actions>
 
-                <md-progress-bar md-mode="indeterminate" v-if="sending" />
+                <md-progress-bar md-mode="indeterminate" v-if="sending"/>
             </md-card>
 
             <md-dialog-alert
                     :md-active.sync="warning"
                     :md-content="text"
-                    md-confirm-text="OK" />
+                    md-confirm-text="OK"/>
         </form>
     </div>
 
 </template>
 
 <script>
-    import { validationMixin } from 'vuelidate'
+    import {validationMixin} from 'vuelidate'
     import {
         required,
         email,
@@ -138,7 +147,7 @@
             }
         },
         methods: {
-            getValidationClass (fieldName) {
+            getValidationClass(fieldName) {
                 const field = this.$v.form[fieldName]
                 if (field) {
                     return {
@@ -148,31 +157,31 @@
             },
             ct() {
                 this.sending = true
-                switch(this.task){
+                switch (this.task) {
                     case "reset":
                         this.form["captcha"] = grecaptcha.getResponse()
-                        this.axios.post("/user/reset",this.form).then((response) => {
-                            if(response.data["code"] == 200){
-                            this.showMsg(this.$t("resetted"))
-                            window.setTimeout(() => {
-                                this.$router.push("/user/login");
-                            },3000)
-                            }else{
+                        this.axios.post("/user/reset", this.form).then((response) => {
+                            if (response.data["code"] == 200) {
+                                this.showMsg(this.$t("resetted"))
+                                window.setTimeout(() => {
+                                    this.$router.push("/user/login");
+                                }, 3000)
+                            } else {
                                 this.showMsg(response.data["data"])
                                 this.sending = false
                             }
                         })
                         break
                     case "phone":
-                        this.axios.post("/code/reset",{
+                        this.axios.post("/code/reset", {
                             "country": this.form.country,
                             "phone": this.form.phone,
                             "captcha": grecaptcha.getResponse()
                         }).then((response) => {
                             this.sending = false
-                            if(response.data["code"] == 200){
+                            if (response.data["code"] == 200) {
                                 this.showMsg(this.$t("send-succeeded"))
-                            }else{
+                            } else {
                                 this.showMsg(response.data["data"])
                             }
                         })
@@ -190,11 +199,11 @@
                             }
                         })
                         break
-                    }
+                }
                 this.task = ""
                 grecaptcha.reset()
             },
-            register () {
+            register() {
                 this.validateItems = {
                     code: {
                         required
@@ -210,10 +219,10 @@
                 }
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
-                    if(this.form.password != this.form.repass){
+                    if (this.form.password != this.form.repass) {
                         this.text = this.$t("password-mismatch")
                         this.warning = true
-                    }else{
+                    } else {
                         this.task = "reset"
                         grecaptcha.execute()
                     }
@@ -248,20 +257,20 @@
                     grecaptcha.execute()
                 }
             },
-            showMsg(msg){
-                this.$emit("showMsg",msg)
+            showMsg(msg) {
+                this.$emit("showMsg", msg)
             }
         },
-        mounted: function(){
+        mounted: function () {
             this.axios.get("/code/available").then((response) => {
                 this.countries = response.data["data"]
-        })
-            this.$emit("changeTitle","Reset Password")
+            })
+            this.$emit("changeTitle", "Reset Password")
             this.$emit("prepareRecaptcha")
         },
         watch: {
             gResponse: {
-                handler: function(val,newVal){
+                handler: function (val, newVal) {
                     this.ct();
                 }
             }
@@ -276,13 +285,14 @@
         right: 0;
         left: 0;
     }
+
     .login {
         margin-top: 80px;
         margin-left: auto;
         margin-right: auto;
-        width:70%;
-        height:100%;
-        min-width:260px;
-        max-width:500px;
+        width: 70%;
+        height: 100%;
+        min-width: 260px;
+        max-width: 500px;
     }
 </style>

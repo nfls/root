@@ -4,7 +4,7 @@ import Jump from '../components/Jump'
 import App from '../components/Components/App'
 import Dashboard from '../components/Dashboard'
 
-import About from'../components/About/About'
+import About from '../components/About/About'
 
 import Directory from '../components/Alumni/Directory'
 import Realname from '../components/Alumni/Realname'
@@ -32,7 +32,7 @@ Vue.use(Router)
 
 export default new Router({
     routes: [
-         {
+        {
             path: '/',
             component: App,
             children: [
