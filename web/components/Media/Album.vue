@@ -66,7 +66,7 @@
 
         <div class="md-row" style="display:inline-block;margin:0px;min-width:90%" v-if="loaded">
             <figure v-for="(item, index) in items" class="photo">
-                <img class="preview-img" :src="item.msrc" @click="$preview.open(index, items, options)"
+                <img class="preview-img" v-lazy="item.msrc" @click="$preview.open(index, items, options)"
                      style="display:inline;">
                 <figcaption v-if="showDebug">ID: {{item.id}}</figcaption>
             </figure>

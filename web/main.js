@@ -21,7 +21,9 @@ import Datetime from 'vue-datetime'
 import infiniteScroll from 'vue-infinite-scroll'
 import "vue-simple-calendar/dist/static/css/default.css"
 import "vue-simple-calendar/dist/static/css/holidays-us.css"
+import VueLazyload from 'vue-lazyload'
 
+Vue.use(VueLazyload)
 Vue.use(infiniteScroll)
 Vue.use(Datetime)
 Vue.use(VueI18n)
@@ -42,7 +44,7 @@ Vue.use(VueWorker)
 var VueCookie = require('vue-cookie');
 Vue.use(VueCookie);
 var i18n = new VueI18n({
-    locale: 'en',
+    locale: 'zh',
     messages:
         {}
 })
