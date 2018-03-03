@@ -226,7 +226,7 @@
                     this.loggedIn = false
                 })
             }, loadWebP() {
-                var WebP = new Image();
+                var WebP = new Image()
                 var self = this
                 WebP.onload = WebP.onerror = function () {
                     if (WebP.height != 2) {
@@ -257,6 +257,8 @@
             this.reload()
             this.initReCaptcha()
             this.loadWebP()
+            if(this.$cookie.get('drop') === "true")
+                this.dropEnabled = trues
             this.$i18n.locale = "zh"
         }, watch: {
             $route() {

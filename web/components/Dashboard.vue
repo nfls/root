@@ -22,8 +22,7 @@
                     </md-card-content>
                 </md-card>
             </div>
-            <div class="md-layout-item md-xlarge-size-50 md-large-size-50 md-medium-size-50 md-small-size-100 md-xsmall-size-100"
-            ">
+            <div class="md-layout-item md-xlarge-size-50 md-large-size-50 md-medium-size-50 md-small-size-100 md-xsmall-size-100">
             <md-card>
                 <md-card-header>
                     <span class="md-title">最新论坛帖子</span>

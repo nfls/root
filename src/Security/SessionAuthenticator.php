@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\User\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,12 +25,19 @@ class SessionAuthenticator extends AbstractGuardAuthenticator
     public function getCredentials(Request $request)
     {
         $request->getSession()->start();
-        return $request->getSession()->get("user_token");
+        return array(
+            "token" => $request->getSession()->get("user_token"),
+            "drop" => $request->cookies->get("drop")
+            );
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        return $userProvider->loadUserByUsername($credentials);
+        /** @var User $user */
+        $user = $userProvider->loadUserByUsername($credentials["token"]);
+        if($credentials["drop"])
+            $user->disableAdmin = true;
+        return $user;
     }
 
     public function checkCredentials($credentials, UserInterface $user)

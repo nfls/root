@@ -228,6 +228,8 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
      */
     public function isAdmin(): bool
     {
+        if($this->disableAdmin)
+            return false;
         return $this->admin;
     }
 
