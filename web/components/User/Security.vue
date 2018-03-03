@@ -28,8 +28,7 @@
                     </md-field>
                     <md-field>
                         <label for="repeatPassword">重复密码</label>
-                        <md-input type="password" name="repeatPassword" id="repeatPassword"
-                                  v-model="form.repeatPassword"/>
+                        <md-input type="password" name="repeatPassword" id="repeatPassword" v-model="form.repeatPassword"/>
                     </md-field>
                     <span class="md-caption">修改邮箱</span><br/>
                     <md-divider></md-divider>
@@ -143,12 +142,12 @@
                 }
             },
             submit() {
-                if (this.form.newPassword != this.form.repeatPassword) {
+                if (this.form.newPassword !== this.form.repeatPassword) {
                     this.showMsg("Passwords mismatch.")
                     return
                 }
                 this.axios.post("/user/change", this.form).then((response) => {
-                    if (response.data["code"] == 200) {
+                    if (response.data["code"] === 200) {
                         this.showMsg("Operation succeeded.")
                         this.resetForm()
                     } else {

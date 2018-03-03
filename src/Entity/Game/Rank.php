@@ -54,7 +54,10 @@ class Rank
         $this->time = new \DateTime();
     }
 
-    /** @ORM\PostLoad */
+    /**
+     * @ORM\PostLoad
+     * @ORM\PostPersist
+     */
     public function calcRank(LifecycleEventArgs $args)
     {
         if ($this->game->isPreferBigger()) {

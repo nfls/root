@@ -42,8 +42,8 @@ class RankRepository extends ServiceEntityRepository
                 ->setParameter("game", $game)
                 ->andWhere("u.user = :user")
                 ->setParameter("user", $user)
-                ->andWhere("u.score > :score")
-                ->setParameter("score", 0)
+                ->andWhere("u.score >= :score")
+                ->setParameter("score", -1)
                 ->orderBy("u.score", "DESC")
                 ->getQuery()
                 ->getResult();
@@ -53,8 +53,8 @@ class RankRepository extends ServiceEntityRepository
                 ->setParameter("game", $game)
                 ->andWhere("u.user = :user")
                 ->setParameter("user", $user)
-                ->andWhere("u.score > :score")
-                ->setParameter("score", 0)
+                ->andWhere("u.score >= :score")
+                ->setParameter("score", -1)
                 ->orderBy("u.score", "ASC")
                 ->getQuery()
                 ->getResult();
