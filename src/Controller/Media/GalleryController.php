@@ -32,7 +32,7 @@ class GalleryController extends AbstractController
             $canViewPrivate = $this->getUser()->hasRole(Permission::IS_AUTHENTICATED);
             $canViewAll = $this->getUser()->hasRole(Permission::IS_ADMIN);
         }
-        
+
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
         return $this->response()->responseEntity($repo->getList($canViewPrivate, $canViewAll));
     }
