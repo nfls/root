@@ -52,7 +52,7 @@ class GalleryController extends AbstractController
         }
 
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
-        return $this->response()->responseEntity($repo->getGallery($request->query->get("id"), $canViewPrivate, $canViewAll));
+        return $this->response()->responseRawEntity($repo->getGallery($request->query->get("id"), $canViewPrivate, $canViewAll));
     }
 
     /**

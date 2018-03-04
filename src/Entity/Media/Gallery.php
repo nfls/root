@@ -266,10 +266,15 @@ class Gallery
      */
     public function getLikes()
     {
-        $repo = $this->em->getRepository(User::class);
-        return array_map(function ($id) use ($repo) {
-            return $repo->findOneBy(["id" => $id]);
-        }, $this->likes);
+        if(is_array($this->likes)){
+            $repo = $this->em->getRepository(User::class);
+            return array_map(function ($id) use ($repo) {
+                return $repo->findOneBy(["id" => $id]);
+            }, $this->likes);
+        } else {
+            return [];
+        }
+
     }
 
     /**

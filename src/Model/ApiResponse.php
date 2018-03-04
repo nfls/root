@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Model\Normalizer\GalleryNormalizer;
 use App\Model\Normalizer\GameNormalizer;
 use App\Model\Normalizer\PhotoNormalizer;
 use App\Model\Normalizer\UserNormalizer;
@@ -33,8 +34,9 @@ class ApiResponse
         $userNormalizer = new UserNormalizer($realname);
         $uuidNormalizer = new UuidNormalizer();
         $gameNormalizer = new GameNormalizer();
-        $this->rawSerializer = new Serializer([$uuidNormalizer, $dateNormalizer, $normalizer], [$encoder]);
-        $this->serializer = new Serializer([$gameNormalizer, $photoNormalizer, $uuidNormalizer, $dateNormalizer, $userNormalizer, $normalizer], [$encoder]);
+        $galleryNormalizer = new GalleryNormalizer();
+        $this->rawSerializer = new Serializer([$uuidNormalizer, $dateNormalizer, $normalizer, $photoNormalizer], [$encoder]);
+        $this->serializer = new Serializer([$gameNormalizer, $uuidNormalizer, $dateNormalizer, $userNormalizer, $galleryNormalizer, $photoNormalizer, $normalizer], [$encoder]);
     }
 
     public function response($data, $code = 200)

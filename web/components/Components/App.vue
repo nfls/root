@@ -119,8 +119,8 @@
                         <md-icon>developer_mode</md-icon>
                         <span class='md-list-item-text'>Development</span></md-list-item>
                     <md-list-item href='https://ib.nfls.io'>
-                        <md-icon>developer_mode</md-icon>
-                        <span class='md-list-item-text'>MB(Mirror)</span></md-list-item>
+                        <md-icon>pool</md-icon>
+                        <span class='md-list-item-text'>ManageBac(Mirror)</span></md-list-item>
 
 
                     <md-divider></md-divider>
