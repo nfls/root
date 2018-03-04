@@ -64,7 +64,7 @@
 
             <md-app-drawer :md-active.sync='menuVisible' md-persistent='full'>
                 <md-toolbar class='md-transparent' md-elevation='0'>
-                    NFLS.IO
+                    NFLS.IO 南外人
                     <div class='md-toolbar-section-end'>
                         <md-button class='md-icon-button md-dense' @click='menuVisible = !menuVisible'>
                             <md-icon>keyboard_arrow_left</md-icon>
@@ -75,7 +75,7 @@
                 <md-list>
                     <md-list-item to='/user/dashboard'>
                         <md-icon>dashboard</md-icon>
-                        <span class='md-list-item-text'>Dashboard</span></md-list-item>
+                        <span class='md-list-item-text'>Homepage</span></md-list-item>
 
                     <md-divider></md-divider>
 

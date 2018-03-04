@@ -23,7 +23,7 @@ class GalleryNormalizer implements NormalizerInterface
         $photoNormalizer = new PhotoNormalizer();
         $timeNormalizer = new DateTimeNormalizer();
         /** @var Gallery $object */
-        return array(
+        $return = array(
             "id"=>$object->getId(),
             "title"=>$object->getTitle(),
             "description"=>$object->getDescription(),
@@ -31,9 +31,12 @@ class GalleryNormalizer implements NormalizerInterface
             "photoCount"=>$object->getPhotoCount(),
             "visible"=>$object->isVisible(),
             "public"=>$object->isPublic(),
-            "cover"=>$photoNormalizer->normalize($object->getCover()),
             "time"=>$timeNormalizer->normalize($object->getTime())
         );
+        if(is_null($object->getCover()))
+            $return["cover"] = null;
+        else
+            $return["cover"] = $photoNormalizer->normalize($object->getCover());
     }
 
     public function supportsNormalization($data, $format = null)
