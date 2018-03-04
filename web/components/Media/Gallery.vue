@@ -1,4 +1,4 @@
-<i18n src="../../translation/Media.json"></i18n>
+<i18n src="../../translation/frontend/Media.json"></i18n>
 <template>
     <div class="md-layout md-gutter md-alignment-center">
         <div class="md-layout-item md-xlarge-size-20 md-large-size-33 md-medium-size-50 md-small-size-100 md-xsmall-size-100 gallery-card"

@@ -1,4 +1,4 @@
-<i18n src="../../translation/Media.json"></i18n>
+<i18n src="../../translation/frontend/Media.json"></i18n>
 <template>
     <div id="game-list">
         <div v-if="!verified" style="margin:20px;">

@@ -1,4 +1,4 @@
-<i18n src="../../translation/Media.json"></i18n>
+<i18n src="../../translation/frontend/Media.json"></i18n>
 <template>
     <div>
         <md-drawer class="md-right" :md-active.sync="showSidepanel" v-if="showSidepanel">

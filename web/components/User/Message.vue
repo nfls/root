@@ -1,4 +1,4 @@
-<i18n src="../../translation/User.json"></i18n>
+<i18n src="../../translation/frontend/User.json"></i18n>
 <template>
     <div align="left" v-infinite-scroll="loadMore">
         <span class="md-title" v-if="!verified">

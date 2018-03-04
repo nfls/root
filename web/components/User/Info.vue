@@ -1,4 +1,4 @@
-<i18n src="../../translation/User.json"></i18n>
+<i18n src="../../translation/frontend/User.json"></i18n>
 <template>
     <div align="left">
         <span class="md-title">{{ $t('account-info') }}</span>
@@ -25,7 +25,7 @@
             <md-divider></md-divider>
             <md-list-item>
                 <div class="md-list-item-text">
-                    <span>{{ $t('cas-horus') }}</span>
+                    <span>{{ $t('cas-hours') }}</span>
                     <span>{{info.point}}</span>
                 </div>
                 <md-tooltip md-direction="bottom">{{ $t('cas-prompt') }}</md-tooltip>

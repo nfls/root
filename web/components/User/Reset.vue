@@ -1,4 +1,4 @@
-<i18n src="../../translation/User.json"></i18n>
+<i18n src="../../translation/frontend/User.json"></i18n>
 <template>
     <div class="login">
         <form novalidate class="md-layout-row md-gutter" @submit.prevent="register">
