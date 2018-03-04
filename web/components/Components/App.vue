@@ -203,7 +203,13 @@
             }, prepareRecaptcha() {
                 document.getElementById('recaptcha').style.visibility = 'visible';
                 if (typeof grecaptcha !== 'undefined') {
-                    grecaptcha.reset()
+                    try {
+                        grecaptcha.reset()
+                    } catch(e) {
+                        setTimeout(function () {
+                            this.prepareRecaptcha()
+                        }, 100);
+                    }
                 }
             }, renderWebp() {
                 if(typeof WebPJSInit === "undefined")
