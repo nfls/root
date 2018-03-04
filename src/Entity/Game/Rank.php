@@ -82,15 +82,7 @@ class Rank
 
         $this->rank = $count + 1;
     }
-
-    /**
-     * @return Game
-     */
-    public function getGame()
-    {
-        return $this->game;
-    }
-
+    
     /**
      * @param Game $game
      */
