@@ -37,6 +37,7 @@ class GalleryNormalizer implements NormalizerInterface
             $return["cover"] = null;
         else
             $return["cover"] = $photoNormalizer->normalize($object->getCover());
+        return $return;
     }
 
     public function supportsNormalization($data, $format = null)
