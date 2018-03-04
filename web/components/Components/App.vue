@@ -169,7 +169,7 @@
         }),
         methods: {
             initReCaptcha() {
-                var self = this;
+                let self = this;
                 setTimeout(function () {
                     if (typeof grecaptcha === 'undefined') {
                         self.initReCaptcha();
@@ -202,12 +202,13 @@
                 this.title = title
             }, prepareRecaptcha() {
                 document.getElementById('recaptcha').style.visibility = 'visible';
+                let self = this
                 if (typeof grecaptcha !== 'undefined') {
                     try {
                         grecaptcha.reset()
                     } catch(e) {
                         setTimeout(function () {
-                            this.prepareRecaptcha()
+                            self.prepareRecaptcha()
                         }, 100);
                     }
                 }
@@ -271,7 +272,7 @@
             this.initReCaptcha()
             this.loadWebP()
             if(this.$cookie.get('drop') === "true")
-                this.dropEnabled = trues
+                this.dropEnabled = true
             this.$i18n.locale = "zh"
         }, watch: {
             $route() {
