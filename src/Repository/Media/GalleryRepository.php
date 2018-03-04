@@ -14,7 +14,7 @@ class GalleryRepository extends ServiceEntityRepository
         parent::__construct($registry, Gallery::class);
     }
 
-    public function getList($page, $canViewPrivate = false, $canViewAll = false)
+    public function getList($canViewPrivate = false, $canViewAll = false)
     {
         $query = $this->createQueryBuilder("u")->orderBy("u.time","DESC");
         if (!$canViewPrivate) {
@@ -24,9 +24,7 @@ class GalleryRepository extends ServiceEntityRepository
             $query = $query->andWhere("u.isVisible = true");
         }
 
-        return $query->setMaxResults(10)
-            ->setFirstResult(($page - 1) * 10)
-            ->getQuery()
+        return $query->getQuery()
             ->getResult();
     }
 

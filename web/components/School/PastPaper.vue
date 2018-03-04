@@ -30,7 +30,7 @@
                             <md-icon>folder_open</md-icon>
                             <span class="md-list-item-text">..</span>
                         </md-list-item>
-                        <md-list-item v-for="item in displayItems" :key="item.etag" @click="enter(item)">
+                        <md-list-item v-for="item in displayItems" :key="item.name" @click="enter(item)">
                             <md-icon v-if="item.size == 0">folder</md-icon>
                             <md-icon v-else-if="item.name.endsWith('pdf')">picture_as_pdf</md-icon>
                             <md-inco v-else>attachment</md-inco>

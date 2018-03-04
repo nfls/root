@@ -284,10 +284,7 @@ class Gallery
      */
     public function likeStatus($user)
     {
-        $repo = $this->em->getRepository(User::class);
-        $likes = array_map(function ($id) use ($repo) {
-            return $repo->findOneBy(["id" => $id]);
-        }, $this->likes);
+        $likes = $this->getLikes();
         if (null === $user) {
             $status = false;
         } else if (in_array($user, $likes)) {
