@@ -118,6 +118,10 @@
                     <md-list-item href='https://dev.nfls.io'>
                         <md-icon>developer_mode</md-icon>
                         <span class='md-list-item-text'>Development</span></md-list-item>
+                    <md-list-item href='https://ib.nfls.io'>
+                        <md-icon>developer_mode</md-icon>
+                        <span class='md-list-item-text'>MB(Mirror)</span></md-list-item>
+
 
                     <md-divider></md-divider>
 
@@ -202,11 +206,14 @@
                     grecaptcha.reset()
                 }
             }, renderWebp() {
-                WebPJSInit()
+                if(typeof WebPJSInit === "undefined")
+                    this.loadWebP()
+                else
+                    WebPJSInit()
             }, reload() {
                 this.avatar = "/avatar/0.png"
                 this.axios.get('/user/current').then((response) => {
-                    if (response.data['code'] == 200) {
+                    if (response.data['code'] === 200) {
                         this.username = response.data['data']['username']
                         this.admin = response.data['data']['admin']
                         this.verified = response.data['data']['verified']
