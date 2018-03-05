@@ -1,3 +1,4 @@
+<i18n src="../../translation/frontend/User.json"></i18n>
 <template>
     <div class="security">
 
@@ -20,43 +21,43 @@
                 </md-card-header>
 
                 <md-card-content>
-                    <span class="md-caption">修改密码</span><br/>
+                    <span class="md-caption">{{ $t('change-password') }}</span><br/>
                     <md-divider></md-divider>
                     <md-field>
-                        <label for="newPassword">新的密码</label>
+                        <label>{{ $t('password-new') }}</label>
                         <md-input type="password" name="newPassword" id="newPassword" v-model="form.newPassword"/>
                     </md-field>
                     <md-field>
-                        <label for="repeatPassword">重复密码</label>
+                        <label>{{ $t('password-repeat') }}</label>
                         <md-input type="password" name="repeatPassword" id="repeatPassword" v-model="form.repeatPassword"/>
                     </md-field>
-                    <span class="md-caption">修改邮箱</span><br/>
+                    <span class="md-caption">{{ $t('change-email') }}</span><br/>
                     <md-divider></md-divider>
                     <md-checkbox v-model="form.unbindEmail" v-if="phone !== '未绑定' && email !== '未绑定'">仅解除绑定
                     </md-checkbox>
                     <md-field>
-                        <label for="email">当前邮箱</label>
+                        <label>{{ $t('email-current') }}</label>
                         <md-input name="email" id="email" autocomplete="email" v-model="email" disabled/>
                     </md-field>
                     <md-field v-if="!form.unbindEmail">
-                        <label for="">新的邮箱</label>
+                        <label>{{ $t('email-new') }}</label>
                         <md-input name="newEmail" id="newEmail" v-model="form.newEmail"/>
                         <md-button class="md-primary" @click="sendEmail">Send</md-button>
                     </md-field>
                     <md-field v-if="!form.unbindEmail">
-                        <label for="emailCode">验证码</label>
+                        <label for="emailCode">{{ $t('code') }}</label>
                         <md-input name="emailCode" id="emailCode" v-model="form.code"/>
                     </md-field>
-                    <span class="md-caption">修改手机</span><br/>
+                    <span class="md-caption">{{ $t('change-phone') }}</span><br/>
                     <md-divider></md-divider>
                     <md-checkbox v-model="form.unbindPhone" v-if="phone !== '未绑定' && email !== '未绑定'">仅解除绑定
                     </md-checkbox>
                     <md-field>
-                        <label for="phone">当前手机</label>
+                        <label for="phone">{{ $t('phone-current') }}</label>
                         <md-input name="phone" id="phone" autocomplete="phone" v-model="phone" disabled/>
                     </md-field>
                     <md-field v-if="!form.unbindPhone">
-                        <label for="country">国家</label>
+                        <label for="country">{{ $t('country') }}</label>
                         <md-select name="country" id="country" v-model="form.country">
                             <md-option v-for="country in countries" :key="country.code" :value="country.code">
                                 {{country.name}} +{{country.prefix}}
@@ -64,18 +65,18 @@
                         </md-select>
                     </md-field>
                     <md-field v-if="!form.unbindPhone">
-                        <label for="newPhone">新的手机号</label>
+                        <label for="newPhone">{{ $t('phone-new') }}</label>
                         <md-input name="newPhone" id="newPhone" v-model="form.newPhone"/>
                         <md-button class="md-primary" @click="sendSMS()">Send</md-button>
                     </md-field>
                     <md-field v-if="!form.unbindPhone">
-                        <label for="phoneCode">验证码</label>
+                        <label for="phoneCode">{{ $t('code') }}</label>
                         <md-input name="phoneCode" id="phoneCode" v-model="form.code"/>
                     </md-field>
-                    <span class="md-caption">验证</span>
+                    <span class="md-caption">{{ $t('verify') }}</span>
                     <md-divider></md-divider>
                     <md-field>
-                        <label for="password">当前密码</label>
+                        <label for="password">{{ $t('password-current') }}</label>
                         <md-input type="password" name="password" id="password" autocomplete="password"
                                   v-model="form.password"/>
                     </md-field>
