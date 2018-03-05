@@ -339,7 +339,12 @@
 
 </style>
 <style lang='scss'>
-    @import '~vue-material/dist/theme/engine';
-    // Import the theme engine
-    @import '~vue-material/dist/theme/all'; // Apply the theme
+    @import "~vue-material/dist/theme/engine"; // Import the theme engine
+
+    @include md-register-theme("default", (
+            primary: #263238, // The primary color of your application
+            accent: #ff5722 // The accent or secondary color
+    ));
+
+    @import "~vue-material/dist/theme/all"; // Apply the theme
 </style>
