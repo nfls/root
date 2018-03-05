@@ -84,6 +84,8 @@
 
                     <md-divider></md-divider>
 
+                    <md-subheader>{{ $t('in-school') }}</md-subheader>
+
                     <md-list-item to='/school/pastpaper'>
                         <md-icon>book</md-icon>
                         <span class='md-list-item-text'>{{ $t('resource') }}</span></md-list-item>
@@ -96,6 +98,8 @@
 
                     <md-divider></md-divider>
 
+                    <md-subheader>{{ $t('graduate') }}</md-subheader>
+
                     <md-list-item to='/alumni/auth'>
                         <md-icon>perm_identity</md-icon>
                         <span class='md-list-item-text'>{{ $t('realname') }}</span></md-list-item>
@@ -105,6 +109,8 @@
 
                     <md-divider></md-divider>
 
+                    <md-subheader>{{ $t('media') }}</md-subheader>
+
                     <md-list-item to='/media/game'>
                         <md-icon>gamepad</md-icon>
                         <span class='md-list-item-text'>{{ $t('game') }}</span></md-list-item>
@@ -113,6 +119,8 @@
                         <span class='md-list-item-text'>{{ $t('gallery') }}</span></md-list-item>
 
                     <md-divider></md-divider>
+
+                    <md-subheader>{{ $t('external') }}</md-subheader>
 
                     <md-list-item href='https://forum.nfls.io'>
                         <md-icon>forum</md-icon>
@@ -333,8 +341,7 @@
     }
 
     .md-drawer {
-        width: 230px;
-        max-width: calc(100vw - 125px);
+        width: 180px;
     }
 
 </style>
