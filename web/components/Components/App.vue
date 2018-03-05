@@ -1,3 +1,4 @@
+<i18n src="../../translation/frontend/App.json"></i18n>
 <template>
     <div class='page-container'>
         <md-app md-waterfall md-mode='fixed'>
@@ -21,25 +22,25 @@
                             <md-list v-if='loggedIn'>
                                 <md-list-item to='/user/info'>
                                     <md-icon>info</md-icon>
-                                    <span class='md-list-item-text'>Info</span></md-list-item>
+                                    <span class='md-list-item-text'>{{ $t('info') }}</span></md-list-item>
                                 <md-list-item to='/user/security'>
                                     <md-icon>security</md-icon>
-                                    <span class='md-list-item-text'>Security</span></md-list-item>
+                                    <span class='md-list-item-text'>{{ $t('security') }}</span></md-list-item>
                                 <md-list-item to='/user/message'>
                                     <md-icon>chat</md-icon>
-                                    <span class='md-list-item-text'>Message</span>
+                                    <span class='md-list-item-text'>{{ $t('message') }}</span>
                                     <md-chip class="md-accent" v-if="unread > 0">{{unread}}</md-chip>
                                 </md-list-item>
                                 <md-divider></md-divider>
                                 <md-list-item href="https://dev.nfls.io/jira/openid/login/2">
                                     <md-icon>help_outline</md-icon>
-                                    <span class='md-list-item-text'>Support</span></md-list-item>
+                                    <span class='md-list-item-text'>{{ $t('support') }}</span></md-list-item>
                                 <md-list-item v-if="admin" @click="dropAdmin">
                                     <md-icon>delete</md-icon>
-                                    <span class='md-list-item-text'>Drop Admin</span></md-list-item>
+                                    <span class='md-list-item-text'>{{ $t('drop-admin') }}</span></md-list-item>
                                 <md-list-item v-else-if="dropEnabled" @click="recover">
                                     <md-icon>autorenew</md-icon>
-                                    <span class='md-list-item-text'>Recover Admin</span></md-list-item>
+                                    <span class='md-list-item-text'>{{ $t('recover-admin') }}</span></md-list-item>
                                 <md-divider></md-divider>
                                 <md-list-item @click="lang">>
                                     <md-icon>translate</md-icon>
@@ -47,17 +48,17 @@
                                 <md-divider></md-divider>
                                 <md-list-item @click="logout">
                                     <md-icon>exit_to_app</md-icon>
-                                    <span class='md-list-item-text'>Logout</span></md-list-item>
+                                    <span class='md-list-item-text'>{{ $t('logout') }}</span></md-list-item>
 
                             </md-list>
                             <md-list v-else>
                                 <md-list-item to='/user/login'>
                                     <md-icon>flight_land</md-icon>
-                                    <span class='md-list-item-text'>Login</span>
+                                    <span class='md-list-item-text'>{{ $t('login') }}</span>
                                 </md-list-item>
                                 <md-list-item to='/user/register'>
                                     <md-icon>create</md-icon>
-                                    <span class='md-list-item-text'>Register</span>
+                                    <span class='md-list-item-text'>{{ $t('register') }}</span>
                                 </md-list-item>
                             </md-list>
                         </md-menu-content>
@@ -79,62 +80,62 @@
                 <md-list>
                     <md-list-item to='/user/dashboard'>
                         <md-icon>dashboard</md-icon>
-                        <span class='md-list-item-text'>Homepage</span></md-list-item>
+                        <span class='md-list-item-text'>{{ $t('homepage') }}</span></md-list-item>
 
                     <md-divider></md-divider>
 
                     <md-list-item to='/school/pastpaper'>
                         <md-icon>book</md-icon>
-                        <span class='md-list-item-text'>PP</span></md-list-item>
+                        <span class='md-list-item-text'>{{ $t('resource') }}</span></md-list-item>
                     <md-list-item to='/school/blackboard'>
                         <md-icon>speaker_notes</md-icon>
-                        <span class='md-list-item-text'>Blackboard</span></md-list-item>
+                        <span class='md-list-item-text'>{{ $t('blackboard') }}</span></md-list-item>
                     <md-list-item to='/school/vote'>
                         <md-icon>plus_one</md-icon>
-                        <span class='md-list-item-text'>Vote</span></md-list-item>
+                        <span class='md-list-item-text'>{{ $t('vote') }}</span></md-list-item>
 
                     <md-divider></md-divider>
 
                     <md-list-item to='/alumni/auth'>
                         <md-icon>perm_identity</md-icon>
-                        <span class='md-list-item-text'>Realname</span></md-list-item>
+                        <span class='md-list-item-text'>{{ $t('realname') }}</span></md-list-item>
                     <md-list-item to='/alumni/directory'>
                         <md-icon>info</md-icon>
-                        <span class='md-list-item-text'>Directory</span></md-list-item>
+                        <span class='md-list-item-text'>{{ $t('directory') }}</span></md-list-item>
 
                     <md-divider></md-divider>
 
                     <md-list-item to='/media/game'>
                         <md-icon>gamepad</md-icon>
-                        <span class='md-list-item-text'>Game</span></md-list-item>
+                        <span class='md-list-item-text'>{{ $t('game') }}</span></md-list-item>
                     <md-list-item to='/media/gallery'>
                         <md-icon>photo_library</md-icon>
-                        <span class='md-list-item-text'>Gallery</span></md-list-item>
+                        <span class='md-list-item-text'>{{ $t('gallery') }}</span></md-list-item>
 
                     <md-divider></md-divider>
 
                     <md-list-item href='https://forum.nfls.io'>
                         <md-icon>forum</md-icon>
-                        <span class='md-list-item-text'>Forum</span></md-list-item>
+                        <span class='md-list-item-text'>{{ $t('forum') }}</span></md-list-item>
                     <md-list-item href='https://wiki.nfls.io'>
                         <md-icon>library_books</md-icon>
-                        <span class='md-list-item-text'>Wiki</span></md-list-item>
+                        <span class='md-list-item-text'>{{ $t('wiki') }}</span></md-list-item>
                     <md-list-item href='https://dev.nfls.io'>
                         <md-icon>developer_mode</md-icon>
-                        <span class='md-list-item-text'>Development</span></md-list-item>
+                        <span class='md-list-item-text'>{{ $t('development') }}</span></md-list-item>
                     <md-list-item href='https://ib.nfls.io'>
                         <md-icon>pool</md-icon>
-                        <span class='md-list-item-text'>ManageBac(Mirror)</span></md-list-item>
+                        <span class='md-list-item-text'>{{ $t('managebac') }}</span></md-list-item>
 
 
                     <md-divider></md-divider>
 
                     <md-list-item to='/about'>
                         <md-icon>adb</md-icon>
-                        <span class='md-list-item-text'>About</span></md-list-item>
+                        <span class='md-list-item-text'>{{ $t('about') }}</span></md-list-item>
                     <md-list-item href='/admin' v-if="admin">
                         <md-icon>build</md-icon>
-                        <span class='md-list-item-text'>Admin</span></md-list-item>
+                        <span class='md-list-item-text'>{{ $t('admin') }}</span></md-list-item>
                 </md-list>
             </md-app-drawer>
 
@@ -142,7 +143,7 @@
                 <router-view :gResponse='gResponse' :webpSupported='webpSupported' :loggedIn='loggedIn' :admin='admin'
                              :verified='verified' :avatar="avatar" @changeTitle="changeTitle"
                              @prepareRecaptcha="prepareRecaptcha" @reload="reload" @renderWebp="renderWebp"
-                             @showMsg="showMsg"/>
+                             @showMsg="showMsg" @generalError="generalError"/>
                 <md-snackbar md-positoin="center" :md-active.sync="showSnackbar" md-persistent>
                     <span>{{message}}</span>
                 </md-snackbar>
@@ -159,7 +160,7 @@
             title: 'Unknown Region',
             toggleCard: false,
             loggedIn: false,
-            username: '未登录',
+            username: '',
             admin: false,
             dropEnabled: false,
             verified: false,
@@ -301,10 +302,13 @@
             }, useEn(){
                 this.$i18n.locale = "en"
                 this.language = "简体中文"
+            }, generalError(error){
+                this.showMsg(this.$t('errors'))
             }
         }, created: function () {
             document.getElementById('recaptcha').style.visibility = 'hidden';
         }, mounted: function () {
+            this.username = this.$t('username')
             this.reload()
             this.initReCaptcha()
             this.loadWebP()
