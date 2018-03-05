@@ -1,9 +1,10 @@
+<i18n src="../../translation/frontend/School.json"></i18n>
 <template>
     <div>
         <md-empty-state
                 md-icon="new_releases"
-                md-label="开发中"
-                md-description="此功能正在开发中">
+                :md-label="$t('developing')"
+                :md-description="$t('developing-hint')">
         </md-empty-state>
     </div>
 </template>
