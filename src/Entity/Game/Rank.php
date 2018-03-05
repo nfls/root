@@ -82,7 +82,7 @@ class Rank
 
         $this->rank = $count + 1;
     }
-    
+
     /**
      * @param Game $game
      */

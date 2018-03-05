@@ -4,7 +4,7 @@
             <md-card>
                 <md-card-content style="align:left;">
                     <md-field>
-                        <label>我要看这块黑板：</label>
+                        <label>{{ $t('current-blackboard') }}</label>
                         <md-select v-model="currentClass">
                             <md-option v-for="cla in claz" :value="cla.id" :key="cla.id">{{cla.title}}</md-option>
                         </md-select>
@@ -17,14 +17,14 @@
                     <div class="md-title">{{classInfo.title}}</div>
                 </md-card-header>
                 <md-card-content style="text-align:left;align:left;">
-                    <span>老师：</span><span v-html="classInfo.teacher.htmlUsername"></span>
+                    <span>{{ $t('teacher') }}</span><span v-html="classInfo.teacher.htmlUsername"></span>
                     <md-divider></md-divider>
                     <vue-markdown>{{classInfo.announcement}}</vue-markdown>
                 </md-card-content>
             </md-card>
             <md-card>
                 <md-card-header>
-                    <div class="md-title">截止日期</div>
+                    <div class="md-title">{{ $t('calender') }}</div>
                 </md-card-header>
                 <md-card-content>
                     <calendar-view
@@ -41,77 +41,77 @@
                     <vue-markdown>{{notice.content}}</vue-markdown>
                     <div v-if="notice.deadline">
                         <md-divider></md-divider>
-                        <span class="md-caption">截止日期</span><br/>
+                        <span class="md-caption">{{ $t('deadline') }}</span><br/>
                         <span class="md-body-2">{{notice.deadline | moment("lll")}}</span><br/>
                         <span class="md-body-1">{{notice.title}}</span>
                     </div>
                     <div v-if="notice.attachment.length > 0">
                         <md-divider></md-divider>
-                        <span class="md-caption">附件</span>
+                        <span class="md-caption">{{ $t('attachment') }}</span>
                         <md-button class="md-primary" v-for="href in notice.attachment" :href="href.href"
                                    :key="href.href" target="_blank">{{href.name}}
                         </md-button>
                     </div>
                     <md-divider></md-divider>
-                    <span class="md-caption" v-if="notice.preview">未发布&nbsp;</span>
+                    <span class="md-caption" v-if="notice.preview">{{ $t('unreleased') }}&nbsp;</span>
                     <span class="md-caption">{{notice.time | moment("lll")}}</span>
                 </md-card-content>
                 <md-card-actions v-if="classInfo.admin">
-                    <md-button @click="deadline(notice.id)" v-if="notice.deadline">截止日期提醒</md-button>
-                    <md-button @click="removeNotice(notice.id)">删除</md-button>
+                    <md-button @click="deadline(notice.id)" v-if="notice.deadline">{{ $t('deadline-notify') }}</md-button>
+                    <md-button @click="removeNotice(notice.id)">{{ $t('delete') }}</md-button>
                 </md-card-actions>
             </md-card>
             <!--Admin-->
             <md-dialog :md-active.sync="showNewPost" class="new-post" style="width:80%" :md-close-on-esc="false"
                        :md-click-outside-to-close="false">
-                <md-dialog-title>新的公告</md-dialog-title>
+                <md-dialog-title>{{ $t('new-note') }}</md-dialog-title>
 
                 <md-dialog-content>
-                    <span>我们提供Google Docs无障碍服务，您可以通过本功能发送文档或是问卷。详情请见<a href="https://dev.nfls.io/confluence/x/AQAO"
-                                                                       target="_blank">Confluence公告</a>。</span>
+                    <span>{{ $t('google-docs' )}}<a href="https://dev.nfls.io/confluence/x/AQAO"
+                                                                       target="_blank">Confluence</a></span>
                     <markdown-palettes v-model="post.content" :disabled="sending"></markdown-palettes>
                     <form>
                         <md-field>
-                            <label>附件</label>
+                            <label>{{ $t('attachment' )}}</label>
                             <md-file v-model="post.file" multiple @md-change="changeUpload" :disabled="sending"/>
                         </md-field>
-                        <span>截止日期（留空为没有）<datetime v-model="post.deadline" type="datetime"
+                        <span>{{ $t('deadline-entry') }}<datetime v-model="post.deadline" type="datetime"
                                                    :disabled="sending"></datetime></span>
                         <md-field>
-                            <label>用于提示截止日期的小标题</label>
+                            <label>{{ $t('title-entry') }}</label>
                             <md-input v-model="post.title" :disabled="sending" :md-counter="20"/>
                         </md-field>
-                        <span>发布日期（留空为立即发布）<datetime v-model="post.time" type="datetime" :disabled="sending"></datetime></span>
+                        <span>{{ $t('releasing-date') }}<datetime v-model="post.time" type="datetime" :disabled="sending"></datetime></span>
                     </form>
                 </md-dialog-content>
                 <md-dialog-actions>
-                    <md-button class="md-primary" @click="close" :disabled="sending">取消</md-button>
-                    <md-button class="md-primary" @click="submit" :disabled="sending">发布</md-button>
+                    <md-button class="md-primary" @click="close" :disabled="sending">{{ $t('cancel') }}</md-button>
+                    <md-button class="md-primary" @click="submit" :disabled="sending">{{ $t('release') }}</md-button>
                 </md-dialog-actions>
             </md-dialog>
 
             <md-dialog :md-active.sync="showAdmin" class="admin-class">
-                <md-dialog-title>管理</md-dialog-title>
+                <md-dialog-title>{{ $t('admin') }}</md-dialog-title>
                 <md-dialog-content>
                     <form>
                         <md-field>
-                            <label for="seniorSchool">标题</label>
-                            <md-input v-model="info.title" id="title" name="title"/>
+                            <label for="seniorSchool">{{ $t('title') }}</label>
+                            <md-input id="seniorSchool" v-model="info.title" name="title"/>
                         </md-field>
-                        <span class="md-caption">公告</span>
+                        <span class="md-caption">{{ $t('announcement') }}</span>
                         <markdown-palettes v-model="info.announcement"></markdown-palettes>
                     </form>
                 </md-dialog-content>
                 <md-dialog-actions>
-                    <md-button class="md-accent" @click="showAdmin = false;showDestroy = true">删除本黑板</md-button>
-                    <md-button class="md-primary" @click="preference">提交</md-button>
-                    <md-button class="md-primary" @click="showAdmin = false">关闭</md-button>
+                    <md-button class="md-accent" @click="showAdmin = false;showDestroy = true">{{ $t('remove') }}</md-button>
+                    <md-button class="md-primary" @click="preference">{{ $t('submit') }}</md-button>
+                    <md-button class="md-primary" @click="showAdmin = false">{{ $t('close') }}</md-button>
                 </md-dialog-actions>
             </md-dialog>
             <md-dialog :md-active.sync="showListStu">
-                <md-dialog-title>用户列表</md-dialog-title>
+                <md-dialog-title>{{ $t('user-list') }}</md-dialog-title>
                 <md-dialog-content>
-                    <span class="md-caption">警告：请不要将自己移出课堂之外！</span><br/>
+                    <span class="md-caption">{{ $t('list-warning') }}</span><br/>
                     <md-list>
                         <md-list-item v-for="student in classInfo.students" :key="student.id">
                             <md-avatar>
@@ -130,22 +130,22 @@
                     </md-list>
                 </md-dialog-content>
                 <md-dialog-actions>
-                    <md-button @click="showAddStu = true">添加新学生</md-button>
-                    <md-button @click="showListStu = false">关闭</md-button>
+                    <md-button @click="showAddStu = true">{{ $t('add-new') }}</md-button>
+                    <md-button @click="showListStu = false">{{ $t('close') }}</md-button>
                 </md-dialog-actions>
             </md-dialog>
             <md-dialog :md-active.sync="showAddStu">
-                <md-dialog-title>添加</md-dialog-title>
+                <md-dialog-title>{{ $t('add') }}</md-dialog-title>
                 <md-dialog-content>
                     <div>
-                        <md-radio v-model="form.seniorSchool" value="2">南外IB国际部</md-radio>
-                        <md-radio v-model="form.seniorSchool" value="3">南外剑桥国际部</md-radio>
+                        <md-radio v-model="form.seniorSchool" value="2">{{ $t('ib') }}</md-radio>
+                        <md-radio v-model="form.seniorSchool" value="3">{{ $t('alevel') }}</md-radio>
                     </div>
                     <md-field style="width:200px;">
-                        <label for="seniorSchool">高中毕业年份</label>
+                        <label for="seniorSchool">{{ $t('senior-graduation') }}</label>
                         <md-input v-model="form.seniorRegistration" id="seniorRegistration" name="seniorRegistration"/>
                     </md-field>
-                    <md-button @click="search">搜索</md-button>
+                    <md-button @click="search">{{ $t('search') }}</md-button>
                     <br/>
                     <md-list>
                         <md-list-item v-for="student in studentsInfo" :key="student.id">
@@ -162,15 +162,15 @@
                     </md-list>
                 </md-dialog-content>
                 <md-dialog-actions>
-                    <md-button @click="showAddStu = false">完成</md-button>
+                    <md-button @click="showAddStu = false">{{ $t('done') }}</md-button>
                 </md-dialog-actions>
             </md-dialog>
         </div>
         <div v-else>
             <md-empty-state
                     md-icon="access_time"
-                    md-label="什么都没有发现"
-                    md-description="看起来你还没有加入任何课堂呢，或者再等等？">
+                    :md-label="$t('nothing')"
+                    :md-description="$t('waiting')">
             </md-empty-state>
 
         </div>
@@ -178,19 +178,19 @@
         <md-dialog-prompt
                 :md-active.sync="showNewClass"
                 v-model="classTitle"
-                md-title="创建一个新黑板"
+                :md-title="$t('create-new')"
                 md-input-maxlength="20"
-                md-input-placeholder="起个名字吧"
-                md-confirm-text="提交"
-                md-cancel-text="取消"
+                :md-input-placeholder="$t('nameing')"
+                :md-confirm-text="$t('confirm')"
+                :md-cancel-text="$t('cancel')"
                 @md-confirm="newClass"/>
 
         <md-dialog-confirm
                 :md-active.sync="showDestroy"
-                md-title="删除确认"
-                md-content="您确认要删除当前黑板吗？您所有上传的的任务都将被删除。此操作不可逆。"
-                md-confirm-text="确认"
-                md-cancel-text="取消"
+                :md-title="$t('removal-title')"
+                :md-content="$t('removal')"
+                :md-confirm-text="$t('confirm')"
+                :md-cancel-text="$t('cancel')"
                 @md-confirm="destroy"/>
 
 
