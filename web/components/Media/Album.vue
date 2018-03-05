@@ -50,7 +50,7 @@
 
             <md-card-content>
                 <span>{{info.description}}</span><br/>
-                <span>Total count: {{info.photoCount}} / Featured count: {{info.originCount}}<br/></span>
+                <span>{{ $t('total-count') }}{{info.photoCount}} / {{ $t('featured-count') }}{{info.originCount}}<br/></span>
                 <span v-if="!verified">{{ $t('photo-not-realname') }}<br/></span>
                 <span v-else>{{ $t('view-full-tip') }}<br/></span>
                 <span v-if="!webpSupported" v-html="$t('webp-not-supported')"><br/></span>

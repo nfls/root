@@ -41,6 +41,10 @@
                                     <md-icon>autorenew</md-icon>
                                     <span class='md-list-item-text'>Recover Admin</span></md-list-item>
                                 <md-divider></md-divider>
+                                <md-list-item @click="lang">>
+                                    <md-icon>translate</md-icon>
+                                    <span class='md-list-item-text'>{{ language }}</span></md-list-item>
+                                <md-divider></md-divider>
                                 <md-list-item @click="logout">
                                     <md-icon>exit_to_app</md-icon>
                                     <span class='md-list-item-text'>Logout</span></md-list-item>
@@ -165,7 +169,8 @@
             reloadC: 0,
             webpSupported: true,
             showSnackbar: false,
-            message: false
+            message: false,
+            language: ""
         }),
         methods: {
             initReCaptcha() {
@@ -264,6 +269,38 @@
             }, recover() {
                 this.$cookie.delete("drop")
                 window.location.reload()
+            }, getLang(){
+                if(this.$cookie.get("lang") === "zh"){
+                    this.useZh()
+                }
+                else if(this.$cookie.get("lang") === "en"){
+                    this.useEn()
+                }else{
+                    let userLang = window.navigator.language || window.navigator.userLanguage;
+                    if(userLang && userLang.includes("zh")){
+                        this.useZh()
+                    }else{
+                        this.useEn()
+                    }
+                }
+            }, lang() {
+                if(this.$i18n.locale === "zh"){
+                    this.$cookie.set("lang","en",{
+                        expires: '1Y'
+                    })
+                    this.useEn()
+                }else{
+                    this.$cookie.set("lang","zh",{
+                        expires: '1Y'
+                    })
+                    this.useZh()
+                }
+            }, useZh(){
+                this.$i18n.locale = "zh"
+                this.language = "English"
+            }, useEn(){
+                this.$i18n.locale = "en"
+                this.language = "简体中文"
             }
         }, created: function () {
             document.getElementById('recaptcha').style.visibility = 'hidden';
@@ -273,7 +310,8 @@
             this.loadWebP()
             if(this.$cookie.get('drop') === "true")
                 this.dropEnabled = true
-            this.$i18n.locale = "zh"
+            this.getLang()
+
         }, watch: {
             $route() {
                 document.getElementById('recaptcha').style.visibility = 'hidden';
