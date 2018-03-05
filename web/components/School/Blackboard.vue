@@ -1,3 +1,4 @@
+<i18n src="../../translation/frontend/School.json"></i18n>
 <template>
     <div class="class" v-infinite-scroll="loadMore" :infinite-scroll-disabled="empty || loading">
         <div class="info" v-if="!empty">
@@ -142,7 +143,7 @@
                         <md-radio v-model="form.seniorSchool" value="3">{{ $t('alevel') }}</md-radio>
                     </div>
                     <md-field style="width:200px;">
-                        <label for="seniorSchool">{{ $t('senior-graduation') }}</label>
+                        <label>{{ $t('senior-graduation') }}</label>
                         <md-input v-model="form.seniorRegistration" id="seniorRegistration" name="seniorRegistration"/>
                     </md-field>
                     <md-button @click="search">{{ $t('search') }}</md-button>
@@ -180,7 +181,7 @@
                 v-model="classTitle"
                 :md-title="$t('create-new')"
                 md-input-maxlength="20"
-                :md-input-placeholder="$t('nameing')"
+                :md-input-placeholder="$t('naming')"
                 :md-confirm-text="$t('confirm')"
                 :md-cancel-text="$t('cancel')"
                 @md-confirm="newClass"/>
@@ -203,20 +204,25 @@
             <md-speed-dial-content>
                 <md-button class="md-icon-button" @click="showNewClass = !showNewClass">
                     <md-icon>fiber_new</md-icon>
+                    <md-tooltip md-direction="left">{{ $t('create-new') }}</md-tooltip>
                 </md-button>
                 <md-button class="md-icon-button" @click="showNewPost = !showNewPost"
                            v-if="classInfo && classInfo.admin">
                     <md-icon>create</md-icon>
+                    <md-tooltip md-direction="left">{{ $t('new-note') }}</md-tooltip>
                 </md-button>
                 <md-button class="md-icon-button" @click="showListStu = !showListStu"
                            v-if="classInfo && classInfo.admin">
                     <md-icon>person</md-icon>
+                    <md-tooltip md-direction="left">{{ $t('user-list') }}</md-tooltip>
                 </md-button>
                 <md-button class="md-icon-button" @click="showAdmin = !showAdmin" v-if="classInfo && classInfo.admin">
                     <md-icon>build</md-icon>
+                    <md-tooltip md-direction="left">{{ $t('admin') }}</md-tooltip>
                 </md-button>
                 <md-button class="md-icon-button md-raised" href='https://dev.nfls.io/confluence/x/GAAO'>
                     <md-icon>help</md-icon>
+                    <md-tooltip md-direction="left">{{ $t('help') }}</md-tooltip>
                 </md-button>
             </md-speed-dial-content>
         </md-speed-dial>
@@ -289,11 +295,15 @@
                 this.axios.get("/school/blackboard/list").then((response) => {
                     this.claz = response.data["data"]
                     this.list()
+                }).catch((error) => {
+                    this.$router.push("/user/login")
                 })
             },
             check() {
                 this.axios.get("/school/blackboard/eligibility").then((response) => {
                     this.eligibility = response.data["data"]
+                }).catch((error) => {
+                    this.$router.push("/user/login")
                 })
             },
             list() {
@@ -317,6 +327,8 @@
                 }).catch((error) => {
                     if (this.claz.length > 0)
                         this.currentClass = this.claz[0].id
+                    else
+                        this.getCsrf()
                 })
             },
             submit() {
@@ -349,7 +361,7 @@
                         this.upload(index + 1)
                     }).catch(error => {
                         this.sending = false
-                        this.showMsg("文件上传失败")
+                        this.showMsg(this.$t('upload-failed'))
                     });
                 })
             },
@@ -359,11 +371,11 @@
                     this.resetForm()
                     this.showNewPost = false
                     this.sending = false
-                    this.showMsg("发布成功")
+                    this.showMsg(this.$t('release-succeeded'))
                     this.list()
                 }).catch((error) => {
                     this.sending = false
-                    this.showMsg("你的公告中存在一些问题，请检查每项是否填写正确")
+                    this.showMsg(this.$t('release-failed'))
                 })
             },
             close() {
@@ -421,7 +433,6 @@
                     remove: true,
                     _csrf: this.csrf
                 }).then((response) => {
-                    this.active = "tab-list"
                     this.list()
                 })
             },
@@ -439,7 +450,7 @@
                     add: true,
                     _csrf: this.csrf
                 }).then((response) => {
-                    this.$emit("showMsg", "添加学生成功！")
+                    this.$emit("showMsg", this.$t('add-succeeded') )
                     this.list()
                 })
             },
@@ -530,9 +541,9 @@
                         id: this.sendId,
                         _csrf: this.csrf
                     }).then((response) => {
-                        this.showMsg("发送成功")
+                        this.showMsg(this.$t('send-succeeded'))
                     }).catch((error) => {
-                        this.showMsg("发送失败")
+                        this.showMsg(this.$t('send-failed'))
                     })
                 }
             }
@@ -555,9 +566,9 @@
 
     .calendar-view {
 
-    .header {
-        display: none
-    }
+        .header {
+            display: none
+        }
 
     }
     .md-list {
