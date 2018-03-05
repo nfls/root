@@ -1,62 +1,63 @@
+<i18n src="../../translation/frontend/User.json"></i18n>
 <template>
     <div class="security">
 
         <form novalidate class="md-layout" @submit.prevent="submit" style="align:left;text-align:left;">
             <md-card class="md-layout-item md-size-100">
                 <md-card-header>
-                    <div class="md-title">安全设置</div>
+                    <div class="md-title">{{ $t('security-settings') }}</div>
                     <div class="md-subtitle">
                         <p align="left">
-                            <span class="md-body-2" v-if="oauth"><strong>清先绑定邮箱后再使用论坛或百科功能！</strong></span><br/>
-                            <span class="md-body-1">您可以在此处修改您的账户安全设置。</span><br/>
+                            <span class="md-body-2" v-if="oauth"><strong>{{ $t('not-emailed') }}</strong></span><br/>
+                            <span class="md-body-1"></span><br/>
                             <span class="md-caption">
-                                注意事项：<br/>
-                                1. 手机和邮箱至少需要绑定一个。在只有一个绑定的情况下您将无法进行解除绑定的操作<br/>
-                                2. 在使用百科或论坛功能前，您必须绑定您的邮箱，并请不要修改，以免绑定失效<br/>
-                                3. 隐私设置仅针对实名用户有效
+                                {{ $t('notice-title') }}<br/>
+                                {{ $t('notice-1') }}<br/>
+                                {{ $t('notice-2') }}<br/>
+                                {{ $t('notice-3') }}
                             </span>
                         </p>
                     </div>
                 </md-card-header>
 
                 <md-card-content>
-                    <span class="md-caption">修改密码</span><br/>
+                    <span class="md-caption">{{ $t('change-password') }}</span><br/>
                     <md-divider></md-divider>
                     <md-field>
-                        <label for="newPassword">新的密码</label>
+                        <label>{{ $t('password-new') }}</label>
                         <md-input type="password" name="newPassword" id="newPassword" v-model="form.newPassword"/>
                     </md-field>
                     <md-field>
-                        <label for="repeatPassword">重复密码</label>
+                        <label>{{ $t('password-repeat') }}</label>
                         <md-input type="password" name="repeatPassword" id="repeatPassword" v-model="form.repeatPassword"/>
                     </md-field>
-                    <span class="md-caption">修改邮箱</span><br/>
+                    <span class="md-caption">{{ $t('change-email') }}</span><br/>
                     <md-divider></md-divider>
-                    <md-checkbox v-model="form.unbindEmail" v-if="phone !== '未绑定' && email !== '未绑定'">仅解除绑定
+                    <md-checkbox v-model="form.unbindEmail" v-if="phone !== $t('not-binded') && email !== $t('not-binded')"s>{{ $t('only-unbind') }}
                     </md-checkbox>
                     <md-field>
-                        <label for="email">当前邮箱</label>
+                        <label>{{ $t('email-current') }}</label>
                         <md-input name="email" id="email" autocomplete="email" v-model="email" disabled/>
                     </md-field>
                     <md-field v-if="!form.unbindEmail">
-                        <label for="">新的邮箱</label>
+                        <label>{{ $t('email-new') }}</label>
                         <md-input name="newEmail" id="newEmail" v-model="form.newEmail"/>
                         <md-button class="md-primary" @click="sendEmail">Send</md-button>
                     </md-field>
                     <md-field v-if="!form.unbindEmail">
-                        <label for="emailCode">验证码</label>
+                        <label>{{ $t('code') }}</label>
                         <md-input name="emailCode" id="emailCode" v-model="form.code"/>
                     </md-field>
-                    <span class="md-caption">修改手机</span><br/>
+                    <span class="md-caption">{{ $t('change-phone') }}</span><br/>
                     <md-divider></md-divider>
-                    <md-checkbox v-model="form.unbindPhone" v-if="phone !== '未绑定' && email !== '未绑定'">仅解除绑定
+                    <md-checkbox v-model="form.unbindPhone" v-if="phone !== $t('not-binded') && email !== $t('not-binded')">{{ $t('only-unbind') }}
                     </md-checkbox>
                     <md-field>
-                        <label for="phone">当前手机</label>
+                        <label>{{ $t('phone-current') }}</label>
                         <md-input name="phone" id="phone" autocomplete="phone" v-model="phone" disabled/>
                     </md-field>
                     <md-field v-if="!form.unbindPhone">
-                        <label for="country">国家</label>
+                        <label>{{ $t('country') }}</label>
                         <md-select name="country" id="country" v-model="form.country">
                             <md-option v-for="country in countries" :key="country.code" :value="country.code">
                                 {{country.name}} +{{country.prefix}}
@@ -64,18 +65,18 @@
                         </md-select>
                     </md-field>
                     <md-field v-if="!form.unbindPhone">
-                        <label for="newPhone">新的手机号</label>
+                        <label>{{ $t('phone-new') }}</label>
                         <md-input name="newPhone" id="newPhone" v-model="form.newPhone"/>
                         <md-button class="md-primary" @click="sendSMS()">Send</md-button>
                     </md-field>
                     <md-field v-if="!form.unbindPhone">
-                        <label for="phoneCode">验证码</label>
+                        <label>{{ $t('code') }}</label>
                         <md-input name="phoneCode" id="phoneCode" v-model="form.code"/>
                     </md-field>
-                    <span class="md-caption">验证</span>
+                    <span class="md-caption">{{ $t('verify') }}</span>
                     <md-divider></md-divider>
                     <md-field>
-                        <label for="password">当前密码</label>
+                        <label>{{ $t('password-current') }}</label>
                         <md-input type="password" name="password" id="password" autocomplete="password"
                                   v-model="form.password"/>
                     </md-field>
@@ -84,7 +85,7 @@
                 <md-progress-bar md-mode="indeterminate" v-if="sending"/>
 
                 <md-card-actions>
-                    <md-button type="submit" class="md-primary" :disabled="sending">提交</md-button>
+                    <md-button type="submit" class="md-primary" :disabled="sending">{{ $t('submit') }}</md-button>
                 </md-card-actions>
             </md-card>
 
@@ -122,10 +123,10 @@
                 this.axios.get("/user/current").then((response) => {
                     this.email = response.data["data"]["email"]
                     if (this.email === null)
-                        this.email = "未绑定"
+                        this.email = this.$t('not-binded')
                     this.phone = response.data["data"]["phone"]
                     if (this.phone === null)
-                        this.phone = "未绑定"
+                        this.phone = this.$t('not-binded')
                 }).catch((error) => {
                     this.$router.push('/user/login')
                 })
@@ -173,7 +174,7 @@
                             "email": this.form.newEmail,
                             "captcha": grecaptcha.getResponse()
                         }).then((response) => {
-                            if (response.data["code"] == 200) {
+                            if (response.data["code"] === 200) {
                                 this.showMsg("Email Sent.")
                             } else {
                                 this.showMsg(response.data["data"])
@@ -186,7 +187,7 @@
                             "country": this.form.country,
                             "captcha": grecaptcha.getResponse()
                         }).then((response) => {
-                            if (response.data["code"] == 200) {
+                            if (response.data["code"] === 200) {
                                 this.showMsg("SMS Sent.")
                             } else {
                                 this.showMsg(response.data["data"])
@@ -197,7 +198,7 @@
                 this.task = ""
                 grecaptcha.reset()
             },
-            showMsg(message) {
+            showMsg(msg) {
                 this.$emit("showMsg", msg)
             }
         },

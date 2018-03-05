@@ -2,26 +2,26 @@
     <div class>
         <md-card>
             <md-card-header>
-                我的实名认证状态
+                {{ $t('status') }}
             </md-card-header>
             <md-card-content>
                 <form>
                     <div>
-                        <md-checkbox v-model="valid" class="md-primary" readonly disabled>实名用户</md-checkbox>
+                        <md-checkbox v-model="valid" class="md-primary" readonly disabled>{{ $t('verified-user') }}</md-checkbox>
                         <md-field v-if="valid">
-                            <label for="chineseName">中文名</label>
+                            <label>{{ $t('chineseName') }}</label>
                             <md-input name="chineseName" id="chineseName" v-model="chineseName" readonly/>
                         </md-field>
                         <md-field v-if="valid">
-                            <label for="englishName">英文名</label>
+                            <label>{{ $t('englishName') }}</label>
                             <md-input name="englishName" id="englishName" v-model="englishName" readonly/>
                         </md-field>
                         <md-field v-if="valid">
-                            <label for="submitTime">验证时间</label>
+                            <label>{{ $t('verified-time') }}</label>
                             <md-input name="submitTime" id="submitTime" v-model="submitTime" readonly/>
                         </md-field>
                         <md-field v-if="valid">
-                            <label for="submitTime">过期时间</label>
+                            <label>{{ $t('expired-time') }}</label>
                             <md-input name="submitTime" id="submitTime" v-model="expireAt" readonly/>
                         </md-field>
                     </div>
@@ -29,10 +29,10 @@
             </md-card-content>
             <md-divider></md-divider>
             <md-card-actions md-alignment="left">
-                <md-button v-if="allowNew" @click="newForm()">填写新的表格
+                <md-button v-if="allowNew" @click="newForm()">{{ $t('new-form') }}
                 </md-button>
                 <md-button disabled v-else>
-                    您有未提交或待审核的表格
+                    {{ $t('unsubmitted') }}
                 </md-button>
             </md-card-actions>
         </md-card>

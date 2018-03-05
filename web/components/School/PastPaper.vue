@@ -1,9 +1,10 @@
+<i18n src="../../translation/frontend/School.json"></i18n>
 <template>
     <div class="browser">
 
         <md-empty-state v-if="loading"
                         md-icon="access_time"
-                        md-label="加载中"
+                        :md-label="$t('loading')"
                         :md-description=currentFile
                         style="width:100%;padding-bottom: 100%;">
         </md-empty-state>
@@ -11,7 +12,7 @@
             <span class="md-caption">
                 <countdown :time=" 60 * 60 * 1000">
                     <template
-                            slot-scope="props">剩余有效时间：{{ props.minutes }}:{{ props.seconds }}。超出时间后请返回Dashboard并重新进入。</template>
+                            slot-scope="props">{{ $t('expire') }}{{ props.minutes }}:{{ props.seconds }}{{ $t('expire-hint')}}</template>
                 </countdown>
             </span>
             <md-card v-if="toDownload.length == 0">
@@ -40,7 +41,7 @@
                     </md-list>
                 </md-card-content>
                 <md-card-actions>
-                    <md-button class="md-raised" @click="batch">批量下载</md-button>
+                    <md-button class="md-raised" @click="batch">{{ $t('bulk') }}</md-button>
                 </md-card-actions>
             </md-card>
             <md-card v-else>
@@ -49,20 +50,20 @@
                                      :md-value="(current)/(toDownload.length + current + 1)*100"></md-progress-bar>
                     <br/>
                     <p align="left">
-                        <span class="md-title">批量下载</span><span class="md-subheading"> 第 {{current}} 个，共 {{current + toDownload.length + 1}} 个</span><br/>
-                        <span class="md-caption">当前文件：{{filename}} </span><br/>
-                        <span class="md-body-1">下载过程中，请保持网络畅通，并请不要做任何无关操作！</span>
+                        <span class="md-title">{{ $t('bulk') }}</span><span class="md-subheading"> {{ $t('progress') }} {{current}} / {{current + toDownload.length + 1}}</span><br/>
+                        <span class="md-caption">{{ $t('current-file') }}{{filename}} </span><br/>
+                        <span class="md-body-1">{{ $t('bulk-hint') }}</span>
                     </p>
                 </md-card-content>
                 <md-card-actions>
-                    <md-button class="md-raised" @click="cancel">取消</md-button>
+                    <md-button class="md-raised" @click="cancel">{{ $t('cancel') }}</md-button>
                 </md-card-actions>
             </md-card>
         </div>
         <md-dialog-alert
                 :md-active.sync="error"
-                md-title="错误"
-                md-content="请确保您已登录您的账户并通过实名认证。如果实名认证已提交，请耐心等待审核！"/>
+                :md-title="$t('error')"
+                :md-content="$t('not-verified')"/>
 
     </div>
 </template>
@@ -91,11 +92,12 @@
             filename: "",
             toDownload: [],
             zipFile: null,
-            currentFile: "如果长期卡住，请考虑刷新或更换浏览器。"
+            currentFile: ""
         }),
         mounted: function () {
             var self = this
-            this.$emit("changeTitle", "PP(Past Papers)")
+            this.currentFile = this.$t('loading-hint')
+            this.$emit("changeTitle", this.$t('pp-title'))
             this.axios.get("/school/pastpaper/header").then((response) => {
                 this.header = response.data["data"]
             })
@@ -206,7 +208,7 @@
                         this.zipFile.file(item.name, response.data)
                         this.downloadBatch()
                     }).catch((error) => {
-                        this.filename = "下载出错。"
+                        this.filename = this.$t('bulk-error')
                     })
                 }
             }, cancel() {
