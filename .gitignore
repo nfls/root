@@ -9,6 +9,7 @@ storage/
 .env
 /public/bundles/
 /public/avatar/
+/public/uploads/
 #/public/assets/
 /var/
 /vendor/

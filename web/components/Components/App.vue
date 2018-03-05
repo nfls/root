@@ -141,10 +141,24 @@
                     <md-list-item to='/about'>
                         <md-icon>adb</md-icon>
                         <span class='md-list-item-text'>{{ $t('about') }}</span></md-list-item>
-                    <md-list-item href='/admin' v-if="admin">
-                        <md-icon>build</md-icon>
-                        <span class='md-list-item-text'>{{ $t('admin') }}</span></md-list-item>
+
+                    <div id="admin" v-if="admin">
+                        <md-divider></md-divider>
+                        <md-subheader>{{ $t('admin') }}</md-subheader>
+
+
+                        <md-list-item href='/admin'>
+                            <md-icon>build</md-icon>
+                            <span class='md-list-item-text'>{{ $t('console') }}</span></md-list-item>
+                        <md-list-item to="/admin/preference">
+                            <md-icon>settings_input_composite</md-icon>
+                            <span class='md-list-item-text'>{{ $t('preference') }}</span></md-list-item>
+                        <md-list-item to="/admin/upload">
+                            <md-icon>file_upload</md-icon>
+                            <span class='md-list-item-text'>{{ $t('upload') }}</span></md-list-item>
+                    </div>
                 </md-list>
+
             </md-app-drawer>
 
             <md-app-content>

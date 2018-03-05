@@ -26,6 +26,7 @@ import Message from '../components/User/Message'
 import Info from '../components/User/Info'
 
 import Preference from '../components/Admin/Preference'
+import Upload from '../components/Admin/Upload'
 
 
 Vue.use(Router)
@@ -99,6 +100,9 @@ export default new Router({
                 }, {
                     path: '/admin/preference',
                     component: Preference
+                }, {
+                    path: '/admin/upload',
+                    component: Upload
                 }, {
                     path: '*',
                     component: Jump
