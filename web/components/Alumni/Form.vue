@@ -92,16 +92,16 @@
         </md-card>
         <md-dialog-confirm
                 :md-active.sync="active"
-                md-title="您确定要提交吗"
-                md-content="除了取消审核，审核期间您将无法修改您所提交的内容。"
-                md-confirm-text="提交"
-                md-cancel-text="取消"
+                :md-title="$t('submit-confirm')"
+                :md-content="$t('submit-confirm-text')"
+                :md-confirm-text="$t('submit')"
+                :md-cancel-text="$t('cancel')"
                 @md-confirm="submit"/>
         <md-dialog-alert
                 :md-active.sync="error"
-                md-title="表格内容填写错误"
+                :md-title="$t('form-error')"
                 :md-content="errors"
-                md-confirm-text="确认"/>
+                :md-confirm-text="$t('confirm')"/>
     </div>
 </template>
 
@@ -216,7 +216,7 @@
                             if (!this.adminMode)
                                 this.changed = false
                             this.sending = false
-                            this.$emit("showMsg", "保存成功，您可以提交了")
+                            this.$emit("showMsg", this.$t("save-succeeded"))
                         })
                     } else {
                         this.active = true
@@ -235,7 +235,7 @@
                     this.sending = false
                     this.isDisabled = true
                     if (data.code == 200) {
-                        this.$emit("showMsg", "提交成功，请等待审核！")
+                        this.$emit("showMsg", this.$t("submit-succeeded"))
                         var self = this
                         setTimeout(function () {
                             self.$router.push("/alumni/auth")
@@ -254,7 +254,7 @@
             }, cancel() {
                 this.form._csrf = this.csrf;
                 this.axios.post("alumni/cancel?id=" + this.$route.params["id"], this.form).then((response) => {
-                    this.$emit("showMsg", "本次验证已被取消，您可以重新提交了。")
+                    this.$emit("showMsg", this.$t("cancel-succeeded"))
                     var self = this
                     setTimeout(function () {
                         self.$router.push("/alumni/auth")
