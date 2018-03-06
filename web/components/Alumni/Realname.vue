@@ -1,5 +1,6 @@
+<i18n src="../../translation/frontend/Alumni.json"></i18n>
 <template>
-    <div class>
+    <div id="list">
         <md-card>
             <md-card-header>
                 {{ $t('status') }}
@@ -38,19 +39,19 @@
         </md-card>
         <md-card>
             <md-card-header>
-                我的实名认证记录
+                {{ $t('my-record') }}
             </md-card-header>
             <md-card-content>
                 <md-list>
-                    <md-list-item v-for="auth in history" :key="auth.id" @click="click(auth.id)">{{auth.readableText}}
+                    <md-list-item v-for="auth in history" :key="auth.id" @click="click(auth.id)"><code>{{auth.readableText}}</code>
                     </md-list-item>
                 </md-list>
             </md-card-content>
         </md-card>
         <md-dialog-alert
                 :md-active.sync="error"
-                md-title="错误"
-                md-content="请先登录您的账户！"/>
+                :md-title="$t('error')"
+                :md-content="$t('login-required')"/>
     </div>
 </template>
 
@@ -78,18 +79,19 @@
                 this.axios.get("/alumni/info").then((response) => {
                     var self = this
                     this.history = response.data["data"].map(function (val) {
-                        val["readableText"] = self.getStatus(val.status)
+                        val["readableText"] = self.$t(self.getStatus(val.status))
+                        val["readableText"] += " " + val.id
                         if (val.submitTime) {
                             var moment = require('moment-timezone');
-                            val["readableText"] += "（提交时间：" + moment(val.submitTime).tz(moment.tz.guess()).format("lll") + "）"
+                            val["readableText"] += " " + self.$t('submit-time')  + moment(val.submitTime).tz(moment.tz.guess()).format("lll") + " "
                         }
-                        val["readableText"] += " " + val.id
                         return val
                     })
                     this.allowNew = (this.history.filter(function (val) {
                         return val.status <= 1
                     }).length == 0)
                 }).catch((error) => {
+                    console.error(error)
                     this.error = true
                 })
             },
@@ -106,7 +108,7 @@
                         if (data["expireAt"])
                             this.expireAt = moment(data["expireAt"]).tz(moment.tz.guess()).format("L")
                         else
-                            this.expireAt = "无期限"
+                            this.expireAt = this.$t('un-metered')
                     } else {
                         this.valid = false
                     }
@@ -116,22 +118,7 @@
                 this.$router.push("/alumni/auth/" + id);
             },
             getStatus(status) {
-                switch (status) {
-                    case 0:
-                        return "未提交"
-                    case 1:
-                        return "待审核"
-                    case 2:
-                        return "已取消"
-                    case 3:
-                        return "审核中"
-                    case 4:
-                        return "被退回"
-                    case 5:
-                        return "已通过"
-                    case 6:
-                        return "已过期"
-                }
+                return "status-" + status
             },
             newForm() {
                 this.axios.get("user/csrf", {

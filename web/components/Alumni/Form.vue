@@ -39,17 +39,17 @@
                                 <label :for="item.key">{{item.name}}</label>
                                 <md-input :name="item.key" :id="item.key" :autocomplete="item.key"
                                           v-model="form[item.key]" :disabled="isDisabled"></md-input>
-                                <span class="md-error" v-if="!$v.form[item.key].required">本项必填</span>
-                                <span class="md-error" v-else-if="!$v.form[item.key].minLength">填写的内容不正确</span>
-                                <span class="md-error" v-else-if="!$v.form[item.key].maxLength">填写的内容不正确</span>
-                                <span class="md-error" v-else-if="!$v.form[item.key].minValue">填写的内容不正确</span>
-                                <span class="md-error" v-else-if="!$v.form[item.key].maxValue">填写的内容不正确</span>
+                                <span class="md-error" v-if="!$v.form[item.key].required">{{ $t('required') }}</span>
+                                <span class="md-error" v-else-if="!$v.form[item.key].minLength">{{ $t('incorrect') }}</span>
+                                <span class="md-error" v-else-if="!$v.form[item.key].maxLength">{{ $t('incorrect') }}</span>
+                                <span class="md-error" v-else-if="!$v.form[item.key].minValue">{{ $t('incorrect') }}</span>
+                                <span class="md-error" v-else-if="!$v.form[item.key].maxValue">{{ $t('incorrect') }}</span>
                             </md-field>
                             <md-field v-else-if="item.type == 'textarea'" :class="getValidationClass(item.key)">
                                 <label :for="item.key">{{item.name}}</label>
                                 <md-textarea :name="item.key" :id="item.key" :autocomplete="item.key"
                                              v-model="form[item.key]" :disabled="isDisabled"></md-textarea>
-                                <span class="md-error" v-if="!$v.form[item.key].required">本项必填</span>
+                                <span class="md-error" v-if="!$v.form[item.key].required">{{ $t('required') }}</span>
                             </md-field>
                             <md-field v-if="item.type == 'country'" :class="getValidationClass(item.key)">
                                 <label :for="item.key">{{item.name}}</label>
@@ -59,7 +59,7 @@
                                         {{country.code}} - {{country.name}}
                                     </md-option>
                                 </md-select>
-                                <span class="md-error" v-if="!$v.form[item.key].required">本项必填</span>
+                                <span class="md-error" v-if="!$v.form[item.key].required">{{ $t('required') }}</span>
                             </md-field>
                             <md-datepicker format="MM/dd/yy" v-else-if="item.type == 'date'" :name="item.key"
                                            :id="item.key" :autocomplete="item.key" :class="getValidationClass(item.key)"
@@ -72,18 +72,18 @@
                     </div>
                     <div v-if="!isDisabled">
                         <div class="md-flex md-flex-small-100" v-if="changed">
-                            <md-button type="save" class="md-raised md-primary" style="width:90%">保存</md-button>
+                            <md-button type="save" class="md-raised md-primary" style="width:90%">{{ $t('submit') }}</md-button>
                         </div>
                         <div class="md-flex md-flex-small-100" v-if="!changed">
-                            <md-button type="save" class="md-raised md-primary" style="width:90%">提交</md-button>
+                            <md-button type="save" class="md-raised md-primary" style="width:90%">{{ $t('submit') }}</md-button>
                         </div>
                     </div>
                     <div class="md-flex md-flex-small-100" v-else-if="status == 1">
-                        <md-button type="button" class="md-raised md-accent" style="width:90%" @click="cancel">取消本次申请
+                        <md-button type="button" class="md-raised md-accent" style="width:90%" @click="cancel">{{ $t('cancel') }}
                         </md-button>
                     </div>
                     <div v-else>
-                        <md-button type="button" class="md-raised md-primary" style="width:90%" disabled>此验证只读
+                        <md-button type="button" class="md-raised md-primary" style="width:90%" disabled>{{ $t('readonly') }}
                         </md-button>
                     </div>
                     <md-progress-bar md-mode="indeterminate" v-if="sending"/>
@@ -92,16 +92,16 @@
         </md-card>
         <md-dialog-confirm
                 :md-active.sync="active"
-                md-title="您确定要提交吗"
-                md-content="除了取消审核，审核期间您将无法修改您所提交的内容。"
-                md-confirm-text="提交"
-                md-cancel-text="取消"
+                :md-title="$t('submit-confirm')"
+                :md-content="$t('submit-confirm-text')"
+                :md-confirm-text="$t('submit')"
+                :md-cancel-text="$t('cancel')"
                 @md-confirm="submit"/>
         <md-dialog-alert
                 :md-active.sync="error"
-                md-title="表格内容填写错误"
+                :md-title="$t('form-error')"
                 :md-content="errors"
-                md-confirm-text="确认"/>
+                :md-confirm-text="$t('confirm')"/>
     </div>
 </template>
 
@@ -216,7 +216,7 @@
                             if (!this.adminMode)
                                 this.changed = false
                             this.sending = false
-                            this.$emit("showMsg", "保存成功，您可以提交了")
+                            this.$emit("showMsg", this.$t("save-succeeded"))
                         })
                     } else {
                         this.active = true
@@ -235,7 +235,7 @@
                     this.sending = false
                     this.isDisabled = true
                     if (data.code == 200) {
-                        this.$emit("showMsg", "提交成功，请等待审核！")
+                        this.$emit("showMsg", this.$t("submit-succeeded"))
                         var self = this
                         setTimeout(function () {
                             self.$router.push("/alumni/auth")
@@ -254,7 +254,7 @@
             }, cancel() {
                 this.form._csrf = this.csrf;
                 this.axios.post("alumni/cancel?id=" + this.$route.params["id"], this.form).then((response) => {
-                    this.$emit("showMsg", "本次验证已被取消，您可以重新提交了。")
+                    this.$emit("showMsg", this.$t("cancel-succeeded"))
                     var self = this
                     setTimeout(function () {
                         self.$router.push("/alumni/auth")
