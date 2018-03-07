@@ -292,20 +292,6 @@
             }, recover() {
                 this.$cookie.delete("drop")
                 window.location.reload()
-            }, getLang(){
-                if(this.$cookie.get("lang") === "zh"){
-                    this.useZh()
-                }
-                else if(this.$cookie.get("lang") === "en"){
-                    this.useEn()
-                }else{
-                    let userLang = window.navigator.language || window.navigator.userLanguage;
-                    if(userLang && userLang.includes("zh")){
-                        this.useZh()
-                    }else{
-                        this.useEn()
-                    }
-                }
             }, lang() {
                 if(this.$i18n.locale === "zh"){
                     this.$cookie.set("lang","en",{
@@ -321,9 +307,11 @@
             }, useZh(){
                 this.$i18n.locale = "zh"
                 this.language = "English"
+                window.location.reload()
             }, useEn(){
                 this.$i18n.locale = "en"
                 this.language = "简体中文"
+                window.location.reload()
             }, generalError(error){
                 this.showMsg(this.$t('errors'))
             }
@@ -336,8 +324,7 @@
             this.loadWebP()
             if(this.$cookie.get('drop') === "true")
                 this.dropEnabled = true
-            this.getLang()
-
+            console.log(this.$i18n.localeåå)
         }, watch: {
             $route() {
                 document.getElementById('recaptcha').style.visibility = 'hidden';
