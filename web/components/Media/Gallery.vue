@@ -10,7 +10,7 @@
                     </md-card-media>
                     <md-card-area>
                         <md-card-header>
-                            <span class="md-title">{{item.title}}</span>
+                            <span class="md-title"><span v-if="item.originCount > 0">⭐</span>️️{{item.title}}</span>
                             <span class="md-subhead">{{item.description}}</span>
                         </md-card-header>
                     </md-card-area>
