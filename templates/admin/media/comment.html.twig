@@ -56,14 +56,18 @@
                 return "否";
         }
         function dateFormatter(val,row) {
-            //console.log(val);
-            var d = new Date(val);
-            return [d.getMonth()+1,
-                    d.getDate(),
-                    d.getFullYear()].join('/')+' '+
-                [d.getHours(),
-                    d.getMinutes(),
-                    d.getSeconds()].join(':');
+            Number.prototype.padLeft = function(base,chr){
+                var  len = (String(base || 10).length - String(this).length)+1;
+                return len > 0? new Array(len).join(chr || '0')+this : this;
+            };
+            var d = new Date,
+                dformat = [d.getFullYear(),
+                        (d.getMonth()+1).padLeft(),
+                        d.getDate().padLeft()].join('/') +' ' +
+                    [d.getHours().padLeft(),
+                        d.getMinutes().padLeft(),
+                        d.getSeconds().padLeft()].join(':');
+            return dformat;
         }
     </script>
 {% endblock %}

@@ -19,7 +19,7 @@
         </md-card>
         <md-card class="form">
             <md-card-header>
-                <div class="md-title">实名认证</div>
+                <div class="md-title">{{ $t('realname') }}</div>
             </md-card-header>
             <md-card-content>
                 <form novalidate class="md-layout-row md-gutter" @submit.prevent="save">
@@ -306,7 +306,7 @@
                     time: this.reviewDate,
                     _csrf: this.csrf
                 }).then((response) => {
-                    if (response.data["code"] == 200)
+                    if (response.data["code"] === 200)
                         window.close()
                 })
             }, acceptWithoutLimit() {
@@ -315,7 +315,7 @@
                     action: "accept",
                     _csrf: this.csrf
                 }).then((response) => {
-                    if (response.data["code"] == 200)
+                    if (response.data["code"] === 200)
                         window.close()
                 })
             }, reject() {
@@ -324,14 +324,14 @@
                     action: "reject",
                     _csrf: this.csrf
                 }).then((response) => {
-                    if (response.data["code"] == 200)
+                    if (response.data["code"] === 200)
                         window.close()
                 })
             }, ddlHelper() {
-                if (this.form.userStatus == "0" && this.form.juniorRegistration) {
+                if (this.form.userStatus === "0" && this.form.juniorRegistration) {
                     this.reviewDate = new Date(this.form.juniorRegistration + "/06/30")
                 }
-                if (this.form.userStatus == "1" && this.form.seniorRegistration) {
+                if (this.form.userStatus === "1" && this.form.seniorRegistration) {
                     this.reviewDate = new Date(this.form.seniorRegistration + "/06/30")
                 }
             }, getCsrf() {

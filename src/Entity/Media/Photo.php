@@ -85,6 +85,13 @@ class Photo
      */
     private $isPublic = false;
 
+    /**
+     * @var array
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $faces;
+
 
     public function __construct()
     {
@@ -253,6 +260,15 @@ class Photo
     public function setHeight($height)
     {
         $this->height = $height;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getFaces(): ?array
+    {
+        return $this->faces;
     }
 
 

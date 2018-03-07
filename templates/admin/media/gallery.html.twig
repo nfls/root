@@ -25,6 +25,7 @@
             <tr>
                 <th data-options="field:'id'">ID</th>
                 <th data-options="field:'title'">标题</th>
+                <th data-options="field:'priority'">优先级</th>
                 <th data-options="field:'time'" formatter="dateFormatter">上传日期</th>
                 <th data-options="field:'photoCount'">照片数</th>
                 <th data-options="field:'originCount'">精选数</th>
@@ -45,6 +46,10 @@
                     <textarea id="description" class="easyui-validatebox" name="description"  style="width:90%"></textarea>
                 </div>
                 <div>
+                    <label for="name">优先度：</label>
+                    <input id="priority" class="easyui-validatebox" type="text" name="priority" style="width:90%"/>
+                </div>
+                <div>
                     <label for="name">封面：</label>
                     <input id="cover" class="easyui-validatebox" type="text" name="cover" style="width:90%"/>
                 </div>
@@ -59,8 +64,9 @@
                 <div>
                     <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="editPhotos()">提交</a>
                     <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="removePhotos()">删除</a>
-                    <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="viewPhotos()">查看</a>
-                    <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-filter'" onclick="goToPhotos()">照片</a>
+                    <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-filter'" onclick="goToPhotos()">列表</a>
+                    <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="viewPhotos()">预览</a>
+
                 </div>
             </form>
         </div>
@@ -72,14 +78,15 @@
         function edit(row,val){
             $("#title").val(val.title).change();
             $("#description").val(val.description).change();
+            $("#priority").val(val.priority).change();
             if(val.cover)
                 $("#cover").val(val.cover.id).change();
             $('#public').prop('checked', val.public);
             $('#visible').prop('checked', val.visible);
             $('#dd').dialog({
                 title: '修改属性',
-                width: 250,
-                height: 250,
+                width: 300,
+                height: 300,
                 closed: true
             });
             $('#dd').dialog("open");
@@ -96,6 +103,7 @@
             data["title"] = $("#title").val();
             data["description"] = $("#description").val();
             data["cover"] = $("#cover").val();
+            data["priority"] = $("#priority").val();
             data["visible"] = $("#visible").is(":checked");
             data["public"] = $("#public").is(":checked");
             $.post("/admin/media/gallery/edit",data, function(message){
@@ -119,7 +127,7 @@
         }
         function goToPhotos(){
             var selected = $("#dg").datagrid("getSelected");
-            window.location.href = "/admin/media/photo?gallery_id=" + selected.id
+            window.open("/admin/media/photo?gallery_id=" + selected.id)
         }
         function nameFormatter(val,row){
             if(val === null){
@@ -136,13 +144,18 @@
         }
         function dateFormatter(val,row) {
             //console.log(val);
-            var d = new Date(val);
-            return [d.getMonth()+1,
-                    d.getDate(),
-                    d.getFullYear()].join('/')+' '+
-                [d.getHours(),
-                    d.getMinutes(),
-                    d.getSeconds()].join(':');
+            Number.prototype.padLeft = function(base,chr){
+                var  len = (String(base || 10).length - String(this).length)+1;
+                return len > 0? new Array(len).join(chr || '0')+this : this;
+            };
+            var d = new Date,
+                dformat = [d.getFullYear(),
+                        (d.getMonth()+1).padLeft(),
+                        d.getDate().padLeft()].join('/') +' ' +
+                    [d.getHours().padLeft(),
+                        d.getMinutes().padLeft(),
+                        d.getSeconds().padLeft()].join(':');
+            return dformat;
         }
         function loadData(){
             $.post( "/admin/media/gallery/edit", function( data ) {

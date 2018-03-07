@@ -25,17 +25,14 @@
         </thead>
     </table>
     <div id="tb" style="padding:2px 5px;">
-        Date From: <input class="easyui-datebox" style="width:110px">
-        To: <input class="easyui-datebox" style="width:110px">
         相册:
         <select id="combobox" class="easyui-combobox" panelHeight="auto" style="width:100px">
-            { % if gallery_id != 0 % }
+            {% if gallery_id > 0 %}
             <option value="{{ gallery_id }}">指定</option>
-            { % endif % }
+            {% endif %}
             <option value="null">未分配</option>
             <option value="all">所有</option>
         </select>
-        <a href="#" class="easyui-linkbutton" iconCls="icon-search">Search</a>
     </div>
     <div id="dd" hidden>
         <form id="ff" method="post" style="padding: 5px;width: 100%">
@@ -98,14 +95,16 @@
                 handler:function(){
                     $('#dd').dialog({
                         title: '修改属性',
-                        width: 200,
-                        height: 130,
+                        width: 300,
+                        height: 300,
                         closed: true
                     });
                     $('#dd').dialog("open");
                     //$('#dd').dialog('refresh', 'new_content.php');
                 }
-            }]
+            }],
+            pageList: [10000,5000,2000,1000,500,100,10],
+            pageSize: 10000
         });
     }
 
@@ -132,14 +131,18 @@
             return "否";
     }
     function dateFormatter(val,row) {
-        //console.log(val);
-        var d = new Date(val);
-        return [d.getMonth()+1,
-                d.getDate(),
-                d.getFullYear()].join('/')+' '+
-            [d.getHours(),
-                d.getMinutes(),
-                d.getSeconds()].join(':');
+        Number.prototype.padLeft = function(base,chr){
+            var  len = (String(base || 10).length - String(this).length)+1;
+            return len > 0? new Array(len).join(chr || '0')+this : this;
+        };
+        var d = new Date,
+            dformat = [d.getFullYear(),
+                    (d.getMonth()+1).padLeft(),
+                    d.getDate().padLeft()].join('/') +' ' +
+                [d.getHours().padLeft(),
+                    d.getMinutes().padLeft(),
+                    d.getSeconds().padLeft()].join(':');
+        return dformat;
     }
     function loadData(){
         $.post( "/admin/media/photo/edit", function( data ) {

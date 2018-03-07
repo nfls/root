@@ -121,11 +121,9 @@
             items: [],
             comments: [],
             options: {
-                /*
                 shareButtons: [
-                    {id:'download', label:'Download image', url:'{{raw_image_url}}', download:true}
+                    {id:'download', label:'Download', url:'{{raw_image_url}}', download:true}
                 ]
-                */
             },
             info: {
                 title: "",

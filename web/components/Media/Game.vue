@@ -4,7 +4,7 @@
         <div v-if="!verified" style="margin:20px;">
             <span class="md-display-1" v-html="$t('game-not-realname')"></span>
         </div>
-        <div style="row">
+        <div class="row">
             <md-table v-model="ranks" md-card v-if="loggedIn">
                 <md-table-toolbar>
                     <h1 class="md-title">{{ $t('my-rank') }}</h1>

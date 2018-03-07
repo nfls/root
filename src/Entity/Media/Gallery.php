@@ -86,6 +86,13 @@ class Gallery
     private $isPublic = false;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", options={"default":1})
+     */
+    private $priority = 1;
+
+    /**
      * @var EntityManager;
      */
     private $em;
@@ -259,6 +266,22 @@ class Gallery
     public function setCover($cover)
     {
         $this->cover = $cover;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPriority(): int
+    {
+        return $this->priority;
+    }
+
+    /**
+     * @param int $priority
+     */
+    public function setPriority(int $priority): void
+    {
+        $this->priority = $priority;
     }
 
     /**

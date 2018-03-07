@@ -130,9 +130,9 @@ class GalleryController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         if ($request->query->has("gallery_id"))
-            return $this->render("admin/media/photo.html.twig", ["gallery_id" => $request->query->get("gallery_id")]);
+            return $this->render("admin/media/photo.php.twig", ["gallery_id" => $request->query->get("gallery_id")]);
         else
-            return $this->render("admin/media/photo.html.twig", ["gallery_id" => 0]);
+            return $this->render("admin/media/photo.php.twig", ["gallery_id" => 0]);
     }
 
     /**
@@ -197,9 +197,11 @@ class GalleryController extends AbstractController
             } else {
                 $title = $request->request->get("title") ?? "";
                 $description = $request->request->get("description") ?? "";
+                $priority = $request->request->getInt("priority",1);
                 $photo = $photoRepo->getPhoto($request->request->get("cover"));
                 $gallery->setCover($photo);
                 $gallery->setTitle($title);
+                $gallery->setPriority($priority);
                 $gallery->setDescription($description);
                 $gallery->setIsPublic($request->request->get("public") == "true");
                 $gallery->setIsVisible($request->request->get("visible") == "true");

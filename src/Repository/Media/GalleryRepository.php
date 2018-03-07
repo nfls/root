@@ -16,7 +16,7 @@ class GalleryRepository extends ServiceEntityRepository
 
     public function getList($canViewPrivate = false, $canViewAll = false)
     {
-        $query = $this->createQueryBuilder("u")->orderBy("u.time","DESC");
+        $query = $this->createQueryBuilder("u")->orderBy("u.priority","DESC")->addOrderBy("u.time","DESC");
         if (!$canViewPrivate) {
             $query = $query->where("u.isPublic = true");
         }
@@ -30,8 +30,8 @@ class GalleryRepository extends ServiceEntityRepository
 
     public function getAllList()
     {
-        return $this->createQueryBuilder("u")
-            ->orderBy("u.time","DESC")
+        return $this->createQueryBuilder("u")->orderBy("u.priority","DESC")
+            ->addOrderBy("u.time","DESC")
             ->getQuery()
             ->getResult();
     }

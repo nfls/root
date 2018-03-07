@@ -7,6 +7,7 @@ use App\Entity\Preference;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class AboutController extends AbstractController
 {
@@ -29,5 +30,13 @@ class AboutController extends AbstractController
             return $previous . "<br/>" . $current;
         });
         return $this->response()->response($gitHashLong);
+    }
+
+    /**
+     * @Route("/about/trans")
+     */
+    public function trans(TranslatorInterface $translator) {
+        return $this->response()->response($translator->trans("nihao"));
+
     }
 }

@@ -17,14 +17,15 @@
         <br/>
         <div style="width:100%">
             选择照片：
-            <input id="myFile" type="file" multiple accept="image/*">
-            并发数：
-            <input id="concurrent" class="easyui-numberspinner" style="width:80px;"
-                   required="required" data-options="min:1,max:4,editable:false" value="2">
-            <a id="submit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
-               onclick="prepareUpload()">开始上传</a><br/>
+            <input id="myFile" type="file" multiple accept="image/*"><br/>
             自动精选：
-            <input id="more" type="file" multiple accept="image/*">
+            <input id="more" type="file" multiple accept="image/*"><br/>
+            并发数（小于总文件数！）：
+            <input id="concurrent" class="easyui-numberspinner" style="width:80px;"
+                   required="required" data-options="min:1,max:4,editable:false" value="4"><br/>
+            <a id="submit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
+               onclick="prepareUpload()">开始上传</a>
+
         </div>
         <br/>
 
