@@ -59,7 +59,7 @@ else if(Cookies.get("lang") === "en"){
     }
 }
 var i18n = new VueI18n({
-    locale: locale,
+    locale: "zh",
     messages:
         {}
 })

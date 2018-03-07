@@ -2,7 +2,12 @@
 <template>
     <div id="gallery">
         <div id="searchBox" align="left">
-            <md-switch v-model="originOnly">精选</md-switch>
+            <md-switch v-model="originOnly">{{ $t('only-featured') }}</md-switch><br/>
+            <md-divider></md-divider>
+            <span class="md-body-1" v-if="!originOnly">{{ $t('star-represent') }}<br/></span>
+            <span class="md-body-1">所有照片采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>。转载时务必注明原地址！<br/></span>
+            <md-divider></md-divider>
+            <span class="md-caption">所有相册基于时间及优先度算法排序<br/></span>
         </div>
 
         <div class="md-layout md-gutter md-alignment-center">

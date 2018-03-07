@@ -31,6 +31,7 @@ class GalleryNormalizer implements NormalizerInterface
             "photoCount"=>$object->getPhotoCount(),
             "visible"=>$object->isVisible(),
             "public"=>$object->isPublic(),
+            "priority"=>$object->getPriority(),
             "time"=>$timeNormalizer->normalize($object->getTime())
         );
         if(is_null($object->getCover()))
