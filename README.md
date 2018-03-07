@@ -23,7 +23,7 @@ Copy and configure all parameters form .env.dist correctly in .env
 
 ## Thank
 ### BrowserStack
-<img src="https://bstacksupport.zendesk.com/attachments/token/Ygvb0OdLftxe7bMxq5JHzEhQh/?name=browserstack-logo-600x315.png" width="200"/>
+<a href="https://browserstack.com"><img src="https://bstacksupport.zendesk.com/attachments/token/Ygvb0OdLftxe7bMxq5JHzEhQh/?name=browserstack-logo-600x315.png" width="200"/></a>
 
 We are using BrowserStack to test frontend compatibity on all major devices.
 
