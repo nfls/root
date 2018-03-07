@@ -21,5 +21,11 @@ Copy and configure all parameters form .env.dist correctly in .env
 ### Production
 1. Run prod.sh, it will automatically install all the dependencies and migrate the database.
 
+## Thank
+### BrowserStack
+<img src="https://bstacksupport.zendesk.com/attachments/token/Ygvb0OdLftxe7bMxq5JHzEhQh/?name=browserstack-logo-600x315.png" width="200"/>
+
+We are using BrowserStack to test frontend compatibity on all major devices.
+
 ## Contribution
 For all the things related to development(e.g. issues, releasing schedules), please visit https://dev.nfls.io.
