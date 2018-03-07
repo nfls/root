@@ -1,23 +1,30 @@
 <i18n src="../../translation/frontend/Media.json"></i18n>
 <template>
-    <div class="md-layout md-gutter md-alignment-center">
-        <div class="md-layout-item md-xlarge-size-20 md-large-size-33 md-medium-size-50 md-small-size-100 md-xsmall-size-100 gallery-card"
-             v-for="item in items" :key="item.id">
-            <md-card @click.native="onclick(item.id)" v-if="item.cover !== null">
-                <md-card-media-cover md-solid>
-                    <md-card-media md-ratio="4:3">
-                        <img v-lazy="item.cover.src" alt="Skyscraper">
-                    </md-card-media>
-                    <md-card-area>
-                        <md-card-header>
-                            <span class="md-title"><span v-if="item.originCount > 0">⭐</span>️️{{item.title}}</span>
-                            <span class="md-subhead">{{item.description}}</span>
-                        </md-card-header>
-                    </md-card-area>
-                </md-card-media-cover>
-            </md-card>
+    <div id="gallery">
+        <div id="searchBox" align="left">
+            <md-switch v-model="originOnly">精选</md-switch>
+        </div>
+
+        <div class="md-layout md-gutter md-alignment-center">
+            <div class="md-layout-item md-xlarge-size-20 md-large-size-33 md-medium-size-50 md-small-size-100 md-xsmall-size-100 gallery-card"
+                 v-for="item in items" :key="item.id" v-if="item.cover !== null && (!originOnly || item.originCount > 0)">
+                <md-card @click.native="onclick(item.id)">
+                    <md-card-media-cover md-solid>
+                        <md-card-media md-ratio="4:3">
+                            <img v-lazy="item.cover.src" alt="Skyscraper">
+                        </md-card-media>
+                        <md-card-area>
+                            <md-card-header>
+                                <span class="md-title"><span v-if="item.originCount > 0 && !originOnly">⭐</span>️️{{item.title}}</span>
+                                <span class="md-subhead">{{item.description}}</span>
+                            </md-card-header>
+                        </md-card-area>
+                    </md-card-media-cover>
+                </md-card>
+            </div>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -28,7 +35,8 @@
         props: ["name"],
         directives: {infiniteScroll},
         data: () => ({
-            items: []
+            items: [],
+            originOnly: false
         }),
         mounted: function () {
             this.$emit("changeTitle", "Gallery")
