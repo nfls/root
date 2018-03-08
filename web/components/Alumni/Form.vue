@@ -3,7 +3,7 @@
     <div class="realname">
         <md-card class="review" v-if="adminMode">
             <md-card-header>
-                <div class="md-title">审核</div>
+                <div class="md-title">{{ $t('action-review') }}</div>
             </md-card-header>
             <md-card-content>
                 <form novalidate class="md-layout-row md-gutter">
@@ -13,9 +13,9 @@
                 </form>
             </md-card-content>
             <md-card-actions md-alignment="left">
-                <md-button @click="acceptWithLimit">接受有期限</md-button>
-                <md-button @click="acceptWithoutLimit">接受无期限</md-button>
-                <md-button @click="reject">拒绝</md-button>
+                <md-button @click="acceptWithLimit">{{ $t('action-with-limit') }}</md-button>
+                <md-button @click="acceptWithoutLimit">{{ $t('action-without-limit') }}</md-button>
+                <md-button @click="reject">{{ $t('action-reject') }}</md-button>
             </md-card-actions>
         </md-card>
         <md-card class="form">
@@ -194,7 +194,7 @@
             this.axios.get("/alumni/countries").then((response) => {
                 this.countries = response.data["data"]
             })
-            this.$emit('changeTitle', "实名认证 - 表格填写")
+            this.$emit('changeTitle', this.$t('form-title'))
         },
         methods: {
             getValidationClass(fieldName) {

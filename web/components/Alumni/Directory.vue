@@ -1,4 +1,4 @@
-<i18n src="../../translation/frontend/School.json"></i18n>
+<i18n src="../../translation/frontend/Alumni.json"></i18n>
 <template>
     <div>
         <md-empty-state
@@ -13,7 +13,7 @@
     export default {
         name: "Directory",
         mounted: function () {
-            this.$emit("changeTitle", "在线校友录")
+            this.$emit("changeTitle", this.$t('title-directory'))
         }
     }
 </script>

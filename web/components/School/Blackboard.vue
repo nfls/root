@@ -96,7 +96,7 @@
                 <md-dialog-content>
                     <form>
                         <md-field>
-                            <label for="seniorSchool">{{ $t('title') }}</label>
+                            <labe>{{ $t('title') }}</labe>
                             <md-input id="seniorSchool" v-model="info.title" name="title"/>
                         </md-field>
                         <span class="md-caption">{{ $t('announcement') }}</span>
