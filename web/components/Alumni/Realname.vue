@@ -72,7 +72,7 @@
         mounted: function () {
             this.loadData()
             this.loadStatus()
-            this.$emit('changeTitle', "实名认证")
+            this.$emit('changeTitle', this.$t('title-auth'))
         },
         methods: {
             loadData() {

@@ -60,6 +60,11 @@
                                     <md-icon>create</md-icon>
                                     <span class='md-list-item-text'>{{ $t('register') }}</span>
                                 </md-list-item>
+                                <md-divider></md-divider>
+                                <md-list-item @click="lang">>
+                                    <md-icon>translate</md-icon>
+                                    <span class='md-list-item-text'>{{ language }}</span>
+                                </md-list-item>
                             </md-list>
                         </md-menu-content>
                     </md-menu>
@@ -271,7 +276,7 @@
                 var WebP = new Image()
                 var self = this
                 WebP.onload = WebP.onerror = function () {
-                    if (WebP.height != 2) {
+                    if (WebP.height !== 2) {
                         var sc = document.createElement('script');
                         sc.type = 'text/javascript';
                         sc.async = true;
@@ -297,21 +302,13 @@
                     this.$cookie.set("lang","en",{
                         expires: '1Y'
                     })
-                    this.useEn()
+                    window.location.reload();
                 }else{
                     this.$cookie.set("lang","zh",{
                         expires: '1Y'
                     })
-                    this.useZh()
+                    window.location.reload();
                 }
-            }, useZh(){
-                this.$i18n.locale = "zh"
-                this.language = "English"
-                window.location.reload()
-            }, useEn(){
-                this.$i18n.locale = "en"
-                this.language = "简体中文"
-                window.location.reload()
             }, generalError(error){
                 this.showMsg(this.$t('errors'))
             }
@@ -324,7 +321,10 @@
             this.loadWebP()
             if(this.$cookie.get('drop') === "true")
                 this.dropEnabled = true
-            console.log(this.$i18n.localeåå)
+            if(this.$i18n.locale === "zh")
+                this.language = "English"
+            else
+                this.language = "简体中文"
         }, watch: {
             $route() {
                 document.getElementById('recaptcha').style.visibility = 'hidden';

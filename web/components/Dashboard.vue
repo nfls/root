@@ -1,3 +1,4 @@
+<i18n src="../translation/frontend/Homepage.json"></i18n>
 <template>
     <div>
         <md-card style="text-align:left;">
@@ -9,7 +10,7 @@
             <div class="md-layout-item md-xlarge-size-50 md-large-size-50 md-medium-size-50 md-small-size-100 md-xsmall-size-100">
                 <md-card>
                     <md-card-header>
-                        <span class="md-title">最新百科词条</span>
+                        <span class="md-title">{{ $t('new-wiki') }}</span>
                     </md-card-header>
                     <md-divider></md-divider>
                     <md-card-content>
@@ -25,7 +26,7 @@
             <div class="md-layout-item md-xlarge-size-50 md-large-size-50 md-medium-size-50 md-small-size-100 md-xsmall-size-100">
             <md-card>
                 <md-card-header>
-                    <span class="md-title">最新论坛帖子</span>
+                    <span class="md-title">{{ $t('new-forum') }}</span>
                 </md-card-header>
                 <md-divider></md-divider>
                 <md-card-content>

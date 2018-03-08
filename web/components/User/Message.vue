@@ -67,7 +67,7 @@
         }),
         mounted: function () {
             this.load()
-            this.$emit("changeTitle", "消息")
+            this.$emit("changeTitle", this.$t("message-title"))
             if (this.$route.params["id"] != null) {
                 this.receiver = this.$route.params["id"]
             }
@@ -79,7 +79,7 @@
                         page: this.page
                     }
                 }).then((response) => {
-                    if (this.page == 1)
+                    if (this.page === 1)
                         this.list = response.data["data"]
                     else
                         this.list = this.list.concat(response.data["data"])
@@ -93,7 +93,7 @@
                     content: this.content,
                     _csrf: this.csrf
                 }).then((response) => {
-                    if (response.data["code"] != 200) {
+                    if (response.data["code"] !== 200) {
                         this.$emit("showMsg", response.data["data"])
                     } else {
                         this.$emit("showMsg", this.$t('send-succeeded'))

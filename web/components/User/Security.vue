@@ -110,12 +110,12 @@
             this.resetForm()
         },
         mounted: function () {
-            this.$emit("changeTitle", "Security")
+            this.$emit("changeTitle", this.$t("security-title"))
             this.$emit("prepareRecaptcha")
             this.axios.get("/code/available").then((response) => {
                 this.countries = response.data["data"]
             })
-            if (this.$route.query.reason == "email")
+            if (this.$route.query.reason === "email")
                 this.oauth = true
         },
         methods: {
@@ -149,13 +149,13 @@
                 }
                 this.axios.post("/user/change", this.form).then((response) => {
                     if (response.data["code"] === 200) {
-                        this.showMsg("Operation succeeded.")
+                        this.showMsg(this.$t("operation-succeeded"))
                         this.resetForm()
                     } else {
                         if (response.data["data"])
                             this.showMsg(response.data["data"])
                         else
-                            this.showMsg("Password incorrect.")
+                            this.showMsg(this.$t("password-only-incorrect"))
                     }
                 })
             },
@@ -175,7 +175,7 @@
                             "captcha": grecaptcha.getResponse()
                         }).then((response) => {
                             if (response.data["code"] === 200) {
-                                this.showMsg("Email Sent.")
+                                this.showMsg(this.$t("send-succeeded"))
                             } else {
                                 this.showMsg(response.data["data"])
                             }
@@ -188,7 +188,7 @@
                             "captcha": grecaptcha.getResponse()
                         }).then((response) => {
                             if (response.data["code"] === 200) {
-                                this.showMsg("SMS Sent.")
+                                this.showMsg(this.$t("send-succeeded"))
                             } else {
                                 this.showMsg(response.data["data"])
                             }

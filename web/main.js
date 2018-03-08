@@ -46,7 +46,7 @@ var VueCookie = require('vue-cookie');
 Vue.use(VueCookie);
 var locale = ""
 if(Cookies.get("lang") === "zh"){
-    locale = "zh;"
+    locale = "zh"
 }
 else if(Cookies.get("lang") === "en"){
     locale = "en"
@@ -59,9 +59,9 @@ else if(Cookies.get("lang") === "en"){
     }
 }
 var i18n = new VueI18n({
-    locale: "zh",
-    messages:
-        {}
+    locale: locale,
+    messages: {},
+    silentTranslationWarn: true
 })
 
 Raven
@@ -71,7 +71,7 @@ Raven
 
 Vue.config.productionTip = false
 
-/* eslint-disable no-new */
+
 new Vue({
     i18n,
     el: '#app',

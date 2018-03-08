@@ -96,7 +96,7 @@
                 <md-dialog-content>
                     <form>
                         <md-field>
-                            <label for="seniorSchool">{{ $t('title') }}</label>
+                            <labe>{{ $t('title') }}</labe>
                             <md-input id="seniorSchool" v-model="info.title" name="title"/>
                         </md-field>
                         <span class="md-caption">{{ $t('announcement') }}</span>
@@ -282,7 +282,7 @@
             showDestroy: false
         }),
         mounted: function () {
-            this.$emit("changeTitle", "Blackboard")
+            this.$emit("changeTitle", this.$t("blackboard-title"))
             this.$emit("prepareRecaptcha")
             this.currentClass = this.$route.params["id"]
             this.init()

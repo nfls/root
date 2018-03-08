@@ -104,13 +104,13 @@
             username: null
         }),
         mounted: function () {
-            this.$emit("changeTitle", "User Info")
+            this.$emit("changeTitle", this.$t("info-title"))
             this.load()
         },
         methods: {
             load() {
                 this.axios.get('/user/current').then((response) => {
-                    if (response.data['code'] == 200) {
+                    if (response.data['code'] === 200) {
                         var moment = require('moment-timezone');
                         this.info = response.data["data"]
                         this.info.joinTime = moment(this.joinTime).tz(moment.tz.guess()).format("lll")
@@ -123,7 +123,7 @@
                     }
                 })
             }, changeAvatar() {
-                if (this.avatarPath === null || this.avatarPath.length != 1) {
+                if (this.avatarPath === null || this.avatarPath.length !== 1) {
                     this.avatarDialog = false
                     return
                 }
@@ -140,7 +140,7 @@
                 this.axios.post("/user/rename", {
                     username: username
                 }).then((response) => {
-                    if (response.data["code"] != 200) {
+                    if (response.data["code"] !== 200) {
                         this.$emit("showMsg", response.data["data"])
                     }
                     this.$emit("reload")
