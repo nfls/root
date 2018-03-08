@@ -271,7 +271,7 @@
                 var WebP = new Image()
                 var self = this
                 WebP.onload = WebP.onerror = function () {
-                    if (WebP.height != 2) {
+                    if (WebP.height !== 2) {
                         var sc = document.createElement('script');
                         sc.type = 'text/javascript';
                         sc.async = true;
@@ -316,7 +316,10 @@
             this.loadWebP()
             if(this.$cookie.get('drop') === "true")
                 this.dropEnabled = true
-            console.log(this.$i18n.localeåå)
+            if(this.$i18n.locale === "zh")
+                this.language = "English"
+            else
+                this.language = "简体中文"
         }, watch: {
             $route() {
                 document.getElementById('recaptcha').style.visibility = 'hidden';
