@@ -15,7 +15,7 @@
                     <div class="md-layout-row md-layout-wrap md-gutter">
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('username')">
-                                <label for="username">{{ $t('login-username') }}</label>
+                                <label>{{ $t('login-username') }}</label>
                                 <md-input name="username" id="username" autocomplete="username" v-model="form.username"
                                           :disabled="sending"/>
                                 <span class="md-error" v-if="!$v.form.username.required">{{ $t('required') }}</span>
@@ -23,7 +23,7 @@
                         </div>
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('password')">
-                                <label for="password">{{ $t('password') }}</label>
+                                <label>{{ $t('password') }}</label>
                                 <md-input name="password" id="password" autocomplete="password" v-model="form.password"
                                           :disabled="sending" type="password"/>
                                 <span class="md-error" v-if="!$v.form.password.required">{{ $t('required') }}</span>
@@ -124,7 +124,7 @@
 
             }
         }, mounted: function () {
-            this.$emit("changeTitle", "Login")
+            this.$emit("changeTitle", this.$t("login-title"))
             this.$emit("prepareRecaptcha")
         }, watch: {
             gResponse: {
