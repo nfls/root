@@ -1,3 +1,4 @@
+<i18n src="../../translation/frontend/Alumni.json"></i18n>
 <template>
     <div class="realname">
         <md-card class="review" v-if="adminMode">
@@ -25,18 +26,18 @@
                 <form novalidate class="md-layout-row md-gutter" @submit.prevent="save">
                     <div class="md-flex" v-for="item in formItems" :key="item.key">
                         <div v-if="hide[item.key]">
-                            <md-field v-if="item.type == 'select'" :class="getValidationClass(item.key)">
-                                <label :for="item.key">{{item.name}}</label>
+                            <md-field v-if="item.type === 'select'" :class="getValidationClass(item.key)">
+                                <label :for="item.key">{{ $t('form-' + item.key) }}</label>
                                 <md-select :name="item.key" :id="item.key" v-model="form[item.key]"
                                            :disabled="isDisabled">
                                     <md-option v-for="value in item.values" :key="value.value" :value="value.value">
-                                        {{value.name}}
+                                        {{ $t('form-' + item.key + '-' + value.value) }}
                                     </md-option>
                                 </md-select>
-                                <span class="md-error" v-if="!$v.form[item.key].required">本项必填</span>
+                                <span class="md-error" v-if="!$v.form[item.key].required">{{ $t('required') }}</span>
                             </md-field>
-                            <md-field v-else-if="item.type == 'input'" :class="getValidationClass(item.key)">
-                                <label :for="item.key">{{item.name}}</label>
+                            <md-field v-else-if="item.type === 'input'" :class="getValidationClass(item.key)">
+                                <label :for="item.key">{{ $t('form-' + item.key) }}</label>
                                 <md-input :name="item.key" :id="item.key" :autocomplete="item.key"
                                           v-model="form[item.key]" :disabled="isDisabled"></md-input>
                                 <span class="md-error" v-if="!$v.form[item.key].required">{{ $t('required') }}</span>
@@ -45,14 +46,14 @@
                                 <span class="md-error" v-else-if="!$v.form[item.key].minValue">{{ $t('incorrect') }}</span>
                                 <span class="md-error" v-else-if="!$v.form[item.key].maxValue">{{ $t('incorrect') }}</span>
                             </md-field>
-                            <md-field v-else-if="item.type == 'textarea'" :class="getValidationClass(item.key)">
-                                <label :for="item.key">{{item.name}}</label>
+                            <md-field v-else-if="item.type === 'textarea'" :class="getValidationClass(item.key)">
+                                <label :for="item.key">{{ $t('form-' + item.key) }}</label>
                                 <md-textarea :name="item.key" :id="item.key" :autocomplete="item.key"
                                              v-model="form[item.key]" :disabled="isDisabled"></md-textarea>
                                 <span class="md-error" v-if="!$v.form[item.key].required">{{ $t('required') }}</span>
                             </md-field>
-                            <md-field v-if="item.type == 'country'" :class="getValidationClass(item.key)">
-                                <label :for="item.key">{{item.name}}</label>
+                            <md-field v-if="item.type === 'country'" :class="getValidationClass(item.key)">
+                                <label :for="item.key">{{ $t('form-' + item.key) }}</label>
                                 <md-select :name="item.key" :id="item.key" v-model="form[item.key]"
                                            :disabled="isDisabled">
                                     <md-option v-for="country in countries" :key="country.code" :value="country.code">
@@ -64,9 +65,9 @@
                             <md-datepicker format="MM/dd/yy" v-else-if="item.type == 'date'" :name="item.key"
                                            :id="item.key" :autocomplete="item.key" :class="getValidationClass(item.key)"
                                            v-model="form[item.key]"/>
-                            <div v-else-if="item.type == 'divider'">
+                            <div v-else-if="item.type === 'divider'">
                                 <md-divider></md-divider>
-                                <md-content>{{item.name}}</md-content>
+                                <md-content>{{ $t('form-' + item.key) }}</md-content>
                             </div>
                         </div>
                     </div>
