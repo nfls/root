@@ -5,7 +5,7 @@
             <md-switch v-model="originOnly">{{ $t('only-featured') }}</md-switch><br/>
             <md-divider></md-divider>
             <span class="md-body-1" v-if="!originOnly">{{ $t('star-represent') }}<br/></span>
-            <span class="md-body-1">{{ $t('license-prompt') }}<br/></span>
+            <span class="md-body-1" v-html="$t('license-prompt')"></span><br/>
             <md-divider></md-divider>
             <span class="md-caption">{{ $t('rank-prompt') }}<br/></span>
         </div>

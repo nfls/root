@@ -60,6 +60,11 @@
                                     <md-icon>create</md-icon>
                                     <span class='md-list-item-text'>{{ $t('register') }}</span>
                                 </md-list-item>
+                                <md-divider></md-divider>
+                                <md-list-item @click="lang">>
+                                    <md-icon>translate</md-icon>
+                                    <span class='md-list-item-text'>{{ language }}</span>
+                                </md-list-item>
                             </md-list>
                         </md-menu-content>
                     </md-menu>
