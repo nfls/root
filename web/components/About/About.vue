@@ -63,7 +63,7 @@
             devs: null
         }),
         mounted: function () {
-            this.$emit("changeTitle", "About")
+            this.$emit("changeTitle", this.$t("about-title"))
             this.axios.get("/about/devs").then((response) => {
                 this.devs = response.data["data"].reduce(function (previous, current) {
                     return previous.concat(current.people.map(function (val) {
