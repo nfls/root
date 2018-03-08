@@ -60,8 +60,8 @@ else if(Cookies.get("lang") === "en"){
 }
 var i18n = new VueI18n({
     locale: locale,
-    messages:
-        {}
+    messages: {},
+    silentTranslationWarn: true
 })
 
 Raven
