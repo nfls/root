@@ -46,7 +46,7 @@ var VueCookie = require('vue-cookie');
 Vue.use(VueCookie);
 var locale = ""
 if(Cookies.get("lang") === "zh"){
-    locale = "zh;"
+    locale = "zh"
 }
 else if(Cookies.get("lang") === "en"){
     locale = "en"
@@ -59,7 +59,7 @@ else if(Cookies.get("lang") === "en"){
     }
 }
 var i18n = new VueI18n({
-    locale: "zh",
+    locale: locale,
     messages:
         {}
 })

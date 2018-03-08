@@ -1,36 +1,36 @@
+<i18n src="../../translation/frontend/About.json"></i18n>
 <template>
     <div align="left">
         <p class="text">
             <span class="md-title">NFLS.IO 南外人</span><br/>
             © 2016-2018 NFLS.IO Dev Group. All rights reserved.<br/>
-            <del>谨以此项目纪念即将过去的高中生活。 —— 胡清阳</del>
             <br/>
-            <md-button class="md-raised text" href="https://dev.nfls.io/jira/openid/login/2">反馈</md-button>
+            <md-button class="md-raised text" href="https://dev.nfls.io/jira/openid/login/2">{{ $t('feedback') }}</md-button>
         </p>
         <p class="text">
             <span class="md-title">App</span><br/>
-            <span class="md-body">开发中</span><br/>
+            <span class="md-body">{{ $t('developing' )}}</span><br/>
         </p>
         <p class="text">
-            <span class="md-title">版本控制信息</span><br/>
-            <span class="md-body">仅显示最近10条 Commits</span>
+            <span class="md-title">{{ $t('version-control') }}</span><br/>
+            <span class="md-body">{{ $t('commits-prompt') }}</span>
             <code v-if="loaded" v-html="version"></code>
         </p>
         <p class="text">
-            <span class="md-title">开发组博客</span><br/>
-            <md-button href="https://hqy.moe" class="md-primary">胡清阳的博客</md-button>
-            <md-button href="https://xzd.nfls.io" class="md-primary">谢祖地的博客</md-button>
-            <md-button href="https://blog.mrtunnel.club" class="md-primary">MrTunnel's Blog</md-button>
+            <span class="md-title">{{ $t('developer-blog') }}</span><br/>
+            <md-button href="https://hqy.moe" class="md-primary">{{ $t('blog-hqy') }}</md-button>
+            <md-button href="https://xzd.nfls.io" class="md-primary">{{ $t('blog-zxd') }}</md-button>
+            <md-button href="https://blog.mrtunnel.club" class="md-primary">{{ $t('blog-mrtunnel') }}</md-button>
             <br/>
         </p>
         <p class="text">
-            <span class="md-title">团队</span><br/>
-            <span class="md-caption">图例</span>&nbsp;
-            <span class="md-caption" style="background-color: #DD9CDF">界面图标设计</span>&nbsp;
-            <span class="md-caption" style="background-color: #3CDBC0">摄影摄像</span>&nbsp;
-            <span class="md-caption" style="background-color: #2DCCD3">游戏开发</span>&nbsp;
-            <span class="md-caption" style="background-color: #00C389">投资人</span>&nbsp;
-            <span class="md-caption" style="background-color: #71C5E8">总负责</span>&nbsp;
+            <span class="md-title">{{ $t('team') }}</span><br/>
+            <span class="md-caption">{{ $t('legend') }}</span>&nbsp;
+            <span class="md-caption" style="background-color: #DD9CDF">{{ $t('logo') }}</span>&nbsp;
+            <span class="md-caption" style="background-color: #3CDBC0">{{ $t('photography') }}</span>&nbsp;
+            <span class="md-caption" style="background-color: #2DCCD3">{{ $t('game') }}</span>&nbsp;
+            <span class="md-caption" style="background-color: #00C389">{{ $t('invest') }}</span>&nbsp;
+            <span class="md-caption" style="background-color: #71C5E8">{{ $t('responsible') }}</span>&nbsp;
         </p>
         <div v-if="loaded">
             <md-card class="md-primary id-card" v-for="dev in devs" :key="dev.title" :md-theme="dev.group">
