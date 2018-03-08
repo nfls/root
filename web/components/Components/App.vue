@@ -297,21 +297,13 @@
                     this.$cookie.set("lang","en",{
                         expires: '1Y'
                     })
-                    this.useEn()
+                    window.location.reload();
                 }else{
                     this.$cookie.set("lang","zh",{
                         expires: '1Y'
                     })
-                    this.useZh()
+                    window.location.reload();
                 }
-            }, useZh(){
-                this.$i18n.locale = "zh"
-                this.language = "English"
-                window.location.reload()
-            }, useEn(){
-                this.$i18n.locale = "en"
-                this.language = "简体中文"
-                window.location.reload()
             }, generalError(error){
                 this.showMsg(this.$t('errors'))
             }
