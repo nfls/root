@@ -282,7 +282,7 @@
             showDestroy: false
         }),
         mounted: function () {
-            this.$emit("changeTitle", "Blackboard")
+            this.$emit("changeTitle", this.$t("blackboard-title"))
             this.$emit("prepareRecaptcha")
             this.currentClass = this.$route.params["id"]
             this.init()

@@ -11,7 +11,7 @@
     export default {
         name: "Vote",
         mounted: function () {
-            this.$emit('changeTitle', "投票")
+            this.$emit('changeTitle', this.$t("vote-title"))
         }
     }
 </script>
