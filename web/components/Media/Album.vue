@@ -210,7 +210,7 @@
                         }
                     }
                     this.comments = response.data["data"]["comments"]
-                    this.$emit('changeTitle', "相册 " + response.data["data"]["title"])
+                    this.$emit('changeTitle', this.$t('title-album') + " " + response.data["data"]["title"])
                     this.info = response.data["data"]
                 })
                 this.axios.get("/media/gallery/like", {
