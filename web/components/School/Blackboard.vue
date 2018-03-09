@@ -86,6 +86,7 @@
                     </form>
                 </md-dialog-content>
                 <md-dialog-actions>
+                    <md-button class="md-primary" @click="imageUpload" :disabled="sending">{{ $t('image-upload') }}</md-button>
                     <md-button class="md-primary" @click="close" :disabled="sending">{{ $t('cancel') }}</md-button>
                     <md-button class="md-primary" @click="submit" :disabled="sending">{{ $t('release') }}</md-button>
                 </md-dialog-actions>
@@ -96,7 +97,7 @@
                 <md-dialog-content>
                     <form>
                         <md-field>
-                            <labe>{{ $t('title') }}</labe>
+                            <label>{{ $t('title') }}</label>
                             <md-input id="seniorSchool" v-model="info.title" name="title"/>
                         </md-field>
                         <span class="md-caption">{{ $t('announcement') }}</span>
@@ -105,6 +106,7 @@
                 </md-dialog-content>
                 <md-dialog-actions>
                     <md-button class="md-accent" @click="showAdmin = false;showDestroy = true">{{ $t('remove') }}</md-button>
+                    <md-button class="md-primary" @click="imageUpload" :disabled="sending">{{ $t('image-upload') }}</md-button>
                     <md-button class="md-primary" @click="preference">{{ $t('submit') }}</md-button>
                     <md-button class="md-primary" @click="showAdmin = false">{{ $t('close') }}</md-button>
                 </md-dialog-actions>
@@ -516,6 +518,9 @@
             deadline(id) {
                 this.sendId = id
                 grecaptcha.execute()
+            },
+            imageUpload(){
+
             },
             getCsrf() {
                 this.axios.get("user/csrf", {

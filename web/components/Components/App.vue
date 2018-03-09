@@ -184,7 +184,7 @@
         name: 'Dashboard',
         data: () => ({
             menuVisible: false,
-            title: 'Unknown Region',
+            title: '',
             toggleCard: false,
             loggedIn: false,
             username: '',

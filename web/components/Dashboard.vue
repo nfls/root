@@ -59,7 +59,7 @@
             loaded: false
         }),
         mounted: function () {
-            this.$emit("changeTitle", "Homepage")
+            this.$emit("changeTitle", this.$t("title"))
             this.axios.get("/message/announcement").then((response) => {
                 this.announcement = response.data["data"]
                 this.loaded = true
