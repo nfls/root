@@ -37,6 +37,12 @@
         <div v-if="!webpSupported">
             <span class="md-headline"><br/><br/>{{ $t('webp-not-supported-content') }}</span>
         </div>
+
+        <md-snackbar :md-position="center" :md-duration="Infinity" :md-active.sync="showLicense" md-persistent>
+            <span v-html="">{{ $t('license-short') }}</span>
+            <md-button class="md-accent" @click="showLicense = false">{{ $t('known') }}</md-button>
+        </md-snackbar>
+
     </div>
 
 </template>
@@ -51,7 +57,8 @@
         data: () => ({
             items: [],
             originOnly: false,
-            showNotEnabled: false
+            showNotEnabled: false,
+            showLicense: true
         }),
         mounted: function () {
             this.$emit("changeTitle", this.$t('title-gallery'))

@@ -52,8 +52,11 @@
                 <span>{{info.description}}</span><br/>
                 <span>{{ $t('total-count') }}{{info.photoCount}} / {{ $t('featured-count') }}{{info.originCount}}<br/></span>
                 <span v-if="!verified">{{ $t('photo-not-realname') }}<br/></span>
-                <span v-else>{{ $t('view-full-tip') }}<br/></span>
-                <span v-if="!webpSupported"><strong>{{ $t('webp-not-supported-content') }}</strong><br/></span>
+                <span v-else-if="onlyOrigin">{{ $t('view-full-tip') }}<br/></span>
+                <strong><span v-html="$t('license-prompt')"></span></strong><br/>
+                <span v-if="!webpSupported"><strong>{{ $t('webp-not-supported-content') }}</strong><br/>
+
+                </span>
                 <md-divider></md-divider>
                 <p align="left">
                     <span class="md-caption" v-if="info.likes.length > 0"><span v-for="like in info.likes"
@@ -113,6 +116,7 @@
                 </md-button>
             </md-speed-dial-content>
         </md-speed-dial>
+
     </div>
 </template>
 
@@ -146,7 +150,7 @@
             showDebug: false,
             csrf: null,
             noFeature: false,
-            showNotEnabled: false
+            showNotEnabled: false,
         }),
         mounted: function () {
             this.loadData(true)
