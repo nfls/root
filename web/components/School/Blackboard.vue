@@ -63,7 +63,7 @@
                 </md-card-actions>
             </md-card>
             <!--Admin-->
-            <md-dialog :md-active.sync="showNewPost" class="new-post" style="width:80%" :md-close-on-esc="false"
+            <md-dialog :md-active.sync="showNewPost" class="new-post" :md-close-on-esc="false"
                        :md-click-outside-to-close="false">
                 <md-dialog-title>{{ $t('new-note') }}</md-dialog-title>
 
@@ -86,13 +86,13 @@
                     </form>
                 </md-dialog-content>
                 <md-dialog-actions>
-                    <md-button class="md-primary" @click="imageUpload" :disabled="sending">{{ $t('image-upload') }}</md-button>
+                    <md-button class="md-primary" @click="showUpload = true" :disabled="sending">{{ $t('image-upload') }}</md-button>
                     <md-button class="md-primary" @click="close" :disabled="sending">{{ $t('cancel') }}</md-button>
                     <md-button class="md-primary" @click="submit" :disabled="sending">{{ $t('release') }}</md-button>
                 </md-dialog-actions>
             </md-dialog>
 
-            <md-dialog :md-active.sync="showAdmin" class="admin-class">
+            <md-dialog :md-active.sync="showAdmin" class="new-post">
                 <md-dialog-title>{{ $t('admin') }}</md-dialog-title>
                 <md-dialog-content>
                     <form>
@@ -106,12 +106,12 @@
                 </md-dialog-content>
                 <md-dialog-actions>
                     <md-button class="md-accent" @click="showAdmin = false;showDestroy = true">{{ $t('remove') }}</md-button>
-                    <md-button class="md-primary" @click="imageUpload" :disabled="sending">{{ $t('image-upload') }}</md-button>
+                    <md-button class="md-primary" @click="showUpload = true" :disabled="sending">{{ $t('image-upload') }}</md-button>
                     <md-button class="md-primary" @click="preference">{{ $t('submit') }}</md-button>
                     <md-button class="md-primary" @click="showAdmin = false">{{ $t('close') }}</md-button>
                 </md-dialog-actions>
             </md-dialog>
-            <md-dialog :md-active.sync="showListStu">
+            <md-dialog :md-active.sync="showListStu" class="new-post">
                 <md-dialog-title>{{ $t('user-list') }}</md-dialog-title>
                 <md-dialog-content>
                     <span class="md-caption">{{ $t('list-warning') }}</span><br/>
@@ -137,7 +137,7 @@
                     <md-button @click="showListStu = false">{{ $t('close') }}</md-button>
                 </md-dialog-actions>
             </md-dialog>
-            <md-dialog :md-active.sync="showAddStu">
+            <md-dialog :md-active.sync="showAddStu" class="new-post">
                 <md-dialog-title>{{ $t('add') }}</md-dialog-title>
                 <md-dialog-content>
                     <div>
@@ -166,6 +166,15 @@
                 </md-dialog-content>
                 <md-dialog-actions>
                     <md-button @click="showAddStu = false">{{ $t('done') }}</md-button>
+                </md-dialog-actions>
+            </md-dialog>
+            <md-dialog :md-active.sync="showUpload" class="new-post">
+                <md-dialog-title>{{ $t('image-upload') }}</md-dialog-title>
+                <md-dialog-content>
+                    <upload-page></upload-page>
+                </md-dialog-content>
+                <md-dialog-actions>
+                    <md-button @click="showUpload = false">{{ $t('done') }}</md-button>
                 </md-dialog-actions>
             </md-dialog>
         </div>
@@ -240,17 +249,21 @@
     import {Datetime} from 'vue-datetime'
     import CalendarView from "vue-simple-calendar"
     import infiniteScroll from 'vue-infinite-scroll'
+    import Upload from '../Admin/Upload.vue'
+    import UploadPage from "../Admin/Upload"
 
     export default {
         name: "Blackboard",
         props: ["admin", "verified", 'loggedIn', 'gResponse'],
         directives: {infiniteScroll},
         components: {
+            UploadPage,
             VueMarkdown,
             MarkdownPalettes,
             vueJsonEditor,
             CalendarView,
-            datetime: Datetime
+            datetime: Datetime,
+            "upload-page": Upload
         },
         data: () => ({
             eligibility: false,
@@ -265,6 +278,7 @@
             showAdmin: false,
             showAddStu: false,
             showListStu: false,
+            showUpload: false,
             post: {},
             sending: false,
             loading: false,
@@ -519,9 +533,6 @@
                 this.sendId = id
                 grecaptcha.execute()
             },
-            imageUpload(){
-
-            },
             getCsrf() {
                 this.axios.get("user/csrf", {
                     params: {
@@ -559,6 +570,7 @@
 <style scoped>
     .new-post {
         min-width: 500px;
+        width: 80%;
     }
 
     .admin-class {
