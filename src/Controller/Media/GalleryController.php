@@ -172,7 +172,14 @@ class GalleryController extends AbstractController
         $url = $request->query->get("id") ?? "";
         $index = strripos($url,"/") + 1;
         $file = substr($url,$index);
-        return $this->response()->response($file);
+        $repo = $this->getDoctrine()->getManager()->getRepository(Photo::class);
+        $photo = $repo->getPhotoByFile($file);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($photo->remove());
+        $em->flush();
+        $em->remove($photo);
+        $em->flush();
+        return $this->response()->response(null);
 
     }
     /**

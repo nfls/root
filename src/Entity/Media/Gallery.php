@@ -340,5 +340,11 @@ class Gallery
         $this->photos = new ArrayCollection();
     }
 
+    public function removePhoto($photo)
+    {
+        $this->photos->removeElement($photo);
+        if($this->cover === $photo)
+            $this->cover = null;
+    }
 
 }

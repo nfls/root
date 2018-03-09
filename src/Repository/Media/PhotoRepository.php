@@ -51,5 +51,20 @@ class PhotoRepository extends ServiceEntityRepository
     {
         return $this->findOneBy(["id" => $id]);
     }
+
+    /**
+     * @param $file
+     * @return Photo|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getPhotoByFile($file){
+        return $this->createQueryBuilder("u")
+            ->where("u.thumb = :file")
+            ->orWhere("u.hd = :file")
+            ->orWhere("u.origin = :file")
+            ->setParameter("file", $file)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
 
