@@ -60,6 +60,7 @@ else if(Cookies.get("lang") === "en"){
 }
 var i18n = new VueI18n({
     locale: locale,
+    fallbackLocale: "zh",
     messages: {},
     silentTranslationWarn: true
 })
