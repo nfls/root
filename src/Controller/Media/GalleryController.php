@@ -78,7 +78,7 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * @Route("media/gallery/like", methods="POST")
+     * @Route("/media/gallery/like", methods="POST")
      */
     public function like(Request $request)
     {
@@ -95,7 +95,7 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * @Route("media/gallery/like", methods="GET")
+     * @Route("/media/gallery/like", methods="GET")
      */
     public function likeStatus(Request $request)
     {
@@ -106,7 +106,7 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * @Route("admin/media/comment", methods="GET")
+     * @Route("/admin/media/comment", methods="GET")
      */
     public function commentPage()
     {
@@ -136,7 +136,7 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * @Route("admin/media/gallery", methods="GET")
+     * @Route("/admin/media/gallery", methods="GET")
      */
     public function manageGallery()
     {
@@ -165,6 +165,16 @@ class GalleryController extends AbstractController
         return $this->response()->responseRowEntity($repo->getList($page, $rows), $repo->getCount(), Response::HTTP_OK);
     }
 
+    /**
+     * @Route("/admin/media/photo/delete", methods="GET")
+     */
+    public function delete(Request $request){
+        $url = $request->query->get("id") ?? "";
+        $index = strripos($url,"/") + 1;
+        $file = substr($url,$index);
+        return $this->response()->response($file);
+
+    }
     /**
      * @Route("/admin/media/gallery/edit", methods="POST")
      */

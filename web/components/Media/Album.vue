@@ -129,7 +129,8 @@
             comments: [],
             options: {
                 shareButtons: [
-                    {id:'download', label:'Download', url:'{{raw_image_url}}', download:true}
+                    {id:'download', label:'Download', url:'{{raw_image_url}}', download:true},
+                    {id:'delete', label:'Delete', url:'/admin/media/photo/delete?id={{image_url}}'}
                 ]
             },
             info: {
