@@ -195,7 +195,7 @@
             avatar: "/avatar/0.png",
             gResponse: '',
             reloadC: 0,
-            webpSupported: true,
+            webpSupported: false,
             showSnackbar: false,
             message: false,
             language: ""
@@ -277,14 +277,9 @@
                 var self = this
                 WebP.onload = WebP.onerror = function () {
                     if (WebP.height !== 2) {
-                        var sc = document.createElement('script');
-                        sc.type = 'text/javascript';
-                        sc.async = true;
-                        var s = document.getElementsByTagName('script')[0];
-                        sc.src = '/js/webpjs-0.0.2.min.js';
-                        s.parentNode.insertBefore(sc, s);
-                        console.log(self.webpSupported)
                         self.webpSupported = false
+                    } else {
+                        self.webpSupported = true
                     }
                 };
                 WebP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
