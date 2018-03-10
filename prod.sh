@@ -1,4 +1,4 @@
-sudo git submodule update --init --recursive
+sudo git submodule update --init --recursive --remote
 sudo npm install
 sudo composer install
 cd public/assets
