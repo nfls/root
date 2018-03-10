@@ -193,6 +193,9 @@
                                 this.showMsg(response.data["data"])
                                 this.sending = false
                             }
+                        }).catch((error) => {
+                            this.sending = false
+                            this.$emit("generalError",error)
                         })
                         break
                     case "phone":
@@ -207,6 +210,9 @@
                             } else {
                                 this.showMsg(response.data["data"])
                             }
+                        }).catch((error) => {
+                            this.sending = false
+                            this.$emit("generalError",error)
                         })
                         break
                     case "email":
@@ -220,6 +226,9 @@
                             } else {
                                 this.showMsg(response.data["data"])
                             }
+                        }).catch((error) => {
+                            this.sending = false
+                            this.$emit("generalError",error)
                         })
                         break
                 }
@@ -295,6 +304,8 @@
         mounted: function () {
             this.axios.get("/code/available").then((response) => {
                 this.countries = response.data["data"]
+            }).catch((error) => {
+                this.$emit("generalError",error)
             })
             this.$emit("changeTitle", this.$t("register-title"))
             this.$emit("prepareRecaptcha")

@@ -1,6 +1,7 @@
 <i18n src="../../translation/frontend/User.json"></i18n>
 <template>
     <div align="left">
+        <md-progress-bar md-mode="indeterminate" v-if="sending"/>
         <span class="md-title">{{ $t('account-info') }}</span>
         <md-list class="md-douple-line" style="margin: 10px">
             <md-list-item>
@@ -11,7 +12,7 @@
                     <span>{{ $t('username') }}</span>
                     <span>{{info.username}}</span>
                 </div>
-                <md-button class="md-icon-button md-list-action" @click="usernameDialog = !usernameDialog">
+                <md-button class="md-icon-button md-list-action" @click="usernameDialog = !usernameDialog" :disabled="sending">
                     <md-icon>edit</md-icon>
                 </md-button>
             </md-list-item>
@@ -43,7 +44,7 @@
                     <span>{{ $t('email') }}</span>
                     <span>{{info.email}}</span>
                 </div>
-                <md-button class="md-icon-button md-list-action" to="/user/security">
+                <md-button class="md-icon-button md-list-action" to="/user/security" :disabled="sending">
                     <md-icon>edit</md-icon>
                 </md-button>
             </md-list-item>
@@ -53,7 +54,7 @@
                     <span>{{ $t('phone') }}</span>
                     <span>{{info.phone}}</span>
                 </div>
-                <md-button class="md-icon-button md-list-action" to="/user/security">
+                <md-button class="md-icon-button md-list-action" to="/user/security" :disabled="sending">
                     <md-icon>edit</md-icon>
                 </md-button>
             </md-list-item>
@@ -69,25 +70,19 @@
                 @md-confirm="confirm"/>
         <md-dialog-prompt/>
         <md-dialog :md-active.sync="avatarDialog">
-            <form @submit.prevent="changeAvatar">
-                <md-card style="padding: 10px;">
-                    <md-card-header>
-                        <span class="md-title">{{ $t('edit-avatar') }}</span><br/>
-                        <span class="md-subtitle" :v-html="$t('edit-avatar-prompt')"></span>
-                    </md-card-header>
-                    <md-card-content>
-                        <md-field>
-                            <label>{{ $t('avatar') }}</label>
-                            <md-file name="avatar" id="avatar" accept="image/*" @md-change="change"/>
-                        </md-field>
-                    </md-card-content>
-                    <md-card-actions>
-                        <md-button class="md-primary" @click="avatarDialog = !avatarDialog">{{ $t('cancel') }}
-                        </md-button>
-                        <md-button type="submit" class="md-primary">{{ $t('submit') }}</md-button>
-                    </md-card-actions>
-                </md-card>
-            </form>
+            <md-diglog-title>{{ $t('edit-avatar') }}</md-diglog-title>
+            <md-dialog-content>
+                <form @submit.prevent="changeAvatar">
+                    <md-field>
+                        <label>{{ $t('avatar') }}</label>
+                        <md-file name="avatar" id="avatar" accept="image/*" @md-change="change"/>
+                    </md-field>
+                </form>
+            </md-dialog-content>
+            <md-dialog-actions>
+                <md-button class="md-primary" @click="avatarDialog = !avatarDialog">{{ $t('cancel') }}</md-button>
+                <md-button type="submit" class="md-primary" :disabled="sending">{{ $t('submit') }}</md-button>
+            </md-dialog-actions>
         </md-dialog>
     </div>
 </template>
@@ -101,7 +96,8 @@
             info: [],
             usernameDialog: false,
             avatarDialog: false,
-            username: null
+            username: null,
+            sending: false
         }),
         mounted: function () {
             this.$emit("changeTitle", this.$t("info-title"))
@@ -119,32 +115,44 @@
                         if (this.info.phone === null)
                             this.info.phone = this.$t("not-binded")
                     } else {
-
+                        this.$router.push("/user/login")
                     }
+                }).catch((error) => {
+                    console.error(error)
+                    this.$router.push("/user/login")
                 })
             }, changeAvatar() {
+                this.sending = true
                 if (this.avatarPath === null || this.avatarPath.length !== 1) {
                     this.avatarDialog = false
                     return
                 }
-
                 var formData = new FormData();
                 formData.append('photo', this.avatarPath[0]);
                 this.axios.post("/user/avatar", formData).then((response) => {
+                    this.sending = false
                     this.avatarDialog = false
                     this.$emit("reload")
+                }).catch((error) => {
+                    this.sending = false
+                    this.$emit("generalError",error)
                 })
             }, change(file) {
                 this.avatarPath = file
             }, confirm(username) {
+                this.sending = true
                 this.axios.post("/user/rename", {
                     username: username
                 }).then((response) => {
+                    this.sending = false
                     if (response.data["code"] !== 200) {
                         this.$emit("showMsg", response.data["data"])
                     }
                     this.$emit("reload")
                     this.load()
+                }).catch((error) => {
+                    this.sending = false
+                    this.$emit("generalError",error)
                 })
             }
         }
@@ -152,5 +160,4 @@
 </script>
 
 <style scoped>
-
 </style>

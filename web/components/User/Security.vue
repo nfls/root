@@ -114,6 +114,8 @@
             this.$emit("prepareRecaptcha")
             this.axios.get("/code/available").then((response) => {
                 this.countries = response.data["data"]
+            }).catch((error) => {
+                this.$emit("generalError",error)
             })
             if (this.$route.query.reason === "email")
                 this.oauth = true
@@ -157,6 +159,8 @@
                         else
                             this.showMsg(this.$t("password-only-incorrect"))
                     }
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             },
             sendEmail() {
@@ -179,6 +183,8 @@
                             } else {
                                 this.showMsg(response.data["data"])
                             }
+                        }).catch((error) => {
+                            this.$emit("generalError",error)
                         })
                         break
                     case "sms":
@@ -192,6 +198,8 @@
                             } else {
                                 this.showMsg(response.data["data"])
                             }
+                        }).catch((error) => {
+                            this.$emit("generalError",error)
                         })
 
                 }

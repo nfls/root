@@ -25,13 +25,14 @@
             <md-dialog-content>
                 <md-field>
                     <label>{{ $t('receiver') }}</label>
-                    <md-input v-model="receiver"></md-input>
+                    <md-input v-model="receiver" :disabled="sending"></md-input>
                 </md-field>
                 <markdown-palettes v-model="content"></markdown-palettes>
+                <md-progress-bar md-mode="indeterminate" v-if="sending"/>
             </md-dialog-content>
             <md-dialog-actions>
-                <md-button class="md-primary" @click="showDialog = false">{{ $t('cancel') }}</md-button>
-                <md-button class="md-primary" @click="send">{{ $t('submit') }}</md-button>
+                <md-button class="md-primary" @click="showDialog = false" :disabled="sending">{{ $t('cancel') }}</md-button>
+                <md-button class="md-primary" @click="send" :disabled="sending">{{ $t('submit') }}</md-button>
             </md-dialog-actions>
 
         </md-dialog>
@@ -63,7 +64,8 @@
             list: [],
             active: null,
             showDialog: false,
-            csrf: ""
+            csrf: "",
+            sending: false
         }),
         mounted: function () {
             this.load()
@@ -84,10 +86,13 @@
                     else
                         this.list = this.list.concat(response.data["data"])
                     this.getCsrf()
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
 
             },
             send() {
+                this.sending = true
                 this.axios.post("/chat/send", {
                     id: this.receiver,
                     content: this.content,
@@ -103,7 +108,10 @@
                         this.page = 1
                         this.load()
                     }
+                    this.sending = false
                 }).catch((error) => {
+                    console.error(error)
+                    this.sending = false
                     this.$emit("showMsg", this.$t("send-failed"))
                 })
             },
@@ -123,6 +131,8 @@
                     }
                 }).then((response) => {
                     this.csrf = response.data["data"]
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             }
         }
@@ -134,7 +144,15 @@
         margin: 10px;
     }
 
-    .CodeMirror-gutters {
-        width: 29px;
+    .md-dialog {
+        min-width: 500px;
+        width: 80%;
+    }
+
+    .md-progress-bar {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
     }
 </style>

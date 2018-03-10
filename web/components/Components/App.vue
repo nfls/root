@@ -305,6 +305,7 @@
                     window.location.reload();
                 }
             }, generalError(error){
+                console.error(error)
                 this.showMsg(this.$t('errors'))
             }
         }, created: function () {
