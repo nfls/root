@@ -1,9 +1,9 @@
-git submodule update --init --recursive
-npm install
-composer install
+sudo git submodule update --init --recursive
+sudo npm install
+sudo composer install
 cd public/assets
-bower install --allow-root
+sudo bower install --allow-root
 cd ../..
 node build/build.js
-bin/console doctrine:schema:update --force
-bin/console cache:clear
+sudo bin/console doctrine:schema:update --force
+sudo bin/console cache:clear

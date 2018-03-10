@@ -271,6 +271,11 @@ class Photo
         return $this->faces;
     }
 
+    public function remove() {
+        $this->gallery->removePhoto($this);
+        return $this->gallery;
+
+    }
 
     // add your own fields
 }

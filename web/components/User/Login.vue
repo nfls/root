@@ -115,11 +115,11 @@
                     } else {
                         this.$emit("showMsg", this.$t('password-incorrect'))
                         grecaptcha.reset()
-                        window.setTimeout(() => {
-                            this.userSaved = false
-                        }, 3000)
                     }
                     this.sending = false
+                }).catch((error) => {
+                    this.sending = false
+                    this.$emit("generalError",error)
                 })
 
             }

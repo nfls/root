@@ -59,7 +59,7 @@
             loaded: false
         }),
         mounted: function () {
-            this.$emit("changeTitle", "Homepage")
+            this.$emit("changeTitle", this.$t("title"))
             this.axios.get("/message/announcement").then((response) => {
                 this.announcement = response.data["data"]
                 this.loaded = true
@@ -70,16 +70,21 @@
                 }).filter(function (val) {
                     if (val.startsWith("用户"))
                         return false
-                    if (val.startsWith("MediaWiki"))
+                    else if (val.startsWith("MediaWiki"))
                         return false
-                    if (val.startsWith("文件"))
+                    else if (val.startsWith("文件"))
                         return false
-                    return true
+                    else
+                        return true
                 })
                 this.wiki = Array.from(new Set(changes)).slice(0, 10)
+            }).catch((error) => {
+                this.$emit("generalError",error)
             })
             this.axios.get("https://forum.nfls.io/api/discussions").then((response) => {
                 this.forum = response.data["data"].slice(0, 10)
+            }).catch((error) => {
+                this.$emit("generalError",error)
             })
         }
     }

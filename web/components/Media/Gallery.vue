@@ -10,6 +10,11 @@
             <span class="md-caption">{{ $t('rank-prompt') }}<br/></span>
         </div>
 
+        <md-dialog-alert
+                :md-active.sync="showNotEnabled"
+                :md-title="$t('webp-not-supported')"
+                :md-content="$t('webp-not-supported-content')" />
+
         <div class="md-layout md-gutter md-alignment-center">
             <div class="md-layout-item md-xlarge-size-20 md-large-size-33 md-medium-size-50 md-small-size-100 md-xsmall-size-100 gallery-card"
                  v-for="item in items" :key="item.id" v-if="item.cover !== null && (!originOnly || item.originCount > 0)">
@@ -28,6 +33,16 @@
                 </md-card>
             </div>
         </div>
+
+        <div v-if="!webpSupported">
+            <span class="md-headline"><br/><br/>{{ $t('webp-not-supported-content') }}</span>
+        </div>
+
+        <md-snackbar :md-position="center" :md-duration="Infinity" :md-active.sync="showLicense" md-persistent>
+            <span v-html="">{{ $t('license-short') }}</span>
+            <md-button class="md-accent" @click="showLicense = false">{{ $t('known') }}</md-button>
+        </md-snackbar>
+
     </div>
 
 </template>
@@ -37,11 +52,13 @@
 
     export default {
         name: "gallery",
-        props: ["name"],
+        props: ["name","webpSupported"],
         directives: {infiniteScroll},
         data: () => ({
             items: [],
-            originOnly: false
+            originOnly: false,
+            showNotEnabled: false,
+            showLicense: true
         }),
         mounted: function () {
             this.$emit("changeTitle", this.$t('title-gallery'))
@@ -49,9 +66,13 @@
         },
         methods: {
             onclick(id) {
-                this.$router.push("/media/gallery/" + id);
+                this.$router.push("/media/gallery/" + id)
             },
             loadMore() {
+                if(!this.webpSupported){
+                    this.showNotEnabled = true
+                    return
+                }
                 this.axios.get("/media/gallery/list").then((response) => {
                     var items = response.data["data"]
                     this.items = this.items.concat(items.filter(function (val) {
@@ -60,8 +81,15 @@
                         }
                         return val
                     }))
-                    this.$emit('renderWebp')
                 })
+            }
+        },
+        watch: {
+            webpSupported: {
+                handler: function (val) {
+                    this.showNotEnabled = !val
+                    this.loadMore()
+                }
             }
         }
     }

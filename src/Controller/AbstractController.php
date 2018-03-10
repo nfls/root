@@ -93,4 +93,15 @@ class AbstractController extends Controller
         $em->persist($log);
         $em->flush();
     }
+
+    public function isValidUuid($uuid)
+    {
+        if (is_null($uuid))
+            return false;
+        else if (preg_match('/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/', $uuid)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

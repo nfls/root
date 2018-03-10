@@ -102,8 +102,8 @@
                 this.header = response.data["data"]
             })
             this.axios.get("/school/pastpaper/token").then((response) => {
-                var data = response.data["data"]
-                var OSS = require('ali-oss').Wrapper;
+                let data = response.data["data"]
+                let OSS = require('ali-oss').Wrapper;
                 this.client = new OSS({
                     region: 'oss-cn-shanghai',
                     accessKeyId: data["AccessKeyId"],
@@ -115,26 +115,27 @@
                 });
                 this.loadFiles("")
             }).catch(function (error) {
+                console.error(error)
                 self.error = true
             });
 
         }, methods: {
             loadFiles(next) {
-                var self = this
-                var result = this.client.list({
+                let self = this
+                this.client.list({
                     "max-keys": 1000,
                     "marker": next
                 }).then(function (result) {
                     self.fileInfo = self.fileInfo.concat(result.objects)
-                    if (result.objects.length == 1000) {
+                    if (result.objects.length === 1000) {
                         self.currentFile = result.nextMarker
                         self.loadFiles(result.nextMarker)
                     } else {
                         self.loading = false
                     }
-                }).catch(function (err) {
-                    console.error(err);
-                });
+                }).catch((error) => {
+                    this.$emit("generalError",error)
+                })
             }, getCurrentPath() {
                 var reducer = (accumulator, currentValue) => accumulator + "/" + currentValue;
                 var uri = this.path.reduce(reducer, "") + "/"
@@ -143,7 +144,7 @@
                 this.pathString = uri
                 return uri
             }, enter(item) {
-                if (item.size == 0) {
+                if (item.size === 0) {
                     this.path.push(item.displayName)
                 } else {
                     var url = this.client.signatureUrl(item.name, {expires: 60})
@@ -153,9 +154,9 @@
                 var self = this
                 this.displayItems = this.fileInfo.filter(function (object) {
                     if (object.name.endsWith("/")) {
-                        return object.name.split("/").length - 1 == self.path.length + 1 && object.name.startsWith(self.getCurrentPath())
+                        return object.name.split("/").length - 1 === self.path.length + 1 && object.name.startsWith(self.getCurrentPath())
                     } else {
-                        return object.name.split("/").length == self.path.length + 1 && object.name.startsWith(self.getCurrentPath())
+                        return object.name.split("/").length === self.path.length + 1 && object.name.startsWith(self.getCurrentPath())
                     }
                 })
                 this.displayItems = this.displayItems.map(function (object) {
@@ -165,7 +166,7 @@
             }, back() {
                 this.path.pop()
             }, downloadURI(uri, name) {
-                var link = document.createElement("a");
+                let link = document.createElement("a");
                 link.download = name;
                 link.href = uri;
                 link.target = "_blank";
@@ -174,11 +175,11 @@
                 document.body.removeChild(link);
             }, batch() {
                 let items = this.displayItems.filter(function (item) {
-                    return item.selected == "on"
+                    return item.selected === "on"
                 })
                 this.toDownload = []
                 items.forEach((value) => {
-                    if (value.size == 0)
+                    if (value.size === 0)
                         this.toDownload = this.toDownload.concat(this.fileInfo.filter(item => item.name.startsWith(value.name)))
                     else
                         this.toDownload = this.toDownload.concat(value)
@@ -190,14 +191,14 @@
 
             }, downloadBatch() {
                 this.current++
-                if (this.toDownload.length == 0) {
+                if (this.toDownload.length === 0) {
                     var FileSaver = require('file-saver')
                     this.zipFile.generateAsync({type: "blob"}).then(function (blob) {
                         FileSaver.saveAs(blob, "Past Papers@" + (Math.floor(Math.random() * 10000000000)) + ".zip");
                     })
                 } else {
-                    var item = this.toDownload.pop()
-                    if (item.size == 0) {
+                    let item = this.toDownload.pop()
+                    if (item.size === 0) {
                         this.downloadBatch()
                         return
                     }
@@ -208,6 +209,7 @@
                         this.zipFile.file(item.name, response.data)
                         this.downloadBatch()
                     }).catch((error) => {
+                        console.error(error)
                         this.filename = this.$t('bulk-error')
                     })
                 }

@@ -54,7 +54,7 @@ class ChatController extends AbstractController
             $request->request->getInt("id")
         );
         if (is_null($user))
-            throw $this->createAccessDeniedException();
+            return $this->response()->response("收件人不存在！", Response::HTTP_FORBIDDEN);
         $chat = new Chat();
         $chat->setSender($this->getUser());
         $chat->setReceiver($user);

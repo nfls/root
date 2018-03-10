@@ -52,8 +52,11 @@
                 <span>{{info.description}}</span><br/>
                 <span>{{ $t('total-count') }}{{info.photoCount}} / {{ $t('featured-count') }}{{info.originCount}}<br/></span>
                 <span v-if="!verified">{{ $t('photo-not-realname') }}<br/></span>
-                <span v-else>{{ $t('view-full-tip') }}<br/></span>
-                <span v-if="!webpSupported" v-html="$t('webp-not-supported')"><br/></span>
+                <span v-else-if="onlyOrigin">{{ $t('view-full-tip') }}<br/></span>
+                <strong><span v-html="$t('license-prompt')"></span></strong><br/>
+                <span v-if="!webpSupported"><strong>{{ $t('webp-not-supported-content') }}</strong><br/>
+
+                </span>
                 <md-divider></md-divider>
                 <p align="left">
                     <span class="md-caption" v-if="info.likes.length > 0"><span v-for="like in info.likes"
@@ -62,9 +65,7 @@
             </md-card-content>
         </md-card>
 
-        <md-progress-spinner md-mode="indeterminate" v-if="!loaded"></md-progress-spinner>
-
-        <div class="md-row" style="display:inline-block;margin:0px;min-width:90%" v-if="loaded">
+        <div class="md-row" style="display:inline-block;margin:0px;min-width:90%">
             <figure v-for="(item, index) in items" class="photo">
                 <img class="preview-img" v-lazy="item.msrc" @click="$preview.open(index, items, options)"
                      style="display:inline;">
@@ -77,6 +78,11 @@
                 :md-title="$t('no-featured')"
                 :md-content="$t('no-featured-text')"
                 :md-confirm-text="$t('confirm')"/>
+
+        <md-dialog-alert
+                :md-active.sync="showNotEnabled"
+                :md-title="$t('webp-not-supported')"
+                :md-content="$t('webp-not-supported-content')" />
 
         <md-speed-dial class="md-top-right back-button" md-direction="bottom" md-event="click">
             <md-speed-dial-target>
@@ -110,6 +116,7 @@
                 </md-button>
             </md-speed-dial-content>
         </md-speed-dial>
+
     </div>
 </template>
 
@@ -122,7 +129,8 @@
             comments: [],
             options: {
                 shareButtons: [
-                    {id:'download', label:'Download', url:'{{raw_image_url}}', download:true}
+                    {id:'download', label:'Download', url:'{{raw_image_url}}', download:true},
+                    {id:'delete', label:'Delete', url:'/admin/media/photo/delete?id={{image_url}}'}
                 ]
             },
             info: {
@@ -143,31 +151,19 @@
             showDebug: false,
             csrf: null,
             noFeature: false,
-            worker: null,
-            loaded: true,
-            counter: [0],
-            current: 0
+            showNotEnabled: false,
         }),
         mounted: function () {
-            const webp = function (data) {
-                //console.log("concurrent!")
-                importScripts("https://nfls.io/js/libwebp-0.1.3.min.js")
-                var decoder = new WebPDecoder()
-                var WebPImage = {width: {value: 0}, height: {value: 0}}
-                var bitmap = decoder.WebPDecodeARGB(data, data.length, WebPImage.width, WebPImage.height)
-                return {
-                    attribute: WebPImage,
-                    bitmap: bitmap
-                }
-            }
-            const actions = [
-                {message: 'worker1', func: webp}
-            ]
-            this.worker = this.$worker.create(actions)
             this.loadData(true)
         },
         methods: {
-            loadData: function (full) {
+            loadData(full) {
+                this.$emit('changeTitle', this.$t('title-album'))
+                if(!this.webpSupported){
+                    this.showNotEnabled = true
+                    return
+                }
+
                 this.getCsrf()
                 this.axios.get("/media/gallery/detail", {
                     params: {
@@ -175,16 +171,15 @@
                     }
                 }).then((response) => {
                     if (full) {
-                        this.loaded = false
                         var items = Object.values(response.data["data"]["photos"])
                         if (this.onlyOrigin) {
                             items = items.filter(item => item.osrc != null)
-                            if (items.length == 0) {
+                            if (items.length === 0) {
                                 this.noFeature = true
                                 this.switchPreference()
                             }
                         }
-                        this.items = items.map(function (val) {
+                        items = items.map(function (val) {
                             val.msrc = "/storage/photos/thumb/" + val.msrc
                             val.src = "/storage/photos/hd/" + val.src
                             if (val.osrc != null) {
@@ -194,20 +189,13 @@
                             }
                             return val
                         })
-                        if (!this.webpSupported) {
-                            this.items = this.items.slice(0, 5);
-                            this.current = 0;
-                            this.decodeToPNG();
-                        } else {
-                            this.loaded = true
-                            this.items.map(function (val) {
-                                if (val.osrc != null) {
-                                    val.msrc = val.src
-                                    val.src = val.osrc
-                                }
-                                return val
-                            })
-                        }
+                        this.items = items.map(function (val) {
+                            if (val.osrc != null) {
+                                val.msrc = val.src
+                                val.src = val.osrc
+                            }
+                            return val
+                        })
                     }
                     this.comments = response.data["data"]["comments"]
                     this.$emit('changeTitle', this.$t('title-album') + " " + response.data["data"]["title"])
@@ -279,92 +267,13 @@
                 }).then((response) => {
                     this.csrf = response.data["data"]
                 })
-            }, webp() {
-                this.$emit("renderWebp");
-            }, decodeToPNG() {
-                var index = this.current
-                if (index >= this.items.length) {
-                    this.loaded = true
-                    return
-                } else {
-                    this.loaded = false
-                }
-                this.axios.get(this.items[index].msrc, {
-                    responseType: 'arraybuffer'
-                }).then((response) => {
-                    var data = convertBinaryToArray(atob(new Buffer(response.data, 'binary').toString('base64')))
-                    var worker = this.getWorker()
-                    this.worker.postMessage(worker, [data]).then((response) => {
-                        this.items[index].msrc = this.bitmapToPNGFromCanvas(response.bitmap, response.attribute)
-                        this.removeWorker(worker)
-                    })
-                })
-                this.axios.get(this.items[index].src, {
-                    responseType: 'arraybuffer'
-                }).then((response) => {
-                    var data = convertBinaryToArray(atob(new Buffer(response.data, 'binary').toString('base64')))
-                    var worker = this.getWorker()
-                    this.worker.postMessage(worker, [data]).then((response) => {
-                        this.items[index].src = this.bitmapToPNGFromCanvas(response.bitmap, response.attribute)
-                        this.removeWorker(worker)
-                    })
-                })
-            }, bitmapToPNGFromCanvas(bitmap, attribute) {
-                if (bitmap != null) {
-                    var height = attribute.height.value
-                    var width = attribute.width.value
-                    var canvas = document.createElement("canvas")
-                    canvas.innerHTML = "text"
-                    document.body.appendChild(canvas)
-                    canvas.style.display = "none"
-                    canvas.height = height
-                    canvas.width = width
-                    var content = canvas.getContext("2d")
-                    var image = content.createImageData(canvas.width, canvas.height)
-                    var arr = image.data
-                    for (var h = 0; h < height; h++)
-                        for (var w = 0; w < width; w++) {
-                            arr[2 + w * 4 + width * 4 * h] = bitmap[3 + w * 4 + width * 4 * h]
-                            arr[1 + w * 4 + width * 4 * h] = bitmap[2 + w * 4 + width * 4 * h]
-                            arr[0 + w * 4 + width * 4 * h] = bitmap[1 + w * 4 + width * 4 * h]
-                            arr[3 + w * 4 + width * 4 * h] = bitmap[0 + w * 4 + width * 4 * h]
-                        }
-                    content.putImageData(image, 0, 0)
-                    var k = canvas.toDataURL("image/png")
-                    document.body.removeChild(canvas)
-                } else k = attribute.URL;
-                return k
-            }, getWorker() {
-                var minC = 100;
-                var pos = 0;
-                for (var i = 0; i <= 0; i++) {
-                    if (this.counter[i] < minC) {
-                        minC = this.counter[i]
-                        pos = i
-                    }
-                }
-                this.counter[pos]++
-                return "worker" + (pos + 1)
-
-            }, removeWorker(name) {
-                switch (name) {
-                    case "worker1":
-                        this.counter[0]--
-                        break
-                    case "worker2":
-                        this.counter[1]--
-                        break
-                    case "worker3":
-                        this.counter[1]--
-                        break
-                    case "worker4":
-                        this.counter[1]--
-                        break
-                }
-                console.log(this.counter)
-                if (this.counter[0] == 0) {
-                    this.current++
-                    this.decodeToPNG()
+            }
+        },
+        watch: {
+            webpSupported: {
+                handler: function (val) {
+                    this.showNotEnabled = !val
+                    this.loadData(true)
                 }
             }
         }
