@@ -306,12 +306,12 @@
         },
         methods: {
             init() {
-
                 this.check()
                 this.axios.get("/school/blackboard/list").then((response) => {
                     this.claz = response.data["data"]
                     this.list()
                 }).catch((error) => {
+                    console.error(error)
                     this.$router.push("/user/login")
                 })
             },
@@ -319,32 +319,41 @@
                 this.axios.get("/school/blackboard/eligibility").then((response) => {
                     this.eligibility = response.data["data"]
                 }).catch((error) => {
+                    console.error(error)
                     this.$router.push("/user/login")
                 })
             },
             list() {
                 this.empty = true
-                this.axios.get("/school/blackboard/detail?id=" + this.currentClass).then((response) => {
-                    this.page = 1
-                    this.classInfo = response.data["data"]
-                    var moment = require('moment-timezone');
-                    this.classInfo.deadlines = this.classInfo.deadlines.map(function (val) {
-                        val.startDate = moment(val.time).toDate()
-                        return val
-                    })
-                    this.classInfo.notices.map(function (val) {
-                        val.preview = moment(val.time).toDate() > new Date()
-                        return val
-                    })
-                    this.info.title = this.classInfo.title
-                    this.info.announcement = this.classInfo.announcement
-                    this.empty = false
-                    this.getCsrf()
-                }).catch((error) => {
+                if(!this.currentClass){
                     if (this.claz.length > 0)
                         this.currentClass = this.claz[0].id
-                    else
-                        this.getCsrf()
+                    return
+                }
+                this.axios.get("/school/blackboard/detail?id=" + this.currentClass).then((response) => {
+                    if(response.data["code"] === 200){
+                        this.page = 1
+                        this.classInfo = response.data["data"]
+                        var moment = require('moment-timezone');
+                        this.classInfo.deadlines = this.classInfo.deadlines.map(function (val) {
+                            val.startDate = moment(val.time).toDate()
+                            return val
+                        })
+                        this.classInfo.notices.map(function (val) {
+                            val.preview = moment(val.time).toDate() > new Date()
+                            return val
+                        })
+                        this.info.title = this.classInfo.title
+                        this.info.announcement = this.classInfo.announcement
+                        this.empty = false
+                    } else {
+                        if (this.claz.length > 0)
+                            this.currentClass = this.claz[0].id
+                        this.$emit("showMsg",response.data["data"])
+                    }
+                    this.getCsrf()
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             },
             submit() {
@@ -426,7 +435,7 @@
             getSuffix(filename) {
                 var pos = filename.lastIndexOf('.');
                 var suffix = '';
-                if (pos != -1) {
+                if (pos !== -1) {
                     suffix = filename.substring(pos)
                 }
                 return suffix;
@@ -434,7 +443,7 @@
             getPreffix(filename) {
                 var pos = filename.lastIndexOf('.');
                 var suffix = '';
-                if (pos != -1) {
+                if (pos !== -1) {
                     suffix = filename.substring(0, pos)
                 }
                 return suffix;

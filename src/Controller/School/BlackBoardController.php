@@ -11,6 +11,7 @@ use App\Service\AliyunOSS;
 use App\Service\Notification\Provider\AbstractNotificationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class BlackBoardController extends AbstractController
 {
@@ -38,9 +39,10 @@ class BlackBoardController extends AbstractController
         $id = $request->query->get("id");
         $repo = $this->getDoctrine()->getManager()->getRepository(Claz::class);
         /** @var $class  Claz */
-        if ($id == "undefined")
-            throw $this->createAccessDeniedException();
-        $class = $repo->findOneBy(["id" => $id]);
+        if(!$this->isValidUuid($id))
+            return $this->response()->response("黑板ID不合法",Response::HTTP_FORBIDDEN);
+        $class = $repo->find($id);
+
         if (!is_null($class) && ($class->getStudents()->contains($this->getUser()) || $this->getUser()->hasRole(Permission::IS_ADMIN))) {
             if ($class->getTeacher() === $this->getUser() || $this->getUser()->hasRole(Permission::IS_ADMIN))
                 $class->admin = true;
@@ -52,7 +54,7 @@ class BlackBoardController extends AbstractController
                 return $this->response()->responseEntity($class->nextNotices($request->query->getInt("page", 0)));
             }
         } else {
-            throw $this->createAccessDeniedException();
+            return $this->response()->response("未找到该黑板",Response::HTTP_FORBIDDEN);
         }
     }
 
