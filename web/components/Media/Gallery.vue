@@ -81,6 +81,8 @@
                         }
                         return val
                     }))
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             }
         },

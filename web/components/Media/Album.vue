@@ -194,6 +194,8 @@
                     this.comments = response.data["data"]["comments"]
                     this.$emit('changeTitle', this.$t('title-album') + " " + response.data["data"]["title"])
                     this.info = response.data["data"]
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
                 this.axios.get("/media/gallery/like", {
                     params: {
@@ -201,7 +203,8 @@
                     }
                 }).then((response) => {
                     this.isLiked = response.data.data
-                    //console.log(this.isLiked)
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             },
             showComments: function () {
@@ -218,11 +221,13 @@
                 }).then((response) => {
                     this.loadData(false)
                     this.showSidepanel = true
-                    if (response.data["code"] == 200) {
+                    if (response.data["code"] === 200) {
                         this.$emit("showMsg", this.$t("comment-succeeded"))
                     } else {
                         this.$emit("showMsg", response.data["data"])
                     }
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             },
             like: function () {
@@ -236,6 +241,8 @@
                         this.$emit("showMsg", this.$t("like-succeeded"))
                     }
                     this.loadData(false)
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             },
             switchPreference: function () {
@@ -252,6 +259,8 @@
                     _csrf: this.csrf
                 }).then((response) => {
                     this.loadData(false)
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             }, getCsrf() {
                 this.axios.get("user/csrf", {
