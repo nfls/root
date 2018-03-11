@@ -3,5 +3,4 @@ framework:
     translator:
         paths:
             - '%kernel.project_dir%/web/translation/backend'
-        fallbacks:
-            - 'zh'
+        fallbacks: ['zh']

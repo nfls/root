@@ -7,5 +7,4 @@ sentry:
       - 'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException'
       - 'Symfony\Component\Debug\Exception\FatalErrorException'
       - 'RuntimeException'
-      - 'Symfony\Component\Console\Exception\RuntimeException'
-      - 
+      - 'Symfony\Component\Console\Exception\RuntimeException' 

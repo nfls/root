@@ -1,6 +1,6 @@
 <i18n src="../../translation/frontend/School.json"></i18n>
 <template>
-    <div class="class" v-infinite-scroll="loadMore" :infinite-scroll-disabled="empty || loading">
+    <div class="class" v-infinite-scroll="loadMore" :infinite-scroll-disabled="empty || loading" :infinite-scroll-immediate-check="false">
         <div class="info" v-if="!empty">
             <md-card>
                 <md-card-content style="align:left;">
@@ -578,6 +578,8 @@
                 })
             },
             loadMore() {
+                if(!this.currentClass)
+                    return
                 this.loading = true
                 this.page++
                 this.axios.get("/school/blackboard/detail", {
@@ -587,12 +589,19 @@
                     }
                 }).then((response) => {
                     this.loading = false
-                    var self = this
-                    var info = response.data["data"].map(function (val) {
-                        val.preview = self.$moment(val.time).toDate() > new Date()
-                        return val
-                    })
-                    this.classInfo.notices = this.classInfo.notices.concat(info)
+                    if(response.data["data"] === 200)
+                    {
+                        this.$emit("showMsg",this.$t("new-succeeded"))
+                        var self = this
+                        var info = response.map(function (val) {
+                            val.preview = self.$moment(val.time).toDate() > new Date()
+                            return val
+                        })
+                        this.classInfo.notices = this.classInfo.notices.concat(info)
+                    }else{
+                        this.$emit("showMsg",response.data["data"])
+                    }
+
                     this.getCsrf()
                 }).catch((error) => {
                     this.loading = false

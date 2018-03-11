@@ -314,7 +314,7 @@
         }, created: function () {
             document.getElementById('recaptcha').style.visibility = 'hidden';
         }, mounted: function () {
-            this.username = this.$t('username')
+            this.username = this.$t('not-login')
             this.reload()
             this.initReCaptcha()
             this.loadWebP()

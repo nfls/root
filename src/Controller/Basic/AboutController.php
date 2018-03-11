@@ -32,12 +32,4 @@ class AboutController extends AbstractController
         return $this->response()->response($gitHashLong);
     }
 
-    /**
-     * @Route("/about/trans")
-     */
-    public function trans(TranslatorInterface $translator) {
-        //$a = ;
-        return $this->response()->response($translator->trans("nihao"));
-
-    }
 }
