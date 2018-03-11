@@ -147,5 +147,13 @@ class Rank
         $this->rank = $rank;
     }
 
+    /**
+     * @return string
+     */
+    public function getGame(): string
+    {
+        return $this->game->getTitle();
+    }
+
 
 }

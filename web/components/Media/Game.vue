@@ -5,14 +5,13 @@
             <span class="md-display-1" v-html="$t('game-not-realname')"></span>
         </div>
         <div class="row">
-            <md-table v-model="ranks" md-card v-if="loggedIn">
+            <md-table v-model="ranks" md-card v-if="ranks.length > 0">
                 <md-table-toolbar>
                     <h1 class="md-title">{{ $t('my-rank') }}</h1>
                 </md-table-toolbar>
 
                 <md-table-row slot="md-table-row" slot-scope="{ item }" style="text-align: left;">
-                    <md-table-cell :md-label="$t('game')" md-sort-by="id" md-numeric>{{ item.game.title }}
-                    </md-table-cell>
+                    <md-table-cell :md-label="$t('game')" md-sort-by="id" md-numeric>{{ item.game }}</md-table-cell>
                     <md-table-cell :md-label="$t('score')" md-sort-by="name">{{ item.score }}</md-table-cell>
                     <md-table-cell :md-label="$t('rank')" md-sort-by="name">{{ item.rank }}</md-table-cell>
                     <md-table-cell :md-label="$t('time')" md-sort-by="name">{{ item.time | moment("lll") }}
@@ -78,6 +77,7 @@
             })
             this.axios.get("/game/listRank").then((response) => {
                 this.ranks = response.data["data"]
+                console.log(this.ranks)
             })
             this.$emit("changeTitle", this.$t('title-game'))
         }, methods: {
