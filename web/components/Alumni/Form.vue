@@ -193,6 +193,8 @@
 
             this.axios.get("/alumni/countries").then((response) => {
                 this.countries = response.data["data"]
+            }).catch((error) => {
+                this.$emit("generalError",error)
             })
             this.$emit('changeTitle', this.$t('form-title'))
         },
@@ -218,6 +220,9 @@
                                 this.changed = false
                             this.sending = false
                             this.$emit("showMsg", this.$t("save-succeeded"))
+                        }).catch((error) => {
+                            this.sending = false
+                            this.$emit("generalError",error)
                         })
                     } else {
                         this.active = true
@@ -235,7 +240,7 @@
                     var data = response.data
                     this.sending = false
                     this.isDisabled = true
-                    if (data.code == 200) {
+                    if (data.code === 200) {
                         this.$emit("showMsg", this.$t("submit-succeeded"))
                         var self = this
                         setTimeout(function () {
@@ -250,16 +255,23 @@
                         self.error = true
                         this.isDisabled = false
                     }
-
+                }).catch((error) => {
+                    this.sending = false
+                    this.$emit("generalError",error)
                 })
             }, cancel() {
-                this.form._csrf = this.csrf;
+                this.form._csrf = this.csrf
+                this.sending = true
                 this.axios.post("alumni/cancel?id=" + this.$route.params["id"], this.form).then((response) => {
+                    this.sending = false
                     this.$emit("showMsg", this.$t("cancel-succeeded"))
                     var self = this
                     setTimeout(function () {
                         self.$router.push("/alumni/auth")
-                    }, 3000)
+                    }, 1500)
+                }).catch((error) => {
+                    this.sending = false
+                    this.$emit("generalError",error)
                 })
             }, getModel(key) {
                 return this.form[key]
@@ -309,6 +321,8 @@
                 }).then((response) => {
                     if (response.data["code"] === 200)
                         window.close()
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             }, acceptWithoutLimit() {
                 this.axios.post("/admin/alumni/auth/update", {
@@ -318,6 +332,8 @@
                 }).then((response) => {
                     if (response.data["code"] === 200)
                         window.close()
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             }, reject() {
                 this.axios.post("/admin/alumni/auth/update", {
@@ -327,6 +343,8 @@
                 }).then((response) => {
                     if (response.data["code"] === 200)
                         window.close()
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             }, ddlHelper() {
                 if (this.form.userStatus === "0" && this.form.juniorRegistration) {
@@ -342,6 +360,8 @@
                     }
                 }).then((response) => {
                     this.csrf = response.data["data"]
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             }
         },

@@ -386,6 +386,7 @@
                         this.upload(index + 1)
                     }).catch(error => {
                         this.sending = false
+                        console.error(error)
                         this.showMsg(this.$t('upload-failed'))
                     });
                 })
@@ -400,6 +401,7 @@
                     this.list()
                 }).catch((error) => {
                     this.sending = false
+                    console.error(error)
                     this.showMsg(this.$t('release-failed'))
                 })
             },
@@ -459,6 +461,8 @@
                     _csrf: this.csrf
                 }).then((response) => {
                     this.list()
+                }).catch((error) => {
+                    this.$emit("generalError", error)
                 })
             },
             removeNotice(id) {
@@ -467,6 +471,8 @@
                     _csrf: this.csrf
                 }).then((response) => {
                     this.list()
+                }).catch((error) => {
+                    this.$emit("generalError", error)
                 })
             },
             add(id) {
@@ -477,6 +483,8 @@
                 }).then((response) => {
                     this.$emit("showMsg", this.$t('add-succeeded') )
                     this.list()
+                }).catch((error) => {
+                    this.$emit("generalError", error)
                 })
             },
             destroy() {
@@ -486,6 +494,8 @@
                 }).then((response) => {
                     this.showAdmin = false
                     this.init()
+                }).catch((error) => {
+                    this.$emit("generalError", error)
                 })
             },
             preference() {
@@ -493,6 +503,8 @@
                 this.axios.post("/school/blackboard/preference?id=" + this.currentClass, this.info).then((response) => {
                     this.init()
                     this.showAdmin = false
+                }).catch((error) => {
+                    this.$emit("generalError", error)
                 })
             },
             search() {
@@ -501,6 +513,8 @@
                 this.axios.post("/alumni/directory/search", this.form).then((response) => {
                     this.studentsInfo = response.data["data"]
                     this.active = "tab-add"
+                }).catch((error) => {
+                    this.$emit("generalError", error)
                 })
             },
             send(id) {
@@ -516,6 +530,8 @@
                     _csrf: this.csrf
                 }).then((response) => {
                     this.init()
+                }).catch((error) => {
+                    this.$emit("generalError", error)
                 })
             },
             loadMore() {
@@ -536,6 +552,8 @@
                     })
                     this.classInfo.notices = this.classInfo.notices.concat(info)
                     this.getCsrf()
+                }).catch((error) => {
+                    this.$emit("generalError", error)
                 })
             },
             deadline(id) {
@@ -549,6 +567,8 @@
                     }
                 }).then((response) => {
                     this.csrf = response.data["data"]
+                }).catch((error) => {
+                    this.$emit("generalError", error)
                 })
             }
         },
@@ -603,4 +623,10 @@
         vertical-align: top;
     }
 
+    .md-progress-bar {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+    }
 </style>

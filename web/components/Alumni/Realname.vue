@@ -48,10 +48,6 @@
                 </md-list>
             </md-card-content>
         </md-card>
-        <md-dialog-alert
-                :md-active.sync="error"
-                :md-title="$t('error')"
-                :md-content="$t('login-required')"/>
     </div>
 </template>
 
@@ -66,7 +62,6 @@
             englishName: "",
             submitTime: "",
             expireAt: "",
-            error: false,
             csrf: null,
         }),
         mounted: function () {
@@ -92,7 +87,7 @@
                     }).length == 0)
                 }).catch((error) => {
                     console.error(error)
-                    this.error = true
+                    this.$router.push("/user/login")
                 })
             },
             loadStatus() {
@@ -112,6 +107,9 @@
                     } else {
                         this.valid = false
                     }
+                }).catch((error) => {
+                    console.error(error)
+                    this.$router.push("/user/login")
                 })
             },
             click(id) {
@@ -130,7 +128,11 @@
                         _csrf: response.data["data"]
                     }).then((response) => {
                         this.loadData()
+                    }).catch((error) => {
+                        this.$emit("generalError",error)
                     })
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             }
         }
