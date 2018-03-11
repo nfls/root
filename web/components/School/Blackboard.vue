@@ -291,12 +291,12 @@
                 announcement: ""
             },
             studentsInfo: [],
-            moment: require('moment-timezone'),
             showDestroy: false
         }),
         mounted: function () {
             this.$emit("changeTitle", this.$t("blackboard-title"))
             this.$emit("prepareRecaptcha")
+            this.$moment.locale(this.$i18n.locale)
             this.currentClass = this.$route.params["id"]
             this.init()
             this.resetForm()
@@ -304,6 +304,7 @@
         methods: {
             init() {
                 this.check()
+                this.loading = true
                 this.axios.get("/school/blackboard/list").then((response) => {
                     this.claz = response.data["data"]
                     this.list()
@@ -331,13 +332,13 @@
                     if(response.data["code"] === 200){
                         this.page = 1
                         this.classInfo = response.data["data"]
-                        var moment = require('moment-timezone');
+                        var self = this
                         this.classInfo.deadlines = this.classInfo.deadlines.map(function (val) {
-                            val.startDate = moment(val.time).toDate()
+                            val.startDate = self.$moment(val.time).toDate()
                             return val
                         })
                         this.classInfo.notices.map(function (val) {
-                            val.preview = moment(val.time).toDate() > new Date()
+                            val.preview = self.$moment(val.time).toDate() > new Date()
                             return val
                         })
                         this.info.title = this.classInfo.title
@@ -348,6 +349,7 @@
                             this.currentClass = this.claz[0].id
                         this.$emit("showMsg",response.data["data"])
                     }
+                    this.loading = false
                     this.getCsrf()
                 }).catch((error) => {
                     this.$emit("generalError",error)
@@ -390,6 +392,7 @@
                             this.showMsg(this.$t('upload-failed'))
                         });
                     }
+
                 })
             },
             sendPost() {
@@ -584,9 +587,9 @@
                     }
                 }).then((response) => {
                     this.loading = false
-                    var moment = require('moment-timezone');
+                    var self = this
                     var info = response.data["data"].map(function (val) {
-                        val.preview = moment(val.time).toDate() > new Date()
+                        val.preview = self.$moment(val.time).toDate() > new Date()
                         return val
                     })
                     this.classInfo.notices = this.classInfo.notices.concat(info)

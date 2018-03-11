@@ -100,6 +100,7 @@
             sending: false
         }),
         mounted: function () {
+            this.$moment.locale(this.$i18n.locale)
             this.$emit("changeTitle", this.$t("info-title"))
             this.load()
         },
@@ -107,9 +108,8 @@
             load() {
                 this.axios.get('/user/current').then((response) => {
                     if (response.data['code'] === 200) {
-                        var moment = require('moment-timezone');
                         this.info = response.data["data"]
-                        this.info.joinTime = moment(this.joinTime).tz(moment.tz.guess()).format("lll")
+                        this.info.joinTime = this.$moment(this.joinTime).format("lll")
                         if (this.info.email === null)
                             this.info.email = this.$t("not-binded")
                         if (this.info.phone === null)

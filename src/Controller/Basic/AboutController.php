@@ -36,6 +36,7 @@ class AboutController extends AbstractController
      * @Route("/about/trans")
      */
     public function trans(TranslatorInterface $translator) {
+        //$a = ;
         return $this->response()->response($translator->trans("nihao"));
 
     }

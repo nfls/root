@@ -296,7 +296,7 @@
                 this.$cookie.delete("drop")
                 window.location.reload()
             }, lang() {
-                if(this.$i18n.locale === "zh"){
+                if(this.$i18n.locale === "zh-cn"){
                     this.$cookie.set("lang","en",{
                         expires: '1Y'
                     })
@@ -320,7 +320,7 @@
             this.loadWebP()
             if(this.$cookie.get('drop') === "true")
                 this.dropEnabled = true
-            if(this.$i18n.locale === "zh")
+            if(this.$i18n.locale === "zh-cn")
                 this.language = "English"
             else
                 this.language = "简体中文"

@@ -72,6 +72,7 @@
             }
         }),
         mounted: function () {
+            this.$moment.locale(this.$i18n.locale)
             this.axios.get("/game/list").then((response) => {
                 this.list = response.data["data"]
             }).catch((error) => {

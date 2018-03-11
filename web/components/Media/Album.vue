@@ -148,6 +148,7 @@
             showNotEnabled: false,
         }),
         mounted: function () {
+            this.$moment.locale(this.$i18n.locale)
             this.loadData(true)
         },
         methods: {

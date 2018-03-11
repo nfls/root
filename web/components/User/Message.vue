@@ -69,6 +69,7 @@
         }),
         mounted: function () {
             this.load()
+            this.$moment.locale(this.$i18n.locale)
             this.$emit("changeTitle", this.$t("message-title"))
             if (this.$route.params["id"] != null) {
                 this.receiver = this.$route.params["id"]

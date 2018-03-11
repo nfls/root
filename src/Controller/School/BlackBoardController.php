@@ -203,6 +203,8 @@ class BlackBoardController extends AbstractController
 
         if (!is_null($class) & ($class->getTeacher() === $this->getUser() || $this->getUser()->hasRole(Permission::IS_ADMIN))) {
             $notice = new Notice();
+            if(is_null($request->request->get("content")))
+                return $this->response()->response($translator->trans("content-blank"),Response::HTTP_FORBIDDEN);
             $notice->setContent($request->request->get("content"));
             $notice->setAttachment($request->request->get("files"));
             $notice->setClaz($class);
