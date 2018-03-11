@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>删除确认</title>
 </head>
-<body>
-
+<body style="margin:10px;">
+<form name="form" method="post" action="">
+    <input type="text" id="hidden" name="hidden" value="hidden" hidden/>
+    <button type="submit" value="submit">Submit</button>
+</form>
+<span style="word-wrap:break-word;">您确认要删除下面这张照片吗({{ file }})<br/><strong>此操作不可逆。</strong><br/></span>
+<img src="{{ url }}" width="500">
 </body>
 </html>

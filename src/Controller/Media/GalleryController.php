@@ -166,7 +166,7 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * @Route("/admin/media/photo/delete", methods="GET")
+     * @Route("/admin/media/photo/delete")
      */
     public function delete(Request $request){
         $url = $request->query->get("id") ?? "";
@@ -174,12 +174,15 @@ class GalleryController extends AbstractController
         $file = substr($url,$index);
         $repo = $this->getDoctrine()->getManager()->getRepository(Photo::class);
         $photo = $repo->getPhotoByFile($file);
+        if($request->getMethod() === "GET"){
+            return $this->render("admin/media/delete.html.twig",["file"=>$file,"url"=>$url]);
+        }
         $em = $this->getDoctrine()->getManager();
         $em->persist($photo->remove());
         $em->flush();
         $em->remove($photo);
         $em->flush();
-        return $this->response()->response(null);
+        return $this->render("admin/media/deleted.html.twig");
 
     }
     /**
