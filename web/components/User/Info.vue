@@ -70,7 +70,7 @@
                 @md-confirm="confirm"/>
         <md-dialog-prompt/>
         <md-dialog :md-active.sync="avatarDialog">
-            <md-diglog-title>{{ $t('edit-avatar') }}</md-diglog-title>
+            <md-dialog-title>{{ $t('edit-avatar') }}</md-dialog-title>
             <md-dialog-content>
                 <form @submit.prevent="changeAvatar">
                     <md-field>

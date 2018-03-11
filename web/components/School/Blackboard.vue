@@ -4,6 +4,7 @@
         <div class="info" v-if="!empty">
             <md-card>
                 <md-card-content style="align:left;">
+                    <md-progress-bar md-mode="indeterminate" v-if="sending"/>
                     <md-field>
                         <label>{{ $t('current-blackboard') }}</label>
                         <md-select v-model="currentClass">
@@ -65,19 +66,18 @@
             <!--Admin-->
             <md-dialog :md-active.sync="showNewPost" class="new-post" :md-close-on-esc="false"
                        :md-click-outside-to-close="false">
+                <md-progress-bar md-mode="indeterminate" v-if="sending"/>
                 <md-dialog-title>{{ $t('new-note') }}</md-dialog-title>
-
                 <md-dialog-content>
                     <span>{{ $t('google-docs' )}}<a href="https://dev.nfls.io/confluence/x/AQAO"
                                                                        target="_blank">Confluence</a></span>
-                    <markdown-palettes v-model="post.content" :disabled="sending"></markdown-palettes>
+                    <markdown-palettes v-model="post.content"></markdown-palettes>
                     <form>
                         <md-field>
                             <label>{{ $t('attachment' )}}</label>
                             <md-file v-model="post.file" multiple @md-change="changeUpload" :disabled="sending"/>
                         </md-field>
-                        <span>{{ $t('deadline-entry') }}<datetime v-model="post.deadline" type="datetime"
-                                                   :disabled="sending"></datetime></span>
+                        <span>{{ $t('deadline-entry') }}<datetime v-model="post.deadline" type="datetime" :disabled="sending"></datetime></span>
                         <md-field>
                             <label>{{ $t('title-entry') }}</label>
                             <md-input v-model="post.title" :disabled="sending" :md-counter="20"/>
@@ -93,25 +93,27 @@
             </md-dialog>
 
             <md-dialog :md-active.sync="showAdmin" class="new-post">
+                <md-progress-bar md-mode="indeterminate" v-if="sending"/>
                 <md-dialog-title>{{ $t('admin') }}</md-dialog-title>
                 <md-dialog-content>
                     <form>
                         <md-field>
                             <label>{{ $t('title') }}</label>
-                            <md-input id="seniorSchool" v-model="info.title" name="title"/>
+                            <md-input id="seniorSchool" v-model="info.title" name="title" :disabled="sending"/>
                         </md-field>
                         <span class="md-caption">{{ $t('announcement') }}</span>
                         <markdown-palettes v-model="info.announcement"></markdown-palettes>
                     </form>
                 </md-dialog-content>
                 <md-dialog-actions>
-                    <md-button class="md-accent" @click="showAdmin = false;showDestroy = true">{{ $t('remove') }}</md-button>
+                    <md-button class="md-accent" @click="showAdmin = false;showDestroy = true" :disabled="sending">{{ $t('remove') }}</md-button>
                     <md-button class="md-primary" @click="showUpload = true" :disabled="sending">{{ $t('image-upload') }}</md-button>
-                    <md-button class="md-primary" @click="preference">{{ $t('submit') }}</md-button>
-                    <md-button class="md-primary" @click="showAdmin = false">{{ $t('close') }}</md-button>
+                    <md-button class="md-primary" @click="preference" :disabled="sending">{{ $t('submit') }}</md-button>
+                    <md-button class="md-primary" @click="showAdmin = false" :disabled="sending">{{ $t('close') }}</md-button>
                 </md-dialog-actions>
             </md-dialog>
             <md-dialog :md-active.sync="showListStu" class="new-post">
+                <md-progress-bar md-mode="indeterminate" v-if="sending"/>
                 <md-dialog-title>{{ $t('user-list') }}</md-dialog-title>
                 <md-dialog-content>
                     <span class="md-caption">{{ $t('list-warning') }}</span><br/>
@@ -123,32 +125,29 @@
                             <div class="md-list-item-text">
                                 <span v-html="student.htmlUsername"></span>
                             </div>
-                            <md-button class="md-icon-button md-list-action" @click="remove(student.id)">
-                                <md-icon>delete</md-icon>
-                            </md-button>
-                            <md-button class="md-icon-button md-list-action" @click="send(student.id)">
-                                <md-icon>send</md-icon>
-                            </md-button>
+                            <md-button class="md-icon-button md-list-action" @click="remove(student.id)" :disabled="sending"><md-icon>delete</md-icon></md-button>
+                            <md-button class="md-icon-button md-list-action" @click="send(student.id)" :disabled="sending"><md-icon>send</md-icon></md-button>
                         </md-list-item>
                     </md-list>
                 </md-dialog-content>
                 <md-dialog-actions>
-                    <md-button @click="showAddStu = true">{{ $t('add-new') }}</md-button>
-                    <md-button @click="showListStu = false">{{ $t('close') }}</md-button>
+                    <md-button @click="showAddStu = true" :disabled="sending">{{ $t('add-new') }}</md-button>
+                    <md-button @click="showListStu = false" :disabled="sending">{{ $t('close') }}</md-button>
                 </md-dialog-actions>
             </md-dialog>
             <md-dialog :md-active.sync="showAddStu" class="new-post">
+                <md-progress-bar md-mode="indeterminate" v-if="sending"/>
                 <md-dialog-title>{{ $t('add') }}</md-dialog-title>
                 <md-dialog-content>
                     <div>
-                        <md-radio v-model="form.seniorSchool" value="2">{{ $t('ib') }}</md-radio>
-                        <md-radio v-model="form.seniorSchool" value="3">{{ $t('alevel') }}</md-radio>
+                        <md-radio v-model="form.seniorSchool" value="2" :disabled="sending">{{ $t('ib') }}</md-radio>
+                        <md-radio v-model="form.seniorSchool" value="3" :disabled="sending">{{ $t('alevel') }}</md-radio>
                     </div>
                     <md-field style="width:200px;">
                         <label>{{ $t('senior-graduation') }}</label>
-                        <md-input v-model="form.seniorRegistration" id="seniorRegistration" name="seniorRegistration"/>
+                        <md-input v-model="form.seniorRegistration" id="seniorRegistration" name="seniorRegistration" :disabled="sending"/>
                     </md-field>
-                    <md-button @click="search">{{ $t('search') }}</md-button>
+                    <md-button @click="search" :disabled="sending">{{ $t('search') }}</md-button>
                     <br/>
                     <md-list>
                         <md-list-item v-for="student in studentsInfo" :key="student.id">
@@ -158,14 +157,12 @@
                             <div class="md-list-item-text">
                                 <span v-html="student.htmlUsername"></span>
                             </div>
-                            <md-button class="md-icon-button md-list-action" @click="add(student.id)">
-                                <md-icon>add</md-icon>
-                            </md-button>
+                            <md-button class="md-icon-button md-list-action" @click="add(student.id)" :disabled="sending"><md-icon>add</md-icon></md-button>
                         </md-list-item>
                     </md-list>
                 </md-dialog-content>
                 <md-dialog-actions>
-                    <md-button @click="showAddStu = false">{{ $t('done') }}</md-button>
+                    <md-button @click="showAddStu = false" :disabled="sending">{{ $t('done') }}</md-button>
                 </md-dialog-actions>
             </md-dialog>
             <md-dialog :md-active.sync="showUpload" class="new-post">
@@ -454,66 +451,82 @@
                 this.$emit("showMsg", msg)
             },
             remove(id) {
-                this.active = "tab-add"
+                this.sending = true
                 this.axios.post("/school/blackboard/edit?id=" + this.currentClass, {
                     id: id,
                     remove: true,
                     _csrf: this.csrf
                 }).then((response) => {
+                    this.sending = false
                     this.list()
                 }).catch((error) => {
+                    this.sending = false
                     this.$emit("generalError", error)
                 })
             },
             removeNotice(id) {
+                this.sending = true
                 this.axios.post("/school/blackboard/delete?id=" + this.currentClass, {
                     id: id,
                     _csrf: this.csrf
                 }).then((response) => {
+                    this.sending = false
                     this.list()
                 }).catch((error) => {
+                    this.sending = false
                     this.$emit("generalError", error)
                 })
             },
             add(id) {
+                this.sending = true
                 this.axios.post("/school/blackboard/edit?id=" + this.currentClass, {
                     id: id,
                     add: true,
                     _csrf: this.csrf
                 }).then((response) => {
+                    this.sending = false
                     this.$emit("showMsg", this.$t('add-succeeded') )
                     this.list()
                 }).catch((error) => {
+                    this.sending = false
                     this.$emit("generalError", error)
                 })
             },
             destroy() {
+                this.sending = true
                 this.axios.post("/school/blackboard/preference?id=" + this.currentClass, {
                     "delete": true,
                     _csrf: this.csrf
                 }).then((response) => {
                     this.showAdmin = false
+                    this.sending = false
                     this.init()
                 }).catch((error) => {
+                    this.sending = fallse
                     this.$emit("generalError", error)
                 })
             },
             preference() {
                 this.info._csrf = this.csrf
+                this.sending = true
                 this.axios.post("/school/blackboard/preference?id=" + this.currentClass, this.info).then((response) => {
                     this.init()
+                    this.sending = false
                     this.showAdmin = false
                 }).catch((error) => {
+                    this.sending = false
                     this.$emit("generalError", error)
                 })
             },
             search() {
-                this.active = "tab-list"
                 this.form._csrf = this.csrf
+                this.sending = true
                 this.axios.post("/alumni/directory/search", this.form).then((response) => {
+                    this.sending = false
                     this.studentsInfo = response.data["data"]
                     this.active = "tab-add"
                 }).catch((error) => {
+                    this.sending = false
                     this.$emit("generalError", error)
                 })
             },
@@ -524,18 +537,20 @@
                 this.showDate = d;
             },
             newClass(val) {
-                //console.log(val)
+                this.sending = true
                 this.axios.post("/school/blackboard/create", {
                     title: this.classTitle,
                     _csrf: this.csrf
                 }).then((response) => {
+                    this.sending = false
+                    this.$emit("showMsg",this.$t("new-succeeded"))
                     this.init()
                 }).catch((error) => {
+                    this.sending = false
                     this.$emit("generalError", error)
                 })
             },
             loadMore() {
-                //console.log("aa")
                 this.loading = true
                 this.page++
                 this.axios.get("/school/blackboard/detail", {
