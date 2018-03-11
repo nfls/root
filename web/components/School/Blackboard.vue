@@ -568,6 +568,7 @@
                     this.classInfo.notices = this.classInfo.notices.concat(info)
                     this.getCsrf()
                 }).catch((error) => {
+                    this.loading = false
                     this.$emit("generalError", error)
                 })
             },
