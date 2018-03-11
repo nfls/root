@@ -9,6 +9,7 @@ use App\Model\Permission;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ChatController extends AbstractController
 {
@@ -45,7 +46,7 @@ class ChatController extends AbstractController
     /**
      * @Route("/chat/send", methods="POST")
      */
-    public function send(Request $request)
+    public function send(Request $request, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
@@ -54,12 +55,12 @@ class ChatController extends AbstractController
             $request->request->getInt("id")
         );
         if (is_null($user))
-            return $this->response()->response("收件人不存在！", Response::HTTP_FORBIDDEN);
+            return $this->response()->response($translator->trans("receiver-not-exist"), Response::HTTP_FORBIDDEN);
         $chat = new Chat();
         $chat->setSender($this->getUser());
         $chat->setReceiver($user);
         if($chat->getReceiver() === $chat->getSender())
-            return $this->response()->response("不能给自己发信息！",Response::HTTP_FORBIDDEN);
+            return $this->response()->response($translator->trans("connot-send-to-itself"),Response::HTTP_FORBIDDEN);
         $chat->setContent($request->request->get("content"));
         $em = $this->getDoctrine()->getManager();
         $em->persist($chat);

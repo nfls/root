@@ -12,6 +12,7 @@ use App\Service\Notification\Provider\AbstractNotificationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class BlackBoardController extends AbstractController
 {
@@ -34,13 +35,13 @@ class BlackBoardController extends AbstractController
     /**
      * @Route("/school/blackboard/detail", methods="GET")
      */
-    public function detail(Request $request)
+    public function detail(Request $request, TranslatorInterface $translator)
     {
         $id = $request->query->get("id");
         $repo = $this->getDoctrine()->getManager()->getRepository(Claz::class);
         /** @var $class  Claz */
         if(!$this->isValidUuid($id))
-            return $this->response()->response("黑板ID不合法",Response::HTTP_FORBIDDEN);
+            return $this->response()->response($translator->trans("illegal-blackboard-id"),Response::HTTP_FORBIDDEN);
         $class = $repo->find($id);
 
         if (!is_null($class) && ($class->getStudents()->contains($this->getUser()) || $this->getUser()->hasRole(Permission::IS_ADMIN))) {
@@ -54,7 +55,7 @@ class BlackBoardController extends AbstractController
                 return $this->response()->responseEntity($class->nextNotices($request->query->getInt("page", 0)));
             }
         } else {
-            return $this->response()->response("未找到该黑板",Response::HTTP_FORBIDDEN);
+            return $this->response()->response($translator->trans("blackboard-id-not-exists"),Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -81,7 +82,7 @@ class BlackBoardController extends AbstractController
     /**
      * @Route("/school/blackboard/edit", methods="POST")
      */
-    public function edit(Request $request)
+    public function edit(Request $request,TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_SCHOOL_BLACKBOARD);
@@ -104,14 +105,14 @@ class BlackBoardController extends AbstractController
             $em->flush();
             return $this->response()->response(null);
         } else {
-            throw $this->createAccessDeniedException();
+            return $this->response()->response($translator->trans("blackboard-id-not-exists"),Response::HTTP_FORBIDDEN);
         }
     }
 
     /**
      * @Route("/school/blackboard/delete", methods="POST")
      */
-    public function delete(Request $request)
+    public function delete(Request $request, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_SCHOOL_BLACKBOARD);
@@ -132,14 +133,14 @@ class BlackBoardController extends AbstractController
             $em->flush();
             return $this->response()->response(null);
         } else {
-            throw $this->createAccessDeniedException();
+            return $this->response()->response($translator->trans("blackboard-id-not-exists"),Response::HTTP_FORBIDDEN);
         }
     }
 
     /**
      * @Route("/school/blackboard/preference", methods="POST")
      */
-    public function preference(Request $request)
+    public function preference(Request $request, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_SCHOOL_BLACKBOARD);
@@ -170,7 +171,7 @@ class BlackBoardController extends AbstractController
             $em->flush();
             return $this->response()->response(null);
         } else {
-            throw $this->createAccessDeniedException();
+            return $this->response()->response($translator->trans("blackboard-id-not-exists"),Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -189,7 +190,7 @@ class BlackBoardController extends AbstractController
     /**
      * @Route("/school/blackboard/post", methods="POST")
      */
-    public function post(Request $request)
+    public function post(Request $request, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_SCHOOL_BLACKBOARD);
@@ -234,20 +235,20 @@ class BlackBoardController extends AbstractController
                 $this->notification()->notifyNewNotice($class,$notice);
             return $this->response()->response(null);
         } else {
-            throw $this->createAccessDeniedException();
+            return $this->response()->response($translator->trans("blackboard-id-not-exists"),Response::HTTP_FORBIDDEN);
         }
     }
 
     /**
      * @Route("/school/blackboard/notify", methods="POST")
      */
-    public function notify(Request $request){
+    public function notify(Request $request, TranslatorInterface $translator){
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_SCHOOL_BLACKBOARD);
         if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
             throw $this->createAccessDeniedException();
         if(!$this->verifyCaptcha($request->request->get("captcha")))
-            $this->createAccessDeniedException();
+            return $this->response()->response($translator->trans("incorrect-captcha"), Response::HTTP_UNAUTHORIZED);
         $id = $request->query->get("id");
         $classRepo = $this->getDoctrine()->getManager()->getRepository(Claz::class);
         /** @var $class  Claz */
@@ -257,8 +258,8 @@ class BlackBoardController extends AbstractController
         if(!is_null($notice->getDeadline()) && $notice->claz() === $class)
         {
             $this->notification()->notifyDeadline($class,$notice);
-        }else{
-            throw $this->createAccessDeniedException();
+        }else {
+            return $this->response()->response($translator->trans("cannot-send-notice"),Response::HTTP_FORBIDDEN);
         }
         return $this->response()->response(null);
     }

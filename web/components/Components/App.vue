@@ -139,6 +139,9 @@
                     <md-list-item href='https://ib.nfls.io'>
                         <md-icon>pool</md-icon>
                         <span class='md-list-item-text'>{{ $t('managebac') }}</span></md-list-item>
+                    <md-list-item href='https://nflsio.statuspage.io'>
+                        <md-icon>flag</md-icon>
+                        <span class='md-list-item-text'>{{ $t('statuspage') }}</span></md-list-item>
 
 
                     <md-divider></md-divider>

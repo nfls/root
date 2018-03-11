@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AlumniController extends AbstractController
@@ -59,14 +60,13 @@ class AlumniController extends AbstractController
     /**
      * @Route("alumni/new", methods="POST")
      */
-    public function newForm(Request $request)
+    public function newForm(Request $request, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        if (!$this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_ALUMNI_FORM))
-            return $this->response()->response("csrf.invalid", Response::HTTP_BAD_REQUEST);
+        $this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_ALUMNI_FORM);
         $repo = $this->getDoctrine()->getManager()->getRepository(Alumni::class);
         if ((count($repo->findBy(["user" => $this->getUser(), "status" => Alumni::STATUS_NOT_SUBMITTED])) + count($repo->findBy(["user" => $this->getUser(), "status" => Alumni::STATUS_SUBMITTED]))) > 0) {
-            return $this->response()->response("alumni.already.new", 403);
+            return $this->response()->response($translator->trans("unfinished-form"), Response::HTTP_FORBIDDEN);
         }
         $alumni = new Alumni();
         $alumni->setUser($this->getUser());
@@ -141,7 +141,7 @@ class AlumniController extends AbstractController
     /**
      * @Route("alumni/submit", methods="POST")
      */
-    public function submitForm(Request $request, ValidatorInterface $validator)
+    public function submitForm(Request $request, ValidatorInterface $validator, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if (!$this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_ALUMNI_FORM))
@@ -181,6 +181,9 @@ class AlumniController extends AbstractController
 
             }
         }
+        $error_ids = array_map(function($val)use($translator){
+            return $translator->trans($val);
+        },$error_ids);
         if (count($error_ids) > 0)
             return $this->response()->responseEntity($error_ids, 400);
 

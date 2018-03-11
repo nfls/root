@@ -127,7 +127,10 @@
                     this.axios.post("alumni/new", {
                         _csrf: response.data["data"]
                     }).then((response) => {
-                        this.loadData()
+                        if(response.data["code"] === 200)
+                            this.loadData()
+                        else
+                            this.$emit("showMsg",response.data["data"])
                     }).catch((error) => {
                         this.$emit("generalError",error)
                     })

@@ -371,30 +371,38 @@
                         type: file.type
                     }
                 }).then((response) => {
-                    console.log(file)
-                    let header = {
-                        headers: {
-                            "Authorization": "Signature",
-                            "Content-Type": file.type
-                        }
+                    if(response.data["code"] !== 200) {
+                        this.showMsg(response.data["data"])
                     }
-                    this.axios.put(response.data["data"], file, header).then((response) => {
-                        this.post.files.push(name)
-                        this.upload(index + 1)
-                    }).catch(error => {
-                        this.sending = false
-                        console.error(error)
-                        this.showMsg(this.$t('upload-failed'))
-                    });
+                    else {
+                        let header = {
+                            headers: {
+                                "Authorization": "Signature",
+                                "Content-Type": file.type
+                            }
+                        }
+                        this.axios.put(response.data["data"], file, header).then((response) => {
+                            this.post.files.push(name)
+                            this.upload(index + 1)
+                        }).catch(error => {
+                            this.sending = false
+                            console.error(error)
+                            this.showMsg(this.$t('upload-failed'))
+                        });
+                    }
                 })
             },
             sendPost() {
                 this.post._csrf = this.csrf
                 this.axios.post("/school/blackboard/post?id=" + this.currentClass, this.post).then((response) => {
-                    this.resetForm()
-                    this.showNewPost = false
-                    this.sending = false
-                    this.showMsg(this.$t('release-succeeded'))
+                    if(response.data["code"] === 200){
+                        this.resetForm()
+                        this.showNewPost = false
+                        this.sending = false
+                        this.showMsg(this.$t('release-succeeded'))
+                    }else{
+                        this.showMsg(response.data["data"])
+                    }
                     this.list()
                 }).catch((error) => {
                     this.sending = false
@@ -457,6 +465,8 @@
                     remove: true,
                     _csrf: this.csrf
                 }).then((response) => {
+                    if(response.data["code"] !== 200)
+                        this.showMsg(response.data["data"])
                     this.sending = false
                     this.list()
                 }).catch((error) => {
@@ -470,6 +480,8 @@
                     id: id,
                     _csrf: this.csrf
                 }).then((response) => {
+                    if(response.data["code"] !== 200)
+                        this.showMsg(response.data["data"])
                     this.sending = false
                     this.list()
                 }).catch((error) => {
@@ -484,8 +496,11 @@
                     add: true,
                     _csrf: this.csrf
                 }).then((response) => {
+                    if(response.data["code"] !== 200)
+                        this.showMsg(response.data["data"])
+                    else
+                        this.$emit("showMsg", this.$t('add-succeeded'))
                     this.sending = false
-                    this.$emit("showMsg", this.$t('add-succeeded') )
                     this.list()
                 }).catch((error) => {
                     this.sending = false
@@ -498,6 +513,8 @@
                     "delete": true,
                     _csrf: this.csrf
                 }).then((response) => {
+                    if(response.data["code"] !== 200)
+                        this.showMsg(response.data["data"])
                     this.showAdmin = false
                     this.sending = false
                     this.init()
@@ -510,6 +527,8 @@
                 this.info._csrf = this.csrf
                 this.sending = true
                 this.axios.post("/school/blackboard/preference?id=" + this.currentClass, this.info).then((response) => {
+                    if(response.data["code"] !== 200)
+                        this.showMsg(response.data["data"])
                     this.init()
                     this.sending = false
                     this.showAdmin = false
@@ -523,8 +542,10 @@
                 this.sending = true
                 this.axios.post("/alumni/directory/search", this.form).then((response) => {
                     this.sending = false
-                    this.studentsInfo = response.data["data"]
-                    this.active = "tab-add"
+                    if(response.data["data"] === 200)
+                        this.studentsInfo = response.data["data"]
+                    else
+                        this.showMsg(response.data["data"])
                 }).catch((error) => {
                     this.sending = false
                     this.$emit("generalError", error)
@@ -543,7 +564,10 @@
                     _csrf: this.csrf
                 }).then((response) => {
                     this.sending = false
-                    this.$emit("showMsg",this.$t("new-succeeded"))
+                    if(response.code["data"] === 200)
+                        this.$emit("showMsg",this.$t("new-succeeded"))
+                    else
+                        this.showMsg(response.data["data"])
                     this.init()
                 }).catch((error) => {
                     this.sending = false
@@ -602,7 +626,10 @@
                         id: this.sendId,
                         _csrf: this.csrf
                     }).then((response) => {
-                        this.showMsg(this.$t('send-succeeded'))
+                        if(response.data["code"] === 200)
+                            this.showMsg(this.$t('send-succeeded'))
+                        else
+                            this.showMsg(response.data["data"])
                     }).catch((error) => {
                         this.showMsg(this.$t('send-failed'))
                     })
