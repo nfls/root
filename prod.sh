@@ -7,4 +7,4 @@ cd ../..
 node build/build.js
 bin/console doctrine:schema:update --force
 bin/console cache:clear
-app/console cache:warmup --env=prod
+bin/console cache:warmup --env=prod
