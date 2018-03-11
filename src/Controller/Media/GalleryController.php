@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class GalleryController extends AbstractController
 {
@@ -57,7 +58,7 @@ class GalleryController extends AbstractController
     /**
      * @Route("/media/gallery/comment", methods="POST")
      */
-    public function comment(Request $request)
+    public function comment(Request $request, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
@@ -68,7 +69,7 @@ class GalleryController extends AbstractController
         $comment = new Comment();
         $comment->setContent($content);
         if(is_null($comment->getContent()))
-            return $this->response()->response("评论内容为空！",Response::HTTP_FORBIDDEN);
+            return $this->response()->response($translator->trans("empty-comment"),Response::HTTP_FORBIDDEN);
         $comment->setPostUser($this->getUser());
         $comment->setGallery($repo->find($request->request->get("id")));
         $em = $this->getDoctrine()->getManager();
@@ -166,20 +167,24 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * @Route("/admin/media/photo/delete", methods="GET")
+     * @Route("/admin/media/photo/delete")
      */
     public function delete(Request $request){
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         $url = $request->query->get("id") ?? "";
         $index = strripos($url,"/") + 1;
         $file = substr($url,$index);
         $repo = $this->getDoctrine()->getManager()->getRepository(Photo::class);
         $photo = $repo->getPhotoByFile($file);
+        if($request->getMethod() === "GET"){
+            return $this->render("admin/media/delete.html.twig",["file"=>$file,"url"=>$url]);
+        }
         $em = $this->getDoctrine()->getManager();
         $em->persist($photo->remove());
         $em->flush();
         $em->remove($photo);
         $em->flush();
-        return $this->response()->response(null);
+        return $this->render("admin/media/deleted.html.twig");
 
     }
     /**

@@ -48,10 +48,6 @@
                 </md-list>
             </md-card-content>
         </md-card>
-        <md-dialog-alert
-                :md-active.sync="error"
-                :md-title="$t('error')"
-                :md-content="$t('login-required')"/>
     </div>
 </template>
 
@@ -66,10 +62,10 @@
             englishName: "",
             submitTime: "",
             expireAt: "",
-            error: false,
             csrf: null,
         }),
         mounted: function () {
+            this.$moment.locale(this.$i18n.locale)
             this.loadData()
             this.loadStatus()
             this.$emit('changeTitle', this.$t('title-auth'))
@@ -82,8 +78,7 @@
                         val["readableText"] = self.$t(self.getStatus(val.status))
                         val["readableText"] += " " + val.id
                         if (val.submitTime) {
-                            var moment = require('moment-timezone');
-                            val["readableText"] += " " + self.$t('submit-time')  + moment(val.submitTime).tz(moment.tz.guess()).format("lll") + " "
+                            val["readableText"] += " " + self.$t('submit-time')  + self.$moment(val.submitTime).format("lll") + " "
                         }
                         return val
                     })
@@ -92,26 +87,29 @@
                     }).length == 0)
                 }).catch((error) => {
                     console.error(error)
-                    this.error = true
+                    this.$router.push("/user/login")
                 })
             },
             loadStatus() {
                 this.axios.get("/alumni/current").then((response) => {
                     //var self = this
                     var data = response.data["data"]
+                    var self = this
                     if (data) {
-                        var moment = require('moment-timezone');
                         this.valid = true
                         this.chineseName = data["chineseName"]
                         this.englishName = data["englishName"]
-                        this.submitTime = moment(data["submitTime"]).tz(moment.tz.guess()).format("lll")
+                        this.submitTime = self.$moment(data["submitTime"]).format("lll")
                         if (data["expireAt"])
-                            this.expireAt = moment(data["expireAt"]).tz(moment.tz.guess()).format("L")
+                            this.expireAt = self.$moment(data["expireAt"]).format("L")
                         else
                             this.expireAt = this.$t('un-metered')
                     } else {
                         this.valid = false
                     }
+                }).catch((error) => {
+                    console.error(error)
+                    this.$router.push("/user/login")
                 })
             },
             click(id) {
@@ -129,8 +127,15 @@
                     this.axios.post("alumni/new", {
                         _csrf: response.data["data"]
                     }).then((response) => {
-                        this.loadData()
+                        if(response.data["code"] === 200)
+                            this.loadData()
+                        else
+                            this.$emit("showMsg",response.data["data"])
+                    }).catch((error) => {
+                        this.$emit("generalError",error)
                     })
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             }
         }

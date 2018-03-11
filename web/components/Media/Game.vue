@@ -72,12 +72,16 @@
             }
         }),
         mounted: function () {
+            this.$moment.locale(this.$i18n.locale)
             this.axios.get("/game/list").then((response) => {
                 this.list = response.data["data"]
+            }).catch((error) => {
+                this.$emit("generalError",error)
             })
             this.axios.get("/game/listRank").then((response) => {
                 this.ranks = response.data["data"]
-                console.log(this.ranks)
+            }).catch((error) => {
+                this.$emit("generalError",error)
             })
             this.$emit("changeTitle", this.$t('title-game'))
         }, methods: {

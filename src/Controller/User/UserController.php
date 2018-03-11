@@ -18,71 +18,33 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
 {
-
-
-    /*
-    public function migrate(\Symfony\Component\HttpFoundation\Request $request)
-    {
-        $info = json_decode($request->getContent(), true);
-        $em = $this->getDoctrine()->getManager();
-        foreach ($info as $userInfo) {
-            $user = new User();
-            if (!$this->verifyUsername($userInfo["username"]))
-                $user->setUsername("user" . substr(md5(microtime()), rand(0, 26), 6));
-            else
-                $user->setUsername($userInfo["username"]);
-            $user->setPassword($userInfo["password"]);
-            $user->setEmail($userInfo["email"]);
-
-            $user->setJoinTime(\DateTime::createFromFormat("Y-m-d H:i:s", $userInfo["join_time"]));
-            if (isset($userInfo["phone"]))
-                $user->setPhone(intval("86" . (string)$userInfo["phone"]));
-            $em->persist($user);
-            if (isset($userInfo["realname"]["englishName"])) {
-                $alumniInfo = $userInfo["realname"];
-                $alumni = new Alumni();
-                $alumni->setUserStatus(1);
-                $alumni->setChineseName($alumniInfo["chineseName"]);
-                $alumni->setEnglishName($alumniInfo["englishName"]);
-                $alumni->setSeniorRegistration($alumniInfo["seniorRegistration"]);
-                $alumni->setSeniorClass($alumniInfo["seniorClass"]);
-                $alumni->setSeniorSchool($alumniInfo["seniorSchool"]);
-                $alumni->setRemark("由旧版IC实名认证系统自动生成。");
-                $alumni->setUser($user);
-                $em->persist($alumni);
-            }
-        }
-        $em->flush();
-        return $this->response()->response(null);
-    }
-    */
-
     /**
      * @Route("/user/register", name="register", methods="POST")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator)
     {
         if (!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response($translator->trans("incorrect-captcha"), Response::HTTP_UNAUTHORIZED);
         $em = $this->getDoctrine()->getManager();
         $user = new User();
         $target = $this->getTarget($request);
         if (is_null($target))
-            return $this->response()->response("手机或邮箱不正确", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response($translator->trans("incorrect-phone-or-email"), Response::HTTP_UNAUTHORIZED);
         $username = $request->request->get("username");
         if ($this->verifyUsername($username)) {
             $user->setUsername($username);
         } else {
-            return $this->response()->response("用户名不正确", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response($translator->trans("illegal-username"), Response::HTTP_UNAUTHORIZED);
         }
         $password = $request->request->get("password");
         if ($this->verifyPassword($user, $password)) {
             $user->setPassword($passwordEncoder->encodePassword($user, $password));
         } else {
-            return $this->response()->response("密码不合法", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response($translator->trans("illegal-password"), Response::HTTP_UNAUTHORIZED);
         }
         if ($this->notification()->verify($target, $request->request->get("code"), NotificationService::ACTION_REGISTERING)) {
             if ($target instanceof PhoneNumber) {
@@ -92,7 +54,7 @@ class UserController extends AbstractController
                 $user->setEmail($target);
             }
         } else {
-            return $this->response()->response("动态码不正确", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);
         }
         $em->persist($user);
         $em->flush();
@@ -155,17 +117,17 @@ class UserController extends AbstractController
     /**
      * @Route("/user/login", name="login")
      */
-    public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator)
     {
         if (!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response($translator->trans("incorrect-captcha"), Response::HTTP_UNAUTHORIZED);
         $session = $request->getSession();
         if (!$session)
             $session = new Session();
         $session->start();
         $user = $this->getDoctrine()->getRepository(User::class)->search($request->request->get("username"));
         if (null === $user)
-            return $this->response()->response(null, 401);
+            return $this->response()->response($translator->trans("incorrect-password"), Response::HTTP_UNAUTHORIZED);
         if ($passwordEncoder->isPasswordValid($user, $request->request->get("password", $user->getSalt()))) {
             $session->set("user_token", $user->getToken());
 
@@ -187,15 +149,14 @@ class UserController extends AbstractController
     /**
      * @Route("/user/reset", methods="POST")
      */
-    public function reset(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function reset(Request $request, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator)
     {
         if (!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response($translator->trans("incorrect-password"), Response::HTTP_UNAUTHORIZED);
 
         $target = $this->getTarget($request);
         if (is_null($target))
-            return $this->response()->response("手机或邮箱不正确", Response::HTTP_UNAUTHORIZED);
-        $code = $request->request->get("code");
+            return $this->response()->response($translator->trans("incorrect-phone-or-email"), Response::HTTP_UNAUTHORIZED);
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(User::class);
         if ($this->notification()->verify($target, $request->request->get("code"), NotificationService::ACTION_RESET)) {
@@ -207,13 +168,13 @@ class UserController extends AbstractController
                 $user = $repo->findOneBy(["email" => $target]);
             }
         } else {
-            return $this->response()->response("动态码不正确", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);
         }
         $password = $request->request->get("password");
         if ($this->verifyPassword($user, $password)) {
             $user->setPassword($passwordEncoder->encodePassword($user, $password));
         } else {
-            return $this->response()->response("密码不合法", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response($translator->trans("illegal-password"), Response::HTTP_UNAUTHORIZED);
         }
         $em->persist($user);
         $em->flush();
@@ -302,7 +263,7 @@ class UserController extends AbstractController
     /**
      * @Route("user/change", methods="POST")
      */
-    public function change(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function change(Request $request, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if ($passwordEncoder->isPasswordValid($this->getUser(), $request->request->get("password"))) {
@@ -316,25 +277,25 @@ class UserController extends AbstractController
             $user = $this->getUser();
             if ($newPassword) {
                 if (!$this->verifyPassword($user, $newPassword))
-                    return $this->response()->response("密码太弱！", Response::HTTP_UNAUTHORIZED);
+                    return $this->response()->response($translator->trans("illegal-password"), Response::HTTP_UNAUTHORIZED);
                 $password = $passwordEncoder->encodePassword($this->getUser(), $newPassword);
                 $user->setPassword($password);
             } else if ($unbindEmail) {
                 if ($user->getPhone()) {
                     $user->setEmail(null);
                 } else {
-                    return $this->response()->response("您没有绑定手机！");
+                    return $this->response()->response($translator->trans("phone-not-bind"));
                 }
             } else if ($newEmail) {
                 if ($this->notification()->verify($newEmail, $code, NotificationService::ACTION_BIND))
                     $user->setEmail($newEmail);
                 else
-                    return $this->response()->response("动态码错误！", Response::HTTP_UNAUTHORIZED);
+                    return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);
             } else if ($unbindPhone) {
                 if ($user->getEmail()) {
                     $user->setPhone(null);
                 } else {
-                    return $this->response()->response("您没有绑定邮箱！", Response::HTTP_UNAUTHORIZED);
+                    return $this->response()->response($translator->trans("email-not-bind"), Response::HTTP_UNAUTHORIZED);
                 }
             } else if ($newPhone) {
                 $util = PhoneNumberUtil::getInstance();
@@ -343,9 +304,9 @@ class UserController extends AbstractController
                     if ($this->notification()->verify($phone, $code, NotificationService::ACTION_BIND))
                         $user->setPhone($util->format($phone, PhoneNumberFormat::E164));
                     else
-                        return $this->response()->response("动态码错误！", Response::HTTP_UNAUTHORIZED);
+                        return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);
                 } catch (NumberParseException $e) {
-                    return $this->response()->response("手机号不正确！", Response::HTTP_UNAUTHORIZED);
+                    return $this->response()->response($translator->trans("incorrect-phone-or-email"), Response::HTTP_UNAUTHORIZED);
                 }
             }
             $this->writeLog("UserSecurityChanged");
@@ -383,7 +344,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/rename", methods="POST")
      */
-    public function rename(Request $request)
+    public function rename(Request $request, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $username = $request->request->get("username");
@@ -397,11 +358,11 @@ class UserController extends AbstractController
                 $this->writeLog("UserRenamed");
                 return $this->response()->response(null);
             } else {
-                return $this->response()->response("积分不足", Response::HTTP_FORBIDDEN);
+                return $this->response()->response($translator->trans("not-enough-points"), Response::HTTP_FORBIDDEN);
             }
 
         } else {
-            return $this->response()->response("用户名不合法不足", Response::HTTP_FORBIDDEN);
+            return $this->response()->response($translator->trans("illegal-username"), Response::HTTP_FORBIDDEN);
         }
     }
 

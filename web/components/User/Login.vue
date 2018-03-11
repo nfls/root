@@ -113,7 +113,7 @@
                                 this.$emit("reload")
                         }, 1500)
                     } else {
-                        this.$emit("showMsg", this.$t('password-incorrect'))
+                        this.$emit("showMsg", response.data["data"])
                         grecaptcha.reset()
                     }
                     this.sending = false

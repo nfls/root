@@ -6,6 +6,7 @@
         <span>{{ $t('upload-warning') }}</span><br/>
         <span>{{ $t('upload-markdown') }}</span>
         <form>
+            <md-progress-bar md-mode="indeterminate" v-if="loading"/>
             <md-field>
                 <label>{{ $t('file') }}</label>
                 <md-file @md-change="change"/>
@@ -23,7 +24,7 @@
         data: () => ({
             file: null,
             url: "",
-            loading:false
+            loading: false
         }),
         mounted: function() {
             this.$emit("changeTitle", this.$t('upload-title'))
@@ -52,5 +53,4 @@
 </script>
 
 <style scoped>
-
 </style>

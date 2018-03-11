@@ -13,6 +13,7 @@ use libphonenumber\PhoneNumberUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class CodeController extends AbstractController
 {
@@ -40,17 +41,17 @@ class CodeController extends AbstractController
     /**
      * @Route("/code/register", methods="POST", name="sendRegisterCode")
      */
-    public function sendRegisterCode(Request $request)
+    public function sendRegisterCode(Request $request, TranslatorInterface $translator)
     {
         if (!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response($translator->trans("incorrect-captcha"), Response::HTTP_UNAUTHORIZED);
         $target = $this->getTarget($request, true);
         if (is_null($target))
-            return $this->response()->response("不正确或已被使用", Response::HTTP_BAD_REQUEST);
+            return $this->response()->response($translator->trans("already-used"), Response::HTTP_BAD_REQUEST);
         if ($this->notification()->code($target, NotificationService::ACTION_REGISTERING))
             return $this->response()->response(null);
         else
-            return $this->response()->response("有未过期的验证请求，请检查您的手机，或稍后再试", Response::HTTP_BAD_REQUEST);
+            return $this->response()->response($translator->trans("not-expired"), Response::HTTP_BAD_REQUEST);
     }
 
     private function getTarget(Request $request, $checkUsed)
@@ -106,50 +107,34 @@ class CodeController extends AbstractController
     /**
      * @Route("/code/reset", methods="POST", name="sendResetCode")
      */
-    public function sendResetCode(Request $request)
+    public function sendResetCode(Request $request, TranslatorInterface $translator)
     {
         if (!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response($translator->trans("incorrect-captcha"), Response::HTTP_UNAUTHORIZED);
         $em = $this->getDoctrine()->getManager()->getRepository(User::class);
         $target = $this->getTarget($request, false);
         if (is_null($target))
-            return $this->response()->response("格式不正确", Response::HTTP_BAD_REQUEST);
+            return $this->response()->response($translator->trans("already-used"), Response::HTTP_BAD_REQUEST);
         if($this->notification()->code($target, NotificationService::ACTION_RESET))
             return $this->response()->response(null);
         else
-            return $this->response()->response("有未过期的验证请求，请检查您的手机，或稍后再试", Response::HTTP_BAD_REQUEST);
+            return $this->response()->response($translator->trans("not-expired"), Response::HTTP_BAD_REQUEST);
     }
 
     /**
      * @Route("/code/bind", methods="POST", name="sendBindCode")
      */
-    public function sendBindCode(Request $request)
+    public function sendBindCode(Request $request, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if (!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response()->response("验证码不正确", Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response($translator->trans("incorrect-captcha"), Response::HTTP_UNAUTHORIZED);
         $target = $this->getTarget($request, true);
         if (is_null($target))
-            return $this->response()->response("不正确或已被使用", Response::HTTP_BAD_REQUEST);
+            return $this->response()->response($translator->trans("already-used"), Response::HTTP_BAD_REQUEST);
         if($this->notification()->code($target, NotificationService::ACTION_BIND))
             return $this->response()->response(null);
         else
-            return $this->response()->response("有未过期的验证请求，请检查您的手机，或稍后再试", Response::HTTP_BAD_REQUEST);
-    }
-
-    private function sendMail($target, $action, $readableAction, $checkUsed = true)
-    {
-        if ($checkUsed && $this->checkUsedEmail($target))
-            return $this->response()->response("email.repeated", Response::HTTP_BAD_REQUEST);
-
-        $code = new Code();
-        $code->setAction($action);
-        $code->setDestination($target);
-        $code->setCode($this->token);
-        $code->setType("email");
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($code);
-        $em->flush();
-        return $this->response()->response($this->mailService->sendCode($target, "NFLS.IO Email Verification", "The verification code for " . $readableAction . " is " . $this->token));
+            return $this->response()->response($translator->trans("not-expired"), Response::HTTP_BAD_REQUEST);
     }
 }

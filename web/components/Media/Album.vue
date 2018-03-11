@@ -127,12 +127,6 @@
         data: () => ({
             items: [],
             comments: [],
-            options: {
-                shareButtons: [
-                    {id:'download', label:'Download', url:'{{raw_image_url}}', download:true},
-                    {id:'delete', label:'Delete', url:'/admin/media/photo/delete?id={{image_url}}'}
-                ]
-            },
             info: {
                 title: "",
                 description: "",
@@ -154,6 +148,7 @@
             showNotEnabled: false,
         }),
         mounted: function () {
+            this.$moment.locale(this.$i18n.locale)
             this.loadData(true)
         },
         methods: {
@@ -200,6 +195,8 @@
                     this.comments = response.data["data"]["comments"]
                     this.$emit('changeTitle', this.$t('title-album') + " " + response.data["data"]["title"])
                     this.info = response.data["data"]
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
                 this.axios.get("/media/gallery/like", {
                     params: {
@@ -207,7 +204,8 @@
                     }
                 }).then((response) => {
                     this.isLiked = response.data.data
-                    //console.log(this.isLiked)
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             },
             showComments: function () {
@@ -224,11 +222,13 @@
                 }).then((response) => {
                     this.loadData(false)
                     this.showSidepanel = true
-                    if (response.data["code"] == 200) {
+                    if (response.data["code"] === 200) {
                         this.$emit("showMsg", this.$t("comment-succeeded"))
                     } else {
                         this.$emit("showMsg", response.data["data"])
                     }
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             },
             like: function () {
@@ -242,6 +242,8 @@
                         this.$emit("showMsg", this.$t("like-succeeded"))
                     }
                     this.loadData(false)
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             },
             switchPreference: function () {
@@ -258,6 +260,8 @@
                     _csrf: this.csrf
                 }).then((response) => {
                     this.loadData(false)
+                }).catch((error) => {
+                    this.$emit("generalError",error)
                 })
             }, getCsrf() {
                 this.axios.get("user/csrf", {
@@ -274,6 +278,17 @@
                 handler: function (val) {
                     this.showNotEnabled = !val
                     this.loadData(true)
+                }
+            }
+        },
+        computed: {
+            options: function() {
+                var download = [{id:'download', label:'Download', url:'{{raw_image_url}}', download:true}]
+                if(this.admin){
+                    download = download.concat([{id:'delete', label:'Delete', url:'/admin/media/photo/delete?id={{image_url}}'}])
+                }
+                return {
+                    shareButtons: download
                 }
             }
         }

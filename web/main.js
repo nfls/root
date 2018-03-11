@@ -23,6 +23,7 @@ import "vue-simple-calendar/dist/static/css/default.css"
 import "vue-simple-calendar/dist/static/css/holidays-us.css"
 import VueLazyload from 'vue-lazyload'
 import Cookies from 'js-cookie'
+import moment from 'moment-timezone'
 
 Vue.use(VueLazyload)
 Vue.use(infiniteScroll)
@@ -32,6 +33,7 @@ Vue.use(VuePreview)
 Vue.use(VueAxios, axios)
 Vue.use(VueMaterial)
 Vue.use(require('vue-moment'))
+Vue.use(moment)
 Vue.use(VueMarkdown)
 Vue.use(Editor)
 Vue.use(VueAnalytics, {
@@ -46,21 +48,21 @@ var VueCookie = require('vue-cookie');
 Vue.use(VueCookie);
 var locale = ""
 if(Cookies.get("lang") === "zh"){
-    locale = "zh"
+    locale = "zh-cn"
 }
 else if(Cookies.get("lang") === "en"){
     locale = "en"
 }else{
     let userLang = window.navigator.language || window.navigator.userLanguage;
     if(userLang && userLang.includes("zh")){
-        locale = "zh"
+        locale = "zh-cn"
     }else{
         locale = "en"
     }
 }
 var i18n = new VueI18n({
     locale: locale,
-    fallbackLocale: "zh",
+    fallbackLocale: "zh-cn",
     messages: {},
     silentTranslationWarn: true
 })

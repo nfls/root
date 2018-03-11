@@ -139,6 +139,9 @@
                     <md-list-item href='https://ib.nfls.io'>
                         <md-icon>pool</md-icon>
                         <span class='md-list-item-text'>{{ $t('managebac') }}</span></md-list-item>
+                    <md-list-item href='https://nflsio.statuspage.io'>
+                        <md-icon>flag</md-icon>
+                        <span class='md-list-item-text'>{{ $t('statuspage') }}</span></md-list-item>
 
 
                     <md-divider></md-divider>
@@ -293,7 +296,7 @@
                 this.$cookie.delete("drop")
                 window.location.reload()
             }, lang() {
-                if(this.$i18n.locale === "zh"){
+                if(this.$i18n.locale === "zh-cn"){
                     this.$cookie.set("lang","en",{
                         expires: '1Y'
                     })
@@ -317,7 +320,7 @@
             this.loadWebP()
             if(this.$cookie.get('drop') === "true")
                 this.dropEnabled = true
-            if(this.$i18n.locale === "zh")
+            if(this.$i18n.locale === "zh-cn")
                 this.language = "English"
             else
                 this.language = "简体中文"
