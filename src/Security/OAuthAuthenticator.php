@@ -56,7 +56,7 @@ class OAuthAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        return new JsonResponse(array("code" => 400, "message" => "Incorrect Information"), 400);
+        return new JsonResponse(array("code" => 400, "message" => $exception->getMessage()), 400);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
