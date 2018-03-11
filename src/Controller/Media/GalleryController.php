@@ -169,6 +169,7 @@ class GalleryController extends AbstractController
      * @Route("/admin/media/photo/delete")
      */
     public function delete(Request $request){
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         $url = $request->query->get("id") ?? "";
         $index = strripos($url,"/") + 1;
         $file = substr($url,$index);

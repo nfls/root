@@ -127,12 +127,6 @@
         data: () => ({
             items: [],
             comments: [],
-            options: {
-                shareButtons: [
-                    {id:'download', label:'Download', url:'{{raw_image_url}}', download:true},
-                    {id:'delete', label:'Delete', url:'/admin/media/photo/delete?id={{image_url}}'}
-                ]
-            },
             info: {
                 title: "",
                 description: "",
@@ -274,6 +268,17 @@
                 handler: function (val) {
                     this.showNotEnabled = !val
                     this.loadData(true)
+                }
+            }
+        },
+        computed: {
+            options: function() {
+                var download = [{id:'download', label:'Download', url:'{{raw_image_url}}', download:true}]
+                if(this.admin){
+                    download = download.concat([{id:'delete', label:'Delete', url:'/admin/media/photo/delete?id={{image_url}}'}])
+                }
+                return {
+                    shareButtons: download
                 }
             }
         }
