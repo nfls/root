@@ -1,0 +1,6 @@
+{
+   	"issuer":"https://nfls.io",
+   	"authorization_endpoint":"https://nfls.io/oauth/authorize",
+   	"token_endpoint":"https://nfls.io/oauth/accessToken",
+   	"userinfo_endpoint":"https://nfls.io/user/forum"
+}
