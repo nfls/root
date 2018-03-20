@@ -2,7 +2,7 @@
 <template>
     <div class="browser">
 
-        <md-empty-state v-if="loading"
+        <md-empty-state v-if="loading && !cache"
                         md-icon="access_time"
                         :md-label="$t('loading')"
                         :md-description=currentFile
@@ -10,13 +10,14 @@
         </md-empty-state>
         <div v-else>
             <span class="md-caption">
-                <countdown :time=" 60 * 60 * 1000">
+                <countdown :time=" 60 * 60 * 1000" v-if="!cache">
                     <template
                             slot-scope="props">{{ $t('expire') }}{{ props.minutes }}:{{ props.seconds }}{{ $t('expire-hint')}}</template>
                 </countdown>
+                <p v-else>{{ $t('loading') }}：{{ currentFile }}</p>
             </span>
             <md-card v-if="toDownload.length == 0">
-                <md-card-header style="text-align: left;">
+                <md-card-header style="text-align: left;" v-if="header !== ''">
                     <vue-markdown>{{header}}</vue-markdown>
                     <md-divider></md-divider>
 
@@ -41,6 +42,7 @@
                     </md-list>
                 </md-card-content>
                 <md-card-actions>
+                    <md-button class="md-raised md-accent" @click="clean">{{ $t('clean-cache') }}</md-button>
                     <md-button class="md-raised" @click="batch">{{ $t('bulk') }}</md-button>
                 </md-card-actions>
             </md-card>
@@ -81,11 +83,13 @@
         props: ["admin", "verified", 'loggedIn'],
         data: () => ({
             fileInfo: [],
+            tempInfo: [],
             path: [],
             pathString: "",
             displayItems: [],
             client: null,
             loading: true,
+            cache: false,
             header: "",
             error: false,
             current: 0,
@@ -118,7 +122,16 @@
                 console.error(error)
                 self.error = true
             });
-
+            this.$getItem("pastpaper_list",function(err, readValue) {
+                if(err) {
+                    console.error(err)
+                } else {
+                    if(Array.isArray(readValue)) {
+                        self.fileInfo = readValue
+                        self.cache = true
+                    }
+                }
+            })
         }, methods: {
             loadFiles(next) {
                 let self = this
@@ -126,12 +139,15 @@
                     "max-keys": 1000,
                     "marker": next
                 }).then(function (result) {
-                    self.fileInfo = self.fileInfo.concat(result.objects)
+                    self.tempInfo = self.tempInfo.concat(result.objects)
                     if (result.objects.length === 1000) {
                         self.currentFile = result.nextMarker
                         self.loadFiles(result.nextMarker)
                     } else {
+                        self.fileInfo = self.tempInfo
+                        self.$setItem("pastpaper_list", self.fileInfo)
                         self.loading = false
+                        self.cache = false
                     }
                 }).catch((error) => {
                     this.$emit("generalError",error)
@@ -215,6 +231,9 @@
                 }
             }, cancel() {
                 this.toDownload = []
+            }, clean() {
+                this.$removeItem("pastpaper_list")
+                window.location.reload()
             }
         }, watch: {
             fileInfo: function (val) {
