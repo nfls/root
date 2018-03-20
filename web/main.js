@@ -24,7 +24,9 @@ import "vue-simple-calendar/dist/static/css/holidays-us.css"
 import VueLazyload from 'vue-lazyload'
 import Cookies from 'js-cookie'
 import moment from 'moment-timezone'
+import VueLocalForage from 'vue-localforage'
 
+Vue.use(VueLocalForage)
 Vue.use(VueLazyload)
 Vue.use(infiniteScroll)
 Vue.use(Datetime)

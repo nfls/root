@@ -84,19 +84,10 @@ EOD;
     function base($html)
     {
         return <<<EOD
-<div style="position:relative;margin:0px auto;width:600px;overflow:hidden">
-    <div><img src="https://nfls-public.oss-cn-shanghai.aliyuncs.com/uploads/64FhtpS2nn7dSNwMNkBtrGcsWn2dfihm.png" width="50">
-        <div style="display:inline-block;float:right;color:inherit;text-decoration:inherit;">NFLSIO / 南外人 <br><a href="https://nfls.io/">https://nfls.io </a>
-        </div>
-    </div>
-    <hr>
-    <div style="position:relative;z-index:2">
-        <h1 style="color:inherit;text-decoration:inherit;">NFLSIO / 南外人 </h1>
+        <h1>NFLSIO / 南外人 </h1>
         $html
         <hr>
         <small>这篇邮件是由系统自动发送，请不要回复这封邮件。 <br>This email is sent by the system automatically. Please do not reply it.</small>
-    </div>
-</div>
 EOD;
     }
 }

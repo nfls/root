@@ -16,10 +16,11 @@ class MailNotification
         $this->renderer = new MainConstant();
         $this->mail = new PHPMailer(true);
         $this->mail->isSMTP();
-        $this->mail->Host = "hk2.nfls.io";
+        $this->mail->Host = $_ENV["MAIL_HOST"];
         $this->mail->SMTPAuth = true;
-        $this->mail->Username = "no-reply@nfls.io";
+        $this->mail->Username = $_ENV["MAIL_ACCOUNT"];
         $this->mail->Password = $_ENV["MAIL_PASSWORD"];
+        $this->mail->setFrom("no-reply@nfls.io", "NFLS.IO");
         $this->mail->SMTPSecure = "tls";
     }
 
