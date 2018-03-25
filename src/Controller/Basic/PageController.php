@@ -26,6 +26,8 @@ class PageController extends AbstractController
                 return $this->render("index.html.twig");
             if ($dd->getClient("name") == "Chrome Mobile" && version_compare($dd->getClient("version"), "50.0", ">="))
                 return $this->render("index.html.twig");
+            if ($dd->isBot())
+                return $this->render("index.html.twig");
             if ($dd->getOs("name") == "iOS")
                 return $this->render("index.html.twig");
             return $this->render("unsupported.html.twig");
