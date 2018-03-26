@@ -404,6 +404,7 @@
                         this.sending = false
                         this.showMsg(this.$t('release-succeeded'))
                     }else{
+                        this.sending = false
                         this.showMsg(response.data["data"])
                     }
                     this.list()
@@ -545,7 +546,7 @@
                 this.sending = true
                 this.axios.post("/alumni/directory/search", this.form).then((response) => {
                     this.sending = false
-                    if(response.data["data"] === 200)
+                    if(response.data["code"] === 200)
                         this.studentsInfo = response.data["data"]
                     else
                         this.showMsg(response.data["data"])
@@ -567,7 +568,7 @@
                     _csrf: this.csrf
                 }).then((response) => {
                     this.sending = false
-                    if(response.code["data"] === 200)
+                    if(response.data["code"] === 200)
                         this.$emit("showMsg",this.$t("new-succeeded"))
                     else
                         this.showMsg(response.data["data"])
@@ -589,11 +590,10 @@
                     }
                 }).then((response) => {
                     this.loading = false
-                    if(response.data["data"] === 200)
+                    if(response.data["code"] === 200)
                     {
-                        this.$emit("showMsg",this.$t("new-succeeded"))
                         var self = this
-                        var info = response.map(function (val) {
+                        var info = response.data["data"].map(function (val) {
                             val.preview = self.$moment(val.time).toDate() > new Date()
                             return val
                         })

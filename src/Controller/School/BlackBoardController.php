@@ -62,13 +62,15 @@ class BlackBoardController extends AbstractController
     /**
      * @Route("/school/blackboard/create", methods="POST")
      */
-    public function create(Request $request)
+    public function create(Request $request, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_SCHOOL_BLACKBOARD);
         if (!$this->getUser()->hasRole(Permission::IS_ADMIN) && !$this->getUser()->hasRole(Permission::IS_TEACHER))
             throw $this->createAccessDeniedException();
         $class = new Claz();
+        if(!is_string($request->request->get("title")))
+            return $this->response()->response($translator->trans("blackboard-blank-name"),Response::HTTP_BAD_REQUEST);
         $class->setTitle($request->request->get("title"));
         $class->setTeacher($this->getUser());
         $em = $this->getDoctrine()->getManager();
