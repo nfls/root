@@ -73,6 +73,7 @@
             this.$emit("changeTitle", this.$t("message-title"))
             if (this.$route.params["id"] != null) {
                 this.receiver = this.$route.params["id"]
+                this.showDialog = true
             }
         },
         methods: {
