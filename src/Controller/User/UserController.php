@@ -273,7 +273,8 @@ class UserController extends AbstractController
             $unbindPhone = $request->request->get("unbindPhone");
             $newPhone = $request->request->get("newPhone");
             $country = $request->request->get("country");
-            $code = $request->request->get("code");
+            $phoneCode = $request->request->get("phoneCode") ?? "";
+            $emailCode = $request->request->get("emailCode") ?? "";
             $user = $this->getUser();
             if ($newPassword) {
                 if (!$this->verifyPassword($user, $newPassword))
@@ -287,7 +288,7 @@ class UserController extends AbstractController
                     return $this->response()->response($translator->trans("phone-not-bind"));
                 }
             } else if ($newEmail) {
-                if ($this->notification()->verify($newEmail, $code, NotificationService::ACTION_BIND))
+                if ($this->notification()->verify($newEmail, $emailCode, NotificationService::ACTION_BIND))
                     $user->setEmail($newEmail);
                 else
                     return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);
@@ -301,7 +302,7 @@ class UserController extends AbstractController
                 $util = PhoneNumberUtil::getInstance();
                 try {
                     $phone = $util->parse($newPhone, $country);
-                    if ($this->notification()->verify($phone, $code, NotificationService::ACTION_BIND))
+                    if ($this->notification()->verify($phone, $phoneCode, NotificationService::ACTION_BIND))
                         $user->setPhone($util->format($phone, PhoneNumberFormat::E164));
                     else
                         return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);

@@ -46,7 +46,7 @@
                     </md-field>
                     <md-field v-if="!form.unbindEmail">
                         <label>{{ $t('code') }}</label>
-                        <md-input name="emailCode" id="emailCode" v-model="form.code"/>
+                        <md-input name="emailCode" id="emailCode" v-model="form.emailCode"/>
                     </md-field>
                     <span class="md-caption">{{ $t('change-phone') }}</span><br/>
                     <md-divider></md-divider>
@@ -71,7 +71,7 @@
                     </md-field>
                     <md-field v-if="!form.unbindPhone">
                         <label>{{ $t('code') }}</label>
-                        <md-input name="phoneCode" id="phoneCode" v-model="form.code"/>
+                        <md-input name="phoneCode" id="phoneCode" v-model="form.phoneCode"/>
                     </md-field>
                     <span class="md-caption">{{ $t('verify') }}</span>
                     <md-divider></md-divider>
@@ -137,7 +137,8 @@
                     newPassword: null,
                     repeatPassword: null,
                     newEmail: null,
-                    code: null,
+                    phoneCode: null,
+                    emailCode: null,
                     country: null,
                     newPhone: null,
                     unbindEmail: false,
