@@ -329,6 +329,8 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
             foreach (array_values($valid) as $value) {
                 array_push($permissions, $this->getAlumniPermission($value));
             }
+            if(!is_null($this->getPhone()))
+                array_push($permissions, Permission::HAS_PHONE);
 
         }
         return $permissions;
