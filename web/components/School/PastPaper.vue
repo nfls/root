@@ -223,10 +223,14 @@
                     else
                         this.toDownload = this.toDownload.concat(value)
                 })
-                var JSZip = require("jszip");
-                this.zipFile = new JSZip();
-                this.cuurent = 0
-                this.downloadBatch()
+                if(this.toDownload.length > 0) {
+                    var JSZip = require("jszip");
+                    this.zipFile = new JSZip();
+                    this.current = 0
+                    this.downloadBatch()
+                } else {
+                    this.$emit("showMsg", this.$t("no-chosen"))
+                }
 
             }, downloadBatch() {
                 this.current++
