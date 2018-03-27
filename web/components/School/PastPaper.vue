@@ -65,7 +65,7 @@
         <md-dialog-alert
                 :md-active.sync="error"
                 :md-title="$t('error')"
-                :md-content="$t('not-verified')"/>
+                :md-content="reason"/>
 
     </div>
 </template>
@@ -96,7 +96,8 @@
             filename: "",
             toDownload: [],
             zipFile: null,
-            currentFile: ""
+            currentFile: "",
+            reason: ""
         }),
         mounted: function () {
             var self = this
@@ -106,20 +107,27 @@
                 this.header = response.data["data"]
             })
             this.axios.get("/school/pastpaper/token").then((response) => {
-                let data = response.data["data"]
-                let OSS = require('ali-oss').Wrapper;
-                this.client = new OSS({
-                    region: 'oss-cn-shanghai',
-                    accessKeyId: data["AccessKeyId"],
-                    accessKeySecret: data["AccessKeySecret"],
-                    stsToken: data["SecurityToken"],
-                    bucket: 'nfls-papers',
-                    secure: true,
-                    timeout: "60s"
-                });
-                this.loadFiles("")
+                if(response.data["code"] === 200) {
+                    let data = response.data["data"]
+                    let OSS = require('ali-oss').Wrapper;
+                    this.client = new OSS({
+                        region: 'oss-cn-shanghai',
+                        accessKeyId: data["AccessKeyId"],
+                        accessKeySecret: data["AccessKeySecret"],
+                        stsToken: data["SecurityToken"],
+                        bucket: 'nfls-papers',
+                        secure: true,
+                        timeout: "60s"
+                    });
+                    this.loadFiles("")
+                } else {
+                    self.reason = response.data["data"]
+                    self.error = true
+                }
+
             }).catch(function (error) {
                 console.error(error)
+                self.reason = self.$t('not-verified')
                 self.error = true
             });
             this.$getItem("pastpaper_list",function(err, readValue) {
