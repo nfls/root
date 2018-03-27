@@ -300,9 +300,7 @@
         display: inline-block;
         float: none;
         vertical-align: top;
-        max-width: 80px;
-        min-width: 250px;
-        width: 40%;
+        width: max-content;
         margin: 0px;
     }
 
