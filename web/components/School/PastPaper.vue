@@ -123,12 +123,14 @@
                     });
                     this.loadFiles("")
                 } else {
+                    self.$removeItem("pastpaper_list")
                     self.reason = response.data["data"]
                     self.error = true
                 }
 
             }).catch(function (error) {
                 console.error(error)
+                self.$removeItem("pastpaper_list")
                 self.reason = self.$t('not-verified')
                 self.error = true
             });

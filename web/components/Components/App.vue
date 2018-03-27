@@ -227,6 +227,7 @@
                     this.axios.post("/user/logout", {
                         _csrf: response.data["data"]
                     }).then((response) => {
+                        this.$clearStorage()
                         this.reload()
                         location.reload()
                     })
