@@ -6,7 +6,7 @@ framework:
 
     # uncomment this entire section to enable sessions
     session:
-        handler_id: ~
+        handler_id: snc_redis.session.handler
     #    # With this config, PHP's native session handling is used
     #    handler_id: ~
 
