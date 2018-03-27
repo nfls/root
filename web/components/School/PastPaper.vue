@@ -27,16 +27,23 @@
                     <p align="left">
                         <span class="md-caption">Path: {{pathString}}</span>
                     </p>
-                    <md-list>
+                    <md-list class="md-double-line">
                         <md-list-item v-if="path.length > 0" @click="back">
                             <md-icon>folder_open</md-icon>
+                            <div class="md-list-item-text">
+                                <span>..</span>
+                                <span>文件夹</span>
+                            </div>
                             <span class="md-list-item-text">..</span>
                         </md-list-item>
                         <md-list-item v-for="item in displayItems" :key="item.name" @click="enter(item)">
                             <md-icon v-if="item.size == 0">folder</md-icon>
                             <md-icon v-else-if="item.name.endsWith('pdf')">picture_as_pdf</md-icon>
                             <md-inco v-else>attachment</md-inco>
-                            <span class="md-list-item-text">{{item.displayName}}</span>
+                            <div class="md-list-item-text">
+                                <span>{{item.displayName}}</span>
+                                <span><code>{{getSize(item.size)}} - {{item.lastModified | moment("lll")}}</code></span>
+                            </div>
                             <md-checkbox v-model="item.selected"/>
                         </md-list-item>
                     </md-list>
@@ -101,6 +108,7 @@
         }),
         mounted: function () {
             var self = this
+            this.$moment.locale(this.$i18n.locale)
             this.currentFile = this.$t('loading-hint')
             this.$emit("changeTitle", this.$t('pp-title'))
             this.axios.get("/school/pastpaper/header").then((response) => {
@@ -191,6 +199,9 @@
                     object.displayName = object.name.replace(self.getCurrentPath(), "").replace("/", "")
                     return object
                 })
+                if(self.getCurrentPath().includes("Past Papers")) {
+                    this.displayItems = this.displayItems.reverse()
+                }
             }, back() {
                 this.path.pop()
             }, downloadURI(uri, name) {
@@ -246,6 +257,31 @@
             }, clean() {
                 this.$removeItem("pastpaper_list")
                 window.location.reload()
+            }, getSize(size) {
+                if(size === 0)
+                    return "文件夹"
+                size = size / 1024
+                var count = 0
+                while(size > 1024) {
+                    size = size / 1024
+                    count ++
+                }
+                var quantity = ""
+                switch(count){
+                    case 0:
+                        quantity = "KB"
+                        break
+                    case 1:
+                        quantity = "MB"
+                        break
+                    case 2:
+                        quantity = "GB"
+                        break
+                    default:
+                        quantity = "--"
+                        break
+                }
+                return size.toFixed(1) + quantity
             }
         }, watch: {
             fileInfo: function (val) {
