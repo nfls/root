@@ -103,6 +103,8 @@ class GalleryController extends AbstractController
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
         $gallery = $repo->getGallery($request->query->get("id"));
+        if(is_null($gallery))
+            throw $this->createAccessDeniedException();
         return $this->response()->response($gallery->likeStatus($this->getUser()));
     }
 
