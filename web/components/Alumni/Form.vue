@@ -23,6 +23,9 @@
                 <div class="md-title">{{ $t('realname') }}</div>
             </md-card-header>
             <md-card-content>
+                <p align="left">
+                    <vue-markdown v-if="header">{{header}}</vue-markdown>
+                </p>
                 <form novalidate class="md-layout-row md-gutter" @submit.prevent="save">
                     <div class="md-flex" v-for="item in formItems" :key="item.key">
                         <div v-if="hide[item.key]">
@@ -116,6 +119,7 @@
         maxValue,
         numeric
     } from 'vuelidate/lib/validators'
+    import VueMarkdown from 'vue-markdown'
 
     export default {
         name: 'Form',
@@ -138,14 +142,23 @@
             adminMode: false,
             csrf: null,
             error: false,
-            errors: ""
+            errors: "",
+            header: null
         }),
+        components: {
+            VueMarkdown
+        },
         validations() {
             return {
                 form: this.validatorItems
             }
         },
         mounted: function () {
+            this.axios.get("/alumni/header").then((response) => {
+                this.header = response.data["data"]
+            }).catch((error) => {
+                this.$emit("generalError", error)
+            })
             this.axios.get("/alumni/detail", {
                 params: {
                     id: this.$route.params["id"]

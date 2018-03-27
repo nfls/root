@@ -12,7 +12,8 @@ class Preference
     const SCHOOL_PASTPAPER_HEADER = "school.pastpaper.header";
     const DASHBOARD_ANNOUNCEMENT = "dashboard.announcement";
     const ABOUT_DEVS = "about.devs";
-    const ALL = [self::SCHOOL_PASTPAPER_HEADER, self::ABOUT_DEVS];
+    const ALUMNI_HEADER = "alumni.auth.header";
+    //const ALL = [self::SCHOOL_PASTPAPER_HEADER, self::ABOUT_DEVS];
     /**
      * @var string
      *

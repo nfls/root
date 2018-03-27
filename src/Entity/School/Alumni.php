@@ -170,6 +170,7 @@ class Alumni
     /**
      * @var string|null
      * @Assert\NotBlank(message="alumni-auth-error-country-blank")
+     * @Assert\Length(min=2,max=2,exactMessage="alumni-auth-error-country-error")
      * @ORM\Column(type="string",length=2, nullable=true)
      */
 

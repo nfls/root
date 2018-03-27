@@ -105,6 +105,8 @@
             this.$emit("changeTitle", this.$t('pp-title'))
             this.axios.get("/school/pastpaper/header").then((response) => {
                 this.header = response.data["data"]
+            }).catch((error) => {
+                this.$emit("generalError", error)
             })
             this.axios.get("/school/pastpaper/token").then((response) => {
                 if(response.data["code"] === 200) {

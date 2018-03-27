@@ -6,6 +6,10 @@
                 {{ $t('status') }}
             </md-card-header>
             <md-card-content>
+                <p align="left">
+                    <vue-markdown v-if="header">{{header}}</vue-markdown>
+                </p>
+                <md-divider></md-divider>
                 <form>
                     <div>
                         <md-checkbox v-model="valid" class="md-primary" readonly disabled>{{ $t('verified-user') }}</md-checkbox>
@@ -52,6 +56,7 @@
 </template>
 
 <script>
+    import VueMarkdown from 'vue-markdown'
     export default {
         name: "Realname",
         data: () => ({
@@ -63,8 +68,17 @@
             submitTime: "",
             expireAt: "",
             csrf: null,
+            header: null
         }),
+        components: {
+            VueMarkdown
+        },
         mounted: function () {
+            this.axios.get("/alumni/header").then((response) => {
+                this.header = response.data["data"]
+            }).catch((error) => {
+                this.$emit("generalError", error)
+            })
             this.$moment.locale(this.$i18n.locale)
             this.loadData()
             this.loadStatus()

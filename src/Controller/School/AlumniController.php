@@ -6,6 +6,7 @@ use App\Controller\AbstractController;
 use App\Entity\School\Alumni;
 use App\Model\Normalizer\UuidNormalizer;
 use App\Model\Permission;
+use Proxies\__CG__\App\Entity\Preference;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +26,14 @@ class AlumniController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         return $this->response()->response(json_decode(file_get_contents($this->get('kernel')->getRootDir() . "/Files/Form.json")));
+    }
+
+    /**
+     * @Route("alumni/header", methods="GET")
+     */
+    public function getHeader()
+    {
+        return $this->response()->response($this->setting()->get(Preference::ALUMNI_HEADER));
     }
 
     /**
