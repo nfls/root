@@ -136,6 +136,9 @@
                     <md-list-item href='https://dev.nfls.io'>
                         <md-icon>developer_mode</md-icon>
                         <span class='md-list-item-text'>{{ $t('development') }}</span></md-list-item>
+                    <md-list-item href='https://kahoot.nfls.io'>
+                        <md-icon>toys</md-icon>
+                        <span class='md-list-item-text'>Kahoot</span></md-list-item>
                     <md-list-item href='https://ib.nfls.io'>
                         <md-icon>pool</md-icon>
                         <span class='md-list-item-text'>{{ $t('managebac') }}</span></md-list-item>
@@ -333,7 +336,6 @@
 
     }
 </script>
-
 <style scoped>
     .md-app {
         min-height: 100vh;
@@ -353,6 +355,5 @@
             primary: #263238, // The primary color of your application
             accent: #ff5722// The accent or secondary color
     ));
-
     @import "~vue-material/dist/theme/all"; // Apply the theme
 </style>
