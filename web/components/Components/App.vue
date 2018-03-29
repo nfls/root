@@ -351,7 +351,7 @@
 
     @include md-register-theme("default", (
             primary: #263238, // The primary color of your application
-            accent: #ff5722 // The accent or secondary color
+            accent: #ff5722// The accent or secondary color
     ));
 
     @import "~vue-material/dist/theme/all"; // Apply the theme
