@@ -81,7 +81,7 @@
             </md-dialog-content>
             <md-dialog-actions>
                 <md-button class="md-primary" @click="avatarDialog = !avatarDialog">{{ $t('cancel') }}</md-button>
-                <md-button type="submit" class="md-primary" :disabled="sending">{{ $t('submit') }}</md-button>
+                <md-button type="submit" class="md-primary" @click="changeAvatar" :disabled="sending">{{ $t('submit') }}</md-button>
             </md-dialog-actions>
         </md-dialog>
     </div>
