@@ -61,7 +61,6 @@ module.exports = {
           resolve('node_modules/ali-oss/dist'), 
           resolve('node_modules/ali-oss/lib'),
           resolve('node_modules/ali-oss/shims'),
-          resolve('node_modules/vue-material/dist'),
           resolve('node_modules/vue-material/src')
         ]
       }, 
