@@ -43,7 +43,7 @@ class OAuthService extends Controller
 
         $refreshTokenExpiry = new DateInterval("P6M");
         $authCodeExpiry = new DateInterval("PT15M");
-        $accessTokenExpiry = new DateInterval("P1D");
+        $accessTokenExpiry = new DateInterval("P7D");
 
         $authCodeGrant = new AuthCodeGrant($authCodeRepo, $refreshTokenRepo, $authCodeExpiry);
         $authCodeGrant->setRefreshTokenTTL($refreshTokenExpiry);
