@@ -14,6 +14,7 @@ use libphonenumber\PhoneNumberUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -144,6 +145,22 @@ class UserController extends AbstractController
             $this->writeLog("UserLoginFailed", null, $user);
             return $this->response()->response(null, Response::HTTP_UNAUTHORIZED);
         }
+    }
+
+    /**
+     * @Route("/user/fastLogin", name="login")
+     */
+    public function fastLogin(Request $request) {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $user = $this->getUser();
+        $session = $request->getSession();
+        if (!$session)
+            $session = new Session();
+        $session->start();
+        $session->set("user_token", $user->getToken());
+        $response = new RedirectResponse("/");
+        return $response;
+
     }
 
     /**
