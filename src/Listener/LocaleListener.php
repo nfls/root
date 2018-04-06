@@ -15,5 +15,6 @@ class LocaleListener {
             $request->setLocale("en");
         else
             $request->setLocale("zh");
+        $request->setLocale("zh");
     }
 }
