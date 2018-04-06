@@ -148,7 +148,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/fastLogin", name="login")
+     * @Route("/user/fastLogin", name="fastLogin")
      */
     public function fastLogin(Request $request) {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
