@@ -76,9 +76,9 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
      */
     private $admin = false;
     /**
-     * @var integer
+     * @var float
      *
-     * @ORM\Column(type="integer", options={"unsigned":true, "default":0})
+     * @ORM\Column(type="float", options={"unsigned":true, "default":0})
      */
     private $point = 0;
     /**
@@ -213,7 +213,7 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
     {
         return array(
             "id" => $this->id,
-            "point" => $this->point,
+            "point" => $this->getPoint(),
             "username" => $this->username,
             "email" => $this->email,
             "phone" => $this->phone,
@@ -260,15 +260,15 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getPoint()
+    public function getPoint(): float
     {
         return $this->point;
     }
 
     /**
-     * @param int $point
+     * @param float $point
      */
     public function setPoint($point)
     {

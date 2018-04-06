@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Controller\OAuthController;
+use App\Entity\User\User;
 use App\Service\OAuthService;
 use League\OAuth2\Server\ResourceServer;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
@@ -42,7 +43,10 @@ class OAuthAuthenticator extends AbstractGuardAuthenticator
         try {
             $auth = $this->server->validateAuthenticatedRequest($credentials);
             $id = $auth->getAttribute("oauth_user_id");
-            return $userProvider->loadUserByUsername($id);
+            /** @var User $user */
+            $user = $userProvider->loadUserByUsername($id);
+            $user->isOAuth = true;
+            return $user;
         } catch (\Exception $e) {
             return null;
         }
