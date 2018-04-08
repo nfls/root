@@ -39,7 +39,7 @@ class GameController extends AbstractController
         $cipher = new AES(AES::MODE_ECB);
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $cipher->setKey($_ENV["GAME_KEY"]);
-        $score = intval($cipher->decrypt(base64_decode($request->request->get("value"))));
+        $score = floatval($cipher->decrypt(base64_decode($request->request->get("value"))));
         if($score < 0 || $score > 3)
             return $this->response()->response(null, Response::HTTP_FORBIDDEN);
         $user = $this->getUser();
