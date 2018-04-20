@@ -98,6 +98,9 @@
     "league/oauth2-server": {
         "version": "6.1.1"
     },
+    "longman/telegram-bot": {
+        "version": "0.53.0"
+    },
     "monolog/monolog": {
         "version": "1.23.0"
     },
