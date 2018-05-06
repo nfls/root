@@ -9,6 +9,8 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VuePreview from 'vue-preview'
 import 'vue-material/dist/vue-material.css'
+import 'vue-material/dist/theme/default.css'
+
 import VueMarkdown from 'vue-markdown'
 import VueAnalytics from 'vue-analytics'
 import Raven from 'raven-js'
@@ -86,5 +88,3 @@ new Vue({
     directives: {infiniteScroll},
     template: '<App/>'
 })
-
-
