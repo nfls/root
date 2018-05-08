@@ -11,6 +11,7 @@ use App\Service\Notification\Provider\AliyunNotification;
 use App\Service\Notification\Provider\MailNotification;
 use App\Service\Notification\Provider\NexmoNotification;
 use libphonenumber\PhoneNumber;
+use Longman\TelegramBot\Telegram;
 use Predis\Client;
 
 class NotificationService
@@ -151,13 +152,25 @@ class NotificationService
     }
 
     public function notifyNewVerification(Alumni $ticket){
-        $info = "【实名认证】新的实名认证请求，来自 " . $ticket->getChineseName(). "(".$ticket->getUser()->getUsername().") [via hk2]";
+        $info = "【实名认证】新的实名认证请求，来自 " . $ticket->getChineseName(). "(".$ticket->getUser()->getUsername().")";
+        $this->sendQQ($info);
+        $this->sendTelegram($info);
+    }
+
+    public function sendQQ(string $text) {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1:20001/openqq/send_group_message?uid=683275012&content=".urlencode($info));
+        curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1:20001/openqq/send_group_message?uid=683275012&content=".urlencode($text));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_exec($ch);
         curl_close($ch);
     }
 
-    //TODO Security setting changes
+    public function sendTelegram(string $text) {
+        try {
+            $telegram = new Telegram($_ENV["TELEGRAM_BOT_KEY"]);
+            $result = \Longman\TelegramBot\Request::sendMessage(['chat_id'=>-1001244396269, 'text'=>$text]);
+        } catch (\Exception $e) {
+
+        }
+    }
 }

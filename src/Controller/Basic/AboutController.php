@@ -4,6 +4,7 @@ namespace App\Controller\Basic;
 
 use App\Controller\AbstractController;
 use App\Entity\Preference;
+use Longman\TelegramBot\Telegram;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +31,15 @@ class AboutController extends AbstractController
             return $previous . "<br/>" . $current;
         });
         return $this->response()->response($gitHashLong);
+    }
+
+    /**
+     * @Route("about/test")
+     */
+    public function test() {
+        //$this->notification()->sendQQ("Telegram同步测试。");
+        //$this->notification()->sendTelegram("Telegram同步测试。");
+
     }
 
 }
