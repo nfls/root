@@ -19,7 +19,7 @@
         <p class="text">
             <span class="md-title">{{ $t('developer-blog') }}</span><br/>
             <md-button href="https://hqy.moe" class="md-primary">{{ $t('blog-hqy') }}</md-button>
-            <md-button href="https://xzd.nfls.io" class="md-primary">{{ $t('blog-zxd') }}</md-button>
+            <md-button href="https://xzd.nfls.io" class="md-primary">{{ $t('blog-xzd') }}</md-button>
             <md-button href="https://blog.mrtunnel.club" class="md-primary">{{ $t('blog-mrtunnel') }}</md-button>
             <br/>
         </p>
