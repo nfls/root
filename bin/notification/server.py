@@ -1,23 +1,13 @@
-from flask import Flask
-from flask import request
-from library import Library
-import sys
+from celery import Celery
+
+app = Celery('notification', broker="redis://127.0.0.1", backend="redis://127.0.0.1")
 
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
-app = Flask(__name__)
-library = Library()
-
-@app.route("/")
-def hello():
-    return "Hello World!"
+@app.task
+def add(x, y):
+    return x+y
 
 
-@app.route("/nfls/realname")
-def realname():
-    username = request.args.get('username')
-    chinese_name = request.args.get('chinese_name')
-    library.new_realname_notification(username=username, chinese_name=chinese_name)
-    return "OK"
+@app.task
+def delete(x, y):
+    return x-y
