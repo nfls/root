@@ -19,7 +19,7 @@ class Device
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="integer")
      */
     private $type;
 
@@ -40,7 +40,7 @@ class Device
     /**
      * @var integer
      *
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User\User")
      */
     private $user;
 
