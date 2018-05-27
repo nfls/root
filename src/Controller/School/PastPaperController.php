@@ -23,6 +23,8 @@ class PastPaperController extends AbstractController
         $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
         if(!$this->getUser()->hasRole(Permission::HAS_PHONE))
             return $this->response()->response($translator->trans("phone-not-bind"), 400);
+        if($_ENV["PASTPAPER_ENABLED"] == "false" && !$this->getUser()->hasRole(Permission::IS_ADMIN))
+            return $this->response()->response("拒绝访问。", 400);
         return $this->response()->response($oss->getDownloadListToken($this->getUser()->getUsername()), 200);
     }
 
