@@ -211,14 +211,19 @@
                 let self = this;
                 setTimeout(function () {
                     if (typeof grecaptcha === 'undefined') {
-                        self.initReCaptcha();
+                        self.initReCaptcha()
                     }
                     else {
-                        grecaptcha.render('recaptcha', {
-                            sitekey: '6LfV3UIUAAAAADBXL7tfgvUs9rt2gw-4GBxLO9Pj',
-                            size: 'invisible',
-                            callback: self.ct
-                        });
+                        try {
+                            grecaptcha.render('recaptcha', {
+                                sitekey: '6LfV3UIUAAAAADBXL7tfgvUs9rt2gw-4GBxLO9Pj',
+                                size: 'invisible',
+                                callback: self.ct
+                            });
+                        } catch(e) {
+                            self.initReCaptcha()
+                        }
+
                     }
                 }, 100);
             }, logout() {
@@ -251,6 +256,10 @@
                             self.prepareRecaptcha()
                         }, 100);
                     }
+                } else {
+                    setTimeout(function () {
+                        self.prepareRecaptcha()
+                    }, 100);
                 }
             }, renderWebp() {
                 if(typeof WebPJSInit === "undefined")
