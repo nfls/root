@@ -64,11 +64,17 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
      */
     private $phone;
     /**
-     * @var integer
+     * @var string
      *
      * @ORM\Column(type="string", unique=true)
      */
     private $token;
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", unique=true, nullable=true)
+     */
+    private $weChatToken;
     /**
      * @var boolean
      *
@@ -299,6 +305,23 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
         $this->joinTime = $joinTime;
     }
 
+    /**
+     * @return string
+     */
+    public function getWeChatToken(): string
+    {
+        return $this->weChatToken;
+    }
+
+    /**
+     * @param string $weChatToken
+     */
+    public function setWeChatToken(string $weChatToken): void
+    {
+        $this->weChatToken = $weChatToken;
+    }
+
+
     public function getSalt()
     {
         return null;
@@ -306,6 +329,7 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
 
     public function eraseCredentials()
     {
+
     }
 
     public function hasRole($role)

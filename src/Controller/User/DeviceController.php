@@ -27,4 +27,12 @@ class DeviceController extends AbstractController
         $client = $repo->getClientById($request->query->get("client_id"));
         return $this->response()->response($client->getVersion());
     }
+
+    /**
+     * @Route("device/register", methods="POST")
+     */
+    public function register(Request $request)
+    {
+
+    }
 }

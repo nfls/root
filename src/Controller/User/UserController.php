@@ -7,6 +7,7 @@ use App\Entity\User\Chat;
 use App\Entity\User\User;
 use App\Model\Permission;
 use App\Service\Notification\NotificationService;
+use GuzzleHttp\Client;
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumber;
 use libphonenumber\PhoneNumberFormat;
@@ -162,6 +163,8 @@ class UserController extends AbstractController
         return $response;
 
     }
+
+
 
     /**
      * @Route("/user/reset", methods="POST")
@@ -392,5 +395,75 @@ class UserController extends AbstractController
         /** @var \Symfony\Component\Security\Csrf\CsrfTokenManagerInterface $csrf */
         $csrf = $this->get('security.csrf.token_manager');
         return $this->response()->response($csrf->refreshToken($request->query->get("name") ?? "")->getValue());
+    }
+
+    /**
+     * @Route("/user/weChat", methods="POST")
+     */
+    public function weChat(Request $request) {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $user = $this->getUser();
+        $token = $this->verifyWeChat($request->request->get("token"));
+        if(!$token)
+            return $this->response()->response(null, Response::HTTP_UNAUTHORIZED);
+
+        $openid = $token["openid"];
+
+        $manager = $this->getDoctrine()->getManager();
+
+        $existingUser = $this->getDoctrine()->getRepository(User::class)->findOneBy(["weChatToken" => $openid]);
+        if (!is_null($existingUser)) {
+            /** @var $existingUser User */
+            $existingUser->setWeChatToken(null);
+            $manager->persist($existingUser);
+            $this->writeLog("UserWeChatConflict", "Replaced by: " . (string)$user->getId(), $existingUser);
+        }
+
+        $user->setWeChatToken($openid);
+        $manager->persist($user);
+        $this->writeLog("UserWeChatBind", null, $user);
+        $manager->flush();
+
+        return $this->response()->response(null);
+    }
+
+    /**
+     * @Route("/user/weChatLogin", methods="POST")
+     */
+    public function weChatLogin(Request $request) {
+        $token = $this->verifyWeChat($request->request->get("token"));
+        if(!$token)
+            return $this->response()->response(null, Response::HTTP_UNAUTHORIZED);
+
+        $openid = $token["openid"];
+        $sessionKey = $token["session_key"];
+
+
+        $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(["weChatToken" => $openid]);
+
+        if(is_null($user)) {
+            return $this->response()->response(null, Response::HTTP_UNAUTHORIZED);
+        } else {
+            /** @var User $user */
+            $session = $request->getSession();
+            if (!$session)
+                $session = new Session();
+            $session->start();
+            $session->set("user_token", $user->getToken());
+            $session->set("wechat_session_key", $sessionKey);
+            $this->writeLog("UserWeChatLogin", null, $user);
+            return $this->response()->response(null);
+        }
+    }
+
+    private function verifyWeChat($code) {
+        $url = "https://api.weixin.qq.com/sns/jscode2session?appid=" . $_ENV["WECHAT_APP_ID"] . "&secret=" . $_ENV["WECHAT_APP_SECRET"] . "&js_code=$code&grant_type=authorization_code";
+        $client = new Client();
+        $result = $client->get($url);
+        $data = json_decode($result->getBody(), true);
+        if(isset($data["openid"]))
+            return $data;
+        else
+            return false;
     }
 }
