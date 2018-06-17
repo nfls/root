@@ -121,8 +121,6 @@ class UserController extends AbstractController
      */
     public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator)
     {
-        if (!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response()->response($translator->trans("incorrect-captcha"), Response::HTTP_UNAUTHORIZED);
         $session = $request->getSession();
         if (!$session)
             $session = new Session();
