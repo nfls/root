@@ -454,6 +454,13 @@ class UserController extends AbstractController
         }
     }
 
+    /**
+     * @Route("/user/weChatLogout", methods="POST")
+     */
+    public function weChatLogout() {
+
+    }
+
     private function verifyWeChat($code) {
         $url = "https://api.weixin.qq.com/sns/jscode2session?appid=" . $_ENV["WECHAT_APP_ID"] . "&secret=" . $_ENV["WECHAT_APP_SECRET"] . "&js_code=$code&grant_type=authorization_code";
         $client = new Client();

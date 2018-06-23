@@ -63,7 +63,8 @@
       "required": true,
       "minLength": 2,
       "maxLength": 4
-    }
+    },
+    "search": "fuzzy"
   },
   {
     "key": "englishName",
@@ -72,7 +73,8 @@
       "required": true,
       "minLength": 2,
       "maxLength": 20
-    }
+    },
+    "search": "fuzzy"
   },
   {
     "key": "birthday",
@@ -100,7 +102,8 @@
     ],
     "validate": {
       "required": true
-    }
+    },
+    "search": "multi"
   },
   {
     "type": "divider",
@@ -123,7 +126,8 @@
     ],
     "validate": {
       "required": true
-    }
+    },
+    "search": "multi"
   },
   {
     "key": "juniorRegistration",
@@ -131,7 +135,8 @@
     "validate": {
       "required": true,
       "minValue": 1963
-    }
+    },
+    "search": "precise"
   },
   {
     "key": "juniorClass",
@@ -140,7 +145,8 @@
       "required": true,
       "minValue": 1,
       "maxValue": 12
-    }
+    },
+    "search": "multi"
   },
   {
     "key": "seniorSchool",
