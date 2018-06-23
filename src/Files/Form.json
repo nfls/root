@@ -177,7 +177,8 @@
     ],
     "validate": {
       "required": true
-    }
+    },
+    "search": "multi"
   },
   {
     "key": "seniorRegistration",
@@ -185,7 +186,8 @@
     "validate": {
       "required": true,
       "minValue": 1963
-    }
+    },
+    "search": "precise"
   },
   {
     "key": "seniorClass",
@@ -194,7 +196,8 @@
       "required": true,
       "minValue": 1,
       "maxValue": 8
-    }
+    },
+    "search": "multi"
   },
   {
     "type": "divider",
@@ -205,21 +208,24 @@
     "type": "textarea",
     "validate": {
       "required": true
-    }
+    },
+    "search": "fuzzy"
   },
   {
     "key": "major",
     "type": "textarea",
     "validate": {
       "required": true
-    }
+    },
+    "search": "fuzzy"
   },
   {
     "key": "workInfo",
     "type": "textarea",
     "validate": {
       "required": true
-    }
+    },
+    "search": "fuzzy"
   },
   {
     "key": "personalInfo",
@@ -233,14 +239,16 @@
     "type": "country",
     "validate": {
       "required": true
-    }
+    },
+    "search": "precise"
   },
   {
     "key": "location",
     "type": "input",
     "validate": {
       "required": true
-    }
+    },
+    "search": "precise"
   },
   {
     "key": "onlineContact",
