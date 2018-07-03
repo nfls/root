@@ -64,7 +64,7 @@
                 this.announcement = response.data["data"]
                 this.loaded = true
             })
-            this.axios.get("https://wiki.nfls.io/api.php?action=query&format=json&list=recentchanges&generator=categorymembers&rcshow=!bot&rclimit=50&gcmtitle=Category%3A*&gcmlimit=100").then((response) => {
+            this.axios.get("https://nfls.io/wiki/api.php?action=query&format=json&list=recentchanges&generator=categorymembers&rcshow=!bot&rclimit=50&gcmtitle=Category%3A*&gcmlimit=100").then((response) => {
                 var changes = response.data["query"]["recentchanges"].map(function (val) {
                     return val.title
                 }).filter(function (val) {
@@ -81,7 +81,7 @@
             }).catch((error) => {
                 this.$emit("generalError",error)
             })
-            this.axios.get("https://forum.nfls.io/api/discussions").then((response) => {
+            this.axios.get("https://nfls.io/forum/api/discussions").then((response) => {
                 this.forum = response.data["data"].slice(0, 10)
             }).catch((error) => {
                 this.$emit("generalError",error)

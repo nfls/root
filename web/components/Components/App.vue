@@ -26,6 +26,9 @@
                                 <md-list-item to='/user/security'>
                                     <md-icon>security</md-icon>
                                     <span class='md-list-item-text'>{{ $t('security') }}</span></md-list-item>
+                                <md-list-item to='/user/privacy'>
+                                    <md-icon>lock</md-icon>
+                                    <span class='md-list-item-text'>{{ $t('privacy') }}</span></md-list-item>
                                 <md-list-item to='/user/message'>
                                     <md-icon>chat</md-icon>
                                     <span class='md-list-item-text'>{{ $t('message') }}</span>
@@ -127,10 +130,10 @@
 
                     <md-subheader>{{ $t('external') }}</md-subheader>
 
-                    <md-list-item href='https://forum.nfls.io'>
+                    <md-list-item href='https://nfls.io/forum'>
                         <md-icon>forum</md-icon>
                         <span class='md-list-item-text'>{{ $t('forum') }}</span></md-list-item>
-                    <md-list-item href='https://wiki.nfls.io'>
+                    <md-list-item href='https://nfls.io/wiki'>
                         <md-icon>library_books</md-icon>
                         <span class='md-list-item-text'>{{ $t('wiki') }}</span></md-list-item>
                     <md-list-item href='https://dev.nfls.io'>
