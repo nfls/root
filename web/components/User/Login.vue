@@ -92,7 +92,7 @@
             validate() {
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
-                    grecaptcha.execute()
+                    this.ct()
                 }
             },
             ct() {
@@ -100,8 +100,8 @@
                 this.axios.post('/user/login', {
                     username: this.form.username,
                     password: this.form.password,
-                    remember: this.form.remember,
-                    captcha: grecaptcha.getResponse()
+                    remember: this.form.remember
+                    //captcha: grecaptcha.getResponse()
                 }).then((response) => {
                     if (response.data.code === 200) {
                         this.$emit("showMsg", this.$t('logged-in'))
@@ -113,8 +113,11 @@
                                 this.$emit("reload")
                         }, 1500)
                     } else {
-                        this.$emit("showMsg", response.data["data"])
-                        grecaptcha.reset()
+                        if(response.data["data"])
+                            this.$emit("showMsg", response.data["data"])
+                        else
+                            this.$emit("showMsg", this.$t('login-failed'))
+                        //grecaptcha.reset()
                     }
                     this.sending = false
                 }).catch((error) => {
@@ -125,7 +128,7 @@
             }
         }, mounted: function () {
             this.$emit("changeTitle", this.$t("login-title"))
-            this.$emit("prepareRecaptcha")
+            //this.$emit("prepareRecaptcha")
         }, watch: {
             gResponse: {
                 handler: function (val, newVal) {

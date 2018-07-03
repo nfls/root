@@ -24,4 +24,12 @@ class DirectoryController extends AbstractController
         $user = array_values(array_unique($user));
         return $this->response()->responseEntity($user);
     }
+
+    /**
+     * @Route("/alumni/directory/query", methods="POST")
+     */
+    public function query(Request $request)
+    {
+
+    }
 }

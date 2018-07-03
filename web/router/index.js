@@ -24,6 +24,7 @@ import Reset from '../components/User/Reset'
 import Security from '../components/User/Security'
 import Message from '../components/User/Message'
 import Info from '../components/User/Info'
+import Privacy from '../components/User/Privacy'
 
 import Preference from '../components/Admin/Preference'
 import Upload from '../components/Admin/Upload'
@@ -97,6 +98,9 @@ export default new Router({
                 }, {
                     path: 'user/info',
                     component: Info
+                }, {
+                    path: 'user/privacy',
+                    component: Privacy
                 }, {
                     path: '/admin/preference',
                     component: Preference
