@@ -88,6 +88,12 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
      */
     private $point = 0;
     /**
+     * @var float
+     *
+     * @ORM\Column(type="bigint", options={"unsigned":true, "default":0})
+     */
+    private $privacy = 0;
+    /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime", options={"default":"CURRENT_TIMESTAMP"})
@@ -308,7 +314,7 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
     /**
      * @return string
      */
-    public function getWeChatToken(): string
+    public function getWeChatToken(): ?string
     {
         return $this->weChatToken;
     }
