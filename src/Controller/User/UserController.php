@@ -6,6 +6,8 @@ use App\Controller\AbstractController;
 use App\Entity\User\Chat;
 use App\Entity\User\User;
 use App\Model\Permission;
+use App\Model\PrivacyBit;
+use App\Model\PrivacyLevel;
 use App\Service\Notification\NotificationService;
 use GuzzleHttp\Client;
 use libphonenumber\NumberParseException;
@@ -459,6 +461,31 @@ class UserController extends AbstractController
      */
     public function weChatLogout() {
 
+    }
+
+    /**
+     * @Route("/user/privacy")
+     */
+    public function privacy(Request $request, TranslatorInterface $translator) {
+        if($request->isMethod("POST")) {
+            $privacy = $request->request->getInt("privacy");
+            $index = 0;
+            while ($index <= count(PrivacyBit::ALL)) {
+                $setting = $privacy / pow(10, $index) % 10;
+                if ($setting < PrivacyLevel::EVERYONE || $setting > PrivacyLevel::ONLY_ME) {
+                    return $this->response()->response($translator->trans("illegal-setting"), Response::HTTP_FORBIDDEN);
+                }
+                $index++;
+            }
+            if ($privacy > (PrivacyLevel::ONLY_ME + 1) * pow(10, count(PrivacyBit::ALL)))
+                return $this->response()->response($translator->trans("illegal-setting"), Response::HTTP_FORBIDDEN);
+            $this->getUser()->setPrivacy($privacy);
+            $antiSpider = $request->request->getBoolean("antiSpider");
+            $this->getUser()->setAntiSpider($antiSpider);
+            $this->getDoctrine()->getManager()->persist($this->getUser());
+            $this->getDoctrine()->getManager()->flush();
+        }
+        return $this->response()->response(array("privacy" => $this->getUser()->getPrivacy(), "antiSpider" => $this->getUser()->isAntiSpider()));
     }
 
     private function verifyWeChat($code) {

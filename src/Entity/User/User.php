@@ -5,6 +5,8 @@ namespace App\Entity\User;
 use App\Entity\School\Alumni;
 use App\Entity\School\Claz;
 use App\Model\Permission;
+use App\Model\PrivacyBit;
+use App\Model\PrivacyLevel;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\UserEntityInterface;
@@ -88,11 +90,17 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
      */
     private $point = 0;
     /**
-     * @var float
+     * @var integer
      *
-     * @ORM\Column(type="bigint", options={"unsigned":true, "default":0})
+     * @ORM\Column(type="integer", options={"unsigned":true, "default":431})
      */
-    private $privacy = 0;
+    private $privacy;
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", options={"default": true})
+     */
+    private $antiSpider = true;
     /**
      * @var \DateTime
      *
@@ -124,6 +132,10 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
         $this->readTime = new \DateTime();
         $this->authTickets = new ArrayCollection();
         $this->classes = new ArrayCollection();
+        $this->privacy =
+            pow(10, PrivacyBit::GENERAL) * PrivacyLevel::SAME_SCHOOL +
+            pow(10, PrivacyBit::CONTACT) * PrivacyLevel::SAME_REGISTRATION +
+            pow(10, PrivacyBit::PHONE_OR_EMAIL) * PrivacyLevel::ONLY_ME;
     }
 
     /**
@@ -434,6 +446,38 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
         if ($this->classes->contains($class)) {
             $this->classes->removeElement($class);
         }
+    }
+
+    /**
+     * @return int
+     */
+    public function getPrivacy(): int
+    {
+        return $this->privacy;
+    }
+
+    /**
+     * @param int $privacy
+     */
+    public function setPrivacy(int $privacy): void
+    {
+        $this->privacy = $privacy;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAntiSpider(): bool
+    {
+        return $this->antiSpider;
+    }
+
+    /**
+     * @param bool $antiSpider
+     */
+    public function setAntiSpider(bool $antiSpider): void
+    {
+        $this->antiSpider = $antiSpider;
     }
 
     public function __toString()
