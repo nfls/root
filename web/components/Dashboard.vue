@@ -15,7 +15,7 @@
                     <md-divider></md-divider>
                     <md-card-content>
                         <md-list>
-                            <md-list-item v-for="title in wiki" :key="title" :href="'https://wiki.nfls.io/w/' + title"
+                            <md-list-item v-for="title in wiki" :key="title" :href="'https://nfls.io/wiki/w/' + title"
                                           target="_blank">
                                 {{title}}
                             </md-list-item>
@@ -31,7 +31,7 @@
                 <md-divider></md-divider>
                 <md-card-content>
                     <md-list>
-                        <md-list-item v-for="post in forum" :key="post.id" :href="'https://forum.nfls.io/d/' + post.id"
+                        <md-list-item v-for="post in forum" :key="post.id" :href="'https://nfls.io/forum/d/' + post.id"
                                       target="_blank">
                             {{post.attributes.title}}
                         </md-list-item>
