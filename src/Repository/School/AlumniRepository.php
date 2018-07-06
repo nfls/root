@@ -3,6 +3,7 @@
 namespace App\Repository\School;
 
 use App\Entity\School\Alumni;
+use Doctrine\Bundle\DoctrineBundle\Command\Proxy\QueryRegionCacheDoctrineCommand;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -69,6 +70,22 @@ class AlumniRepository extends ServiceEntityRepository
         $query = $this->addLikeQuery("major", $request, $query);
         $query = $this->addLikeQuery("workInfo", $request, $query);
         return $query->setMaxResults(30)->getQuery()->getResult();
+    }
+
+    public function search($name)
+    {
+        $query = $this->createQueryBuilder("u")
+            ->where("u.status = :status")
+            ->setParameter("status", 5);
+        $query = $this->like("university", $name, $query);
+        $query = $this->like("major", $name, $query);
+        $query = $this->like("workInfo", $name, $query);
+    }
+
+    public function like($key, $name, QueryBuilder $query)
+    {
+        return $query->andWhere("u." . $key . " like :" . $key)
+            ->setParameter($key, "%" . $name . "%");
     }
 
     private function addQuery($key, Request $request, QueryBuilder $query)

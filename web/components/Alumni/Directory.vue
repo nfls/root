@@ -35,7 +35,11 @@
             load() {
             },
             search() {
-                this.axios.get("/")
+                this.axios.post("alumni/query", {
+                    name: this.name
+                }).then((response) => {
+
+                })
             }
         }
     }
