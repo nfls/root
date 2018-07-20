@@ -86,7 +86,6 @@
                                 <span class="md-caption">联系方式</span>
                                 <span>{{alumni.onlineContact}}</span>
                             </div>
-                            <md-tooltip md-direction="bottom">{{ alumni.onlineContact }}</md-tooltip>
                         </md-list-item>
                         <md-divider></md-divider>
                     </div>

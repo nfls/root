@@ -48,7 +48,7 @@
 <script>
     export default {
         name: "Directory",
-        props: ['gResponse'],
+        props: ['gResponse','verified'],
         data: () => ({
             name: "",
             registration: "",
@@ -59,6 +59,10 @@
             this.$emit("prepareRecaptcha")
             this.$emit("changeTitle", this.$t('title-directory'))
             this.load()
+            if(!this.verified) {
+                this.$emit("showMsg", "请先完成实名认证！")
+                this.$router.push("/alumni/auth")
+            }
         },
         methods: {
             load() {
