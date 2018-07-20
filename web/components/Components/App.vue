@@ -26,9 +26,6 @@
                                 <md-list-item to='/user/security'>
                                     <md-icon>security</md-icon>
                                     <span class='md-list-item-text'>{{ $t('security') }}</span></md-list-item>
-                                <md-list-item to='/user/privacy'>
-                                    <md-icon>lock</md-icon>
-                                    <span class='md-list-item-text'>{{ $t('privacy') }}</span></md-list-item>
                                 <md-list-item to='/user/message'>
                                     <md-icon>chat</md-icon>
                                     <span class='md-list-item-text'>{{ $t('message') }}</span>
