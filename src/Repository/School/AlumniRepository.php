@@ -86,7 +86,7 @@ class AlumniRepository extends ServiceEntityRepository
             $qb->expr()->eq("u.personalInfo", ":name"),
             $qb->expr()->eq("u.chineseName", ":name"),
             $qb->expr()->eq("u.englishName", ":name")
-        ))->setParameter("name", $name);
+        ))->setParameter("name", "%" . $name . "%");
 
         if(!is_null($registration))
             $query = $query->andWhere($qb->expr()->orX(
