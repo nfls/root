@@ -275,7 +275,7 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
      * @return Alumni|null
      */
     public function getValidAuth(){
-        $valid = array_filter($this->authTickets->toArray(), array($this, "getValid"));
+        $valid = array_filter($this->authTickets->toArray(), array($this, "getValidRegardlessTime"));
         if (count($valid) > 0) {
             /** @var $auth Alumni */
             $auth = array_values($valid)[0];
@@ -405,6 +405,18 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
     public function getValid($val)
     {
         if ($val->getStatus() == Alumni::STATUS_PASSED)
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * @param $val Alumni
+     * @return bool
+     */
+    public function getValidRegardlessTime($val)
+    {
+        if ($val->getStatus() == Alumni::STATUS_PASSED || $val->getStatus() == Alumni::STATUS_EXPIRED)
             return true;
         else
             return false;
