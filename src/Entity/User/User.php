@@ -480,6 +480,7 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
         $this->antiSpider = $antiSpider;
     }
 
+
     public function __toString()
     {
         return $this->username;

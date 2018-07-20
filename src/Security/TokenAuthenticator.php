@@ -30,7 +30,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return true;
+        return $user->getToken() === $credentials;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)

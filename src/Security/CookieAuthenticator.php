@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\User\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,9 +31,14 @@ class CookieAuthenticator extends AbstractGuardAuthenticator
         return $userProvider->loadUserByUsername($credentials);
     }
 
+    /**
+     * @param mixed $credentials
+     * @param User $user
+     * @return bool
+     */
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return true;
+        return $user->getToken() === $credentials;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)

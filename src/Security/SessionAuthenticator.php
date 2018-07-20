@@ -42,7 +42,7 @@ class SessionAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return true;
+        return $user->getToken() === $credentials;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
