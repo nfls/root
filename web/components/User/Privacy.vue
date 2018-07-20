@@ -11,20 +11,8 @@
         <md-checkbox v-model="antiSpider">启用反爬虫保护</md-checkbox>
         <br/>
         <md-field>
-            <label>实名认证的大学和工作信息，常住地及个人简介</label>
+            <label>将我的实名认证完整信息展示给</label>
             <md-select v-model="general" name="general" id="general">
-                <md-option v-for="(level, index) in privacyLevel" :key="index" :value="index">{{ level }}</md-option>
-            </md-select>
-        </md-field>
-        <md-field>
-            <label>实名认证表格中的联系方式</label>
-            <md-select v-model="contact" name="contact" id="contact">
-                <md-option v-for="(level, index) in privacyLevel" :key="index" :value="index">{{ level }}</md-option>
-            </md-select>
-        </md-field>
-        <md-field>
-            <label>注册邮箱或手机号</label>
-            <md-select v-model="phoneOrEmail" name="phoneOrEmail" id="phoneOrEmail">
                 <md-option v-for="(level, index) in privacyLevel" :key="index" :value="index">{{ level }}</md-option>
             </md-select>
         </md-field>
@@ -44,30 +32,24 @@
         data: () => ({
             sending: false,
             privacyLevel: {
-                0: "所有人",
                 1: "仅同校同学（所有已实名用户）",
                 2: "仅同届同学",
-                3: "仅同班同学",
-                4: "仅自己"
+                3: "仅自己"
             },
             general: 0,
-            contact: 0,
-            phoneOrEmail: 0,
-            privacy: "",
             antiSpider: true
         }),
         mounted: function() {
             this.axios.get("/user/privacy").then((response) => {
                 this.antiSpider = response.data["data"].antiSpider
-                this.privacy = response.data["data"].privacy
+                this.general = response.data["data"].privacy
             })
         },
         methods: {
             submit() {
                 this.sending = true
-                this.privacy = this.general + this.contact * 10 + this.phoneOrEmail * 100
                 this.axios.post("/user/privacy", {
-                    privacy: this.privacy,
+                    privacy: this.general,
                     antiSpider: this.antiSpider
                 }).then((response) => {
                     this.sending = false
@@ -77,13 +59,6 @@
                     this.sending = false
                     this.$emit("generalError",error)
                 })
-            }
-        },
-        watch: {
-            privacy(val) {
-                this.general = val % 10;
-                this.contact = parseInt(val / 10) % 10;
-                this.phoneOrEmail = parseInt(val / 100) % 10;
             }
         }
 

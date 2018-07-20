@@ -3,6 +3,7 @@
 namespace App\Entity\School;
 
 use App\Entity\User\User;
+use App\Model\PrivacyLevel;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component;
@@ -625,5 +626,40 @@ class Alumni
         }
     }
 
+    public function pbi(int $level, Alumni $sender) {
+        $array = [
+            "userStatus" => $this->userStatus,
+            "chineseName" => $this->chineseName,
+            "englishName" => $this->englishName,
+            "gender" => $this->gender,
+            "birthday" => $this->birthday,
+            "juniorRegistration" => $this->juniorRegistration,
+            "juniorClass" => $this->juniorClass,
+            "juniorSchool" => $this->juniorSchool,
+            "seniorRegistration" => $this->seniorRegistration,
+            "seniorClass" => $this->seniorClass,
+            "seniorSchool" => $this->seniorSchool,
+            "personalInfo" => $this->personalInfo,
+            "country" => $this->country
+        ];
+        if(
+            $level === PrivacyLevel::SAME_SCHOOL ||
+            (
+                $level === PrivacyLevel::SAME_REGISTRATION &&
+                (
+                    $sender->getJuniorRegistration() === $this->getJuniorRegistration() ||
+                    $sender->getSeniorRegistration() === $this->getSeniorRegistration()
+                )
+            )
+        ){
+            $array["university"] = $this->university;
+            $array["major"] = $this->major;
+            $array["workInfo"] = $this->workInfo;
+            $array["location"] = $this->location;
+            $array["onlineContact"] = $this->onlineContact;
+        }
+        return $array;
+
+    }
 
 }

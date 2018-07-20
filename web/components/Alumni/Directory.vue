@@ -90,7 +90,8 @@
                 })
             },
             info(id) {
-
+                let url = this.$router.resolve("/user/page/" + id)
+                window.open(url.href, "_blank");
             }
         },
         watch: {

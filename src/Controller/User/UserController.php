@@ -3,6 +3,7 @@
 namespace App\Controller\User;
 
 use App\Controller\AbstractController;
+use App\Entity\School\Alumni;
 use App\Entity\User\Chat;
 use App\Entity\User\User;
 use App\Model\Permission;
@@ -470,15 +471,7 @@ class UserController extends AbstractController
     public function privacy(Request $request, TranslatorInterface $translator) {
         if($request->isMethod("POST")) {
             $privacy = $request->request->getInt("privacy");
-            $index = 0;
-            while ($index <= count(PrivacyBit::ALL)) {
-                $setting = $privacy / pow(10, $index) % 10;
-                if ($setting < PrivacyLevel::EVERYONE || $setting > PrivacyLevel::ONLY_ME) {
-                    return $this->response()->response($translator->trans("illegal-setting"), Response::HTTP_FORBIDDEN);
-                }
-                $index++;
-            }
-            if ($privacy > (PrivacyLevel::ONLY_ME + 1) * pow(10, count(PrivacyBit::ALL)))
+            if ($privacy > (PrivacyLevel::ONLY_ME) || $privacy < (PrivacyLevel::SAME_SCHOOL))
                 return $this->response()->response($translator->trans("illegal-setting"), Response::HTTP_FORBIDDEN);
             $this->getUser()->setPrivacy($privacy);
             $antiSpider = $request->request->getBoolean("antiSpider");
@@ -495,10 +488,16 @@ class UserController extends AbstractController
     public function page(Request $request, TranslatorInterface $translator, CacheService $service) {
         $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
         $id = $request->query->get("id");
-        if($service->antiSpiderUse($this->getUser(), $id)){
+        if($service->antiSpiderUse($this->getUser(), $id) || $this->getUser()->isAdmin()){
             /** @var User $user */
             $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($id);
-            return $this->response()->response($user);
+            /** @var Alumni $alumni */
+            $alumni = $this->getDoctrine()->getManager()->getRepository(Alumni::class)->getLastSuccessfulAuth($user);
+            $sender = $this->getDoctrine()->getManager()->getRepository(Alumni::class)->getLastSuccessfulAuth($this->getUser());
+            return $this->response()->responseEntity(array(
+                "alumni" => $alumni->pbi($user->getPrivacy(), $sender),
+                "info" => $user
+            ));
         }else{
             return $this->response()->response($translator->trans("anti-spider-enabled"));
         }

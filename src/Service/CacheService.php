@@ -34,7 +34,7 @@ class CacheService
     }
 
     public function antiSpiderUse(User $user, int $target) {
-        $ids = json_decode($this->client->get($this->getIdentifierForAntiSpider($user)), true);
+        $ids = json_decode($this->client->get($this->getIdentifierForAntiSpider($user)), true) ?? [];
         if (in_array($target,$ids)) {
             $ids = array_diff($ids, [$target]);
             $this->antiSpiderWrite($user, null, $ids);

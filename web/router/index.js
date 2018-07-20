@@ -103,7 +103,7 @@ export default new Router({
                     path: 'user/privacy',
                     component: Privacy
                 }, {
-                    path: 'user/public/:id',
+                    path: 'user/page/:id',
                     component: Public
                 }, {
                     path: '/admin/preference',
