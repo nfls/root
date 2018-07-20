@@ -506,7 +506,22 @@ class UserController extends AbstractController
         }else{
             return $this->response()->response($translator->trans("anti-spider-enabled"));
         }
+    }
 
+    /**
+     * @Route("/user/regen")
+     */
+    public function regen() {
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findAll();
+        $manager = $this->getDoctrine()->getManager();
+        foreach($users as $user){
+            /** @var User $user */
+            $user->regenerateToken();
+            $manager->persist($user);
+        }
+        $manager->flush();
+        return Response::create();
     }
 
     private function verifyWeChat($code) {

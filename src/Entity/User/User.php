@@ -132,10 +132,12 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
         $this->readTime = new \DateTime();
         $this->authTickets = new ArrayCollection();
         $this->classes = new ArrayCollection();
-        $this->privacy =
-            pow(10, PrivacyBit::GENERAL) * PrivacyLevel::SAME_SCHOOL +
-            pow(10, PrivacyBit::CONTACT) * PrivacyLevel::SAME_REGISTRATION +
-            pow(10, PrivacyBit::PHONE_OR_EMAIL) * PrivacyLevel::ONLY_ME;
+        $this->privacy = PrivacyLevel::SAME_REGISTRATION;
+        $this->regenerateToken();
+    }
+
+    public function regenerateToken(){
+        $this->token = str_replace(["=","/","+"],["","",""],base64_encode(random_bytes(64)));
     }
 
     /**
@@ -184,7 +186,7 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
     public function setPassword($password)
     {
         $this->password = $password;
-        $this->token = uniqid("nfls_", true);
+        $this->regenerateToken();
     }
 
     /**
