@@ -152,9 +152,9 @@ class NotificationService
     }
 
     public function notifyNewVerification(Alumni $ticket){
-        $info = "【实名认证】新的实名认证请求，来自 " . $ticket->getChineseName(). "(".$ticket->getUser()->getUsername().")";
-        $this->sendQQ($info);
-        $this->sendTelegram($info);
+        //$info = "【实名认证】新的实名认证请求，来自 " . $ticket->getChineseName(). "(".$ticket->getUser()->getUsername().")";
+        //$this->sendQQ($info);
+        //$this->sendTelegram($info);
     }
 
     public function sendQQ(string $text) {

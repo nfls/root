@@ -72,19 +72,40 @@ class AlumniRepository extends ServiceEntityRepository
         return $query->setMaxResults(30)->getQuery()->getResult();
     }
 
-    public function search($name)
+    public function search(string $name, ?string $registration, ?string $class)
     {
-        $query = $this->createQueryBuilder("u")
+        $qb = $this->createQueryBuilder("u");
+        $query = $qb
             ->where("u.status = :status")
             ->setParameter("status", 5);
         $query = $this->like("university", $name, $query);
         $query = $this->like("major", $name, $query);
         $query = $this->like("workInfo", $name, $query);
+        $query = $this->like("personalInfo", $name, $query);
+        $query = $this->like("chineseName", $name, $query);
+        $query = $this->like("englishName", $name, $query);
+
+        if(!is_null($registration))
+            $query = $query->andWhere($qb->expr()->orX(
+                $qb->expr()->eq("u.juniorRegistration", ":registration"),
+                $qb->expr()->eq("u.seniorRegistration", ":registration")
+            ))->setParameter("registration", $registration);
+
+        if(!is_null($class))
+            $query = $query->andWhere($qb->expr()->orX(
+                $qb->expr()->eq("u.juniorClass", ":class"),
+                $qb->expr()->eq("u.juniorClass", ":class")
+            ))->setParameter("class", $class);
+
+        return $query
+            ->setMaxResults(20)
+            ->getQuery()
+            ->getResult();
     }
 
     public function like($key, $name, QueryBuilder $query)
     {
-        return $query->andWhere("u." . $key . " like :" . $key)
+        return $query->orWhere("u." . $key . " like :" . $key)
             ->setParameter($key, "%" . $name . "%");
     }
 

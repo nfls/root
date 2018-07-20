@@ -30,6 +30,16 @@ class DirectoryController extends AbstractController
      */
     public function query(Request $request)
     {
+        $text = $request->request->get("name");
+        $registration = $request->request->get("registration");
+        $class = $request->request->get("class");
+        $alumni = $this->getDoctrine()->getManager()->getRepository(Alumni::class)->search($text, $registration, $class);
+        $user = array_map(function ($val) {
+            /** @var $val Alumni */
+            return $val->getUser();
+        }, $alumni);
+        $user = array_values(array_unique($user));
+        return $this->response()->responseEntity($user);
 
     }
 }

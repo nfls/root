@@ -35,7 +35,7 @@
             load() {
             },
             search() {
-                this.axios.post("alumni/query", {
+                this.axios.post("alumni/directory/query", {
                     name: this.name
                 }).then((response) => {
 

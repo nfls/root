@@ -218,8 +218,11 @@
                     }
                     else {
                         try {
+                            let siteKey = '6LfV3UIUAAAAADBXL7tfgvUs9rt2gw-4GBxLO9Pj'
+                            if (window.location.hostname === "127.0.0.1")
+                                siteKey = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
                             grecaptcha.render('recaptcha', {
-                                sitekey: '6LfV3UIUAAAAADBXL7tfgvUs9rt2gw-4GBxLO9Pj',
+                                sitekey: siteKey,
                                 size: 'invisible',
                                 callback: self.ct
                             });
