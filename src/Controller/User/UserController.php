@@ -8,6 +8,7 @@ use App\Entity\User\User;
 use App\Model\Permission;
 use App\Model\PrivacyBit;
 use App\Model\PrivacyLevel;
+use App\Service\CacheService;
 use App\Service\Notification\NotificationService;
 use GuzzleHttp\Client;
 use libphonenumber\NumberParseException;
@@ -486,6 +487,22 @@ class UserController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
         }
         return $this->response()->response(array("privacy" => $this->getUser()->getPrivacy(), "antiSpider" => $this->getUser()->isAntiSpider()));
+    }
+
+    /**
+     * @Route("/user/page")
+     */
+    public function page(Request $request, TranslatorInterface $translator, CacheService $service) {
+        $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
+        $id = $request->query->get("id");
+        if($service->antiSpiderUse($this->getUser(), $id)){
+            /** @var User $user */
+            $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($id);
+            return $this->response()->response($user);
+        }else{
+            return $this->response()->response($translator->trans("anti-spider-enabled"));
+        }
+
     }
 
     private function verifyWeChat($code) {

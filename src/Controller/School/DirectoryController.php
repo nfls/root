@@ -5,6 +5,8 @@ namespace App\Controller\School;
 use App\Controller\AbstractController;
 use App\Entity\School\Alumni;
 use App\Model\Permission;
+use App\Service\CacheService;
+use Doctrine\ORM\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,8 +32,9 @@ class DirectoryController extends AbstractController
     /**
      * @Route("/alumni/directory/query", methods="POST")
      */
-    public function query(Request $request, TranslatorInterface $translator)
+    public function query(Request $request, TranslatorInterface $translator, CacheService $service)
     {
+        $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
         if(!$this->verifyCaptcha($request->request->get("captcha")))
             return $this->response()->response($translator->trans("incorrect-captcha"), Response::HTTP_UNAUTHORIZED);
         $text = $request->request->get("name");
@@ -40,6 +43,7 @@ class DirectoryController extends AbstractController
         $registration = $request->request->get("registration");
         $class = $request->request->get("class");
         $alumni = $this->getDoctrine()->getManager()->getRepository(Alumni::class)->search($text, $registration, $class);
+        $service->antiSpiderWrite($this->getUser(), $alumni, null);
         $user = array_map(function ($val) {
             /** @var $val Alumni */
             return $val->getUser();
