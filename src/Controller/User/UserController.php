@@ -508,21 +508,19 @@ class UserController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/user/regen")
-     */
+    /*
     public function regen() {
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findAll();
         $manager = $this->getDoctrine()->getManager();
         foreach($users as $user){
-            /** @var User $user */
             $user->regenerateToken();
             $manager->persist($user);
         }
         $manager->flush();
         return Response::create();
     }
+    */
 
     private function verifyWeChat($code) {
         $url = "https://api.weixin.qq.com/sns/jscode2session?appid=" . $_ENV["WECHAT_APP_ID"] . "&secret=" . $_ENV["WECHAT_APP_SECRET"] . "&js_code=$code&grant_type=authorization_code";
