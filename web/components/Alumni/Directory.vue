@@ -26,6 +26,21 @@
                 <md-button class="md-raised md-primary" @click="search">检索</md-button>
             </md-card-actions>
         </md-card>
+        <md-card style="margin-top: 50px;">
+            <md-card-content>
+                <md-list>
+                    <md-list-item v-for="student in list" :key="student.id">
+                        <md-avatar>
+                            <img :src="'/avatar/' + student.id + '.png'" alt="Avatar">
+                        </md-avatar>
+                        <div class="md-list-item-text">
+                            <span v-html="student.htmlUsername"></span>
+                        </div>
+                        <md-button class="md-icon-button md-list-action" @click="info(student.id)"><md-icon>info</md-icon></md-button>
+                    </md-list-item>
+                </md-list>
+            </md-card-content>
+        </md-card>
     </div>
 
 </template>
@@ -33,12 +48,15 @@
 <script>
     export default {
         name: "Directory",
+        props: ['gResponse'],
         data: () => ({
             name: "",
             registration: "",
-            claz: ""
+            claz: "",
+            list: []
         }),
         mounted: function () {
+            this.$emit("prepareRecaptcha")
             this.$emit("changeTitle", this.$t('title-directory'))
             this.load()
         },
@@ -46,6 +64,9 @@
             load() {
             },
             search() {
+                grecaptcha.execute()
+            },
+            ct() {
                 let registration = this.registration
                 if(registration === "")
                     registration = null
@@ -55,10 +76,26 @@
                 this.axios.post("alumni/directory/query", {
                     name: this.name,
                     registration: registration,
-                    class: claz
+                    class: claz,
+                    captcha: grecaptcha.getResponse()
                 }).then((response) => {
-
+                    if (response.data["code"] === 200)
+                        this.list = response.data["data"]
+                    else
+                        this.$emit("showMsg", response.data["data"])
+                    grecaptcha.reset()
+                }).catch((error) => {
+                    this.$emit("generalError",error)
+                    grecaptcha.reset()
                 })
+            },
+            info(id) {
+
+            }
+        },
+        watch: {
+            gResponse() {
+                this.ct()
             }
         }
     }

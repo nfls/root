@@ -7,6 +7,8 @@ use App\Entity\School\Alumni;
 use App\Model\Permission;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class DirectoryController extends AbstractController
 {
@@ -28,9 +30,13 @@ class DirectoryController extends AbstractController
     /**
      * @Route("/alumni/directory/query", methods="POST")
      */
-    public function query(Request $request)
+    public function query(Request $request, TranslatorInterface $translator)
     {
+        if(!$this->verifyCaptcha($request->request->get("captcha")))
+            return $this->response()->response($translator->trans("incorrect-captcha"), Response::HTTP_UNAUTHORIZED);
         $text = $request->request->get("name");
+        if(is_null($text) || $text == "")
+            return $this->response()->response($translator->trans("blank-search"), Response::HTTP_FORBIDDEN);
         $registration = $request->request->get("registration");
         $class = $request->request->get("class");
         $alumni = $this->getDoctrine()->getManager()->getRepository(Alumni::class)->search($text, $registration, $class);
