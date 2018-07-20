@@ -662,4 +662,12 @@ class Alumni
 
     }
 
+    public function __clone()
+    {
+        $this->id = null;
+        $this->status = 0;
+        $this->userStatus = null;
+        $this->expireAt = null;
+    }
+
 }

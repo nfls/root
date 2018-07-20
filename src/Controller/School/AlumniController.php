@@ -102,6 +102,31 @@ class AlumniController extends AbstractController
     }
 
     /**
+     * @Route("alumni/duplicate",methods="POST")
+     */
+    public function duplicate(Request $request)
+    {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if (!$this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_ALUMNI_FORM))
+            return $this->response()->response("csrf.invalid", Response::HTTP_BAD_REQUEST);
+        $id = $request->query->get("id");
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository(Alumni::class);
+        /**
+         * @var Alumni $form
+         */
+        if ($this->getUser()->hasRole(Permission::IS_ADMIN))
+            $form = $repo->findOneBy(["id" => $id]);
+        else
+            $form = $repo->findOneBy(["id" => $id, "user" => $this->getUser()]);
+
+        $f = clone $form;
+        $em->persist($f);
+        $em->flush();
+        return $this->response()->response($f->getId());
+    }
+
+    /**
      * @Route("alumni/save",methods="POST")
      */
     public function saveForm(Request $request)

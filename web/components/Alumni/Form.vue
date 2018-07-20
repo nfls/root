@@ -87,7 +87,7 @@
                         </md-button>
                     </div>
                     <div v-else>
-                        <md-button type="button" class="md-raised md-primary" style="width:90%" disabled>{{ $t('readonly') }}
+                        <md-button type="button" class="md-raised md-primary" style="width:90%" @click="duplicate">{{ $t('duplicate') }}
                         </md-button>
                     </div>
                     <md-progress-bar md-mode="indeterminate" v-if="sending"/>
@@ -271,6 +271,12 @@
                 }).catch((error) => {
                     this.sending = false
                     this.$emit("generalError",error)
+                })
+            }, duplicate() {
+                this.axios.post("alumni/duplicate?id=" + this.$route.params["id"], {
+                    "_csrf": this.csrf
+                }).then((_) => {
+                    this.$router.push("/alumni/auth")
                 })
             }, cancel() {
                 this.form._csrf = this.csrf
