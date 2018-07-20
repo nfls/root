@@ -488,9 +488,9 @@ class UserController extends AbstractController
     public function page(Request $request, TranslatorInterface $translator, CacheService $service) {
         $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
         $id = $request->query->get("id");
-        if($service->antiSpiderUse($this->getUser(), $id) || $this->getUser()->isAdmin()){
-            /** @var User $user */
-            $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($id);
+        /** @var User $user */
+        $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($id);
+        if($service->antiSpiderUse($this->getUser(), $id) || $this->getUser()->isAdmin() || !$user->isAntiSpider()){
             /** @var Alumni $alumni */
             $alumni = $this->getDoctrine()->getManager()->getRepository(Alumni::class)->getLastSuccessfulAuth($user);
             $sender = $this->getDoctrine()->getManager()->getRepository(Alumni::class)->getLastSuccessfulAuth($this->getUser());
