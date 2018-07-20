@@ -78,12 +78,15 @@ class AlumniRepository extends ServiceEntityRepository
         $query = $qb
             ->where("u.status = :status")
             ->setParameter("status", 5);
-        $query = $this->like("university", $name, $query);
-        $query = $this->like("major", $name, $query);
-        $query = $this->like("workInfo", $name, $query);
-        $query = $this->like("personalInfo", $name, $query);
-        $query = $this->like("chineseName", $name, $query);
-        $query = $this->like("englishName", $name, $query);
+
+        $query = $query->andWhere($qb->expr()->orX(
+            $qb->expr()->eq("u.university", ":name"),
+            $qb->expr()->eq("u.major", ":name"),
+            $qb->expr()->eq("u.workInfo", ":name"),
+            $qb->expr()->eq("u.personalInfo", ":name"),
+            $qb->expr()->eq("u.chineseName", ":name"),
+            $qb->expr()->eq("u.englishName", ":name")
+        ))->setParameter("name", $name);
 
         if(!is_null($registration))
             $query = $query->andWhere($qb->expr()->orX(
