@@ -6,6 +6,7 @@ use App\Controller\AbstractController;
 use App\Entity\OAuth\Client;
 use App\Entity\Preference;
 use App\Entity\User\Device;
+use App\Model\Permission;
 use App\Type\DeviceType;
 use function GuzzleHttp\default_ca_bundle;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -36,6 +37,7 @@ class DeviceController extends AbstractController
      */
     public function register(Request $request)
     {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $token = $request->request->get("token");
         $em = $this->getDoctrine()->getManager();
         /** @var Device $device */
@@ -56,5 +58,6 @@ class DeviceController extends AbstractController
         }
         $em->persist($device);
         $em->flush();
+        return $this->response()->responseEntity($device);
     }
 }
