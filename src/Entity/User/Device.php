@@ -22,7 +22,7 @@ class Device
     private $id;
 
     /**
-     * @var string
+     * @var integer
      *
      * @ORM\Column(type="smallint")
      */
@@ -87,15 +87,15 @@ class Device
     /**
      * @return string
      */
-    public function getType(): string
+    public function getType(): int
     {
         return $this->type;
     }
 
     /**
-     * @param string $type
+     * @param int $type
      */
-    public function setType(string $type): void
+    public function setType(int $type): void
     {
         $this->type = $type;
     }
