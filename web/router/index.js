@@ -28,6 +28,7 @@ import Public from '../components/User/Public'
 
 import Preference from '../components/Admin/Preference'
 import Upload from '../components/Admin/Upload'
+import Notification from '../components/Admin/Notification'
 
 
 Vue.use(Router)
@@ -107,6 +108,9 @@ export default new Router({
                 }, {
                     path: '/admin/upload',
                     component: Upload
+                }, {
+                    path: '/admin/notification',
+                    component: Notification
                 }, {
                     path: '*',
                     component: Jump

@@ -18,6 +18,14 @@ class DeviceRepository extends ServiceEntityRepository
         return $this->findOneBy(["user" => $user, "token" => $token]);
     }
 
+    public function findByUserAndType(User $user, int $type) {
+        return $this->findBy(["user" => $user, "type" => $type]);
+    }
+
+    public function findByType(int $type) {
+        return $this->findBy(["type" => $type]);
+    }
+
     public function findOneByCallbackToken(string $token) {
         return $this->findOneBy(["callbackToken" => $token]);
     }

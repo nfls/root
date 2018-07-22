@@ -47,7 +47,32 @@ class APNSService
                 ]));
     }
 
-    public function bulk(array $devices, ?string $title, ?string $subtitle, ?string $body, ?int $badge, ?string $image) {
-
+    /**
+     * @param array $devices
+     * @param null|string $title
+     * @param null|string $subtitle
+     * @param null|string $body
+     * @param int|null $badge
+     * @param null|string $link
+     * @param null|string $image
+     * @throws \CeleryException
+     * @throws \CeleryPublishException
+     */
+    public function bulk(array $devices, ?string $title, ?string $subtitle, ?string $body, ?int $badge, ?string $link, ?string $image) {
+        foreach ($devices as $device) {
+            $this->celery->client->PostTask("tasks.sendAPN",
+                array(
+                    $device->getToken(),
+                    $device->getCallbackToken(),
+                    $title,
+                    $subtitle,
+                    $body,
+                    $badge,
+                    [
+                        "imageUrl"=> $image,
+                        "link" => $link,
+                        "callbackToken" => $device->getCallbackToken()
+                    ]));
+        }
     }
 }
