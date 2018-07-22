@@ -33,7 +33,7 @@ class DeviceController extends AbstractController
     }
 
     /**
-     * @Route("device/register", methods="POST")
+     * @Route("device/pushRegister", methods="POST")
      */
     public function register(Request $request)
     {
