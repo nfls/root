@@ -47,6 +47,13 @@ class Device
      *
      * @ORM\Column(type="text")
      */
+    private $remark;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text")
+     */
     private $callbackToken;
 
     /**
@@ -171,4 +178,21 @@ class Device
     {
         return $this->time;
     }
+
+    /**
+     * @return string
+     */
+    public function getRemark(): string
+    {
+        return $this->remark;
+    }
+
+    /**
+     * @param string $remark
+     */
+    public function setRemark(string $remark): void
+    {
+        $this->remark = $remark;
+    }
+
 }

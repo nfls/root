@@ -39,12 +39,15 @@ class DeviceController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $token = $request->request->get("token");
+        if(is_null($token) || $token == "")
+            throw new \InvalidArgumentException("Invalid token.");
         $em = $this->getDoctrine()->getManager();
         /** @var Device $device */
         $device = $em->getRepository(Device::class)->findOneByUserAndToken($this->getUser(), $token) ?? new Device();
         $device->setUser($this->getUser());
         $device->setToken($token);
         $device->setModel($request->request->get("model"));
+        $device->setRemark($request->request->get("remark"));
         $type = $request->request->get("type");
         switch($type) {
             case "ios":
