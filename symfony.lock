@@ -50,6 +50,9 @@
             "ref": "c1431086fec31f17fbcfe6d6d7e92059458facc1"
         }
     },
+    "doctrine/event-manager": {
+        "version": "v1.0.0"
+    },
     "doctrine/inflector": {
         "version": "v1.2.0"
     },
@@ -64,6 +67,12 @@
     },
     "doctrine/orm": {
         "version": "v2.5.13"
+    },
+    "doctrine/persistence": {
+        "version": "v1.0.0"
+    },
+    "doctrine/reflection": {
+        "version": "v1.0.0"
     },
     "erusev/parsedown": {
         "version": "1.6.4"
@@ -100,6 +109,9 @@
     },
     "longman/telegram-bot": {
         "version": "0.53.0"
+    },
+    "massivescale/celery-php": {
+        "version": "2.1.2"
     },
     "monolog/monolog": {
         "version": "1.23.0"
@@ -343,9 +355,6 @@
             "version": "3.3",
             "ref": "a249484db698d1a847a30291c8f732414ac47e25"
         }
-    },
-    "symfony/security": {
-        "version": "v4.0.2"
     },
     "symfony/security-bundle": {
         "version": "3.3",

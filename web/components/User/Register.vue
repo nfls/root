@@ -17,15 +17,6 @@
                             <md-radio v-model="way" value="email">{{ $t("email") }}</md-radio>
                         </div>
                         <div class="md-flex md-flex-small-100" v-if="way == 'phone'">
-                            <md-field :class="getValidationClass('country')">
-                                <label for="country">{{ $t('country') }}</label>
-                                <md-select name="country" id="country" v-model="form.country">
-                                    <md-option v-for="country in countries" :key="country.code" :value="country.code">
-                                        {{country.code}} +{{country.prefix}}
-                                    </md-option>
-                                </md-select>
-                                <span class="md-error" v-if="$v.form.country && !$v.form.country.required">{{ $t('required') }}</span>
-                            </md-field>
                             <md-field :class="getValidationClass('phone')">
                                 <label for="phone">{{ $t('phone') }}</label>
                                 <md-input name="phone" id="phone" autocomplete="phone" v-model="form.phone"
@@ -141,7 +132,6 @@
                 phone: null,
                 email: null,
                 code: null,
-                country: null,
                 username: null,
                 password: null,
                 repass: null,
@@ -151,7 +141,6 @@
                 phone: {},
                 email: {},
                 code: {},
-                country: {},
                 username: {},
                 password: {},
                 repass: {}

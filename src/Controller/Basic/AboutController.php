@@ -4,6 +4,7 @@ namespace App\Controller\Basic;
 
 use App\Controller\AbstractController;
 use App\Entity\Preference;
+use App\Service\CeleryService;
 use Longman\TelegramBot\Telegram;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,9 +37,8 @@ class AboutController extends AbstractController
     /**
      * @Route("about/test")
      */
-    public function test() {
-        //$this->notification()->sendQQ("Telegram同步测试。");
-        //$this->notification()->sendTelegram("Telegram同步测试。");
+    public function test(CeleryService $celeryService) {
+        $celeryService->send();
 
     }
 

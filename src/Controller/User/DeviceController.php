@@ -5,6 +5,9 @@ namespace App\Controller\User;
 use App\Controller\AbstractController;
 use App\Entity\OAuth\Client;
 use App\Entity\Preference;
+use App\Entity\User\Device;
+use App\Type\DeviceType;
+use function GuzzleHttp\default_ca_bundle;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -33,6 +36,25 @@ class DeviceController extends AbstractController
      */
     public function register(Request $request)
     {
-
+        $token = $request->request->get("token");
+        $em = $this->getDoctrine()->getManager();
+        /** @var Device $device */
+        $device = $em->getRepository(Device::class)->findOneByUserAndToken($this->getUser(), $token) ?? new Device();
+        $device->setUser($this->getUser());
+        $device->setToken($token);
+        $device->setModel($request->request->get("model"));
+        $type = $request->request->get("type");
+        switch($type) {
+            case "ios":
+                $device->setType(DeviceType::IOS);
+                break;
+            case "wechat":
+                $device->setType(DeviceType::WE_CHAT);
+                break;
+            default:
+                throw new \InvalidArgumentException("Invalid type.");
+        }
+        $em->persist($device);
+        $em->flush();
     }
 }

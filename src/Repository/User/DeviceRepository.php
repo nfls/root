@@ -3,6 +3,7 @@
 namespace App\Repository\User;
 
 use App\Entity\User\Device;
+use App\Entity\User\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -13,4 +14,7 @@ class DeviceRepository extends ServiceEntityRepository
         parent::__construct($registry, Device::class);
     }
 
+    public function findOneByUserAndToken(User $user, string $token) {
+        return $this->findOneBy(["user" => $user, "token" => $token]);
+    }
 }
