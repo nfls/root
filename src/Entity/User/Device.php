@@ -195,4 +195,11 @@ class Device
         $this->remark = $remark;
     }
 
+    /**
+     * @param int $status
+     */
+    public function setStatus(int $status): void
+    {
+        $this->status = $status;
+    }
 }

@@ -11,8 +11,10 @@ namespace App\Type;
 
 class DeviceStatusType
 {
-    const INVALID = 0;
+    const INVALID = -1;
+    const SERVER_ERROR = 0;
     const NORMAL = 1;
     const SENT = 2;
     const ACKNOWLEDGED = 3;
+    const VIEWED = 4;
 }

@@ -16,15 +16,10 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        public:
-            pattern: (accessToken|login|register|reset)
-            security: false
         main:
             pattern:    ^/
-            http_basic: ~
             provider: user
-            anonymous: true
-            security: true
+            anonymous: ~
             guard:
                 authenticators:
                     - App\Security\SessionAuthenticator
@@ -32,16 +27,6 @@ security:
                     - App\Security\CookieAuthenticator
                     - App\Security\TokenAuthenticator
                 entry_point: App\Security\SessionAuthenticator
-            stateless: false
    
     encoders:
         App\Entity\User\User: bcrypt
-
-    access_control:
-        - { path: ^/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/user/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/code/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/oauth/authorize, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY}
-        # symfony starts at the top and stops at first match
-        # The ^ means that urls beginning with the pattern will be matched

@@ -4,6 +4,8 @@ namespace App\Controller\Basic;
 
 use App\Controller\AbstractController;
 use App\Entity\Preference;
+use App\Entity\User\Device;
+use App\Service\APNSService;
 use App\Service\CeleryService;
 use Longman\TelegramBot\Telegram;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -37,8 +39,9 @@ class AboutController extends AbstractController
     /**
      * @Route("about/test")
      */
-    public function test(CeleryService $celeryService) {
-        $celeryService->send();
+    public function test(APNSService $service) {
+        $device = $this->getDoctrine()->getManager()->getRepository(Device::class)->find("f7016e4b-44f1-439f-904a-05be55ef7d0e");
+        $service->push($device,"测试","这是副标题","这是内容这是内容这是内容这是内容这是内容这是内容",1,null,"https://nfls.io/uploads/d33a39bc90779f289bc8a3276431d068.jpeg");
 
     }
 
