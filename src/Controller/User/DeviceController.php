@@ -56,6 +56,7 @@ class DeviceController extends AbstractController
             default:
                 throw new \InvalidArgumentException("Invalid type.");
         }
+        $device->setTime();
         $em->persist($device);
         $em->flush();
         return $this->response()->responseEntity($device);

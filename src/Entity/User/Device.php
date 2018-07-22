@@ -63,6 +63,13 @@ class Device
      */
     private $user;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $time;
+
     public function __construct()
     {
         $this->callbackToken = base64_encode(random_bytes(32));
@@ -149,6 +156,27 @@ class Device
         return $this->callbackToken;
     }
 
+    /**
+     * @return int
+     */
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+
+    /**
+     */
+    public function setTime(): void
+    {
+        $this->time = new \DateTime();
+    }
 
 
+    /**
+     * @return \DateTime
+     */
+    public function getTime(): \DateTime
+    {
+        return $this->time;
+    }
 }
