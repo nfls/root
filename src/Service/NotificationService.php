@@ -11,6 +11,7 @@ namespace App\Service;
 
 use App\Entity\School\Alumni;
 use App\Entity\School\Notice;
+use App\Entity\User\Chat;
 use App\Entity\User\Device;
 use App\Entity\User\User;
 use App\Model\MailConstant;
@@ -202,6 +203,27 @@ class NotificationService
         $this->SMSService->send(
             $user->getPhone(),
             AliyunTemplateType::REALNAME_FAILED,
+            array());
+    }
+
+    public function notifyNewMessage(Chat $chat) {
+        $this->mailService->send(
+            "message@nfls.io",
+            "南外人私信",
+            $chat->getReceiver()->getEmail(),
+            "【NFLS.IO/南外人】私信 PM",
+            $this->mailRenderer->renderNewMessagePage($chat->getSender()->getUsername(), $chat->getContent())
+        );
+        $this->APNService->bulk(
+            $this->getDevices($chat->getReceiver()),
+            "来自 ".$chat->getSender()->getUsername()." 的新私信",
+            "New message from ".$chat->getSender()->getUsername(),
+            $chat->getContent(),
+            null,
+            null,
+            null);
+        $this->SMSService->send($chat->getReceiver()->getPhone(),
+            AliyunTemplateType::MESSAGE,
             array());
     }
 

@@ -6,6 +6,7 @@ use App\Controller\AbstractController;
 use App\Entity\User\Chat;
 use App\Entity\User\User;
 use App\Model\Permission;
+use App\Service\NotificationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +47,7 @@ class ChatController extends AbstractController
     /**
      * @Route("/chat/send", methods="POST")
      */
-    public function send(Request $request, TranslatorInterface $translator)
+    public function send(Request $request, TranslatorInterface $translator, NotificationService $service)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
@@ -65,6 +66,7 @@ class ChatController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->persist($chat);
         $em->flush();
+        $service->notifyNewMessage($chat);
         return $this->response()->response(null);
     }
 }

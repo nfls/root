@@ -16,4 +16,5 @@ class AliyunTemplateType
     const REGISTER = "SMS_119080912";
     const RESET = "SMS_119085891";
     const BIND = "SMS_119085892";
+    const MESSAGE = "SMS_125028504";
 }
