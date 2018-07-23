@@ -1,22 +1,30 @@
 from celery import Celery
 import apns2
+import sendgrid
+from sendgrid.helpers.mail import *
 import requests
+from aliyunsms import AliyunSMS
+import config
 
 app = Celery('notification', broker="redis://127.0.0.1", backend="redis://127.0.0.1")
 
-aps = apns2.APNSClient(mode="dev", client_cert="/etc/cert/push_dev.pem")
-callback = "https://nfls.io/device/pushCallback"
+aps = apns2.APNSClient(mode="dev", client_cert=config.apns_cert)
+sg = sendgrid.SendGridAPIClient(apikey=config.sendgrid_key)
 
+callback = config.apns_callback
 
-@app.task
-def add(x, y):
-    return x+y
+@app.task(name='tasks.sendEmail')
+def sendEmail(sender, sender_name, receiver, subject, content, content_type):
+    mail = Mail(Email(sender, sender_name), subject, Email(receiver), Content(content_type, content))
+    sg.client.mail.send.post(request_body=mail.get())
 
-
-@app.task
-def delete(x, y):
-    return x-y
-
+@app.task(name='tasks.sendSMS')
+def sendSMS(receiver, template_code, params):
+    cli = AliyunSMS(access_key_id=config.aliyun_id, access_secret=config.aliyun_key)
+    cli.request(phone_numbers=receiver,
+                       sign='南外人',
+                       template_code=template_code,
+                       template_param=params)
 
 @app.task(name='tasks.sendAPN')
 def sendAPN(token, callbackToken, title, subtitle, body, badge, custom):
