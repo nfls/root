@@ -11,8 +11,8 @@
                     <span class='md-title'>{{title}}</span>
                 </div>
                 <div class='md-toolbar-section-end' align="right" style="margin: 10px;">
-                    <span class='md-title'>{{username}}</span>&nbsp;&nbsp;&nbsp;
-                    <md-menu md-size='big' md-direction='bottom-start'>
+                    <md-button @click="active = !active" style="margin-right: -10px;">{{username}}<md-icon>arrow_drop_down</md-icon></md-button>&nbsp;&nbsp;
+                    <md-menu md-size='big' md-direction='bottom-start' :md-active.sync="active">
                         <md-button md-menu-trigger class='md-icon-button'>
                             <md-avatar>
                                 <img :src="avatar">
@@ -149,7 +149,6 @@
                         <md-divider></md-divider>
                         <md-subheader>{{ $t('admin') }}</md-subheader>
 
-
                         <md-list-item href='/admin'>
                             <md-icon>build</md-icon>
                             <span class='md-list-item-text'>{{ $t('console') }}</span></md-list-item>
@@ -159,6 +158,12 @@
                         <md-list-item to="/admin/upload">
                             <md-icon>file_upload</md-icon>
                             <span class='md-list-item-text'>{{ $t('upload') }}</span></md-list-item>
+                        <md-list-item to="/admin/notification">
+                            <md-icon>notification_important</md-icon>
+                            <span class='md-list-item-text'>{{ $t('notification') }}</span></md-list-item>
+                        <md-list-item to="/admin/vote">
+                            <md-icon>data_usage</md-icon>
+                            <span class='md-list-item-text'>{{ $t('vote') }}</span></md-list-item>
                     </div>
                 </md-list>
 
@@ -196,7 +201,8 @@
             webpSupported: false,
             showSnackbar: false,
             message: false,
-            language: ""
+            language: "",
+            active: false
         }),
         methods: {
             initReCaptcha() {

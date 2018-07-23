@@ -85,6 +85,8 @@ class OAuthController extends AbstractController
     {
         $repo = $this->getDoctrine()->getManager()->getRepository(Client::class);
         $client = $repo->getClientById($request->query->get("client_id"));
+        if(is_null($client))
+            return $this->response()->response(null);
         return $this->response()->response($client->getVersion());
     }
 
