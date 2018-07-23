@@ -57,14 +57,6 @@
                         <md-input name="phone" id="phone" autocomplete="phone" v-model="phone" disabled/>
                     </md-field>
                     <md-field v-if="!form.unbindPhone">
-                        <label>{{ $t('country') }}</label>
-                        <md-select name="country" id="country" v-model="form.country">
-                            <md-option v-for="country in countries" :key="country.code" :value="country.code">
-                                {{country.name}} +{{country.prefix}}
-                            </md-option>
-                        </md-select>
-                    </md-field>
-                    <md-field v-if="!form.unbindPhone">
                         <label>{{ $t('phone-new') }}</label>
                         <md-input name="newPhone" id="newPhone" v-model="form.newPhone"/>
                         <md-button class="md-primary" @click="sendSMS()">Send</md-button>
@@ -99,7 +91,6 @@
         props: ["isAdmin", "isLoggedIn", "isVerified", "gResponse"],
         data: () => ({
             sending: false,
-            countries: [],
             task: "",
             email: "",
             phone: "",
@@ -112,11 +103,6 @@
         mounted: function () {
             this.$emit("changeTitle", this.$t("security-title"))
             this.$emit("prepareRecaptcha")
-            this.axios.get("/code/available").then((response) => {
-                this.countries = response.data["data"]
-            }).catch((error) => {
-                this.$emit("generalError",error)
-            })
             if (this.$route.query.reason === "email")
                 this.oauth = true
         },
@@ -139,7 +125,6 @@
                     newEmail: null,
                     phoneCode: null,
                     emailCode: null,
-                    country: null,
                     newPhone: null,
                     unbindEmail: false,
                     unbindPhone: false
@@ -175,7 +160,7 @@
             ct() {
                 switch (this.task) {
                     case "email":
-                        this.axios.post("/code/bind", {
+                        this.axios.post("/user/code", {
                             "email": this.form.newEmail,
                             "captcha": grecaptcha.getResponse()
                         }).then((response) => {
@@ -189,9 +174,9 @@
                         })
                         break
                     case "sms":
-                        this.axios.post("/code/bind", {
+                        this.axios.post("/user/code", {
+                            "type": 3,
                             "phone": this.form.newPhone,
-                            "country": this.form.country,
                             "captcha": grecaptcha.getResponse()
                         }).then((response) => {
                             if (response.data["code"] === 200) {

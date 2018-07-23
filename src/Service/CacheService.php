@@ -45,6 +45,26 @@ class CacheService
         }
     }
 
+    public function codeWrite(string $target, string $code, int $action) {
+        $this->client->set($target, json_encode(["code" => $code, "action" => $action]));
+        $this->client->expire($target, 600);
+    }
+
+    public function codeVerify(string $target, string $code, int $action) {
+        $verification = json_decode($this->client->get($target), true);
+        if(is_null($verification))
+            return false;
+        if($verification["code"] == $code && $verification["action"] == $action) {
+            $this->client->set($target, null);
+            $this->client->expire($target, 1);
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+
     private function getIdentifierForAntiSpider(User $user){
         return "antispider.".(string)$user->getId();
     }

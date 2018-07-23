@@ -6,6 +6,7 @@ use App\Controller\AbstractController;
 use App\Entity\School\Alumni;
 use App\Model\Normalizer\UuidNormalizer;
 use App\Model\Permission;
+use App\Service\NotificationService;
 use Proxies\__CG__\App\Entity\Preference;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -223,7 +224,7 @@ class AlumniController extends AbstractController
 
         $form->setStatus(1);
         $form->setSubmitTime(new \DateTime());
-        $this->notification()->notifyNewVerification($form);
+        //$this->notification()->notifyNewVerification($form);
         $em->persist($form);
         $em->flush();
         return $this->response()->responseEntity(null, 200);
@@ -274,7 +275,7 @@ class AlumniController extends AbstractController
     /**
      * @Route("admin/alumni/auth/update", methods="POST")
      */
-    public function update(Request $request)
+    public function update(Request $request, NotificationService $service)
     {
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         if (!$this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_ALUMNI_FORM))
@@ -292,12 +293,12 @@ class AlumniController extends AbstractController
         switch ($action) {
             case "reject":
                 $ticket->setStatus(Alumni::STATUS_REJECTED);
-                $this->notification()->notifyRealnameFailed($ticket->getUser());
+                $service->realnameFailed($ticket->getUser());
                 break;
             case "accept":
                 $ticket->setStatus(Alumni::STATUS_PASSED);
                 $ticket->setExpireAt($time);
-                $this->notification()->notifyRealnamePassed($ticket->getUser(),$ticket->readableUserStatus(),$ticket->getExpireAt());
+                $service->realnamePassed($ticket->getUser(),$ticket);
                 break;
             default:
                 break;

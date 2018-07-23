@@ -58,11 +58,6 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         }
     }
 
-    /**
-     * @param $info
-     * @return User|null
-     */
-
     public function search($info)
     {
         return $this->createQueryBuilder("u")

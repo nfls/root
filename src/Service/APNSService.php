@@ -10,16 +10,11 @@ namespace App\Service;
 
 
 use App\Entity\User\Device;
+use App\Model\User;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class APNSService
+class APNSService extends CeleryEnabledService
 {
-    private $celery;
-
-    public function __construct(CeleryService $celeryService)
-    {
-        $this->celery = $celeryService;
-    }
 
     /**
      * @param Device $device
@@ -28,38 +23,9 @@ class APNSService
      * @param null|string $body
      * @param int|null $badge
      * @param null|string $image
-     * @throws \CeleryException
-     * @throws \CeleryPublishException
      */
     public function push(Device $device, ?string $title, ?string $subtitle, ?string $body, ?int $badge, ?string $link, ?string $image) {
-        $this->celery->client->PostTask("tasks.sendAPN",
-            array(
-                $device->getToken(),
-                $device->getCallbackToken(),
-                $title,
-                $subtitle,
-                $body,
-                $badge,
-                [
-                    "imageUrl"=> $image,
-                    "link" => $link,
-                    "callbackToken" => $device->getCallbackToken()
-                ]));
-    }
-
-    /**
-     * @param array $devices
-     * @param null|string $title
-     * @param null|string $subtitle
-     * @param null|string $body
-     * @param int|null $badge
-     * @param null|string $link
-     * @param null|string $image
-     * @throws \CeleryException
-     * @throws \CeleryPublishException
-     */
-    public function bulk(array $devices, ?string $title, ?string $subtitle, ?string $body, ?int $badge, ?string $link, ?string $image) {
-        foreach ($devices as $device) {
+        try {
             $this->celery->client->PostTask("tasks.sendAPN",
                 array(
                     $device->getToken(),
@@ -73,6 +39,24 @@ class APNSService
                         "link" => $link,
                         "callbackToken" => $device->getCallbackToken()
                     ]));
+        } catch(\Exception $e) {
+            return;
+        }
+
+    }
+
+    /**
+     * @param array $devices
+     * @param null|string $title
+     * @param null|string $subtitle
+     * @param null|string $body
+     * @param int|null $badge
+     * @param null|string $link
+     * @param null|string $image
+     */
+    public function bulk(array $devices, ?string $title, ?string $subtitle, ?string $body, ?int $badge, ?string $link, ?string $image) {
+        foreach ($devices as $device) {
+            $this->push($device, $title, $subtitle, $body, $badge, $link, $image);
         }
     }
 }

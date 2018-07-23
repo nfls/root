@@ -18,7 +18,7 @@
                         </div>
                         <div class="md-flex md-flex-small-100" v-if="way == 'phone'">
                             <md-field :class="getValidationClass('phone')">
-                                <label for="phone">{{ $t('phone') }}</label>
+                                <label>{{ $t('phone') }}</label>
                                 <md-input name="phone" id="phone" autocomplete="phone" v-model="form.phone"
                                           :disabled="sending"/>
                                 <span class="md-error" v-if="$v.form.phone && !$v.form.phone.required">{{ $t('required') }}</span>
@@ -145,12 +145,10 @@
                 password: {},
                 repass: {}
             },
-            countries: [],
             sending: false,
             passwordMismatch: false,
             text: '',
             warning: false,
-            task: '',
             way: "phone"
         }),
         validations() {
@@ -169,59 +167,22 @@
             },
             ct() {
                 this.sending = true
-                switch (this.task) {
-                    case "register":
-                        this.form["captcha"] = grecaptcha.getResponse()
-                        this.axios.post("/user/register", this.form).then((response) => {
-                            if (response.data["code"] === 200) {
-                                this.showMsg(this.$t("registered"))
-                                window.setTimeout(() => {
-                                    this.$router.push("/user/login");
-                                }, 3000)
-                            } else {
-                                this.showMsg(response.data["data"])
-                                this.sending = false
-                            }
-                        }).catch((error) => {
-                            this.sending = false
-                            this.$emit("generalError",error)
-                        })
-                        break
-                    case "phone":
-                        this.axios.post("/code/register", {
-                            "country": this.form.country,
-                            "phone": this.form.phone,
-                            "captcha": grecaptcha.getResponse()
-                        }).then((response) => {
-                            this.sending = false
-                            if (response.data["code"] === 200) {
-                                this.showMsg(this.$t("send-succeeded"))
-                            } else {
-                                this.showMsg(response.data["data"])
-                            }
-                        }).catch((error) => {
-                            this.sending = false
-                            this.$emit("generalError",error)
-                        })
-                        break
-                    case "email":
-                        this.axios.post("/code/register", {
-                            "email": this.form.email,
-                            "captcha": grecaptcha.getResponse()
-                        }).then((response) => {
-                            this.sending = false
-                            if (response.data["code"] === 200) {
-                                this.showMsg(this.$t("send-succeeded"))
-                            } else {
-                                this.showMsg(response.data["data"])
-                            }
-                        }).catch((error) => {
-                            this.sending = false
-                            this.$emit("generalError",error)
-                        })
-                        break
-                }
-                this.task = ""
+                this.axios.post("/code/register", {
+                    "type": 1,
+                    "email": this.form.email,
+                    "phone": this.form.phone,
+                    "captcha": grecaptcha.getResponse()
+                }).then((response) => {
+                    this.sending = false
+                    if (response.data["code"] === 200) {
+                        this.showMsg(this.$t("send-succeeded"))
+                    } else {
+                        this.showMsg(response.data["data"])
+                    }
+                }).catch((error) => {
+                    this.sending = false
+                    this.$emit("generalError",error)
+                })
                 grecaptcha.reset()
             },
             register() {
@@ -252,8 +213,20 @@
                         this.text = this.$t("password-mismatch")
                         this.warning = true
                     } else {
-                        this.task = "register"
-                        grecaptcha.execute()
+                        this.axios.post("/user/register", this.form).then((response) => {
+                            if (response.data["code"] === 200) {
+                                this.showMsg(this.$t("registered"))
+                                window.setTimeout(() => {
+                                    this.$router.push("/user/login");
+                                }, 3000)
+                            } else {
+                                this.showMsg(response.data["data"])
+                                this.sending = false
+                            }
+                        }).catch((error) => {
+                            this.sending = false
+                            this.$emit("generalError",error)
+                        })
                     }
                 }
             },
@@ -262,14 +235,11 @@
                     phone: {
                         required,
                         numeric
-                    },
-                    country: {
-                        required
                     }
                 }
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
-                    this.task = "phone"
+                    this.form.email = null
                     grecaptcha.execute()
                 }
             },
@@ -282,7 +252,7 @@
                 }
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
-                    this.task = "email"
+                    this.form.phone = null
                     grecaptcha.execute()
                 }
             },
@@ -291,11 +261,6 @@
             }
         },
         mounted: function () {
-            this.axios.get("/code/available").then((response) => {
-                this.countries = response.data["data"]
-            }).catch((error) => {
-                this.$emit("generalError",error)
-            })
             this.$emit("changeTitle", this.$t("register-title"))
             this.$emit("prepareRecaptcha")
         },

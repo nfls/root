@@ -236,7 +236,7 @@ class BlackBoardController extends AbstractController
             $em->persist($notice);
             $em->flush();
             if($time <= new \DateTime())
-                $this->notification()->notifyNewNotice($class,$notice);
+                //$this->notification()->notifyNewNotice($class,$notice);
             return $this->response()->response(null);
         } else {
             return $this->response()->response($translator->trans("blackboard-id-not-exists"),Response::HTTP_FORBIDDEN);
@@ -261,7 +261,7 @@ class BlackBoardController extends AbstractController
         $notice = $noticeRepo->find($request->request->get("id"));
         if(!is_null($notice->getDeadline()) && $notice->claz() === $class)
         {
-            $this->notification()->notifyDeadline($class,$notice);
+            //$this->notification()->notifyDeadline($class,$notice);
         }else {
             return $this->response()->response($translator->trans("cannot-send-notice"),Response::HTTP_FORBIDDEN);
         }

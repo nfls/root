@@ -45,13 +45,6 @@ class AbstractController extends Controller
         return $this->getDoctrine()->getManager()->getRepository(Preference::class);
     }
 
-    public function notification()
-    {
-        $service = new NotificationService();
-        $service->set($this->get('snc_redis.default'));
-        return $service;
-    }
-
     public function verifyCaptcha($captcha)
     {
         $verifyResponse = file_get_contents('https://www.recaptcha.net/recaptcha/api/siteverify?secret=' . $_ENV["GOOGLE_KEY"] . '&response=' . $captcha);

@@ -101,7 +101,6 @@
                     username: this.form.username,
                     password: this.form.password,
                     remember: this.form.remember
-                    //captcha: grecaptcha.getResponse()
                 }).then((response) => {
                     if (response.data.code === 200) {
                         this.$emit("showMsg", this.$t('logged-in'))
@@ -117,7 +116,6 @@
                             this.$emit("showMsg", response.data["data"])
                         else
                             this.$emit("showMsg", this.$t('login-failed'))
-                        //grecaptcha.reset()
                     }
                     this.sending = false
                 }).catch((error) => {

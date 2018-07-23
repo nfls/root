@@ -91,15 +91,12 @@
 
                     <md-subheader>{{ $t('in-school') }}</md-subheader>
 
-                    <md-list-item to='/school/pastpaper'>
-                        <md-icon>book</md-icon>
-                        <span class='md-list-item-text'>{{ $t('resource') }}</span></md-list-item>
-                    <md-list-item to='/school/blackboard'>
-                        <md-icon>speaker_notes</md-icon>
-                        <span class='md-list-item-text'>{{ $t('blackboard') }}</span></md-list-item>
                     <md-list-item to='/school/vote'>
                         <md-icon>plus_one</md-icon>
                         <span class='md-list-item-text'>{{ $t('vote') }}</span></md-list-item>
+                    <md-list-item href='https://ib.nfls.io'>
+                        <md-icon>pool</md-icon>
+                        <span class='md-list-item-text'>{{ $t('study') }}</span></md-list-item>
 
                     <md-divider></md-divider>
 
@@ -136,12 +133,6 @@
                     <md-list-item href='https://dev.nfls.io'>
                         <md-icon>developer_mode</md-icon>
                         <span class='md-list-item-text'>{{ $t('development') }}</span></md-list-item>
-                    <md-list-item href='https://kahoot.nfls.io'>
-                        <md-icon>toys</md-icon>
-                        <span class='md-list-item-text'>Kahoot</span></md-list-item>
-                    <md-list-item href='https://ib.nfls.io'>
-                        <md-icon>pool</md-icon>
-                        <span class='md-list-item-text'>{{ $t('managebac') }}</span></md-list-item>
                     <md-list-item href='https://nflsio.statuspage.io'>
                         <md-icon>flag</md-icon>
                         <span class='md-list-item-text'>{{ $t('statuspage') }}</span></md-list-item>

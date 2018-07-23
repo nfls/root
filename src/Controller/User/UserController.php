@@ -7,15 +7,13 @@ use App\Entity\School\Alumni;
 use App\Entity\User\Chat;
 use App\Entity\User\User;
 use App\Model\Permission;
-use App\Model\PrivacyBit;
 use App\Model\PrivacyLevel;
 use App\Service\CacheService;
-use App\Service\Notification\NotificationService;
+use App\Service\CodeService;
+use App\Service\NotificationService;
+use App\Type\AliyunTemplateType;
+use App\Type\CodeActionType;
 use GuzzleHttp\Client;
-use libphonenumber\NumberParseException;
-use libphonenumber\PhoneNumber;
-use libphonenumber\PhoneNumberFormat;
-use libphonenumber\PhoneNumberUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,15 +29,10 @@ class UserController extends AbstractController
     /**
      * @Route("/user/register", name="register", methods="POST")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator)
+    public function register(Request $request, NotificationService $service, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator)
     {
-        if (!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response()->response($translator->trans("incorrect-captcha"), Response::HTTP_UNAUTHORIZED);
         $em = $this->getDoctrine()->getManager();
         $user = new User();
-        $target = $this->getTarget($request);
-        if (is_null($target))
-            return $this->response()->response($translator->trans("incorrect-phone-or-email"), Response::HTTP_UNAUTHORIZED);
         $username = $request->request->get("username");
         if ($this->verifyUsername($username)) {
             $user->setUsername($username);
@@ -52,12 +45,16 @@ class UserController extends AbstractController
         } else {
             return $this->response()->response($translator->trans("illegal-password"), Response::HTTP_UNAUTHORIZED);
         }
-        if ($this->notification()->verify($target, $request->request->get("code"), NotificationService::ACTION_REGISTERING)) {
-            if ($target instanceof PhoneNumber) {
-                $util = PhoneNumberUtil::getInstance();
-                $user->setPhone($util->format($target, PhoneNumberFormat::E164));
+        $result = $service->verify(
+            $request->request->get("phone"),
+            $request->request->get("email"),
+            $request->request->get("code"),
+            CodeActionType::REGISTER);
+        if (!is_null($request)) {
+            if ($result === true) {
+                $user->setPhone($request->request->get("phone"));
             } else {
-                $user->setEmail($target);
+                $user->setEmail($request->request->get("email"));
             }
         } else {
             return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);
@@ -70,55 +67,6 @@ class UserController extends AbstractController
         return $this->response()->response(null);
     }
 
-    private function getTarget(Request $request)
-    {
-        $phone = intval($request->request->get("phone"));
-        if ($phone > 0) {
-            $country = $request->request->get("country");
-            $util = PhoneNumberUtil::getInstance();
-            try {
-                $phoneObject = $util->parse($phone, $country);
-                return $phoneObject;
-            } catch (NumberParseException $e) {
-                return null;
-            }
-        } else {
-            $email = $request->request->get("email");
-            return $email;
-        }
-    }
-
-    private function verifyUsername($username)
-    {
-        $re = '/[A-Za-z0-9_\-\x{0800}-\x{9fa5}]{3,16}/u';
-        if (preg_match($re, $username) && !is_numeric($username[0])) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
-
-    private function verifyPassword(User $user, $password)
-    {
-        //Strength
-        $re = '/^((?!.*[\s])(?=\S*?[a-zA-Z])(?=\S*?[0-9]).{6,})$/';
-        if (!preg_match($re, $password))
-            return false;
-        //Email
-        if (null !== $user->getEmail() && preg_match('/' . $user->getEmail() . '/', $password))
-            return false;
-        //Username
-        if (preg_match('/' . $user->getUsername() . '/', $password))
-            return false;
-
-        return true;
-    }
-
-    private function getDefaultAvatar($username, $id)
-    {
-        file_put_contents($this->get('kernel')->getRootDir() . "/../public/avatar/" . strval($id) . ".png", fopen('http://identicon.relucks.org/' . md5($username) . '?size=200', 'r'));
-    }
 
     /**
      * @Route("/user/login", name="login")
@@ -150,6 +98,42 @@ class UserController extends AbstractController
         }
     }
 
+
+    /**
+     * @Route("/user/reset", methods="POST")
+     */
+    public function reset(Request $request, NotificationService $service, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository(User::class);
+
+        $result = $service->verify(
+            $request->request->get("email"),
+            $request->request->get("phone"),
+            $request->request->get("code"),
+            CodeActionType::RESET);
+        if (!is_null($result)) {
+            if ($result === true) {
+                $user = $repo->findOneBy(["phone" => $request->request->get("phone")]);
+            } else {
+                $user = $repo->findOneBy(["email" => $request->request->get("email")]);
+            }
+        } else {
+            return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);
+        }
+        $password = $request->request->get("password");
+        if ($this->verifyPassword($user, $password)) {
+            $user->setPassword($passwordEncoder->encodePassword($user, $password));
+        } else {
+            return $this->response()->response($translator->trans("illegal-password"), Response::HTTP_UNAUTHORIZED);
+        }
+        $em->persist($user);
+        $em->flush();
+        $this->writeLog("UserPasswordReset", null, $user);
+        return $this->response()->response(null);
+    }
+
+
     /**
      * @Route("/user/fastLogin", name="fastLogin")
      */
@@ -166,43 +150,6 @@ class UserController extends AbstractController
 
     }
 
-
-
-    /**
-     * @Route("/user/reset", methods="POST")
-     */
-    public function reset(Request $request, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator)
-    {
-        if (!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response()->response($translator->trans("incorrect-password"), Response::HTTP_UNAUTHORIZED);
-
-        $target = $this->getTarget($request);
-        if (is_null($target))
-            return $this->response()->response($translator->trans("incorrect-phone-or-email"), Response::HTTP_UNAUTHORIZED);
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository(User::class);
-        if ($this->notification()->verify($target, $request->request->get("code"), NotificationService::ACTION_RESET)) {
-            if ($target instanceof PhoneNumber) {
-                $util = PhoneNumberUtil::getInstance();
-                $phone = $util->format($target, PhoneNumberFormat::E164);
-                $user = $repo->findOneBy(["phone" => $phone]);
-            } else {
-                $user = $repo->findOneBy(["email" => $target]);
-            }
-        } else {
-            return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);
-        }
-        $password = $request->request->get("password");
-        if ($this->verifyPassword($user, $password)) {
-            $user->setPassword($passwordEncoder->encodePassword($user, $password));
-        } else {
-            return $this->response()->response($translator->trans("illegal-password"), Response::HTTP_UNAUTHORIZED);
-        }
-        $em->persist($user);
-        $em->flush();
-        $this->writeLog("UserPasswordReset", null, $user);
-        return $this->response()->response(null);
-    }
 
     /**
      * @Route("/user/logout", methods="POST")
@@ -233,42 +180,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/wiki", name="User(Wiki)", methods="GET")
-     */
-    public function wiki()
-    {
-        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        if (null === $this->getUser())
-            return $this->response()->response(null, Response::HTTP_NO_CONTENT);
-        return new JsonResponse(array("user" => $this->getUser()->getInfoArray()));
-    }
-
-    /**
-     * @Route("/user/forum", name="User(OAuth)", methods="GET")
-     */
-    public function forum()
-    {
-        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        if (null === $this->getUser())
-            return $this->response()->response(null, Response::HTTP_NO_CONTENT);
-        return new JsonResponse($this->getUser()->getInfoArray());
-    }
-
-    /**
-     * @Route("/user/openid", name="User(OpenId)", methods="GET")
-     */
-    public function openid()
-    {
-        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        if (null === $this->getUser())
-            return $this->response()->response(null, Response::HTTP_NO_CONTENT);
-        return new JsonResponse(array(
-            "name" => $this->getUser()->getUsername(),
-            "email" => $this->getUser()->getEmail()
-        ));
-    }
-
-    /**
      * @Route("user/info", name="User(Info)", methods="GET")
      */
     public function info(Request $request)
@@ -285,7 +196,7 @@ class UserController extends AbstractController
     /**
      * @Route("user/change", methods="POST")
      */
-    public function change(Request $request, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator)
+    public function change(Request $request, NotificationService $service, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if ($passwordEncoder->isPasswordValid($this->getUser(), $request->request->get("password"))) {
@@ -294,7 +205,6 @@ class UserController extends AbstractController
             $newEmail = $request->request->get("newEmail");
             $unbindPhone = $request->request->get("unbindPhone");
             $newPhone = $request->request->get("newPhone");
-            $country = $request->request->get("country");
             $phoneCode = $request->request->get("phoneCode") ?? "";
             $emailCode = $request->request->get("emailCode") ?? "";
             $user = $this->getUser();
@@ -310,7 +220,7 @@ class UserController extends AbstractController
                     return $this->response()->response($translator->trans("phone-not-bind"));
                 }
             } else if ($newEmail) {
-                if ($this->notification()->verify($newEmail, $emailCode, NotificationService::ACTION_BIND))
+                if ($service->verify(null, $newEmail, $emailCode, CodeActionType::BIND) === false)
                     $user->setEmail($newEmail);
                 else
                     return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);
@@ -321,16 +231,10 @@ class UserController extends AbstractController
                     return $this->response()->response($translator->trans("email-not-bind"), Response::HTTP_UNAUTHORIZED);
                 }
             } else if ($newPhone) {
-                $util = PhoneNumberUtil::getInstance();
-                try {
-                    $phone = $util->parse($newPhone, $country);
-                    if ($this->notification()->verify($phone, $phoneCode, NotificationService::ACTION_BIND))
-                        $user->setPhone($util->format($phone, PhoneNumberFormat::E164));
-                    else
-                        return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);
-                } catch (NumberParseException $e) {
-                    return $this->response()->response($translator->trans("incorrect-phone-or-email"), Response::HTTP_UNAUTHORIZED);
-                }
+                if ($service->verify($newPhone, null, $phoneCode, CodeActionType::BIND) === true)
+                    $user->setPhone($newPhone);
+                else
+                    return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);
             }
             $this->writeLog("UserSecurityChanged");
             $em = $this->getDoctrine()->getManager();
@@ -508,19 +412,61 @@ class UserController extends AbstractController
         }
     }
 
-    /*
-    public function regen() {
-        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
-        $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findAll();
-        $manager = $this->getDoctrine()->getManager();
-        foreach($users as $user){
-            $user->regenerateToken();
-            $manager->persist($user);
-        }
-        $manager->flush();
-        return Response::create();
+
+    /**
+     * @Route("/user/wiki", methods="GET")
+     */
+    public function wiki()
+    {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if (null === $this->getUser())
+            return $this->response()->response(null, Response::HTTP_NO_CONTENT);
+        return new JsonResponse(array("user" => $this->getUser()->getInfoArray()));
     }
-    */
+
+    /**
+     * @Route("/user/forum", methods="GET")
+     */
+    public function forum()
+    {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if (null === $this->getUser())
+            return $this->response()->response(null, Response::HTTP_NO_CONTENT);
+        return new JsonResponse($this->getUser()->getInfoArray());
+    }
+
+    /**
+     * @Route("/user/openid", methods="GET")
+     */
+    public function openid()
+    {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if (null === $this->getUser())
+            return $this->response()->response(null, Response::HTTP_NO_CONTENT);
+        return new JsonResponse(array(
+            "name" => $this->getUser()->getUsername(),
+            "email" => $this->getUser()->getEmail()
+        ));
+    }
+
+
+    /**
+     * @Route("/user/code", methods="POST")
+     */
+    public function code(Request $request, NotificationService $service, TranslatorInterface $translator)
+    {
+        if (!$this->verifyCaptcha($request->request->get("captcha")))
+            return $this->response()->response($translator->trans("incorrect-captcha"), Response::HTTP_UNAUTHORIZED);
+        $type = $request->request->getInt("type");
+        if($type == AliyunTemplateType::BIND)
+            $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $error = $service->code($request->request->get("email"), $request->request->get("phone"), $type);
+        if($error)
+            return $this->response()->response(null);
+        else
+            return $this->response()->response($translator->trans("already-used"), Response::HTTP_FORBIDDEN);
+    }
+
 
     private function verifyWeChat($code) {
         $url = "https://api.weixin.qq.com/sns/jscode2session?appid=" . $_ENV["WECHAT_APP_ID"] . "&secret=" . $_ENV["WECHAT_APP_SECRET"] . "&js_code=$code&grant_type=authorization_code";
@@ -531,5 +477,39 @@ class UserController extends AbstractController
             return $data;
         else
             return false;
+    }
+
+
+
+    private function verifyUsername($username)
+    {
+        $re = '/[A-Za-z0-9_\-\x{0800}-\x{9fa5}]{3,16}/u';
+        if (preg_match($re, $username) && !is_numeric($username[0])) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    private function verifyPassword(User $user, $password)
+    {
+        //Strength
+        $re = '/^((?!.*[\s])(?=\S*?[a-zA-Z])(?=\S*?[0-9]).{6,})$/';
+        if (!preg_match($re, $password))
+            return false;
+        //Email
+        if (null !== $user->getEmail() && preg_match('/' . $user->getEmail() . '/', $password))
+            return false;
+        //Username
+        if (preg_match('/' . $user->getUsername() . '/', $password))
+            return false;
+
+        return true;
+    }
+
+    private function getDefaultAvatar($username, $id)
+    {
+        file_put_contents($this->get('kernel')->getRootDir() . "/../public/avatar/" . strval($id) . ".png", fopen('http://identicon.relucks.org/' . md5($username) . '?size=200', 'r'));
     }
 }

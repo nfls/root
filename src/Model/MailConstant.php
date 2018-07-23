@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Service\Notification\Provider;
+namespace App\Model;
 
 use Parsedown;
 
-class MainConstant
+class MailConstant
 {
     function renderCodePage($actionCN, $actionEN, $code)
     {
@@ -33,11 +33,11 @@ EOD;
         return $this->base($text);
     }
 
-    function renderRealnameSucceeded(string $statusCN,string $statusEN, string $time)
+    function renderRealnameSucceeded(string $statusCN,string $statusEN, string $timeCN, string $timeEN)
     {
         $text = <<<EOD
-        <p>用户您好，您的实名认证已通过审核，当前身份为$statusCN ，有效期至$time 。</p>
-        <p>Hello, now you are verified. Your identity is $statusEN with expire date on $time .</p> 
+        <p>用户您好，您的实名认证已通过审核，当前身份为$statusCN ，有效期至$timeCN 。</p>
+        <p>Hello, now you are verified. Your identity is $statusEN with expire date on $timeEN .</p> 
         <p>&nbsp;</p>
 EOD;
         return $this->base($text);
