@@ -11,6 +11,7 @@ use App\Entity\User\User;
 use DateInterval;
 use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\ImplicitGrant;
 use League\OAuth2\Server\Grant\PasswordGrant;
@@ -20,14 +21,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class OAuthService extends Controller
 {
-
-    const PrivateKey = "/etc/cert/oauth.key";
-    const EncryptionKey = "/etc/cert/oauth.pub";
     private $em;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->em = $entityManager;
+    }
+
+    private function getPrivateKey(){
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            return new CryptKey("C:/Users/huqin/private.key", null, false);
+        } else {
+            return "/etc/cert/oauth.key";
+        }
+    }
+
+    private function getPublicKey(){
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            return new CryptKey("C:/Users/huqin/public.key", null, false);
+        } else {
+            return "/etc/cert/oauth.pub";
+        }
     }
 
     public function getServer()
@@ -56,7 +70,7 @@ class OAuthService extends Controller
         $refreshTokenGrant = new RefreshTokenGrant($refreshTokenRepo);
         $refreshTokenGrant->setRefreshTokenTTL($refreshTokenExpiry);
         //$refreshTokenGrant->canRespondToAccessTokenRequest();
-        $server = new AuthorizationServer($clientRepo, $accessTokenRepo, $scopeRepo, self::PrivateKey, self::EncryptionKey);
+        $server = new AuthorizationServer($clientRepo, $accessTokenRepo, $scopeRepo, $this->getPrivateKey(), $this->getPublicKey());
         $server->enableGrantType($passwordGrant, $accessTokenExpiry);
         $server->enableGrantType($authCodeGrant, $accessTokenExpiry);
         $server->enableGrantType($implicitGrant, $accessTokenExpiry);
@@ -69,7 +83,7 @@ class OAuthService extends Controller
     {
         $em = $this->em;
         $accessTokenRepo = $em->getRepository(AccessToken::class);
-        $server = new ResourceServer($accessTokenRepo, self::EncryptionKey);
+        $server = new ResourceServer($accessTokenRepo, $this->getPublicKey());
         return $server;
     }
 }
