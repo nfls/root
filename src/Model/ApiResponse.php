@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -68,6 +69,15 @@ class ApiResponse
     function responseRawEntity($data, $code = Response::HTTP_OK)
     {
         $data = json_decode($this->rawSerializer->serialize($data, "json"), TRUE);
+        $json = new JsonResponse();
+        $array = array("code" => $code, "data" => $data);
+        $json->setData($array);
+        return $json;
+    }
+
+    function responseJsonEntity($entity, $code = Response::HTTP_OK) {
+        $serializer = new Serializer([new JsonSerializableNormalizer()],[new JsonEncoder()]);
+        $data = json_decode($serializer->serialize($entity, "json"), TRUE);
         $json = new JsonResponse();
         $array = array("code" => $code, "data" => $data);
         $json->setData($array);

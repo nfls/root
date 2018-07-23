@@ -105,11 +105,15 @@ class AlumniController extends AbstractController
     /**
      * @Route("alumni/duplicate",methods="POST")
      */
-    public function duplicate(Request $request)
+    public function duplicate(Request $request, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if (!$this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_ALUMNI_FORM))
             return $this->response()->response("csrf.invalid", Response::HTTP_BAD_REQUEST);
+        $repo = $this->getDoctrine()->getManager()->getRepository(Alumni::class);
+        if ((count($repo->findBy(["user" => $this->getUser(), "status" => Alumni::STATUS_NOT_SUBMITTED])) + count($repo->findBy(["user" => $this->getUser(), "status" => Alumni::STATUS_SUBMITTED]))) > 0) {
+            return $this->response()->response($translator->trans("unfinished-form"), Response::HTTP_FORBIDDEN);
+        }
         $id = $request->query->get("id");
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Alumni::class);

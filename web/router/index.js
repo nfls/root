@@ -27,6 +27,7 @@ import Public from '../components/User/Public'
 import Preference from '../components/Admin/Preference'
 import Upload from '../components/Admin/Upload'
 import Notification from '../components/Admin/Notification'
+import VoteAdmin from '../components/Admin/Vote'
 
 
 Vue.use(Router)
@@ -100,6 +101,9 @@ export default new Router({
                 }, {
                     path: '/admin/notification',
                     component: Notification
+                }, {
+                    path: '/admin/vote',
+                    component: VoteAdmin
                 }, {
                     path: '*',
                     component: Jump

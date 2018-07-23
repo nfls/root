@@ -8,10 +8,6 @@
             <md-button class="md-raised text" href="https://dev.nfls.io/jira/openid/login/2">{{ $t('feedback') }}</md-button>
         </p>
         <p class="text">
-            <span class="md-title">App</span><br/>
-            <span class="md-body">{{ $t('developing' )}}</span><br/>
-        </p>
-        <p class="text">
             <span class="md-title">{{ $t('version-control') }}</span><br/>
             <span class="md-body">{{ $t('commits-prompt') }}</span>
             <code v-if="loaded" v-html="version"></code>
