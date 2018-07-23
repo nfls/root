@@ -87,6 +87,30 @@
                         <md-icon>dashboard</md-icon>
                         <span class='md-list-item-text'>{{ $t('homepage') }}</span></md-list-item>
 
+
+
+                    <md-divider></md-divider>
+
+                    <md-subheader>{{ $t('general') }}</md-subheader>
+
+                    <md-list-item href='https://nfls.io/forum'>
+                        <md-icon>forum</md-icon>
+                        <span class='md-list-item-text'>{{ $t('forum') }}</span></md-list-item>
+                    <md-list-item href='https://nfls.io/wiki'>
+                        <md-icon>library_books</md-icon>
+                        <span class='md-list-item-text'>{{ $t('wiki') }}</span></md-list-item>
+
+                    <md-divider></md-divider>
+
+                    <md-subheader>{{ $t('media') }}</md-subheader>
+
+                    <md-list-item to='/media/game'>
+                        <md-icon>gamepad</md-icon>
+                        <span class='md-list-item-text'>{{ $t('game') }}</span></md-list-item>
+                    <md-list-item to='/media/gallery'>
+                        <md-icon>photo_library</md-icon>
+                        <span class='md-list-item-text'>{{ $t('gallery') }}</span></md-list-item>
+
                     <md-divider></md-divider>
 
                     <md-subheader>{{ $t('in-school') }}</md-subheader>
@@ -110,39 +134,16 @@
                         <span class='md-list-item-text'>{{ $t('directory') }}</span></md-list-item>
 
                     <md-divider></md-divider>
-
-                    <md-subheader>{{ $t('media') }}</md-subheader>
-
-                    <md-list-item to='/media/game'>
-                        <md-icon>gamepad</md-icon>
-                        <span class='md-list-item-text'>{{ $t('game') }}</span></md-list-item>
-                    <md-list-item to='/media/gallery'>
-                        <md-icon>photo_library</md-icon>
-                        <span class='md-list-item-text'>{{ $t('gallery') }}</span></md-list-item>
-
-                    <md-divider></md-divider>
-
-                    <md-subheader>{{ $t('external') }}</md-subheader>
-
-                    <md-list-item href='https://nfls.io/forum'>
-                        <md-icon>forum</md-icon>
-                        <span class='md-list-item-text'>{{ $t('forum') }}</span></md-list-item>
-                    <md-list-item href='https://nfls.io/wiki'>
-                        <md-icon>library_books</md-icon>
-                        <span class='md-list-item-text'>{{ $t('wiki') }}</span></md-list-item>
+                    <md-subheader>{{ $t('other') }}</md-subheader>
+                    <md-list-item to='/about'>
+                        <md-icon>adb</md-icon>
+                        <span class='md-list-item-text'>{{ $t('about') }}</span></md-list-item>
                     <md-list-item href='https://dev.nfls.io'>
                         <md-icon>developer_mode</md-icon>
                         <span class='md-list-item-text'>{{ $t('development') }}</span></md-list-item>
                     <md-list-item href='https://nflsio.statuspage.io'>
                         <md-icon>flag</md-icon>
                         <span class='md-list-item-text'>{{ $t('statuspage') }}</span></md-list-item>
-
-
-                    <md-divider></md-divider>
-
-                    <md-list-item to='/about'>
-                        <md-icon>adb</md-icon>
-                        <span class='md-list-item-text'>{{ $t('about') }}</span></md-list-item>
 
                     <div id="admin" v-if="admin">
                         <md-divider></md-divider>
