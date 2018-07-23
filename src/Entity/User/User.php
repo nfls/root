@@ -119,12 +119,6 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
      * @ORM\OneToMany(targetEntity="App\Entity\School\Alumni", mappedBy="user")
      */
     private $authTickets;
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="App\Entity\School\Claz", inversedBy="students")
-     */
-    private $classes;
 
     public function __construct()
     {
@@ -438,28 +432,6 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getClasses()
-    {
-        return $this->classes;
-    }
-
-    public function addClass(Claz $class)
-    {
-        if (!$this->classes->contains($class)) {
-            $this->classes->add($class);
-        }
-    }
-
-    public function removeClass(Claz $class)
-    {
-        if ($this->classes->contains($class)) {
-            $this->classes->removeElement($class);
-        }
     }
 
     /**

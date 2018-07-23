@@ -14,8 +14,6 @@ import Game from '../components/Media/Game'
 import Gallery from '../components/Media/Gallery'
 import Album from '../components/Media/Album'
 
-import Blackboard from '../components/School/Blackboard'
-import PastPaper from '../components/School/PastPaper'
 import Vote from '../components/School/Vote'
 
 import Login from '../components/User/Login'
@@ -69,15 +67,6 @@ export default new Router({
                 }, {
                     path: 'school/vote',
                     component: Vote
-                }, {
-                    path: 'school/pastpaper',
-                    component: PastPaper
-                }, {
-                    path: 'school/blackboard',
-                    component: Blackboard
-                }, {
-                    path: 'school/blackboard/:id',
-                    component: Blackboard
                 }, {
                     path: 'user/security',
                     component: Security

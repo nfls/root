@@ -94,7 +94,7 @@
                     <md-list-item to='/school/vote'>
                         <md-icon>plus_one</md-icon>
                         <span class='md-list-item-text'>{{ $t('vote') }}</span></md-list-item>
-                    <md-list-item href='https://ib.nfls.io'>
+                    <md-list-item disabled>
                         <md-icon>pool</md-icon>
                         <span class='md-list-item-text'>{{ $t('study') }}</span></md-list-item>
 
