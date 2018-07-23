@@ -6,7 +6,6 @@ Encore
     .setPublicPath('/vue')
     .addEntry('vue', './web/main.js')
     .enableSassLoader()
-    .autoProvidejQuery()
     .enableSourceMaps(!Encore.isProduction())
     .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
@@ -17,6 +16,10 @@ Encore
     })
     // create hashed filenames (e.g. app.abc123.css)
     .enableVersioning()
+    .addLoader({
+        test: /\.js$/,
+        loader: 'babel-loader'
+    })
 ;
 module.exports = Encore.getWebpackConfig();
 
