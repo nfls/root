@@ -23,7 +23,6 @@
                             <span class="md-body-2"> 项目{{itemKey + 1}} ： {{ item.text }} </span>
                             <div>
                                 <md-radio v-for="(option, key) in item.options" :key="option" v-model="choices[itemKey]" :value="key" :disabled="!current.enabled || code !== 400">{{ option }}</md-radio>
-                                <md-radio v-model="choices[itemKey]" :value="-1" :disabled="!current.enabled || code !== 400">本项弃权</md-radio>
                             </div>
                         </div>
                     </form>

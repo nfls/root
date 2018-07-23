@@ -62,7 +62,7 @@ class Ticket
         if(!is_array($choices) || count($vote->getOptions()) != count($choices))
             throw new \InvalidArgumentException("Invalid ticket.");
         for($i=0; $i<count($vote->getOptions()); $i++) {
-            if(!is_int($choices[$i]) || $choices[$i] < -1 || $choices[$i] >= count($vote->getOptions()[$i]["options"]))
+            if(!is_int($choices[$i]) || $choices[$i] < 0 || $choices[$i] >= count($vote->getOptions()[$i]["options"]))
                 throw new \InvalidArgumentException("Invalid ticket for ".$i.".");
         }
         $this->vote = $vote;

@@ -95,4 +95,31 @@ class VoteController extends AbstractController
         return $this->response()->responseEntity($vote);
     }
 
+    /**
+     * @Route("/school/vote/result", methods="GET")
+     */
+    public function result(Request $request) {
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        $id = $request->query->get("id");
+        if($id == 'new')
+            return $this->response()->response(null);
+        $em = $this->getDoctrine()->getManager();
+        /** @var Vote $vote */
+        $vote = $em->getRepository(Vote::class)->find($id);
+        $tickets = $em->getRepository(Ticket::class)->findBy(["vote" => $vote]);
+        $result = array();
+        for($i=0; $i<count($vote->getOptions()); $i++) {
+            $result[$i] = array();
+            for($j=0; $j<count($vote->getOptions()[$i]["options"]); $j++) {
+                $result[$i][$j] = 0;
+            }
+        }
+        foreach ($tickets as $ticket) {
+            /** @var Ticket $ticket*/
+            foreach ($ticket->getChoices() as $key => $choice) {
+                $result[$key][$choice] ++;
+            }
+        }
+        return $this->response()->response(array("total" => count($tickets), "detail" => $result));
+    }
 }

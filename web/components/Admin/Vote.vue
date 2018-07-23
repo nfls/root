@@ -20,7 +20,26 @@
             <vue-json-editor v-model="form.options" :show-btns="false"></vue-json-editor>
             <md-switch v-model="form.enabled">允许进行投票</md-switch><br/>
             <md-button class="md-raised md-primary" @click="submit">保存</md-button>
+            <md-button class="md-raised md-primary" @click="r">结果</md-button>
         </form>
+        <md-dialog :md-active.sync="showDialog">
+            <md-dialog-title>结果</md-dialog-title>
+            <div v-if="result.length > 0" style="margin-right: 25px; margin-left: 25px;">
+                <div v-for="(item, itemKey) in form.options" :key="item.text">
+                    <span class="md-title"> 项目{{itemKey + 1}} ： {{ item.text }} </span>
+                    <div v-for="(option, key) in item.options" :key="key">
+                        <span class="md-body-2">{{ option }} : {{result[itemKey][key]}} 票</span><br/>
+                    </div>
+                    <md-divider></md-divider>
+                </div>
+                <span class="md-caption">总计：{{ total }} 票</span>
+            </div>
+            <md-dialog-actions>
+                <md-button class="md-primary" @click="showDialog = false">关闭</md-button>
+                <md-button class="md-primary" @click="r" :disabled="form.id === 'new'">刷新</md-button>
+            </md-dialog-actions>
+        </md-dialog>
+
     </div>
 </template>
 
@@ -40,7 +59,10 @@
                 content: "",
                 options: "[]",
                 enabled: false
-            }
+            },
+            total: 0,
+            result: [],
+            showDialog: false
 
         }),
         mounted() {
@@ -59,6 +81,7 @@
             load() {
                 this.axios.get("/school/vote/edit?id="+this.form.id, this.form).then((response) => {
                     this.form = response.data["data"]
+                    this.result = []
                 })
             },
             list() {
@@ -66,6 +89,15 @@
                     this.votes = response.data["data"]
                     if(this.votes.length > 0 && this.id === "")
                         this.form.id = this.votes[0].id
+                })
+            },
+            r() {
+                this.axios.get("/school/vote/result?id="+this.form.id, this.form).then((response) => {
+                    if(response.data["data"] == null)
+                        return
+                    this.result = response.data["data"]["detail"]
+                    this.total = response.data["data"]["total"]
+                    this.showDialog = true
                 })
             }
         }
