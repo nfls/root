@@ -133,7 +133,7 @@
         overflow:hidden;
         display:-webkit-box;
         -webkit-box-orient:vertical;
-        -webkit-line-clamp:3;
-        height: 10em;
+        -webkit-line-clamp:4;
+        height: 6.0em;
     }
 </style>
