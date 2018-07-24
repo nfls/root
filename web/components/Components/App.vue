@@ -289,6 +289,17 @@
                 }).catch((error) => {
                     this.loggedIn = false
                 })
+            }, loadWebP() {
+                var WebP = new Image()
+                var self = this
+                WebP.onload = WebP.onerror = function () {
+                    if (WebP.height !== 2) {
+                        self.webpSupported = false
+                    } else {
+                        self.webpSupported = true
+                    }
+                };
+                WebP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
             }, showMsg(msg) {
                 this.message = msg
                 this.showSnackbar = true
