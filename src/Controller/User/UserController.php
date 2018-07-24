@@ -3,6 +3,8 @@
 namespace App\Controller\User;
 
 use App\Controller\AbstractController;
+use App\Entity\OAuth\AccessToken;
+use App\Entity\OAuth\RefreshToken;
 use App\Entity\School\Alumni;
 use App\Entity\User\Chat;
 use App\Entity\User\User;
@@ -246,6 +248,25 @@ class UserController extends AbstractController
         } else {
             return $this->response()->response(null, Response::HTTP_UNAUTHORIZED);
         }
+    }
+
+    /**
+     * @Route("/user/clean", methods="POST")
+     */
+    public function clean() {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $user = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $accessTokens = $em->getRepository(AccessToken::class)->findBy(["user" => $user]);
+        foreach($accessTokens as $accessToken) {
+            $refreshTokens = $em->getRepository(RefreshToken::class)->findBy(["accessToken" => $accessToken]);
+            foreach($refreshTokens as $refreshToken) {
+                $em->remove($refreshToken);
+            }
+            $em->remove($accessToken);
+        }
+        $em->flush();
+        return $this->response()->response(null);
     }
 
     /**
