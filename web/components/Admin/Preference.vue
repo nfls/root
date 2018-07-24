@@ -2,7 +2,7 @@
     <div>
         <div class="md-layout-item">
             <md-field>
-                <label for="item">项目</label>
+                <label>项目</label>
                 <md-select v-model="item" name="item" id="item">
                     <md-option v-for="preference in info" :value="preference.identifier" :key="preference.identifier">
                         {{preference.remark}}
@@ -11,7 +11,7 @@
             </md-field>
         </div>
         <div style="text-align: left;">
-            <markdown-palettes v-model="content" v-if="type == 'markdown'"></markdown-palettes>
+            <mavon-editor v-model="content" v-if="type == 'markdown'"></mavon-editor>
             <vue-json-editor v-model="content" v-if="type == 'json'"></vue-json-editor>
         </div>
         <md-button class="md-raised md-primary" @click="save">保存</md-button>
@@ -20,12 +20,10 @@
 </template>
 
 <script>
-    import MarkdownPalettes from 'markdown-palettes'
     import vueJsonEditor from 'vue-json-editor'
 
     export default {
         components: {
-            MarkdownPalettes,
             vueJsonEditor
         },
         name: "Preference",
