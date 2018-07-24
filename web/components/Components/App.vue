@@ -74,7 +74,7 @@
 
             <md-app-drawer :md-active.sync='menuVisible' md-persistent='full'>
                 <md-toolbar class='md-transparent' md-elevation='0'>
-                    NFLS.IO 南外人
+                    NFLS.IO
                     <div class='md-toolbar-section-end'>
                         <md-button class='md-icon-button md-dense' @click='menuVisible = !menuVisible'>
                             <md-icon>keyboard_arrow_left</md-icon>
@@ -289,17 +289,6 @@
                 }).catch((error) => {
                     this.loggedIn = false
                 })
-            }, loadWebP() {
-                var WebP = new Image()
-                var self = this
-                WebP.onload = WebP.onerror = function () {
-                    if (WebP.height !== 2) {
-                        self.webpSupported = false
-                    } else {
-                        self.webpSupported = true
-                    }
-                };
-                WebP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
             }, showMsg(msg) {
                 this.message = msg
                 this.showSnackbar = true
@@ -354,7 +343,7 @@
     }
 
     .md-drawer {
-        width: 190px;
+        width: 140px;
     }
 
 </style>

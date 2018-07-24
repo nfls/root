@@ -36,7 +36,7 @@
             </md-dialog-actions>
 
         </md-dialog>
-        <md-speed-dial class="md-bottom-right">
+        <md-speed-dial class="md-bottom-right" v-if="verified">
             <md-speed-dial-target @click="reply(null)">
                 <md-icon>create</md-icon>
             </md-speed-dial-target>

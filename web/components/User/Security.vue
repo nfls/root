@@ -1,6 +1,5 @@
 <i18n src="../../translation/frontend/User.json"></i18n>
 <template>
-        <form novalidate class="md-layout" @submit.prevent="submit" style="align:left;text-align:left;">
     <div class="security" align="left">
             <md-card>
                 <md-card-header>
