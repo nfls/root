@@ -354,7 +354,7 @@
     }
 
     .md-drawer {
-        width: 140px;
+        width: 160px;
     }
 
 </style>
