@@ -70,7 +70,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/login", name="login")
      */
-    public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator)
+    public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator, CacheService $cacheService)
     {
         $session = $request->getSession();
         if (!$session)
@@ -78,7 +78,9 @@ class UserController extends AbstractController
         $session->start();
         $user = $this->getDoctrine()->getRepository(User::class)->search($request->request->get("username"));
         if (null === $user)
-            return $this->response()->response($translator->trans("incorrect-password"), Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response($translator->trans("incorrect-username-or-password"), Response::HTTP_UNAUTHORIZED);
+        if(!$cacheService->rateVerify($user))
+            return $this->response()->response($translator->trans("rate-limited"), Response::HTTP_FORBIDDEN);
         if ($passwordEncoder->isPasswordValid($user, $request->request->get("password", $user->getSalt()))) {
             $session->set("user_token", $user->getToken());
 
@@ -93,7 +95,8 @@ class UserController extends AbstractController
             return $this->response()->response(null);
         } else {
             $this->writeLog("UserLoginFailed", null, $user);
-            return $this->response()->response(null, Response::HTTP_UNAUTHORIZED);
+            $cacheService->rateWrite($user);
+            return $this->response()->response($translator->trans("incorrect-username-or-password"), Response::HTTP_UNAUTHORIZED);
         }
     }
 

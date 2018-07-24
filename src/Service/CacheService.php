@@ -45,6 +45,22 @@ class CacheService
         }
     }
 
+    public function rateWrite(User $user) {
+        $current = (int)$this->client->get($this->getIdentifierForRate($user));
+        $current ++;
+        $this->client->set($this->getIdentifierForRate($user), $current);
+        $this->client->expire($this->getIdentifierForRate($user), 600);
+        return $current;
+    }
+
+    public function rateVerify(User $user) {
+        $current = (int)$this->client->get($this->getIdentifierForRate($user));
+        if($current < 5)
+            return true;
+        else
+            return false;
+    }
+
     public function codeWrite(string $target, string $code, int $action) {
         $this->client->set($target, json_encode(["code" => $code, "action" => $action]));
         $this->client->expire($target, 600);
@@ -62,10 +78,13 @@ class CacheService
         else {
             return false;
         }
-
     }
 
     private function getIdentifierForAntiSpider(User $user){
         return "antispider.".(string)$user->getId();
+    }
+
+    private function getIdentifierForRate(User $user) {
+        return "rate.".(string)$user->getId();
     }
 }

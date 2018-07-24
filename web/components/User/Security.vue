@@ -13,8 +13,7 @@
                             <span class="md-caption">
                                 {{ $t('notice-title') }}<br/>
                                 {{ $t('notice-1') }}<br/>
-                                {{ $t('notice-2') }}<br/>
-                                {{ $t('notice-3') }}
+                                {{ $t('notice-2') }}
                             </span>
                         </p>
                     </div>
