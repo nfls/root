@@ -22,6 +22,18 @@ class DeviceRepository extends ServiceEntityRepository
         return $this->findBy(["user" => $user, "type" => $type]);
     }
 
+    public function findValidByUserAndType(User $user, int $type) {
+        return $this->createQueryBuilder("u")
+            ->where("u.user = :user")
+            ->andWhere("u.type = :type")
+            ->andWhere("u.status > :status")
+            ->setParameter("user", $user)
+            ->setParameter("type", $type)
+            ->setParameter("status", -1)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findByType(int $type) {
         return $this->findBy(["type" => $type]);
     }

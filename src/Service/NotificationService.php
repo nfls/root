@@ -228,7 +228,7 @@ class NotificationService
     }
 
     private function getDevices(User $user) {
-        return $this->objectManager->getRepository(Device::class)->findByUserAndType($user, DeviceType::IOS);
+        return $this->objectManager->getRepository(Device::class)->findValidByUserAndType($user, DeviceType::IOS, true);
     }
 
     private function isPhoneUsed(?string $phone) {
