@@ -47,11 +47,11 @@ class UserController extends AbstractController
             return $this->response()->response($translator->trans("illegal-password"), Response::HTTP_UNAUTHORIZED);
         }
         $result = $service->verify(
-            $request->request->get("phone"),
             $request->request->get("email"),
+            $request->request->get("phone"),
             $request->request->get("code"),
             CodeActionType::REGISTER);
-        if (!is_null($request)) {
+        if (!is_null($result)) {
             if ($result === true) {
                 $user->setPhone($request->request->get("phone"));
             } else {
@@ -219,7 +219,7 @@ class UserController extends AbstractController
                 $user->setPassword($password);
             }
             if ($newEmail && is_null($user->getEmail())) {
-                if ($service->verify(null, $newEmail, $emailCode, CodeActionType::BIND) === false)
+                if ($service->verify($newEmail, null , $emailCode, CodeActionType::BIND) === false)
                     $user->setEmail($newEmail);
                 else
                     return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);
@@ -232,7 +232,7 @@ class UserController extends AbstractController
                     return $this->response()->response($translator->trans("email-not-bind"), Response::HTTP_UNAUTHORIZED);
                 }
             } else if ($newPhone) {
-                if ($service->verify($newPhone, null, $phoneCode, CodeActionType::BIND) === true)
+                if ($service->verify(null, $newPhone, $phoneCode, CodeActionType::BIND) === true)
                     $user->setPhone($newPhone);
                 else
                     return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);
@@ -506,7 +506,7 @@ class UserController extends AbstractController
 
     private function verifyUsername($username)
     {
-        $re = '/[A-Za-z0-9_\-\x{0800}-\x{9fa5}]{3,16}/u';
+        $re = '/^[A-Za-z0-9_\-\x{0800}-\x{9fa5}]{3,16}$/u';
         if (preg_match($re, $username) && !is_numeric($username[0])) {
             return true;
         } else {

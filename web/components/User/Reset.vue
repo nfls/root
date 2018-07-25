@@ -182,6 +182,7 @@
                         this.text = this.$t("password-mismatch")
                         this.warning = true
                     } else {
+                        this.sending = true
                         this.axios.post("/user/reset", this.form).then((response) => {
                             if (response.data["code"] === 200) {
                                 this.showMsg(this.$t("resetted"))

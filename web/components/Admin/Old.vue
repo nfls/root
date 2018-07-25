@@ -4,7 +4,10 @@
 
 <script>
     export default {
-        name: "Old"
+        name: "Old",
+        mounted() {
+            this.$emit("changeTitle", "旧版控制台")
+        }
     }
 </script>
 

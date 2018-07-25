@@ -1,20 +1,23 @@
 <i18n src="../../translation/frontend/School.json"></i18n>
 <template>
     <div align="left">
-        <md-field>
-            <label>请选择</label>
-            <md-select v-model="id" @md-selected="load">
-                <md-option v-for="vote in votes" :key="vote.id" :value="vote.id">{{ vote.title }}</md-option>
-            </md-select>
-        </md-field>
-        <div v-if="current">
+        <div v-if="!loading">
+            <md-field>
+                <label>请选择</label>
+                <md-select v-model="id" @md-selected="load">
+                    <md-option v-for="vote in votes" :key="vote.id" :value="vote.id">{{ vote.title }}</md-option>
+                </md-select>
+            </md-field>
+        </div>
+        <div v-if="current && !loading">
 
-            <vue-markdown> {{ current.content }}</vue-markdown>
             <md-card>
                 <md-card-header>
                     <div class="md-title">{{ current.title }}</div>
                 </md-card-header>
                 <md-card-content>
+                    <vue-markdown> {{ current.content }}</vue-markdown>
+                    <md-divider></md-divider>
                     <span v-if="code === 401 && !current.enabled" class="md-caption">投票已结束，或尚未开始</span>
                     <span v-if="code === 401 && current.enabled" class="md-caption">您所在的用户组无法投票</span>
                     <span v-if="code === 403" class="md-caption">您已经投过票了</span>
@@ -73,14 +76,15 @@
         data: () => ({
             id: "",
             votes: [],
-            current: {},
+            current: null,
             choices: [],
             confirmation: false,
             error: false,
             message: "",
             result: false,
             code: "",
-            query: ""
+            query: "",
+            loading: true
         }),
         methods: {
             list() {
@@ -88,6 +92,7 @@
                     this.votes = response.data["data"]
                     if(this.votes.length > 0)
                         this.id = this.votes[0].id
+                    this.loading = false
                 }).catch((error)=>{
                     this.$router.push("/user/login")
                     console.log(error)

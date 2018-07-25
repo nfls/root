@@ -55,7 +55,7 @@ class OAuthAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return true;
+        return $user->isEnabled();
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)

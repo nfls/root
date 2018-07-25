@@ -86,7 +86,6 @@ class AdminController extends AbstractController
      * @Route("/admin/mail", methods="POST")
      */
     public function mail(Request $request, MailService $mailService) {
-        $renderer = new MailConstant();
         $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
         $receiver = $request->request->get("receiver");
         if($receiver == "all") {
@@ -99,18 +98,19 @@ class AdminController extends AbstractController
                 "NFLS.IO/南外人",
                 $receivers,
                 "【NFLS.IO/南外人】".$request->request->get("title"),
-                $renderer->base((new \Parsedown())->parse($request->request->get("content")))
+                (new \Parsedown())->parse($request->request->get("content"))
                 );
         } else {
             $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($receiver);
-            $mailService->bulk(
+            $mailService->send(
                 "announcement@nfls.io",
                 "NFLS.IO/南外人",
                 $user->getEmail(),
                 "【NFLS.IO/南外人】".$request->request->get("title"),
-                $renderer->base((new \Parsedown())->parse($request->request->get("content")))
+                (new \Parsedown())->parse($request->request->get("content"))
             );
         }
+        return $this->response()->response(null);
 
     }
 

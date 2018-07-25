@@ -160,6 +160,7 @@
                 switch (this.task) {
                     case "email":
                         this.axios.post("/user/code", {
+                            "type": 3,
                             "email": this.form.newEmail,
                             "captcha": grecaptcha.getResponse()
                         }).then((response) => {

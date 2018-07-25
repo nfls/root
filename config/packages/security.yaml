@@ -25,7 +25,6 @@ security:
                     - App\Security\SessionAuthenticator
                     - App\Security\OAuthAuthenticator
                     - App\Security\CookieAuthenticator
-                    - App\Security\TokenAuthenticator
                 entry_point: App\Security\SessionAuthenticator
    
     encoders:

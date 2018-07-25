@@ -40,7 +40,7 @@ class CookieAuthenticator extends AbstractGuardAuthenticator
      */
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return $user->getToken() === $credentials;
+        return $user->getToken() === $credentials && $user->isEnabled();
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)

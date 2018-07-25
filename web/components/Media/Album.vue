@@ -67,11 +67,9 @@
 
         <div class="md-row" style="display:inline-block;margin:0px;min-width:90%">
             <figure v-for="(item, index) in items" class="photo">
-                <waterfall-slot>
-                    <img class="preview-img" v-lazy="item.msrc" @click="$preview.open(index, items, options)"
-                         style="display:inline;height:200px;">
-                    <figcaption v-if="showDebug">ID: {{item.id}}</figcaption>
-                </waterfall-slot>
+                <img class="preview-img" v-lazy="item.msrc" @click="$preview.open(index, items, options)"
+                     style="display:inline;height:200px;">
+                <figcaption v-if="showDebug">ID: {{item.id}}</figcaption>
             </figure>
         </div>
 
@@ -123,16 +121,9 @@
 </template>
 
 <script>
-    import Waterfall from 'vue-waterfall/lib/waterfall'
-    import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
-
     export default {
         name: "Album",
         props: ["admin", "verified", 'loggedIn', 'webpSupported'],
-        components: {
-            Waterfall,
-            WaterfallSlot
-        },
         data: () => ({
             items: [],
             comments: [],

@@ -168,6 +168,7 @@
         }),
         mounted() {
             this.submit()
+            this.$emit("changeTitle", "用户管理")
         },
         methods: {
             submit() {

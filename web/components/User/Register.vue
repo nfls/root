@@ -89,7 +89,7 @@
                             </span>
                         </div>
                         <div class="md-flex md-flex-small-100">
-                            <md-button type="submit" class="md-raised md-primary" @click="register" :disabled="sending">
+                            <md-button type="submit" class="md-raised md-primary" :disabled="sending">
                                 {{ $t('register') }}
                             </md-button>
                         </div>
@@ -167,7 +167,7 @@
             },
             ct() {
                 this.sending = true
-                this.axios.post("/code/register", {
+                this.axios.post("/user/code", {
                     "type": 1,
                     "email": this.form.email,
                     "phone": this.form.phone,
@@ -213,6 +213,7 @@
                         this.text = this.$t("password-mismatch")
                         this.warning = true
                     } else {
+                        this.sending = true;
                         this.axios.post("/user/register", this.form).then((response) => {
                             if (response.data["code"] === 200) {
                                 this.showMsg(this.$t("registered"))

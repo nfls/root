@@ -9,7 +9,7 @@
             <md-progress-bar md-mode="indeterminate" v-if="loading"/>
             <md-field>
                 <label>{{ $t('file') }}</label>
-                <md-file @md-change="change"/>
+                <md-file @md-change="change" v-model="fake"/>
                 <md-button @click="upload" :disabled="loading">{{ $t('submit') }}</md-button><br/>
             </md-field>
         </form>
@@ -24,7 +24,8 @@
         data: () => ({
             file: null,
             url: "",
-            loading: false
+            loading: false,
+            fake: ""
         }),
         mounted: function() {
             this.$emit("changeTitle", this.$t('upload-title'))

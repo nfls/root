@@ -55,7 +55,7 @@
             }
         },
         mounted: function () {
-            this.$emit("changeTitle", "Preference")
+            this.$emit("changeTitle", "参数设置")
             this.update()
         },
         watch: {
