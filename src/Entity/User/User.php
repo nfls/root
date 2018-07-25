@@ -330,7 +330,7 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
     /**
      * @param string $weChatToken
      */
-    public function setWeChatToken(string $weChatToken): void
+    public function setWeChatToken(?string $weChatToken): void
     {
         $this->weChatToken = $weChatToken;
     }

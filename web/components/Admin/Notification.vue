@@ -44,6 +44,9 @@
 
             }
         }),
+        mounted() {
+            this.$emit("changeTitle", "通知发送")
+        },
         methods: {
             push() {
                 this.axios.post("/admin/push", this.ios)

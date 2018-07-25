@@ -8,7 +8,7 @@ import config
 
 app = Celery('notification', broker="redis://127.0.0.1", backend="redis://127.0.0.1")
 
-aps = apns2.APNSClient(mode="dev", client_cert=config.apns_cert)
+aps = apns2.APNSClient(mode=config.mode, client_cert=config.apns_cert)
 sg = sendgrid.SendGridAPIClient(apikey=config.sendgrid_key)
 
 callback = config.apns_callback

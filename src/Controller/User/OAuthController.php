@@ -68,9 +68,9 @@ class OAuthController extends AbstractController
         $psrRequest = $factory->createRequest($request);
         try {
             $response = $httpFoundationFactory->createResponse($this->server->respondToAccessTokenRequest($psrRequest, $psrResponse));
-            $response_array = json_decode($response->getContent(),true);
-            $response_array["id_token"] = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1MTk4NjQxNTUsImV4cCI6MTU1MTQwMDE1NSwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSJ9.M_2dughXyVmbuem2_EQFh0Cjw7Kutcqt6rSi1I7jR1I';
-            $response->setContent(json_encode($response_array));
+            //$response_array = json_decode($response->getContent(),true);
+            //$response_array["id_token"] = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1MTk4NjQxNTUsImV4cCI6MTU1MTQwMDE1NSwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSJ9.M_2dughXyVmbuem2_EQFh0Cjw7Kutcqt6rSi1I7jR1I';
+            //$response->setContent(json_encode($response_array));
             return $response;
         } catch (OAuthServerException $e) {
             return $httpFoundationFactory->createResponse($e->generateHttpResponse($psrResponse));
@@ -85,6 +85,8 @@ class OAuthController extends AbstractController
     {
         $repo = $this->getDoctrine()->getManager()->getRepository(Client::class);
         $client = $repo->getClientById($request->query->get("client_id"));
+        if(is_null($client))
+            return $this->response()->response(null);
         return $this->response()->response($client->getVersion());
     }
 

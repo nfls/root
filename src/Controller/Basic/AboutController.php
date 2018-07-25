@@ -37,12 +37,4 @@ class AboutController extends AbstractController
         });
         return $this->response()->response($gitHashLong);
     }
-
-    /**
-     * @Route("about/test")
-     */
-    public function test(SMSService $service) {
-        $service->send("13222778740","SMS_119085892", array("code"=>"123456"));
-    }
-
 }

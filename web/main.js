@@ -15,7 +15,6 @@ import VueMarkdown from 'vue-markdown'
 import VueAnalytics from 'vue-analytics'
 import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
-import Editor from 'markdown-palettes'
 import VueI18n from 'vue-i18n'
 import VueWorker from 'vue-worker'
 import Datetime from 'vue-datetime'
@@ -41,7 +40,6 @@ Vue.use(VueMaterial)
 Vue.use(require('vue-moment'))
 Vue.use(moment)
 Vue.use(VueMarkdown)
-Vue.use(Editor)
 Vue.use(VueAnalytics, {
     id: 'UA-113518783-1',
     router,

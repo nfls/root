@@ -27,7 +27,7 @@
                     <label>{{ $t('receiver') }}</label>
                     <md-input v-model="receiver" :disabled="sending"></md-input>
                 </md-field>
-                <markdown-palettes v-model="content"></markdown-palettes>
+                <mavon-editor v-model="content"></mavon-editor>
                 <md-progress-bar md-mode="indeterminate" v-if="sending"/>
             </md-dialog-content>
             <md-dialog-actions>
@@ -36,7 +36,7 @@
             </md-dialog-actions>
 
         </md-dialog>
-        <md-speed-dial class="md-bottom-right">
+        <md-speed-dial class="md-bottom-right" v-if="verified">
             <md-speed-dial-target @click="reply(null)">
                 <md-icon>create</md-icon>
             </md-speed-dial-target>
@@ -46,15 +46,13 @@
 
 <script>
     import VueMarkdown from 'vue-markdown'
-    import MarkdownPalettes from 'markdown-palettes'
     import infiniteScroll from 'vue-infinite-scroll'
 
     export default {
         name: "Message",
         props: ["admin", "loggedIn", "verified", "gResponse"],
         components: {
-            VueMarkdown,
-            MarkdownPalettes
+            VueMarkdown
         },
         directives: {infiniteScroll},
         data: () => ({

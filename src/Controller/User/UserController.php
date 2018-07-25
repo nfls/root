@@ -3,6 +3,8 @@
 namespace App\Controller\User;
 
 use App\Controller\AbstractController;
+use App\Entity\OAuth\AccessToken;
+use App\Entity\OAuth\RefreshToken;
 use App\Entity\School\Alumni;
 use App\Entity\User\Chat;
 use App\Entity\User\User;
@@ -70,7 +72,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/login", name="login")
      */
-    public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator)
+    public function login(Request $request, UserPasswordEncoderInterface $passwordEncoder, TranslatorInterface $translator, CacheService $cacheService)
     {
         $session = $request->getSession();
         if (!$session)
@@ -78,7 +80,9 @@ class UserController extends AbstractController
         $session->start();
         $user = $this->getDoctrine()->getRepository(User::class)->search($request->request->get("username"));
         if (null === $user)
-            return $this->response()->response($translator->trans("incorrect-password"), Response::HTTP_UNAUTHORIZED);
+            return $this->response()->response($translator->trans("incorrect-username-or-password"), Response::HTTP_UNAUTHORIZED);
+        if(!$cacheService->rateVerify($user))
+            return $this->response()->response($translator->trans("rate-limited"), Response::HTTP_FORBIDDEN);
         if ($passwordEncoder->isPasswordValid($user, $request->request->get("password", $user->getSalt()))) {
             $session->set("user_token", $user->getToken());
 
@@ -93,7 +97,8 @@ class UserController extends AbstractController
             return $this->response()->response(null);
         } else {
             $this->writeLog("UserLoginFailed", null, $user);
-            return $this->response()->response(null, Response::HTTP_UNAUTHORIZED);
+            $cacheService->rateWrite($user);
+            return $this->response()->response($translator->trans("incorrect-username-or-password"), Response::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -200,30 +205,27 @@ class UserController extends AbstractController
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if ($passwordEncoder->isPasswordValid($this->getUser(), $request->request->get("password"))) {
             $newPassword = $request->request->get("newPassword");
-            $unbindEmail = $request->request->get("unbindEmail");
             $newEmail = $request->request->get("newEmail");
-            $unbindPhone = $request->request->get("unbindPhone");
+            $unbindPhone = $request->request->getBoolean("unbindPhone", false);
             $newPhone = $request->request->get("newPhone");
             $phoneCode = $request->request->get("phoneCode") ?? "";
             $emailCode = $request->request->get("emailCode") ?? "";
+            $clean = $request->request->getBoolean("clean", false);
             $user = $this->getUser();
             if ($newPassword) {
                 if (!$this->verifyPassword($user, $newPassword))
                     return $this->response()->response($translator->trans("illegal-password"), Response::HTTP_UNAUTHORIZED);
                 $password = $passwordEncoder->encodePassword($this->getUser(), $newPassword);
                 $user->setPassword($password);
-            } else if ($unbindEmail) {
-                if ($user->getPhone()) {
-                    $user->setEmail(null);
-                } else {
-                    return $this->response()->response($translator->trans("phone-not-bind"));
-                }
-            } else if ($newEmail) {
+            }
+            if ($newEmail && is_null($user->getEmail())) {
                 if ($service->verify(null, $newEmail, $emailCode, CodeActionType::BIND) === false)
                     $user->setEmail($newEmail);
                 else
                     return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);
-            } else if ($unbindPhone) {
+            }
+
+            if ($unbindPhone) {
                 if ($user->getEmail()) {
                     $user->setPhone(null);
                 } else {
@@ -235,6 +237,12 @@ class UserController extends AbstractController
                 else
                     return $this->response()->response($translator->trans("incorrect-code"), Response::HTTP_UNAUTHORIZED);
             }
+
+            if ($clean) {
+                $this->clean();
+                $user->setWeChatToken(null);
+            }
+
             $this->writeLog("UserSecurityChanged");
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
@@ -243,6 +251,22 @@ class UserController extends AbstractController
         } else {
             return $this->response()->response(null, Response::HTTP_UNAUTHORIZED);
         }
+    }
+
+    private function clean() {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $user = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $accessTokens = $em->getRepository(AccessToken::class)->findBy(["user" => $user]);
+        foreach($accessTokens as $accessToken) {
+            $refreshTokens = $em->getRepository(RefreshToken::class)->findBy(["accessToken" => $accessToken]);
+            foreach($refreshTokens as $refreshToken) {
+                $em->remove($refreshToken);
+            }
+            $em->remove($accessToken);
+        }
+        $em->flush();
+        return $this->response()->response(null);
     }
 
     /**

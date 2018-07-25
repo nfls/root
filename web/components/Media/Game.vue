@@ -1,26 +1,23 @@
 <i18n src="../../translation/frontend/Media.json"></i18n>
 <template>
-    <div id="game-list">
-        <div v-if="!verified" style="margin:20px;">
-            <span class="md-display-1" v-html="$t('game-not-realname')"></span>
+    <div id="game-list" align="left">
+        <div md-card v-if="ranks.length > 0">
+            <span class="md-title" style="margin-left: 16px;">{{ $t('my-rank') }}</span>
+            <md-list class="md-triple-line">
+                <div v-for="rank in ranks">
+                    <md-list-item>
+                        <div class="md-list-item-text">
+                            <span>{{ rank.game }}</span>
+                            <span>{{ $t('score') }}: {{ rank.score }}, {{ $t('rank' )}}: {{ rank.rank }}</span>
+                            <span>{{ rank.time | moment("lll") }}</span>
+                        </div>
+                    </md-list-item>
+                    <md-divider></md-divider>
+                </div>
+            </md-list>
         </div>
-        <div class="row">
-            <md-table v-model="ranks" md-card v-if="ranks.length > 0">
-                <md-table-toolbar>
-                    <h1 class="md-title">{{ $t('my-rank') }}</h1>
-                </md-table-toolbar>
-
-                <md-table-row slot="md-table-row" slot-scope="{ item }" style="text-align: left;">
-                    <md-table-cell :md-label="$t('game')" md-sort-by="id" md-numeric>{{ item.game }}</md-table-cell>
-                    <md-table-cell :md-label="$t('score')" md-sort-by="name">{{ item.score }}</md-table-cell>
-                    <md-table-cell :md-label="$t('rank')" md-sort-by="name">{{ item.rank }}</md-table-cell>
-                    <md-table-cell :md-label="$t('time')" md-sort-by="name">{{ item.time | moment("lll") }}
-                    </md-table-cell>
-                </md-table-row>
-            </md-table>
-        </div>
-        <div class="md-layout md-gutter md-alignment-center">
-            <div class="md-layout-item md-xlarge-size-20 md-large-size-20 md-medium-size-33 md-small-size-50 md-xsmall-size-100 game-card"
+        <div class="md-layout md-gutter">
+            <div class="md-layout-item md-xlarge-size-20 md-large-size-25 md-medium-size-33 md-small-size-50 md-xsmall-size-100 game-card"
                  v-for="item in list" :key="item.id">
                 <md-card>
                     <md-card-media>
@@ -32,27 +29,17 @@
                         <div class="md-subhead">{{item.subTitle}}</div>
                     </md-card-header>
 
-                    <md-card-expand>
-                        <md-card-actions md-alignment="space-between">
-                            <div>
-                                <md-button class="md-icon-button" v-for="button in item.content" :key="button.name"
-                                           :href="button.key">
-                                    <md-icon>{{getIcon(button.name)}}</md-icon>
-                                </md-button>
-                            </div>
-                            <md-card-expand-trigger>
-                                <md-button class="md-icon-button">
-                                    <md-icon>keyboard_arrow_down</md-icon>
-                                </md-button>
-                            </md-card-expand-trigger>
-                        </md-card-actions>
+                    <md-card-content>
+                        <div class="max-lines md-caption">{{item.description}}</div>
+                    </md-card-content>
 
-                        <md-card-expand-content>
-                            <md-card-content>
-                                {{item.description}}
-                            </md-card-content>
-                        </md-card-expand-content>
-                    </md-card-expand>
+                    <md-card-actions>
+                        <md-button class="md-icon-button" v-for="button in item.content" :key="button.name"
+                                   :href="button.key">
+                            <md-icon>{{getIcon(button.name)}}</md-icon>
+                            <md-tooltip md-direction="top">{{getTip(button.name)}}</md-tooltip>
+                        </md-button>
+                    </md-card-actions>
                 </md-card>
             </div>
         </div>
@@ -112,6 +99,19 @@
                     case "web":
                         return "web"
                 }
+            }, getTip(name) {
+                switch (name) {
+                    case "android":
+                        return "Android APK下载"
+                    case "ios":
+                        return "App Store链接"
+                    case "windows":
+                        return "Windows EXE下载"
+                    case "mac":
+                        return "macOS DMG下载"
+                    case "web":
+                        return "网页版"
+                }
             }
         }
     }
@@ -127,5 +127,13 @@
     .card-container {
         display: table;
         width: 100%;
+    }
+
+    .max-lines {
+        overflow:hidden;
+        display:-webkit-box;
+        -webkit-box-orient:vertical;
+        -webkit-line-clamp:4;
+        height: 6.0em;
     }
 </style>

@@ -42,7 +42,7 @@ class RefreshToken implements RefreshTokenEntityInterface
 
     public function setAccessToken(AccessTokenEntityInterface $accessToken)
     {
-        $this->token = $accessToken;
+        $this->accessToken = $accessToken;
     }
 
     public function getIdentifier()

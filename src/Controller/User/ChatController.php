@@ -6,6 +6,7 @@ use App\Controller\AbstractController;
 use App\Entity\User\Chat;
 use App\Entity\User\User;
 use App\Model\Permission;
+use App\Service\CacheService;
 use App\Service\NotificationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,11 +48,14 @@ class ChatController extends AbstractController
     /**
      * @Route("/chat/send", methods="POST")
      */
-    public function send(Request $request, TranslatorInterface $translator, NotificationService $service)
+    public function send(Request $request, TranslatorInterface $translator, NotificationService $service, CacheService $cacheService)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
         $this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_USER);
+        if(!$cacheService->rateVerify($this->getUser())) {
+            return $this->response()->response($translator->trans("rate-limited"), Response::HTTP_FORBIDDEN);
+        }
         $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find(
             $request->request->getInt("id")
         );
@@ -67,6 +71,7 @@ class ChatController extends AbstractController
         $em->persist($chat);
         $em->flush();
         $service->notifyNewMessage($chat);
+        $cacheService->rateWrite($this->getUser());
         return $this->response()->response(null);
     }
 }

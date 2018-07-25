@@ -3,7 +3,9 @@
 namespace App\Security;
 
 use App\Entity\User\User;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -48,7 +50,12 @@ class SessionAuthenticator extends AbstractGuardAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         $request->getSession()->invalidate();
-        return new JsonResponse(array("code" => 400, "message" => "Login required with Session."), Response::HTTP_UNAUTHORIZED);
+        $response = RedirectResponse::create("/");
+        $time = new \DateTime();
+        $time->sub(new \DateInterval("P1M"));
+        $response->headers->setCookie(new Cookie("remember_token", "deleted", $time, "/", null, false, true));
+        $response->headers->setCookie(new Cookie("PHPSESSID", "deleted", $time, "/", null, false, true));
+        return $response;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)

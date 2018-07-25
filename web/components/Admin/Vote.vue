@@ -67,6 +67,7 @@
         }),
         mounted() {
             this.list()
+            this.$emit("changeTitle", "投票管理")
         },
         methods: {
             submit() {

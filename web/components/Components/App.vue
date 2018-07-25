@@ -11,8 +11,8 @@
                     <span class='md-title'>{{title}}</span>
                 </div>
                 <div class='md-toolbar-section-end' align="right" style="margin: 10px;">
-                    <span class='md-title'>{{username}}</span>&nbsp;&nbsp;&nbsp;
-                    <md-menu md-size='big' md-direction='bottom-start'>
+                    <md-button @click="active = !active" style="margin-right: -10px;">{{username}}<md-icon>arrow_drop_down</md-icon></md-button>&nbsp;&nbsp;
+                    <md-menu md-size='big' md-direction='bottom-start' :md-active.sync="active">
                         <md-button md-menu-trigger class='md-icon-button'>
                             <md-avatar>
                                 <img :src="avatar">
@@ -74,7 +74,7 @@
 
             <md-app-drawer :md-active.sync='menuVisible' md-persistent='full'>
                 <md-toolbar class='md-transparent' md-elevation='0'>
-                    NFLS.IO 南外人
+                    NFLS.IO
                     <div class='md-toolbar-section-end'>
                         <md-button class='md-icon-button md-dense' @click='menuVisible = !menuVisible'>
                             <md-icon>keyboard_arrow_left</md-icon>
@@ -86,6 +86,30 @@
                     <md-list-item to='/user/dashboard'>
                         <md-icon>dashboard</md-icon>
                         <span class='md-list-item-text'>{{ $t('homepage') }}</span></md-list-item>
+
+
+
+                    <md-divider></md-divider>
+
+                    <md-subheader>{{ $t('general') }}</md-subheader>
+
+                    <md-list-item href='https://nfls.io/forum'>
+                        <md-icon>forum</md-icon>
+                        <span class='md-list-item-text'>{{ $t('forum') }}</span></md-list-item>
+                    <md-list-item href='https://nfls.io/wiki'>
+                        <md-icon>library_books</md-icon>
+                        <span class='md-list-item-text'>{{ $t('wiki') }}</span></md-list-item>
+
+                    <md-divider></md-divider>
+
+                    <md-subheader>{{ $t('media') }}</md-subheader>
+
+                    <md-list-item to='/media/game'>
+                        <md-icon>gamepad</md-icon>
+                        <span class='md-list-item-text'>{{ $t('game') }}</span></md-list-item>
+                    <md-list-item to='/media/gallery'>
+                        <md-icon>photo_library</md-icon>
+                        <span class='md-list-item-text'>{{ $t('gallery') }}</span></md-list-item>
 
                     <md-divider></md-divider>
 
@@ -110,26 +134,10 @@
                         <span class='md-list-item-text'>{{ $t('directory') }}</span></md-list-item>
 
                     <md-divider></md-divider>
-
-                    <md-subheader>{{ $t('media') }}</md-subheader>
-
-                    <md-list-item to='/media/game'>
-                        <md-icon>gamepad</md-icon>
-                        <span class='md-list-item-text'>{{ $t('game') }}</span></md-list-item>
-                    <md-list-item to='/media/gallery'>
-                        <md-icon>photo_library</md-icon>
-                        <span class='md-list-item-text'>{{ $t('gallery') }}</span></md-list-item>
-
-                    <md-divider></md-divider>
-
-                    <md-subheader>{{ $t('external') }}</md-subheader>
-
-                    <md-list-item href='https://nfls.io/forum'>
-                        <md-icon>forum</md-icon>
-                        <span class='md-list-item-text'>{{ $t('forum') }}</span></md-list-item>
-                    <md-list-item href='https://nfls.io/wiki'>
-                        <md-icon>library_books</md-icon>
-                        <span class='md-list-item-text'>{{ $t('wiki') }}</span></md-list-item>
+                    <md-subheader>{{ $t('other') }}</md-subheader>
+                    <md-list-item to='/about'>
+                        <md-icon>adb</md-icon>
+                        <span class='md-list-item-text'>{{ $t('about') }}</span></md-list-item>
                     <md-list-item href='https://dev.nfls.io'>
                         <md-icon>developer_mode</md-icon>
                         <span class='md-list-item-text'>{{ $t('development') }}</span></md-list-item>
@@ -137,17 +145,9 @@
                         <md-icon>flag</md-icon>
                         <span class='md-list-item-text'>{{ $t('statuspage') }}</span></md-list-item>
 
-
-                    <md-divider></md-divider>
-
-                    <md-list-item to='/about'>
-                        <md-icon>adb</md-icon>
-                        <span class='md-list-item-text'>{{ $t('about') }}</span></md-list-item>
-
                     <div id="admin" v-if="admin">
                         <md-divider></md-divider>
                         <md-subheader>{{ $t('admin') }}</md-subheader>
-
 
                         <md-list-item href='/admin'>
                             <md-icon>build</md-icon>
@@ -158,6 +158,12 @@
                         <md-list-item to="/admin/upload">
                             <md-icon>file_upload</md-icon>
                             <span class='md-list-item-text'>{{ $t('upload') }}</span></md-list-item>
+                        <md-list-item to="/admin/notification">
+                            <md-icon>notification_important</md-icon>
+                            <span class='md-list-item-text'>{{ $t('notification') }}</span></md-list-item>
+                        <md-list-item to="/admin/vote">
+                            <md-icon>data_usage</md-icon>
+                            <span class='md-list-item-text'>{{ $t('vote') }}</span></md-list-item>
                     </div>
                 </md-list>
 
@@ -195,7 +201,8 @@
             webpSupported: false,
             showSnackbar: false,
             message: false,
-            language: ""
+            language: "",
+            active: false
         }),
         methods: {
             initReCaptcha() {
@@ -347,7 +354,7 @@
     }
 
     .md-drawer {
-        width: 190px;
+        width: 160px;
     }
 
 </style>
