@@ -42,7 +42,7 @@ def sendAPN(token, callbackToken, title, subtitle, body, badge, custom):
             status = 1
         if result.reason == "BadDeviceToken" or result.reason == "Unregistered":
             status = -1
-        print("APNS: Token: " + token + ", Title: " + title + ", Result: " + str(result.status_code) + "(" + result.reason + ")")
+        print("APNS: Token: " + token + ", Title: " + title + ", Result: " + str(result.status_code) + "(" + (result.reason or "") + ")")
     except:
         status = 0
 
