@@ -151,7 +151,7 @@
                 phone: "",
                 enabled: " ",
                 verified: false,
-                nofNfls: false,
+                notNfls: false,
                 reverse: true,
                 size: 10,
                 page: 1
