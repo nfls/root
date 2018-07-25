@@ -13,7 +13,7 @@ class SMSService extends CeleryEnabledService
 {
     public function send(string $receiver, string $template, array $params) {
         try {
-            $this->celery->client->PostTask("tasks.sendSMS",array($receiver, $template, $params));
+            $this->celery->client->PostTask("tasks.sendSMS", array($receiver, $template, $params));
             return true;
         } catch(\Exception $e) {
             return false;
