@@ -19,10 +19,10 @@
                     <span v-if="code === 401 && current.enabled" class="md-caption">您所在的用户组无法投票</span>
                     <span v-if="code === 403" class="md-caption">您已经投过票了</span>
                     <form>
-                        <div v-for="(item, itemKey) in current.options" :key="item.text">
+                        <div v-for="(item, itemKey) in current.options" :key="itemKey">
                             <span class="md-body-2"> 项目{{itemKey + 1}} ： {{ item.text }} </span>
                             <div>
-                                <md-radio v-for="(option, key) in item.options" :key="option" v-model="choices[itemKey]" :value="key" :disabled="!current.enabled || code !== 400">{{ option }}</md-radio>
+                                <md-radio v-for="(option, key) in item.options" :key="key" v-model="choices[itemKey]" :value="key" :disabled="!current.enabled || code !== 400">{{ option }}</md-radio>
                             </div>
                         </div>
                     </form>
@@ -88,12 +88,17 @@
                     this.votes = response.data["data"]
                     if(this.votes.length > 0)
                         this.id = this.votes[0].id
+                }).catch((error)=>{
+                    this.$router.push("/user/login")
+                    console.log(error)
                 })
             },
             load() {
                 this.axios.get("/school/vote/detail?id="+this.id).then((response) => {
                     this.current = response.data["data"]
                     this.status()
+                }).catch((error)=>{
+                    this.$emit("generalError", error)
                 })
             },
             confirm() {

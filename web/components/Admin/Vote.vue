@@ -20,20 +20,22 @@
             <vue-json-editor v-model="form.options" :show-btns="false"></vue-json-editor>
             <md-switch v-model="form.enabled">允许进行投票</md-switch><br/>
             <md-button class="md-raised md-primary" @click="submit">保存</md-button>
-            <md-button class="md-raised md-primary" @click="r">结果</md-button>
+            <md-button class="md-raised md-primary" @click="r" :disabled="form.id === 'new'">结果</md-button>
         </form>
         <md-dialog :md-active.sync="showDialog">
             <md-dialog-title>结果</md-dialog-title>
-            <div v-if="result.length > 0" style="margin-right: 25px; margin-left: 25px;">
-                <div v-for="(item, itemKey) in form.options" :key="item.text">
-                    <span class="md-title"> 项目{{itemKey + 1}} ： {{ item.text }} </span>
-                    <div v-for="(option, key) in item.options" :key="key">
-                        <span class="md-body-2">{{ option }} : {{result[itemKey][key]}} 票</span><br/>
+            <md-dialog-content>
+                <div v-if="result.length > 0">
+                    <div v-for="(item, itemKey) in form.options" :key="item.text">
+                        <span class="md-subheading"> 项目{{itemKey + 1}} ： {{ item.text }} </span>
+                        <div v-for="(option, key) in item.options" :key="key">
+                            <span class="md-body-1">{{ option }} : {{result[itemKey][key]}} 票</span><br/>
+                        </div>
+                        <md-divider></md-divider>
                     </div>
-                    <md-divider></md-divider>
+                    <span class="md-caption">总计：{{ total }} 票</span>
                 </div>
-                <span class="md-caption">总计：{{ total }} 票</span>
-            </div>
+            </md-dialog-content>
             <md-dialog-actions>
                 <md-button class="md-primary" @click="showDialog = false">关闭</md-button>
                 <md-button class="md-primary" @click="r" :disabled="form.id === 'new'">刷新</md-button>
@@ -54,7 +56,7 @@
         data: () => ({
             votes: [],
             form: {
-                id: "",
+                id: "new",
                 title: "",
                 content: "",
                 options: "[]",
@@ -73,10 +75,7 @@
             submit() {
                 this.axios.post("/school/vote/edit?id="+this.form.id, this.form).then((response) => {
                     this.form = response.data["data"]
-                    this.axios.get("/school/vote/list").then((response) => {
-                        this.votes = response.data["data"]
-                        this.list()
-                    })
+                    this.list()
                 })
             },
             load() {
@@ -87,8 +86,9 @@
             },
             list() {
                 this.axios.get("/school/vote/list").then((response) => {
+                    let t_new = this.form.id === "new";
                     this.votes = response.data["data"]
-                    if(this.votes.length > 0 && this.id === "")
+                    if(this.votes.length > 0 && t_new)
                         this.form.id = this.votes[0].id
                 })
             },

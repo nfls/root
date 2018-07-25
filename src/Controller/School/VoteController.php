@@ -24,6 +24,7 @@ class VoteController extends AbstractController
      * @Route("/school/vote/list", methods="GET")
      */
     public function list() {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         return $this->response()->responseJsonEntity($this
             ->getDoctrine()
             ->getManager()
@@ -35,6 +36,7 @@ class VoteController extends AbstractController
      * @Route("/school/vote/detail", methods="GET")
      */
     public function detail(Request $request) {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $id = $request->query->get("id");
         $vote = $this->getDoctrine()->getManager()->getRepository(Vote::class)->find($id);
         return $this->response()->responseEntity($vote);
