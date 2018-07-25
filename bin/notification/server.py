@@ -27,7 +27,7 @@ def sendSMS(receiver, template_code, params):
                        sign='南外人',
                        template_code=template_code,
                        template_param=params)
-    print("SMS: Receiver: " + receiver + ", Template: " + template_code + ", Params: " + params)
+    print("SMS: Receiver: " + receiver + ", Template: " + template_code + ", Params: " + json.dumps(params))
 
 @app.task(name='tasks.sendAPN')
 def sendAPN(token, callbackToken, title, subtitle, body, badge, custom):
@@ -42,7 +42,7 @@ def sendAPN(token, callbackToken, title, subtitle, body, badge, custom):
             status = 1
         if result.reason == "BadDeviceToken" or result.reason == "Unregistered":
             status = -1
-        print("APNS: Token: " + token + ", Title: " + title + ", Result: " + result.status_code + "(" + result.reason + ")")
+        print("APNS: Token: " + token + ", Title: " + title + ", Result: " + str(result.status_code) + "(" + result.reason + ")")
     except:
         status = 0
 
