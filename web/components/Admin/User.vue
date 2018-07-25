@@ -46,13 +46,13 @@
                     <div class="md-layout-item md-small-size-100">
                         <md-field >
                             <label>每页数量</label>
-                            <md-input name="size" id="size" v-model="form.size"/>
+                            <md-input name="size" id="size" v-model="form.size" type="number"/>
                         </md-field>
                     </div>
                     <div class="md-layout-item md-small-size-100">
                         <md-field >
                             <label>页码</label>
-                            <md-input name="page" id="page" v-model="form.page"/>
+                            <md-input name="page" id="page" v-model="form.page" type="number"/>
                         </md-field>
                     </div>
                 </div>
