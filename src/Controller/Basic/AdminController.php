@@ -80,6 +80,36 @@ class AdminController extends AbstractController
         return $this->response()->response(null);
     }
 
-
+    /**
+     * @Route("/admin/user", methods="POST")
+     */
+    public function user(Request $request) {
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findByUsernameAndEmailAndPhoneAndEnabled(
+            $request->request->get("username"),
+            $request->request->get("email"),
+            $request->request->get("phone"),
+            $request->request->get("enabled"),
+            $request->request->getBoolean("verified", true),
+            $request->request->getInt("size"),
+            ($request->request->getInt("page", 1) - 1) * $request->request->getInt("size"),
+            $request->request->getBoolean("reverse", true)
+        );
+        $result = [];
+        foreach ($users as $user) {
+            /** @var User $user */
+            $result[] = [
+                "id" => $user->getId(),
+                "username" => $user->getUsername(),
+                "email" => $user->getEmail(),
+                "phone" => $user->getPhone(),
+                "enabled" => $user->isEnabled(),
+                "joinTime" => $user->getJoinTime(),
+                "readTime" => $user->getReadTime(),
+                "chineseName" => ($user->getValidAuth() ?? new Alumni())->getChineseName()
+            ];
+        }
+        return $this->response()->responseEntity($result);
+    }
 
 }

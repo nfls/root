@@ -28,6 +28,8 @@ import Preference from '../components/Admin/Preference'
 import Upload from '../components/Admin/Upload'
 import Notification from '../components/Admin/Notification'
 import VoteAdmin from '../components/Admin/Vote'
+import Old from '../components/Admin/Old'
+import User from '../components/Admin/User'
 
 
 Vue.use(Router)
@@ -39,43 +41,43 @@ export default new Router({
             component: App,
             children: [
                 {
-                    path: 'dashboard',
+                    path: '/dashboard',
                     component: Dashboard
                 }, {
-                    path: 'about',
+                    path: '/about',
                     component: About
                 }, {
-                    path: 'alumni/auth',
+                    path: '/alumni/auth',
                     component: Realname
                 }, {
-                    path: 'alumni/auth/:id',
+                    path: '/alumni/auth/:id',
                     component: Form
                 }, {
-                    path: 'alumni/auth/admin/:id',
+                    path: '/alumni/auth/admin/:id',
                     component: Form
                 }, {
-                    path: 'alumni/directory',
+                    path: '/alumni/directory',
                     component: Directory
                 }, {
-                    path: 'media/game',
+                    path: '/media/game',
                     component: Game
                 }, {
-                    path: 'media/gallery',
+                    path: '/media/gallery',
                     component: Gallery
                 }, {
-                    path: 'media/gallery/:id',
+                    path: '/media/gallery/:id',
                     component: Album
                 }, {
-                    path: 'school/vote',
+                    path: '/school/vote',
                     component: Vote
                 }, {
-                    path: 'user/security',
+                    path: '/user/security',
                     component: Security
                 }, {
-                    path: 'user/message',
+                    path: '/user/message',
                     component: Message
                 }, {
-                    path: 'user/message/:id',
+                    path: '/user/message/:id',
                     component: Message
                 }, {
                     path: '/user/login',
@@ -87,10 +89,10 @@ export default new Router({
                     path: '/user/reset',
                     component: Reset
                 }, {
-                    path: 'user/info',
+                    path: '/user/info',
                     component: Info
                 }, {
-                    path: 'user/page/:id',
+                    path: '/user/page/:id',
                     component: Public
                 }, {
                     path: '/admin/preference',
@@ -104,6 +106,12 @@ export default new Router({
                 }, {
                     path: '/admin/vote',
                     component: VoteAdmin
+                }, {
+                    path: '/admin/old',
+                    component: Old
+                }, {
+                    path: '/admin/user',
+                    component: User
                 }, {
                     path: '*',
                     component: Jump

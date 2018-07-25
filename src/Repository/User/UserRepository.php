@@ -4,6 +4,7 @@ namespace App\Repository\User;
 
 use App\Entity\User\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -70,5 +71,45 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findByUsernameAndEmailAndPhoneAndEnabled(?string $username, ?string $email, ?string $phone, ?bool $enabled, bool $verified, int $size, int $offset, bool $reverse) {
+        $query = $this->createQueryBuilder("u");
+        $first = true;
+        $first = $this->addOptionalWhere($query, "username", $username, $first);
+        $first = $this->addOptionalWhere($query, "email", $email, $first);
+        $this->addOptionalWhere($query, "phone", $phone, $first);
+        if($enabled === "true")
+            $query = $query->andWhere("u.enabled = :enabled")->setParameter("enabled", true);
+        else if($enabled === "false")
+            $query = $query->andWhere("u.enabled = :enabled")->setParameter("enabled", false);
+        if($reverse)
+            $query = $query->orderBy("u.id", "DESC");
+        if($verified)
+            $query = $query->join("u.authTickets", "a")
+                ->andWhere("a.status = :status")
+                ->setParameter("status", 5);
+        return $query->setFirstResult($offset)
+            ->setMaxResults($size)
+            ->getQuery()
+            ->getResult();
+    }
+
+    private function addOptionalWhere(QueryBuilder &$query, $key, $value, $first) {
+        if(is_null($value) || $value == "")
+            return $first;
+        if($value == " ") {
+            if($first)
+                $query = $query->where("u.".$key. " IS NOT NULL");
+            else
+                $query = $query->andWhere("u.".$key. " IS NOT NULL");
+            return false;
+        } else if($first)
+            $query = $query->where("u.".$key." LIKE :".$key);
+        else
+            $query = $query->andHaving("u.".$key." LIKE :".$key);
+        $query = $query->setParameter($key, "%".$value."%");
+        return false;
+    }
+
 
 }

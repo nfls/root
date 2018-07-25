@@ -50,6 +50,7 @@
 <script>
     import infiniteScroll from 'vue-infinite-scroll'
 
+
     export default {
         name: "gallery",
         props: ["name","webpSupported"],

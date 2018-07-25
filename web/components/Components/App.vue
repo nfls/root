@@ -83,12 +83,9 @@
                 </md-toolbar>
 
                 <md-list>
-                    <md-list-item to='/user/dashboard'>
+                    <md-list-item to='/dashboard'>
                         <md-icon>dashboard</md-icon>
                         <span class='md-list-item-text'>{{ $t('homepage') }}</span></md-list-item>
-
-
-
                     <md-divider></md-divider>
 
                     <md-subheader>{{ $t('general') }}</md-subheader>
@@ -149,9 +146,12 @@
                         <md-divider></md-divider>
                         <md-subheader>{{ $t('admin') }}</md-subheader>
 
-                        <md-list-item href='/admin'>
+                        <md-list-item to='/admin/old'>
                             <md-icon>build</md-icon>
                             <span class='md-list-item-text'>{{ $t('console') }}</span></md-list-item>
+                        <md-list-item to='/admin/user'>
+                            <md-icon>info</md-icon>
+                            <span class='md-list-item-text'>{{ $t('user') }}</span></md-list-item>
                         <md-list-item to="/admin/preference">
                             <md-icon>settings_input_composite</md-icon>
                             <span class='md-list-item-text'>{{ $t('preference') }}</span></md-list-item>

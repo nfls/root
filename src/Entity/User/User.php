@@ -3,9 +3,7 @@
 namespace App\Entity\User;
 
 use App\Entity\School\Alumni;
-use App\Entity\School\Claz;
 use App\Model\Permission;
-use App\Model\PrivacyBit;
 use App\Model\PrivacyLevel;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -80,6 +78,12 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
     /**
      * @var boolean
      *
+     * @ORM\Column(type="boolean", options={"default": true})
+     */
+    private $enabled = true;
+    /**
+     * @var boolean
+     *
      * @ORM\Column(type="boolean")
      */
     private $admin = false;
@@ -92,7 +96,7 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
     /**
      * @var integer
      *
-     * @ORM\Column(type="integer", options={"unsigned":true, "default":431})
+     * @ORM\Column(type="integer", options={"unsigned":true, "default":1})
      */
     private $privacy;
     /**
@@ -125,7 +129,6 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
         $this->joinTime = new \DateTime();
         $this->readTime = new \DateTime();
         $this->authTickets = new ArrayCollection();
-        $this->classes = new ArrayCollection();
         $this->privacy = PrivacyLevel::SAME_REGISTRATION;
         $this->regenerateToken();
     }
@@ -184,17 +187,11 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
     }
 
     /**
-     * @return \libphonenumber\PhoneNumber
+     * @return string
      */
     public function getPhone()
     {
-        $util = \libphonenumber\PhoneNumberUtil::getInstance();
-        try {
-            $phoneObject = $util->parse("+" . $this->phone);
-            return $phoneObject;
-        } catch (\libphonenumber\NumberParseException $e) {
-            return null;
-        }
+        return $this->phone;
     }
 
     /**
@@ -466,6 +463,21 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
         $this->antiSpider = $antiSpider;
     }
 
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled(bool $enabled): void
+    {
+        $this->enabled = $enabled;
+    }
 
     public function __toString()
     {
