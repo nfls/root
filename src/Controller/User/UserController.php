@@ -83,6 +83,8 @@ class UserController extends AbstractController
             return $this->response()->response($translator->trans("incorrect-username-or-password"), Response::HTTP_UNAUTHORIZED);
         if(!$cacheService->rateVerify($user))
             return $this->response()->response($translator->trans("rate-limited"), Response::HTTP_FORBIDDEN);
+        if(!$user->isEnabled())
+            return $this->response()->response($translator->trans("banned"), Response::HTTP_UNAUTHORIZED);
         if ($passwordEncoder->isPasswordValid($user, $request->request->get("password", $user->getSalt()))) {
             $session->set("user_token", $user->getToken());
 
