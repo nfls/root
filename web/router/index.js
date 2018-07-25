@@ -30,6 +30,7 @@ import Notification from '../components/Admin/Notification'
 import VoteAdmin from '../components/Admin/Vote'
 import Old from '../components/Admin/Old'
 import User from '../components/Admin/User'
+import Overview from '../components/Admin/Overview'
 
 
 Vue.use(Router)
@@ -112,6 +113,9 @@ export default new Router({
                 }, {
                     path: '/admin/user',
                     component: User
+                }, {
+                    path: '/admin/overview',
+                    component: Overview
                 }, {
                     path: '*',
                     component: Jump

@@ -149,8 +149,13 @@
                         <md-list-item to='/admin/old'>
                             <md-icon>build</md-icon>
                             <span class='md-list-item-text'>{{ $t('console') }}</span></md-list-item>
+                        <!--
+                        <md-list-item to='/admin/overview'>
+                            <md-icon>schedule</md-icon>
+                            <span class='md-list-item-text'>{{ $t('overview') }}</span></md-list-item>
+                            -->
                         <md-list-item to='/admin/user'>
-                            <md-icon>info</md-icon>
+                            <md-icon>person</md-icon>
                             <span class='md-list-item-text'>{{ $t('user') }}</span></md-list-item>
                         <md-list-item to="/admin/preference">
                             <md-icon>settings_input_composite</md-icon>

@@ -21,6 +21,7 @@ class Alumni
     const STATUS_REJECTED = 4;
     const STATUS_PASSED = 5;
     const STATUS_EXPIRED = 6;
+    const STATUS_NOT_NFLS = 7;
     /**
      * @var Uuid
      *
@@ -582,7 +583,7 @@ class Alumni
      */
     public function isAtNflsOnce()
     {
-        if ($this->userStatus == 4)
+        if ($this->userStatus == 4 || $this->userStatus == 5)
             return true;
         if ($this->juniorSchool > 0)
             return true;
@@ -622,6 +623,11 @@ class Alumni
                 return array(
                     "zh" => "在校老师",
                     "en" => "a current teacher"
+                );
+            case 5:
+                return array(
+                    "zh" => "其他学校学生",
+                    "en" => "a student from an other school"
                 );
         }
     }

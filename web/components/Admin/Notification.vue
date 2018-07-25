@@ -27,6 +27,7 @@
                     <label>App内跳转链接</label>
                     <md-input v-model="ios.link"></md-input>
                 </md-field>
+                <span class="md-caption">Tips: 接收人可为数字ID或all。</span>
             </md-card-content>
             <md-card-actions>
                 <md-button class="md-raised md-primary" @click="push">发送</md-button>
@@ -45,34 +46,14 @@
                     <md-input v-model="email.title"></md-input>
                 </md-field>
                 <span class="md-caption">内容</span>
-                <mavon-editor v-model="email.body"></mavon-editor>
+                <mavon-editor v-model="email.content"></mavon-editor>
+                <span class="md-caption">Tips: 接收人可为数字ID或all。</span>
             </md-card-content>
             <md-card-actions>
                 <md-button class="md-raised md-primary" @click="mail">发送</md-button>
             </md-card-actions>
-        </md-card>
 
-        <md-card>
-            <md-card-header><span class="md-title">短信</span></md-card-header>
-            <md-card-content>
-                <md-field>
-                    <label>接收人</label>
-                    <md-input v-model="sms.receiver"></md-input>
-                </md-field>
-                <md-field>
-                    <label>模板</label>
-                    <md-input v-model="sms.template"></md-input>
-                </md-field>
-                <md-field>
-                    <label>参数</label>
-                    <md-input v-model="sms.params"></md-input>
-                </md-field>
-            </md-card-content>
-            <md-card-actions>
-                <md-button class="md-raised md-primary" @click="send">发送</md-button>
-            </md-card-actions>
         </md-card>
-
     </div>
 </template>
 
@@ -92,12 +73,7 @@
             email: {
                 receiver: "",
                 title: "",
-                body: ""
-            },
-            sms: {
-                receiver: "",
-                template: "",
-                params: ""
+                content: ""
             }
         }),
         mounted() {
@@ -105,13 +81,14 @@
         },
         methods: {
             push() {
-                this.axios.post("/admin/push", this.ios)
+                this.axios.post("/admin/push", this.ios).then((_) => {
+                    this.$emit("showMsg", "发送成功")
+                })
             },
             mail() {
-
-            },
-            send() {
-
+                this.axios.post("/admin/mail", this.email).then((_) => {
+                    this.$emit("showMsg", "发送成功")
+                })
             }
         }
     }

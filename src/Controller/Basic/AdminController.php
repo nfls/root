@@ -3,12 +3,15 @@
 namespace App\Controller\Basic;
 
 use App\Controller\AbstractController;
+use App\Entity\Log;
 use App\Entity\School\Alumni;
 use App\Entity\Preference;
 use App\Entity\User\Device;
+use App\Model\MailConstant;
 use App\Model\Permission;
 use App\Entity\User\User;
 use App\Service\APNSService;
+use App\Service\MailService;
 use App\Type\DeviceType;
 use Nexmo\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -79,6 +82,37 @@ class AdminController extends AbstractController
             $request->request->get("link"));
         return $this->response()->response(null);
     }
+    /**
+     * @Route("/admin/mail", methods="POST")
+     */
+    public function mail(Request $request, MailService $mailService) {
+        $renderer = new MailConstant();
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        $receiver = $request->request->get("receiver");
+        if($receiver == "all") {
+            $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findAll();
+            $receivers = array_map(function($user){
+                return $user->getEmail();
+            }, $users);
+            $mailService->bulk(
+                "announcement@nfls.io",
+                "NFLS.IO/南外人",
+                $receivers,
+                "【NFLS.IO/南外人】".$request->request->get("title"),
+                $renderer->base((new \Parsedown())->parse($request->request->get("content")))
+                );
+        } else {
+            $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($receiver);
+            $mailService->bulk(
+                "announcement@nfls.io",
+                "NFLS.IO/南外人",
+                $user->getEmail(),
+                "【NFLS.IO/南外人】".$request->request->get("title"),
+                $renderer->base((new \Parsedown())->parse($request->request->get("content")))
+            );
+        }
+
+    }
 
     /**
      * @Route("/admin/user", methods="POST")
@@ -91,6 +125,7 @@ class AdminController extends AbstractController
             $request->request->get("phone"),
             $request->request->get("enabled"),
             $request->request->getBoolean("verified", true),
+            $request->request->getBoolean("notNfls", true),
             $request->request->getInt("size"),
             ($request->request->getInt("page", 1) - 1) * $request->request->getInt("size"),
             $request->request->getBoolean("reverse", true)
@@ -106,10 +141,64 @@ class AdminController extends AbstractController
                 "enabled" => $user->isEnabled(),
                 "joinTime" => $user->getJoinTime(),
                 "readTime" => $user->getReadTime(),
-                "chineseName" => ($user->getValidAuth() ?? new Alumni())->getChineseName()
+                "chineseName" => $user->getChineseName()
             ];
         }
         return $this->response()->responseEntity($result);
     }
 
+    /**
+     * @Route("/admin/detail", methods="GET")
+     */
+    public function detail(Request $request) {
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        $id = $request->query->getInt("id", 1);
+        $em = $this->getDoctrine()->getManager();
+        /** @var User $user */
+        $user = $em->getRepository(User::class)->find($id);
+        $ios = $em->getRepository(Device::class)->findByUserAndType($user, DeviceType::IOS);
+        $weChat = $em->getRepository(Device::class)->findByUserAndType($user, DeviceType::WE_CHAT);
+        $log = $em->getRepository(Log::class)->findByUser($user);
+        $tickets = $user->getAuthTickets();
+        return $this->response()->responseEntity([
+            "ios" => $ios,
+            "weChat" => $weChat,
+            "log" => $log,
+            "tickets" => $tickets
+        ]);
+    }
+
+    /**
+     * @Route("/admin/disable", methods="POST")
+     */
+    public function disable(Request $request) {
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        $em = $this->getDoctrine()->getManager();
+        $id = $request->query->getInt("id", 1);
+        /** @var User $user */
+        $user = $em->getRepository(User::class)->find($id);
+        $user->setEnabled(!$user->isEnabled());
+        $em->persist($user);
+        $em->flush();
+        return $this->response()->response(null);
+    }
+
+    /**
+     * @Route("/admin/avatar", methods="POST")
+     */
+    public function avatar(Request $request) {
+        $this->denyAccessUnlessGranted(Permission::IS_ADMIN);
+        $em = $this->getDoctrine()->getManager();
+        $id = $request->query->getInt("id", 1);
+        /** @var User $user */
+        $user = $em->getRepository(User::class)->find($id);
+        $this->getDefaultAvatar($user->getUsername(), $user->getId());
+        return $this->response()->response(null);
+    }
+
+    private function getDefaultAvatar($username, $id)
+    {
+        @unlink($this->get('kernel')->getRootDir() . "/../public/avatar/" . strval($id) . ".png");
+        file_put_contents($this->get('kernel')->getRootDir() . "/../public/avatar/" . strval($id) . ".png", fopen('http://identicon.relucks.org/' . md5($username) . '?size=200', 'r'));
+    }
 }

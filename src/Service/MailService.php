@@ -25,6 +25,12 @@ class MailService extends CeleryEnabledService
         } catch (\Exception $e) {
             return false;
         }
+    }
 
+    public function bulk(string $sender, string $senderName, array $receivers, string $subject, string $content) {
+        foreach ($receivers as $receiver) {
+            $this->send($sender, $senderName, $receiver, $subject, $content);
+        }
+        return true;
     }
 }

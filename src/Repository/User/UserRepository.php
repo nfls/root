@@ -72,7 +72,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
             ->getOneOrNullResult();
     }
 
-    public function findByUsernameAndEmailAndPhoneAndEnabled(?string $username, ?string $email, ?string $phone, string $enabled, bool $verified, int $size, int $offset, bool $reverse) {
+    public function findByUsernameAndEmailAndPhoneAndEnabled(?string $username, ?string $email, ?string $phone, string $enabled, bool $verified, bool $notNfls, int $size, int $offset, bool $reverse) {
         $query = $this->createQueryBuilder("u");
         $first = true;
         $first = $this->addOptionalWhere($query, "username", $username, $first);
@@ -88,10 +88,37 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
             $query = $query->join("u.authTickets", "a")
                 ->andWhere("a.status = :status")
                 ->setParameter("status", 5);
+        else if($notNfls)
+            $query = $query->join("u.authTickets", "a")
+                ->andWhere("a.status = :status")
+                ->setParameter("status", 7);
         return $query->setFirstResult($offset)
             ->setMaxResults($size)
             ->getQuery()
             ->getResult();
+    }
+
+    public function findByType(string $type){
+        switch($type) {
+            case "nfls":
+                return $this->createQueryBuilder("u")
+                    ->join("u.authTickets", "a")
+                    ->where("a.status = :status")
+                    ->setParameter("status", 5)
+                    ->getQuery()
+                    ->getResult();
+            case "non-nfls":
+                return $this->createQueryBuilder("u")
+                    ->join("u.authTickets", "a")
+                    ->where("a.status = :status")
+                    ->setParameter("status", 7)
+                    ->getQuery()
+                    ->getResult();
+            case "all":
+                return $this->findAll();
+            default:
+                return [];
+        }
     }
 
     private function addOptionalWhere(QueryBuilder &$query, $key, $value, $first) {

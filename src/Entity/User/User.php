@@ -121,6 +121,7 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="App\Entity\School\Alumni", mappedBy="user")
+     * @ORM\OrderBy({"submitTime" = "desc"})
      */
     private $authTickets;
 
@@ -479,6 +480,22 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
         $this->enabled = $enabled;
     }
 
+    public function getAuthTickets()
+    {
+        return $this->authTickets;
+    }
+
+    public function getChineseName() {
+        foreach ($this->authTickets as $ticket) {
+            /** @var Alumni $ticket */
+            if($ticket->getStatus() == 5 || $ticket->getStatus() == 6) {
+                return $ticket->getChineseName();
+            } else if($ticket->getStatus() == 7){
+                return $ticket->getChineseName()."（非南外）";
+            }
+        }
+        return null;
+    }
     public function __toString()
     {
         return $this->username;

@@ -12,7 +12,7 @@ use Ramsey\Uuid\Uuid;
 class Log
 {
     /**
-     * @var Uuid
+     * @var int
      *
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -85,5 +85,43 @@ class Log
         $this->message = $message;
     }
 
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
 
+    /**
+     * @return \DateTime
+     */
+    public function getTime(): \DateTime
+    {
+        return $this->time;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier(): string
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIp(): string
+    {
+        return $this->ip;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
 }

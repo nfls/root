@@ -4,6 +4,7 @@ namespace App\Controller\School;
 
 use App\Controller\AbstractController;
 use App\Entity\School\Alumni;
+use App\Entity\School\Ticket;
 use App\Model\Normalizer\UuidNormalizer;
 use App\Model\Permission;
 use App\Service\NotificationService;
@@ -293,6 +294,7 @@ class AlumniController extends AbstractController
             $time->add(new \DateInterval("PT11H"));
         else
             $time = null;
+        /** @var Alumni $ticket */
         $ticket = $repo->findOneBy(["id" => $id]);
         switch ($action) {
             case "reject":
@@ -300,7 +302,10 @@ class AlumniController extends AbstractController
                 $service->realnameFailed($ticket->getUser());
                 break;
             case "accept":
-                $ticket->setStatus(Alumni::STATUS_PASSED);
+                if($ticket->getUserStatus() == 5)
+                    $ticket->setStatus(Alumni::STATUS_NOT_NFLS);
+                else
+                    $ticket->setStatus(Alumni::STATUS_PASSED);
                 $ticket->setExpireAt($time);
                 $service->realnamePassed($ticket->getUser(),$ticket);
                 break;
