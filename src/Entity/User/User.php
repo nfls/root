@@ -237,7 +237,8 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
             "phone" => $this->phone,
             "joinTime" => $this->joinTime,
             "admin" => $this->isAdmin(),
-            "verified" => $this->isVerified()
+            "verified" => $this->isVerified(),
+            "status" => ($this->getValidAuth() ?? new Alumni())->getUserStatus()
         );
     }
 
