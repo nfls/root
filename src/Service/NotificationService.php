@@ -233,7 +233,7 @@ class NotificationService
         $phones = [];
         foreach ($students as $student) {
             /** @var User $student */
-            array_merge($devices, $this->getDevices($student));
+            $devices = array_merge($devices, $this->getDevices($student));
             array_push($emails, $student->getEmail());
             array_push($phones, $student->getPhone());
         }
@@ -270,7 +270,7 @@ class NotificationService
         $phones = [];
         foreach ($students as $student) {
             /** @var User $student */
-            array_merge($devices, $this->getDevices($student));
+            $devices = array_merge($devices, $this->getDevices($student));
             array_push($emails, $student->getEmail());
             array_push($phones, $student->getPhone());
         }
