@@ -17,4 +17,6 @@ class AliyunTemplateType
     const RESET = "SMS_119085891";
     const BIND = "SMS_119085892";
     const MESSAGE = "SMS_125028504";
+    const NOTICE = "SMS_125018518";
+    const DEADLINE = "SMS_125028511";
 }

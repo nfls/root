@@ -43,24 +43,24 @@ EOD;
         return $this->base($text);
     }
 
-    function renderNoticePage(string $teacher, string $class, string $notice)
+    function renderNoticePage(string $teacher, string $class, string $title, string $notice)
     {
-        $paser = new Parsedown();
-        $notice = $paser->parse($notice);
+        $parser = new Parsedown();
+        $notice = $parser->parse($notice);
         $text = <<<EOD
-        <p><strong>$teacher</strong> posted a new note on the blackboard for group <strong>$class</strong>:</p>
+        <p><strong>$teacher</strong> posted a new note <strong>$title</strong> on the blackboard for group <strong>$class</strong>. There may be attachments, so please login in to see more details.</p>
         $notice
         <p>&nbsp;</p>
 EOD;
         return $this->base($text);
     }
 
-    function renderDeadlinePage(string $teacher, string $project, string $time, string $notice)
+    function renderDeadlinePage(string $teacher, string $title, string $time, string $notice)
     {
-        $paser = new Parsedown();
-        $notice = $paser->parse($notice);
+        $parser = new Parsedown();
+        $notice = $parser->parse($notice);
         $text = <<<EOD
-        <p><strong>$teacher</strong> wants to remind you that the deadline for <strong>$project</strong> is <strong>$time</strong>.</p>
+        <p><strong>$teacher</strong> wants to remind you that the deadline for <strong>$title</strong> is <strong>$time</strong>.</p>
         $notice
         <p>Please schedule your time wisely, and we hope that you can finish all the work in time.</p>
         <p>&nbsp;</p>

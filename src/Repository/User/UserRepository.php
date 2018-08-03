@@ -72,6 +72,14 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
             ->getOneOrNullResult();
     }
 
+    public function findByIds(array $ids) {
+        return $this->createQueryBuilder("u")
+            ->where("u.id IN (:ids)")
+            ->setParameter("ids", $ids)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findByUsernameAndEmailAndPhoneAndEnabled(?string $username, ?string $email, ?string $phone, string $enabled, bool $verified, bool $notNfls, int $size, int $offset, bool $reverse) {
         $query = $this->createQueryBuilder("u");
         $first = true;

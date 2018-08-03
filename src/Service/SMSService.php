@@ -23,4 +23,10 @@ class SMSService extends CeleryEnabledService
             return false;
         }
     }
+
+    public function bulk(array $receivers, string $template, array $params) {
+        foreach($receivers as $receiver) {
+            $this->send($receiver, $template, $params);
+        }
+    }
 }

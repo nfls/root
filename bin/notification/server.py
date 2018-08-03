@@ -1,4 +1,5 @@
 from celery import Celery
+from celery.schedules import crontab
 import apns2
 import sendgrid
 from sendgrid.helpers.mail import *
@@ -8,11 +9,22 @@ import config
 import json
 
 app = Celery('notification', broker="redis://127.0.0.1", backend="redis://127.0.0.1")
-
 aps = apns2.APNSClient(mode=config.mode, client_cert=config.apns_cert)
 sg = sendgrid.SendGridAPIClient(apikey=config.sendgrid_key)
+app.conf.beat_schedule = {
+    'notice_check': {
+        'task': 'tasks.checkNotice',
+        'schedule': 30.0,
+        'args': ()
+    },
+}
 
 callback = config.apns_callback
+	
+
+@app.task(name='tasks.checkNotice')
+def checkNotice():
+    requests.get(config.task_url)
 
 @app.task(name='tasks.sendEmail')
 def sendEmail(sender, sender_name, receiver, subject, content, content_type):

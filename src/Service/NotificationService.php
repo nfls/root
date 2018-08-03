@@ -227,6 +227,81 @@ class NotificationService
             array());
     }
 
+    public function blackboardNotice(User $teacher, array $students, string $class, string $title, string $content) {
+        $devices = [];
+        $emails = [];
+        $phones = [];
+        foreach ($students as $student) {
+            /** @var User $student */
+            array_merge($devices, $this->getDevices($student));
+            array_push($emails, $student->getEmail());
+            array_push($phones, $student->getPhone());
+        }
+        $this->mailService->bulk(
+            "study@nfls.io",
+            "NFLS.IO Blackboard",
+            $emails,
+            "【NFLS.IO/南外人】New Notice",
+            $this->mailRenderer->renderNoticePage($teacher->getValidAuth()->getEnglishName(), $class, $title, $content)
+        );
+        $this->SMSService->bulk(
+            $phones,
+            AliyunTemplateType::NOTICE,
+            [
+                "person" => mb_substr($teacher->getValidAuth()->getEnglishName(), 0, 20),
+                "group" => mb_substr($class, 0, 20)
+            ]
+        );
+        $parser = new PlainTextParsedown();
+        $this->APNService->bulk(
+            $devices,
+            "New note for ". $class. " by " . $teacher->getValidAuth()->getEnglishName(),
+            $title,
+            $parser->text($content),
+            1,
+            null,
+            null
+        );
+    }
+
+    public function blackboardDeadline(User $teacher, array $students, string $title, string $content, string $deadline) {
+        $devices = [];
+        $emails = [];
+        $phones = [];
+        foreach ($students as $student) {
+            /** @var User $student */
+            array_merge($devices, $this->getDevices($student));
+            array_push($emails, $student->getEmail());
+            array_push($phones, $student->getPhone());
+        }
+        $this->mailService->bulk(
+            "study@nfls.io",
+            "NFLS.IO Blackboard",
+            $emails,
+            "【NFLS.IO/南外人】Deadline Reminder",
+            $this->mailRenderer->renderDeadlinePage($teacher->getValidAuth()->getEnglishName(), $title, $deadline, $content)
+        );
+        $this->SMSService->bulk(
+            $phones,
+            AliyunTemplateType::DEADLINE,
+            [
+                "user" => mb_substr($teacher->getValidAuth()->getEnglishName(), 0, 20),
+                "project" => mb_substr($title, 0, 20),
+                "time" => $deadline
+            ]
+        );
+        $parser = new PlainTextParsedown();
+        $this->APNService->bulk(
+            $devices,
+            "Deadline reminder by " . $teacher->getValidAuth()->getEnglishName(),
+            $title . " is due by " . $deadline,
+            $parser->text($content),
+            1,
+            null,
+            null
+        );
+    }
+
     private function getDevices(User $user) {
         return $this->objectManager->getRepository(Device::class)->findValidByUserAndType($user, DeviceType::IOS, true);
     }
