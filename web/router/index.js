@@ -4,8 +4,6 @@ import Jump from '../components/Jump'
 import App from '../components/Components/App'
 import Dashboard from '../components/Dashboard'
 
-import About from '../components/About/About'
-
 import Directory from '../components/Alumni/Directory'
 import Realname from '../components/Alumni/Realname'
 import Form from '../components/Alumni/Form'
@@ -44,9 +42,6 @@ export default new Router({
                 {
                     path: '/dashboard',
                     component: Dashboard
-                }, {
-                    path: '/about',
-                    component: About
                 }, {
                     path: '/alumni/auth',
                     component: Realname

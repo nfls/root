@@ -181,7 +181,7 @@ class AlumniController extends AbstractController
     /**
      * @Route("alumni/submit", methods="POST")
      */
-    public function submitForm(Request $request, ValidatorInterface $validator, TranslatorInterface $translator)
+    public function submitForm(Request $request, ValidatorInterface $validator, TranslatorInterface $translator, NotificationService $service)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if (!$this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_ALUMNI_FORM))
@@ -229,7 +229,7 @@ class AlumniController extends AbstractController
 
         $form->setStatus(1);
         $form->setSubmitTime(new \DateTime());
-        //$this->notification()->notifyNewVerification($form);
+        $service->newVerification($form);
         $em->persist($form);
         $em->flush();
         return $this->response()->responseEntity(null, 200);

@@ -32,9 +32,6 @@
                                     <md-chip class="md-accent" v-if="unread > 0">{{unread}}</md-chip>
                                 </md-list-item>
                                 <md-divider></md-divider>
-                                <md-list-item href="https://dev.nfls.io/jira/openid/login/2">
-                                    <md-icon>help_outline</md-icon>
-                                    <span class='md-list-item-text'>{{ $t('support') }}</span></md-list-item>
                                 <md-list-item v-if="admin" @click="dropAdmin">
                                     <md-icon>delete</md-icon>
                                     <span class='md-list-item-text'>{{ $t('drop-admin') }}</span></md-list-item>
@@ -90,10 +87,10 @@
 
                     <md-subheader>{{ $t('general') }}</md-subheader>
 
-                    <md-list-item href='https://nfls.io/forum'>
+                    <md-list-item href='https://forum.nfls.io'>
                         <md-icon>forum</md-icon>
                         <span class='md-list-item-text'>{{ $t('forum') }}</span></md-list-item>
-                    <md-list-item href='https://nfls.io/wiki'>
+                    <md-list-item href='https://wiki.nfls.io'>
                         <md-icon>library_books</md-icon>
                         <span class='md-list-item-text'>{{ $t('wiki') }}</span></md-list-item>
 
@@ -115,7 +112,7 @@
                     <md-list-item to='/school/vote'>
                         <md-icon>plus_one</md-icon>
                         <span class='md-list-item-text'>{{ $t('vote') }}</span></md-list-item>
-                    <md-list-item disabled>
+                    <md-list-item href='https://water.nfls.io'>
                         <md-icon>pool</md-icon>
                         <span class='md-list-item-text'>{{ $t('study') }}</span></md-list-item>
 
@@ -132,9 +129,6 @@
 
                     <md-divider></md-divider>
                     <md-subheader>{{ $t('other') }}</md-subheader>
-                    <md-list-item to='/about'>
-                        <md-icon>adb</md-icon>
-                        <span class='md-list-item-text'>{{ $t('about') }}</span></md-list-item>
                     <md-list-item href='https://dev.nfls.io'>
                         <md-icon>developer_mode</md-icon>
                         <span class='md-list-item-text'>{{ $t('development') }}</span></md-list-item>
@@ -146,7 +140,7 @@
                         <md-divider></md-divider>
                         <md-subheader>{{ $t('admin') }}</md-subheader>
 
-                        <md-list-item to='/admin/old'>
+                        <md-list-item href='/admin/alumni/auth' target="_blank">
                             <md-icon>build</md-icon>
                             <span class='md-list-item-text'>{{ $t('console') }}</span></md-list-item>
                         <!--

@@ -87,7 +87,7 @@ class UserController extends AbstractController
             return $this->response()->response($translator->trans("banned"), Response::HTTP_UNAUTHORIZED);
         if ($passwordEncoder->isPasswordValid($user, $request->request->get("password", $user->getSalt()))) {
             $session->set("user_token", $user->getToken());
-
+            $this->writeLog("UserLoginSucceeded", null, $user);
             if ($request->request->get("remember") == "true") {
                 $response = $this->response()->response(null);
                 $time = new \DateTime();
@@ -95,7 +95,6 @@ class UserController extends AbstractController
                 $response->headers->setCookie(new Cookie("remember_token", $user->getToken(), $time, "/", null, false, true));
                 return $response;
             }
-            $this->writeLog("UserLoginSucceeded", null, $user);
             return $this->response()->response(null);
         } else {
             $this->writeLog("UserLoginFailed", null, $user);

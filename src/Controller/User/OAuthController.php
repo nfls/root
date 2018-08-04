@@ -43,7 +43,13 @@ class OAuthController extends AbstractController
             return new RedirectResponse("/#/user/login?redirect=" . urlencode($request->getUri()));
         }
         if (is_null($user->getEmail())) {
-            return new RedirectResponse("/#/user/security?reason=email");
+            return new RedirectResponse("/#/user/security?reason=incomplete");
+        }
+        if (is_null($user->getPhone()) && geoip_country_code_by_name($request->getClientIp()) === "CN") {
+            return new RedirectResponse("/#/user/security?reason=incomplete");
+        }
+        if (geoip_country_code_by_name($request->getClientIp()) !== "CN" && is_null($this->getUser()->getValidAuth())) {
+            return new RedirectResponse("/#/user/security?reason=incomplete");
         }
         try {
             $authRequest = $this->server->validateAuthorizationRequest($psrRequest);

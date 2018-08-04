@@ -65,9 +65,9 @@ class VoteController extends AbstractController
             return $this->response()->response($translator->trans("already-submit"), Response::HTTP_FORBIDDEN);
         try {
             $ticket = new Ticket($vote, $this->getUser(), $request->request->get("choices"));
-
             $em->persist($ticket);
             $em->flush();
+            $this->writeLog("UserVoted", $request->request->get("choices"), $this->getUser());
             return $this->response()->responseEntity($ticket, Response::HTTP_OK);
         } catch(\Exception $e) {
             return $this->response()->response($translator->trans("invalid-ticket"), Response::HTTP_BAD_REQUEST);

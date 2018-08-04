@@ -19,6 +19,7 @@ use App\Type\AliyunTemplateType;
 use App\Type\CodeActionType;
 use App\Type\DeviceType;
 use Doctrine\Common\Persistence\ObjectManager;
+use Longman\TelegramBot\Telegram;
 
 class NotificationService
 {
@@ -300,6 +301,22 @@ class NotificationService
             null,
             null
         );
+    }
+
+    /**
+     * @deprecated
+     */
+    public function newVerification(Alumni $ticket){
+        $info = "【实名认证】新的实名认证请求，来自 " . $ticket->getChineseName(). "(".$ticket->getUser()->getUsername().")";
+        $this->sendTelegram($info);
+    }
+
+    public function sendTelegram(string $text) {
+        try {
+            $telegram = new Telegram($_ENV["TELEGRAM_BOT_KEY"]);
+            $result = \Longman\TelegramBot\Request::sendMessage(['chat_id'=>-1001244396269, 'text'=>$text]);
+        } catch (\Exception $e) {
+        }
     }
 
     private function getDevices(User $user) {

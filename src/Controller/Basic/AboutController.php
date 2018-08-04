@@ -17,24 +17,4 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class AboutController extends AbstractController
 {
-    /**
-     * @Route("/about/devs", name="about")
-     */
-    public function index()
-    {
-        $repo = $this->getDoctrine()->getManager()->getRepository(Preference::class);
-        return $this->response()->response($repo->get(Preference::ABOUT_DEVS));
-    }
-
-    /**
-     * @Route("/about/version")
-     */
-    public function version()
-    {
-        exec('git lg2 -10', $gitHashLong);
-        $gitHashLong = array_reduce($gitHashLong, function ($previous, $current) {
-            return $previous . "<br/>" . $current;
-        });
-        return $this->response()->response($gitHashLong);
-    }
 }

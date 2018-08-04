@@ -6,6 +6,7 @@
                 <vue-markdown v-if="loaded">{{announcement}}</vue-markdown>
             </md-card-content>
         </md-card>
+        <!--
         <md-card>
             <md-card-header>
                 <div class="md-title">精选功能</div>
@@ -16,7 +17,7 @@
                         <md-empty-state
                                 md-icon="pool"
                                 md-description="新一代学习系统">
-                            <md-button class="md-primary md-raised" disabled>划水(未开放)</md-button>
+                            <md-button class="md-primary md-raised" href="https://water.nfls.io">划水</md-button>
                         </md-empty-state>
                     </div>
                     <div class="md-layout-item md-medium-size-25 md-small-size-50 md-xsmall-size-100">
@@ -30,7 +31,7 @@
                         <md-empty-state
                                 md-icon="forum"
                                 md-description="荒无人烟的地方">
-                            <md-button class="md-primary md-raised" href="/forum">论坛</md-button>
+                            <md-button class="md-primary md-raised" href="https://forum.nfls.io">论坛</md-button>
                         </md-empty-state>
                     </div>
                     <div class="md-layout-item md-medium-size-25 md-small-size-50 md-xsmall-size-100">
@@ -43,6 +44,7 @@
                 </div>
             </md-card-content>
         </md-card>
+        -->
     </div>
 </template>
 
