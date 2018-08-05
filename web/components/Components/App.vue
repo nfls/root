@@ -127,15 +127,6 @@
                         <md-icon>info</md-icon>
                         <span class='md-list-item-text'>{{ $t('directory') }}</span></md-list-item>
 
-                    <md-divider></md-divider>
-                    <md-subheader>{{ $t('other') }}</md-subheader>
-                    <md-list-item href='https://dev.nfls.io'>
-                        <md-icon>developer_mode</md-icon>
-                        <span class='md-list-item-text'>{{ $t('development') }}</span></md-list-item>
-                    <md-list-item href='https://nflsio.statuspage.io'>
-                        <md-icon>flag</md-icon>
-                        <span class='md-list-item-text'>{{ $t('statuspage') }}</span></md-list-item>
-
                     <div id="admin" v-if="admin">
                         <md-divider></md-divider>
                         <md-subheader>{{ $t('admin') }}</md-subheader>
