@@ -6,7 +6,7 @@
  * Time: 0:50
  */
 
-namespace App\EventListener;
+namespace App\Listener;
 
 
 use Symfony\Component\HttpFoundation\JsonResponse;
