@@ -26,11 +26,8 @@ import Cookies from 'js-cookie'
 import moment from 'moment-timezone'
 import VueLocalForage from 'vue-localforage'
 import mavonEditor from 'mavon-editor'
-import VueGitHubButtons from 'vue-github-buttons';
 import 'mavon-editor/dist/css/index.css'
-import 'vue-github-buttons/dist/vue-github-buttons.css';
 
-Vue.use(VueGitHubButtons);
 Vue.use(mavonEditor)
 Vue.use(VueLocalForage)
 Vue.use(VueLazyload)
