@@ -11,7 +11,7 @@ import Form from '../components/Alumni/Form'
 import Game from '../components/Media/Game'
 import Gallery from '../components/Media/Gallery'
 import Album from '../components/Media/Album'
-
+import Live from '../components/Media/Live'
 import Vote from '../components/School/Vote'
 
 import Login from '../components/User/Login'
@@ -63,6 +63,9 @@ export default new Router({
                 }, {
                     path: '/media/gallery/:id',
                     component: Album
+                }, {
+                    path: '/media/live/:id',
+                    component: Live
                 }, {
                     path: '/school/vote',
                     component: Vote

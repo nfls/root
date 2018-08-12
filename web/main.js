@@ -27,7 +27,10 @@ import moment from 'moment-timezone'
 import VueLocalForage from 'vue-localforage'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-
+import VueVideoPlayer from 'vue-video-player'
+import 'video.js/dist/video-js.css'
+import 'videojs-contrib-hls'
+Vue.use(VueVideoPlayer)
 Vue.use(mavonEditor)
 Vue.use(VueLocalForage)
 Vue.use(VueLazyload)
