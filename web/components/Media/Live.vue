@@ -2,7 +2,9 @@
     <video-player
             class="video-player-box"
             ref="videoPlayer"
-            :options="options">
+            :options="options"
+            @ready="play"
+    >
     </video-player>
 </template>
 
@@ -24,7 +26,13 @@
         },
         data: () => ({
             options: {}
-        })
+        }),
+        methods: {
+            play() {
+                this.$refs.videoPlayer.player.play()
+            }
+
+        }
     }
 </script>
 
