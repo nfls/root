@@ -3,6 +3,7 @@
 namespace App\Repository\OAuth;
 
 use App\Entity\OAuth\AccessToken;
+use App\Entity\OAuth\RefreshToken;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
@@ -43,8 +44,13 @@ class AccessTokenRepository extends ServiceEntityRepository implements AccessTok
 
     public function revokeAccessToken($tokenId)
     {
+        /** @var AccessToken $token */
         $token = $this->findOneBy(["token" => $tokenId]);
+        /** @var RefreshToken $refreshToken */
+        $refreshToken = $this->getEntityManager()->getRepository(RefreshToken::class)->findOneBy(["accessToken"=>$token]);
         if (null !== $token) {
+            $refreshToken->setAccessToken(null);
+            $this->getEntityManager()->persist($refreshToken);
             $this->getEntityManager()->remove($token);
             $this->getEntityManager()->flush();
         }
