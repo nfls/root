@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad71cad71f88eed4ae6b7f2504006173",
+    "content-hash": "a8927d31ba13e188f0b7c2e590210018",
     "packages": [
         {
             "name": "aliyuncs/oss-sdk-php",
@@ -3584,23 +3584,22 @@
         },
         {
             "name": "snc/redis-bundle",
-            "version": "dev-master",
+            "version": "2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/snc/SncRedisBundle.git",
-                "reference": "714ba5685bd6758225db5efbec65935745bad301"
+                "reference": "3f3c233ebbfba43d3abd2403be0bc34c11e6dc06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/snc/SncRedisBundle/714ba5685bd6758225db5efbec65935745bad301.zip",
-                "reference": "714ba5685bd6758225db5efbec65935745bad301",
+                "url": "https://api.github.com/repos/snc/SncRedisBundle/zipball/3f3c233ebbfba43d3abd2403be0bc34c11e6dc06",
+                "reference": "3f3c233ebbfba43d3abd2403be0bc34c11e6dc06",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0",
-                "symfony/framework-bundle": "^3.4 || ^4.0",
-                "symfony/http-foundation": "^3.4 || ^4.0",
-                "symfony/yaml": "^3.4 || ^4.0"
+                "php": ">=5.3.3",
+                "symfony/framework-bundle": "^2.7 || ^3.0 || ^4.0",
+                "symfony/yaml": "^2.7 || ^3.0 || ^4.0"
             },
             "require-dev": {
                 "doctrine/cache": "1.*",
@@ -3646,7 +3645,7 @@
                 "redis",
                 "symfony"
             ],
-            "time": "2018-03-29T18:03:55+00:00"
+            "time": "2018-06-25T15:31:46+00:00"
         },
         {
             "name": "symfony/asset",
@@ -6832,7 +6831,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "mrgoon/aliyun-sms": 20,
-        "snc/redis-bundle": 20,
         "symfony/lts": 20
     },
     "prefer-stable": false,
