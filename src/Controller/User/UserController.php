@@ -153,7 +153,10 @@ class UserController extends AbstractController
             $session = new Session();
         $session->start();
         $session->set("user_token", $user->getToken());
-        $response = new RedirectResponse("/");
+        if($request->query->has("realname"))
+            $response = new RedirectResponse("/#/alumni/auth");
+        else
+            $response = new RedirectResponse("/");
         return $response;
 
     }
