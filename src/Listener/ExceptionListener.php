@@ -3,9 +3,11 @@ namespace App\Listener;
 
 use DeviceDetector\DeviceDetector;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ExceptionListener
 {
@@ -15,10 +17,14 @@ class ExceptionListener
             return;
         $exception = $event->getException();
         if($exception instanceof HttpExceptionInterface){
-            $response = new JsonResponse(array(
-                "code" => $exception->getStatusCode(),
-                "data" => $exception->getMessage()
-            ),$exception->getStatusCode());
+            if($exception instanceof NotFoundHttpException) {
+                $response = new RedirectResponse("/");
+            } else {
+                $response = new JsonResponse(array(
+                    "code" => $exception->getStatusCode(),
+                    "data" => $exception->getMessage()
+                ),$exception->getStatusCode());
+            }
         }else{
             $response = new JsonResponse(array(
                 "code" => $exception->getCode(),
