@@ -499,7 +499,7 @@ class UserController extends AbstractController
             $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($request->request->get("id"));
             if(!is_null($user)) {
                 /** @var User $user */
-                $token = Base32::encodeUpper(hash_hmac("sha256", $this->getUser()->getCard(), $_ENV["APP_SECRET"]));
+                $token = Base32::encodeUpper(hash_hmac("sha256", $user->getCard(), $_ENV["APP_SECRET"]));
                 $otp = TOTP::create($token, 15, "sha1", 8);
                 $result = $otp->verify($request->request->get("digit"));
                 if($result)
