@@ -55,25 +55,6 @@ class AbstractController extends Controller
         }
     }
 
-    public function verfityCsrfToken($token, $id)
-    {
-        if (is_null($this->getUser()))
-            throw $this->createAccessDeniedException("Csrf Invalid.");
-        if (is_null($token))
-            throw $this->createAccessDeniedException("Csrf Invalid.");
-        else
-            if ($this->getUser()->isOAuth) {
-                return true;
-            } else {
-                /** @var \Symfony\Component\Security\Csrf\CsrfTokenManagerInterface $csrf */
-                $csrf = $this->get('security.csrf.token_manager');
-                if ($csrf->isTokenValid(new CsrfToken($id, $token)))
-                    return true;
-                else
-                    throw $this->createAccessDeniedException("Csrf Invalid.");
-            }
-    }
-
     public function writeLog(string $identifier, ?string $message = null, ?User $user = null)
     {
         if (is_null($user))

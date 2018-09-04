@@ -52,7 +52,6 @@ class ChatController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
-        $this->verfityCsrfToken($request->request->get("_csrf"),AbstractController::CSRF_USER);
         if(!$cacheService->rateVerify($this->getUser())) {
             return $this->response()->response($translator->trans("rate-limited"), Response::HTTP_FORBIDDEN);
         }

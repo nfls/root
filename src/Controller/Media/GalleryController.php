@@ -62,8 +62,6 @@ class GalleryController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $this->denyAccessUnlessGranted(Permission::IS_AUTHENTICATED);
-        if (!$this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_MEDIA_GALLERY))
-            return $this->response()->response("csrf.invalid", Response::HTTP_BAD_REQUEST);
         $content = $request->request->get("content");
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
         $comment = new Comment();
@@ -84,8 +82,6 @@ class GalleryController extends AbstractController
     public function like(Request $request)
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        if (!$this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_MEDIA_GALLERY))
-            return $this->response()->response("csrf.invalid", Response::HTTP_BAD_REQUEST);
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
         $gallery = $repo->getGallery($request->request->get("id"));
         $gallery->like($this->getUser());
@@ -157,8 +153,6 @@ class GalleryController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(Comment::class);
         if ($request->request->has("delete")) {
-            if (!$this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_MEDIA_GALLERY))
-                return $this->response()->response("csrf.invalid", Response::HTTP_BAD_REQUEST);
             $items = json_decode($request->request->get("delete"), true);
             foreach ($items as $item) {
                 $em->remove($repo->findOneBy(["id" => $item]));

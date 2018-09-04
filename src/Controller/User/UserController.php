@@ -161,8 +161,6 @@ class UserController extends AbstractController
      */
     public function logout(Request $request)
     {
-        if (!$this->verfityCsrfToken($request->request->get("_csrf"), AbstractController::CSRF_USER))
-            return $this->response()->response("csrf.invalid", Response::HTTP_BAD_REQUEST);
         $response = $this->response()->response(null, 200);
         $time = new \DateTime();
         $time->sub(new \DateInterval("P1M"));
