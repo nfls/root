@@ -16,25 +16,33 @@
                             <md-radio v-model="way" value="phone">{{ $t("phone") }}</md-radio>
                             <md-radio v-model="way" value="email">{{ $t("email") }}</md-radio>
                         </div>
-                        <div class="md-flex md-flex-small-100" v-if="way == 'phone'">
-                            <md-field :class="getValidationClass('phone')">
-                                <label>{{ $t('phone') }}</label>
-                                <md-input name="phone" id="phone" autocomplete="phone" v-model="form.phone"
-                                          :disabled="sending"/>
-                                <span class="md-error" v-if="$v.form.phone && !$v.form.phone.required">{{ $t('required') }}</span>
-                                <span class="md-error" v-else-if="$v.form.phone && !$v.form.phone.numeric">{{ $t('phone-invalid') }}</span>
-                                <md-button class="md-primary" @click="sendSMS">{{$t('send')}}</md-button>
-                            </md-field>
+                        <div v-if="way == 'phone'">
+                            <div class="md-flex md-flex-small-100">
+                                <md-field :class="getValidationClass('phone')">
+                                    <label>{{ $t('phone') }}</label>
+                                    <md-input name="phone" id="phone" autocomplete="phone" v-model="form.phone"
+                                              :disabled="sending"/>
+                                    <span class="md-error" v-if="$v.form.phone && !$v.form.phone.required">{{ $t('required') }}</span>
+                                    <span class="md-error" v-else-if="$v.form.phone && !$v.form.phone.numeric">{{ $t('phone-invalid') }}</span>
+                                </md-field>
+                            </div>
+                            <div class="md-flex md-flex-small-100">
+                                <md-button class="md-raised" @click="sendSMS">{{$t('send')}}</md-button>
+                            </div>
                         </div>
-                        <div class="md-flex md-flex-small-100" v-else-if="way == 'email'">
-                            <md-field :class="getValidationClass('email')">
-                                <label>{{ $t('email') }}</label>
-                                <md-input name="email" id="email" autocomplete="email" v-model="form.email"
-                                          :disabled="sending"/>
-                                <md-button class="md-primary" @click="sendEmail">{{$t('send')}}</md-button>
-                                <span class="md-error" v-if="$v.form.email && !$v.form.email.required">{{ $t('required') }}</span>
-                                <span class="md-error" v-else-if="$v.form.email && !$v.form.email.email"></span>
-                            </md-field>
+                        <div v-else-if="way == 'email'">
+                            <div class="md-flex" >
+                                <md-field :class="getValidationClass('email')">
+                                    <label>{{ $t('email') }}</label>
+                                    <md-input name="email" id="email" autocomplete="email" v-model="form.email"
+                                              :disabled="sending"/>
+                                    <span class="md-error" v-if="$v.form.email && !$v.form.email.required">{{ $t('required') }}</span>
+                                    <span class="md-error" v-else-if="$v.form.email && !$v.form.email.email"></span>
+                                </md-field>
+                            </div>
+                            <div class="md-flex md-flex-small-100">
+                                <md-button class="md-raised" @click="sendEmail">{{$t('send')}}</md-button>
+                            </div>
                         </div>
                         <div class="md-flex md-flex-small-100">
                             <md-field :class="getValidationClass('code')">

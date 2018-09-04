@@ -52,13 +52,15 @@
                 <md-field>
                     <label>{{ $t('email-new') }}</label>
                     <md-input name="newEmail" id="newEmail" v-model="form.newEmail"/>
-                    <md-button class="md-primary" @click="sendEmail">Send</md-button>
                 </md-field>
                 <md-field v-if="!form.unbindEmail">
                     <label>{{ $t('code') }}</label>
                     <md-input name="emailCode" id="emailCode" v-model="form.emailCode"/>
                 </md-field>
             </md-card-content>
+            <md-card-actions>
+                <md-button class="md-primary" @click="sendEmail">{{ $t("send") }}</md-button>
+            </md-card-actions>
         </md-card>
 
         <md-card>
@@ -75,13 +77,15 @@
                 <md-field v-if="!form.unbindPhone">
                     <label>{{ $t('phone-new') }}</label>
                     <md-input name="newPhone" id="newPhone" v-model="form.newPhone"/>
-                    <md-button class="md-primary" @click="sendSMS()">Send</md-button>
                 </md-field>
                 <md-field v-if="!form.unbindPhone">
                     <label>{{ $t('code') }}</label>
                     <md-input name="phoneCode" id="phoneCode" v-model="form.phoneCode"/>
                 </md-field>
             </md-card-content>
+            <md-card-actions>
+                <md-button class="md-primary" @click="sendSMS()">{{ $t("send") }}</md-button>
+            </md-card-actions>
         </md-card>
 
         <md-dialog-alert

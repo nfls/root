@@ -65,7 +65,7 @@
         data: () => ({
             form: {
                 username: null,
-                remember: false,
+                remember: true,
                 password: null
             },
             sending: false
