@@ -6,6 +6,7 @@ use App\Controller\AbstractController;
 use App\Entity\Preference;
 use DeviceDetector\DeviceDetector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class PageController extends AbstractController
@@ -30,8 +31,8 @@ class PageController extends AbstractController
                 return $this->render("index.html.twig");
             if ($dd->getOs("name") == "iOS")
                 return $this->render("index.html.twig");
-            return $this->render("unsupported.html.twig");
         }
+        return new RedirectResponse("https://outdated.nfls.io");
 
     }
 

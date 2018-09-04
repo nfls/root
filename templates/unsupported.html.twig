@@ -5,41 +5,9 @@
 </head>
 
 <body>
-<div id="app">
-    <h4>不兼容的浏览器</h4>
-    <span>
-        &nbsp;&nbsp;&nbsp;&nbsp;我们推荐使用最新版的Chrome Desktop或Chrome Android进行访问。
-        您可能会遇到图片无法加载或错位，日期显示错误，或是按钮无反应等种种问题。
-        iOS客户端正在制作中，可暂时使用网页版。
-    </span>
-    <br/>
-    <br/>
-    <button type="button" onclick="web()">继续使用网页版</button>
-</div>
 <script>
-    function web(){
-        setCookie("continue","true",180);
-        window.location.reload();
-    }
-    function setCookie(name,value,days) {
-        var expires = "";
-        if (days) {
-            var date = new Date();
-            date.setTime(date.getTime() + (days*24*60*60*1000));
-            expires = "; expires=" + date.toUTCString();
-        }
-        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-    }
 </script>
 </body>
 <style>
-    #app {
-        font-family: 'Avenir', Helvetica, Arial, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-align: left;
-        color: #2c3e50;
-        margin-top: 60px;
-    }
 </style>
 </html>

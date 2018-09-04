@@ -25,7 +25,6 @@ class OAuthController extends AbstractController
     public function __construct(OAuthService $service)
     {
         $this->server = $service->getServer();
-        parent::__construct();
     }
 
 
