@@ -492,7 +492,7 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
     /**
      * @return string
      */
-    public function getCard(): string
+    public function getCard(): ?string
     {
         return $this->card;
     }
