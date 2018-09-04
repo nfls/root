@@ -24,10 +24,11 @@ class PageController extends AbstractController
                 return $this->render("index.html.twig");
             $dd = new DeviceDetector($request->headers->get("user-agent"));
             $dd->parse();
-            if ($dd->getClient("name") == "Chrome" && version_compare($dd->getClient("version"), "50.0", ">="))
+            if ($dd->getClient("name") == "Chrome" && version_compare($dd->getClient("version"), "49.0", ">="))
                 return $this->render("index.html.twig");
-            if ($dd->getClient("name") == "Chrome Mobile" && version_compare($dd->getClient("version"), "50.0", ">="))
+            if ($dd->getClient("name") == "Chrome Mobile" && version_compare($dd->getClient("version"), "49.0", ">="))
                 return $this->render("index.html.twig");
+
             if ($dd->isBot())
                 return $this->render("index.html.twig");
             if ($dd->getOs("name") == "iOS")

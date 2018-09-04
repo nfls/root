@@ -125,6 +125,13 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
      */
     private $authTickets;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $card;
+
     public function __construct()
     {
         $this->joinTime = new \DateTime();
@@ -480,6 +487,22 @@ class User implements UserInterface, UserEntityInterface, \JsonSerializable
     public function setEnabled(bool $enabled): void
     {
         $this->enabled = $enabled;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCard(): string
+    {
+        return $this->card;
+    }
+
+    /**
+     * @param string $card
+     */
+    public function setCard(string $card): void
+    {
+        $this->card = $card;
     }
 
     public function getAuthTickets()

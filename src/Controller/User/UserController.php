@@ -15,6 +15,9 @@ use App\Service\NotificationService;
 use App\Type\AliyunTemplateType;
 use App\Type\CodeActionType;
 use GuzzleHttp\Client;
+use OTPHP\OTP;
+use OTPHP\TOTP;
+use ParagonIE\ConstantTime\Base32;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -477,6 +480,36 @@ class UserController extends AbstractController
             return $this->response()->response(null);
         else
             return $this->response()->response($translator->trans("already-used"), Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @Route("/user/card")
+     */
+    public function card(Request $request) {
+
+        if($request->isMethod("get")) {
+            $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+            if(!is_null($this->getUser()->getCard())) {
+                return $this->response()->response([
+                    "image" => $this->getUser()->getCard(),
+                    "code" => Base32::encodeUpper(hash_hmac("sha256", $this->getUser()->getCard(), $_ENV["APP_SECRET"]))
+                ]);
+            }
+        } else if($request->isMethod("post")) {
+            $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($request->request->get("id"));
+            if(!is_null($user)) {
+                /** @var User $user */
+                $token = Base32::encodeUpper(hash_hmac("sha256", $this->getUser()->getCard(), $_ENV["APP_SECRET"]));
+                $otp = TOTP::create($token, 15, "sha1", 8);
+                $result = $otp->verify($request->request->get("digit"));
+                if($result)
+                    return $this->response()->response(true);
+                else
+                    return $this->response()->response(false);
+            }
+        }
+
+        return $this->response()->response(null);
     }
 
     private function verifyWeChat($code) {

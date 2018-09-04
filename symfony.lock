@@ -5,6 +5,9 @@
     "aliyunsts/aliyun-sts": {
         "version": "1.0"
     },
+    "beberlei/assert": {
+        "version": "v2.9.6"
+    },
     "defuse/php-encryption": {
         "version": "v2.1.0"
     },
@@ -137,6 +140,9 @@
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },
+    "paragonie/constant_time_encoding": {
+        "version": "v2.2.2"
+    },
     "paragonie/random_compat": {
         "version": "v2.0.11"
     },
@@ -220,6 +226,9 @@
             "version": "2.0",
             "ref": "9ef855ff444add54c2d66bdf3f4b7b2b6a120259"
         }
+    },
+    "spomky-labs/otphp": {
+        "version": "v9.1.0"
     },
     "symfony/asset": {
         "version": "v4.0.3"
