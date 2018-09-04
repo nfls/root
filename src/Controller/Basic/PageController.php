@@ -16,8 +16,9 @@ class PageController extends AbstractController
      */
     public function index(Request $request)
     {
+        return $this->render("index.html.twig");
         if ($_ENV["APP_ENV"] == "dev") {
-            return $this->render("index.html.twig");
+
         } else {
             if ($request->cookies->get("continue") == "true")
                 return $this->render("index.html.twig");
