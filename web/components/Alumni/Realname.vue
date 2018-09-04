@@ -67,7 +67,6 @@
             englishName: "",
             submitTime: "",
             expireAt: "",
-            csrf: null,
             header: null
         }),
         components: {
@@ -133,25 +132,16 @@
                 return "status-" + status
             },
             newForm() {
-                this.axios.get("user/csrf", {
-                    params: {
-                        name: "alumni.form"
-                    }
-                }).then((response) => {
-                    this.axios.post("alumni/new", {
-                        _csrf: response.data["data"]
-                    }).then((response) => {
-                        if(response.data["code"] === 200)
-                            this.loadData()
-                        else
-                            this.$emit("showMsg",response.data["data"])
-                    }).catch((error) => {
-                        this.$emit("generalError",error)
-                    })
+                this.axios.post("alumni/new").then((response) => {
+                    if(response.data["code"] === 200)
+                        this.loadData()
+                    else
+                        this.$emit("showMsg",response.data["data"])
                 }).catch((error) => {
                     this.$emit("generalError",error)
                 })
             }
+
         }
     }
 </script>

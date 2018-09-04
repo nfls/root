@@ -143,7 +143,6 @@
             isLiked: false,
             onlyOrigin: true,
             showDebug: false,
-            csrf: null,
             noFeature: false,
             showNotEnabled: false,
         }),
@@ -158,8 +157,6 @@
                     this.showNotEnabled = true
                     return
                 }
-
-                this.getCsrf()
                 this.axios.get("/media/gallery/detail", {
                     params: {
                         id: this.$route.params["id"]
@@ -218,7 +215,6 @@
                 this.axios.post('/media/gallery/comment', {
                     id: this.$route.params["id"],
                     content: this.comment,
-                    _csrf: this.csrf
                 }).then((response) => {
                     this.loadData(false)
                     this.showSidepanel = true
@@ -234,7 +230,6 @@
             like: function () {
                 this.axios.post('/media/gallery/like', {
                     id: this.$route.params["id"],
-                    _csrf: this.csrf
                 }).then((response) => {
                     if (this.isLiked) {
                         this.$emit("showMsg", this.$t("dislike-succeeded"))
@@ -256,20 +251,11 @@
             },
             deleteComment: function (id) {
                 this.axios.post("/admin/media/comment/edit", {
-                    "delete": "[" + id + "]",
-                    _csrf: this.csrf
+                    "delete": "[" + id + "]"
                 }).then((response) => {
                     this.loadData(false)
                 }).catch((error) => {
                     this.$emit("generalError",error)
-                })
-            }, getCsrf() {
-                this.axios.get("user/csrf", {
-                    params: {
-                        name: "media.gallery"
-                    }
-                }).then((response) => {
-                    this.csrf = response.data["data"]
                 })
             }
         },

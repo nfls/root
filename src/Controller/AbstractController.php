@@ -15,15 +15,6 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 class AbstractController extends Controller
 {
 
-    const CSRF_USER = "user";
-    const CSRF_ALUMNI_FORM = "alumni.form";
-    const CSRF_MEDIA_GALLERY = "media.gallery";
-    const CSRF_SCHOOL_BLACKBOARD = "school.blackboard";
-
-    public function __construct()
-    {
-    }
-
     public function response()
     {
         if (is_null($this->getUser()))

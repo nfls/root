@@ -218,23 +218,15 @@
                     }
                 }, 100);
             }, logout() {
-                this.axios.get("user/csrf", {
-                    params: {
-                        name: "user"
-                    }
-                }).then((response) => {
-                    this.axios.post("/user/logout", {
-                        _csrf: response.data["data"]
-                    }).then((response) => {
-                        this.$clearStorage()
-                        this.reload()
-                        location.reload()
-                    })
+                this.axios.post("/user/logout").then((response) => {
+                    this.$clearStorage()
+                    this.reload()
+                    location.reload()
                 })
             }, ct(response) {
                 this.gResponse = response
             }, changeTitle(title) {
-                document.title = title + " - 南外人 NFLS.IO "
+                document.title = title + " - NFLS.IO "
                 this.title = title
             }, prepareRecaptcha() {
                 document.getElementById('recaptcha').style.visibility = 'visible';

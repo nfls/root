@@ -316,16 +316,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/csrf")
-     */
-    public function getCsrfToken(Request $request)
-    {
-        /** @var \Symfony\Component\Security\Csrf\CsrfTokenManagerInterface $csrf */
-        $csrf = $this->get('security.csrf.token_manager');
-        return $this->response()->response($csrf->refreshToken($request->query->get("name") ?? "")->getValue());
-    }
-
-    /**
      * @Route("/user/weChat", methods="POST")
      */
     public function weChat(Request $request) {

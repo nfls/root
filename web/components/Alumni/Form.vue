@@ -140,7 +140,6 @@
             changed: false,
             active: false,
             adminMode: false,
-            csrf: null,
             error: false,
             errors: "",
             header: null
@@ -199,7 +198,6 @@
                     this.refreshValidator(objects)
                     this.formItems = response.data["data"]
                     this.ddlHelper()
-                    this.getCsrf()
                 })
             })
 
@@ -225,9 +223,7 @@
                     if (this.changed) {
                         this.isDisabled = true
                         this.sending = true
-                        this.form._csrf = this.csrf;
                         this.axios.post("alumni/save?id=" + this.$route.params["id"], this.form).then((response) => {
-                            this.getCsrf()
                             this.isDisabled = false
                             if (!this.adminMode)
                                 this.changed = false
@@ -246,10 +242,8 @@
             }, submit() {
                 this.isDisabled = true
                 this.sending = true
-                this.form._csrf = this.csrf;
                 this.axios.post("alumni/submit?id=" + this.$route.params["id"], this.form).then((response) => {
                     var self = this
-                    this.getCsrf()
                     var data = response.data
                     this.sending = false
                     this.isDisabled = true
@@ -273,13 +267,10 @@
                     this.$emit("generalError",error)
                 })
             }, duplicate() {
-                this.axios.post("alumni/duplicate?id=" + this.$route.params["id"], {
-                    "_csrf": this.csrf
-                }).then((_) => {
+                this.axios.post("alumni/duplicate?id=" + this.$route.params["id"]).then((_) => {
                     this.$router.push("/alumni/auth")
                 })
             }, cancel() {
-                this.form._csrf = this.csrf
                 this.sending = true
                 this.axios.post("alumni/cancel?id=" + this.$route.params["id"], this.form).then((response) => {
                     this.sending = false
@@ -335,8 +326,7 @@
                 this.axios.post("/admin/alumni/auth/update", {
                     id: this.$route.params["id"],
                     action: "accept",
-                    time: this.reviewDate,
-                    _csrf: this.csrf
+                    time: this.reviewDate
                 }).then((response) => {
                     if (response.data["code"] === 200)
                         window.close()
@@ -346,8 +336,7 @@
             }, acceptWithoutLimit() {
                 this.axios.post("/admin/alumni/auth/update", {
                     id: this.$route.params["id"],
-                    action: "accept",
-                    _csrf: this.csrf
+                    action: "accept"
                 }).then((response) => {
                     if (response.data["code"] === 200)
                         window.close()
@@ -357,8 +346,7 @@
             }, reject() {
                 this.axios.post("/admin/alumni/auth/update", {
                     id: this.$route.params["id"],
-                    action: "reject",
-                    _csrf: this.csrf
+                    action: "reject"
                 }).then((response) => {
                     if (response.data["code"] === 200)
                         window.close()
@@ -376,16 +364,6 @@
                     let d = new Date();
                     this.reviewDate = new Date(d.getFullYear() + 1, d.getMonth(), d.getDate())
                 }
-            }, getCsrf() {
-                this.axios.get("user/csrf", {
-                    params: {
-                        name: "alumni.form"
-                    }
-                }).then((response) => {
-                    this.csrf = response.data["data"]
-                }).catch((error) => {
-                    this.$emit("generalError",error)
-                })
             }
         },
         watch: {
