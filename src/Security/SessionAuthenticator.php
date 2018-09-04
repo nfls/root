@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User\User;
+use App\Library;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,7 +22,7 @@ class SessionAuthenticator extends AbstractGuardAuthenticator
     public function supports(Request $request)
     {
         return /*$request->getSession() && */
-            $request->getSession()->has("user_token");
+            $request->getSession()->has("user_token") && Library::checkCsrf($request);
     }
 
     public function getCredentials(Request $request)

@@ -491,7 +491,6 @@ class UserController extends AbstractController
             return $this->response()->response($translator->trans("already-used"), Response::HTTP_FORBIDDEN);
     }
 
-
     private function verifyWeChat($code) {
         $url = "https://api.weixin.qq.com/sns/jscode2session?appid=" . $_ENV["WECHAT_APP_ID"] . "&secret=" . $_ENV["WECHAT_APP_SECRET"] . "&js_code=$code&grant_type=authorization_code";
         $client = new Client();

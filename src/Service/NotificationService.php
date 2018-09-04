@@ -314,6 +314,7 @@ class NotificationService
     public function sendTelegram(string $text) {
         try {
             $telegram = new Telegram($_ENV["TELEGRAM_BOT_KEY"]);
+            $telegram->
             $result = \Longman\TelegramBot\Request::sendMessage(['chat_id'=>-1001244396269, 'text'=>$text]);
         } catch (\Exception $e) {
         }

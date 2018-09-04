@@ -17,4 +17,5 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class AboutController extends AbstractController
 {
+
 }

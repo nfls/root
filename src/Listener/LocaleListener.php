@@ -6,6 +6,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class LocaleListener {
     public function onKernelRequest(GetResponseEvent $event)
     {
+        // Set the locale
         $request = $event->getRequest();
         if($request->cookies->get("lang") === "zh")
             $request->setLocale("zh");
@@ -16,5 +17,6 @@ class LocaleListener {
         else
             $request->setLocale("zh");
         $request->setLocale("zh");
+
     }
 }
