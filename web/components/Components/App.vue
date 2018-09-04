@@ -173,6 +173,7 @@
 </template>
 
 <script>
+    import Raven from 'raven-js'
     export default {
         name: 'Dashboard',
         data: () => ({
@@ -253,12 +254,17 @@
                 this.avatar = "/avatar/0.png"
                 this.axios.get('/user/current').then((response) => {
                     if (response.data['code'] === 200) {
+
                         this.username = response.data['data']['username']
                         this.admin = response.data['data']['admin']
                         this.verified = response.data['data']['verified']
                         this.unread = response.data['data']['unread']
                         this.avatar = "/avatar/" + response.data['data']['id'] + ".png?" + this.reloadC
                         this.loggedIn = true
+                        Raven.setUserContext({
+                            username: this.username,
+                            email: this.email
+                        });
                         this.reloadC++
                         if (this.$cookie.get("drop") === "true")
                             this.dropEnabled = true

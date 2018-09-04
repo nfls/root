@@ -75,7 +75,10 @@ var i18n = new VueI18n({
 })
 
 Raven
-    .config('https://a9dbb410043f46369cd2f27763a1be82@sentry.io/282834')
+    .config('https://a9dbb410043f46369cd2f27763a1be82@sentry.io/282834', {
+        ignoreErrors: ["*Request failed*"],
+        ignoreUrls: ["gstatic.cn", "gstatic.com"]
+    })
     .addPlugin(RavenVue, Vue)
     .install();
 
