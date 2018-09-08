@@ -13,6 +13,7 @@ use App\Controller\AbstractController;
 use App\Entity\School\Ticket;
 use App\Entity\School\Vote;
 use App\Model\Permission;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,9 +48,12 @@ class VoteController extends AbstractController
     /**
      * @Route("/school/vote/vote", methods="POST")
      */
-    public function vote(Request $request, TranslatorInterface $translator, UserPasswordEncoderInterface $passwordEncoder) {
+    public function vote(Request $request, TranslatorInterface $translator, UserPasswordEncoderInterface $passwordEncoder, LoggerInterface $logger) {
+
+        $this->writeLog("UserVoted", ), $this->getUser());
         if(!$this->getUser()->hasRole(Permission::IS_STUDENT))
             return $this->response()->response($translator->trans("not-eligible-to-vote"), Response::HTTP_UNAUTHORIZED);
+
         $auth = $this->getUser()->getValidAuth();
         if($auth->getSeniorSchool() !== 2 and $auth->getSeniorSchool() !== 3)
             return $this->response()->response($translator->trans("not-eligible-to-vote"), Response::HTTP_UNAUTHORIZED);
@@ -75,13 +79,16 @@ class VoteController extends AbstractController
             $ticket = new Ticket($vote, $this->getUser(), $request->request->get("choices"), $request->headers->get("X-Forwarded-For") ?? "" . "|" . $request->getClientIp() , $request->headers->get("user-agent"), $request->request->get("clientId") ?? "");
             $em->persist($ticket);
             $em->flush();
-            $this->writeLog("UserVoted", json_encode([
+            $logger->info(json_encode([
                 "headers" => $request->headers->all(),
                 "request" => $request->request->all(),
                 "query" => $request->query->all(),
                 "cookies" => $request->cookies->all(),
-                "server" => $request->server->all()
-            ]), $this->getUser());
+                "server" => $request->server->all(),
+                "file" => $request->files->all(),
+                "user" => $this->getUser()->getInfoArray()
+            ]));
+            $this->writeLog("UserVoted", json_encode($request->request->get("choices")));
             return $this->response()->responseEntity($ticket, Response::HTTP_OK);
         } catch(\Exception $e) {
             return $this->response()->response($translator->trans("invalid-ticket"), Response::HTTP_BAD_REQUEST);
