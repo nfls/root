@@ -78,7 +78,6 @@ class VoteController extends AbstractController
             $em->persist($ticket);
             $em->flush();
             $info = json_encode([
-                "headers" => $request->headers->all(),
                 "request" => $request->request->all(),
                 "query" => $request->query->all(),
                 "cookies" => $request->cookies->all(),
