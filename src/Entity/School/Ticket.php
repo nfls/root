@@ -15,14 +15,12 @@ class Ticket
 {
     /**
      * @var Uuid
-     *
      * @ORM\Id
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private $id;
-
 
     /**
      * @var Vote
@@ -50,6 +48,27 @@ class Ticket
      *
      * @ORM\Column(type="text")
      */
+    private $userAgent;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text")
+     */
+    private $deviceId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text")
+     */
+    private $ip;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text")
+     */
     private $code;
 
     /**
@@ -57,7 +76,7 @@ class Ticket
      */
     private $time;
 
-    public function  __construct(Vote $vote, User $user, $choices)
+    public function  __construct(Vote $vote, User $user, $choices, string $ip, string $userAgent, string $deviceId)
     {
         if(!is_array($choices) || count($vote->getOptions()) != count($choices))
             throw new \InvalidArgumentException("Invalid ticket.");
@@ -70,6 +89,9 @@ class Ticket
         $this->choices = $choices;
         $this->code = base64_encode(random_bytes(8));
         $this->time = new \DateTime();
+        $this->ip = $ip;
+        $this->userAgent = $userAgent;
+        $this->deviceId = $deviceId;
     }
 
     public function getId()

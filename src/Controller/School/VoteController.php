@@ -16,6 +16,8 @@ use App\Model\Permission;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class VoteController extends AbstractController
@@ -45,7 +47,7 @@ class VoteController extends AbstractController
     /**
      * @Route("/school/vote/vote", methods="POST")
      */
-    public function vote(Request $request, TranslatorInterface $translator) {
+    public function vote(Request $request, TranslatorInterface $translator, UserPasswordEncoderInterface $passwordEncoder) {
         if(!$this->getUser()->hasRole(Permission::IS_STUDENT))
             return $this->response()->response($translator->trans("not-eligible-to-vote"), Response::HTTP_UNAUTHORIZED);
         $auth = $this->getUser()->getValidAuth();
@@ -64,10 +66,16 @@ class VoteController extends AbstractController
         if(!is_null($em->getRepository(Ticket::class)->findOneByUserAndVote($this->getUser(), $vote)))
             return $this->response()->response($translator->trans("already-submit"), Response::HTTP_FORBIDDEN);
         try {
-            $ticket = new Ticket($vote, $this->getUser(), $request->request->get("choices"));
+            if(!$passwordEncoder->isPasswordValid($this->getUser(), $request->request->get("password"))) {
+                return $this->response()->response($translator->trans("incorrect-password"), Response::HTTP_BAD_REQUEST);
+            }
+            if($this->getUser()->isOAuth && $request->request->has("clientId") && $this->isValidUuid($request->request->get("clientId"))) {
+                return $this->response()->response($translator->trans("invalid-client"). Response::HTTP_BAD_REQUEST);
+            }
+            $ticket = new Ticket($vote, $this->getUser(), $request->request->get("choices"), json_encode($request->getClientIps()), $request->headers->get("user-agent"), $request->request->get("clientId") ?? "");
             $em->persist($ticket);
             $em->flush();
-            $this->writeLog("UserVoted",json_encode($request->request->get("choices")), $this->getUser());
+            $this->writeLog("UserVoted", json_encode($_REQUEST), $this->getUser());
             return $this->response()->responseEntity($ticket, Response::HTTP_OK);
         } catch(\Exception $e) {
             return $this->response()->response($translator->trans("invalid-ticket"), Response::HTTP_BAD_REQUEST);

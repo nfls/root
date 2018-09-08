@@ -47,7 +47,6 @@ class Vote implements \JsonSerializable
      * @ORM\Column(type="datetime")
      */
     private $time;
-
     /**
      * @var boolean
      *
