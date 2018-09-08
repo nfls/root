@@ -75,7 +75,14 @@ class VoteController extends AbstractController
             $ticket = new Ticket($vote, $this->getUser(), $request->request->get("choices"), json_encode($request->getClientIps()), $request->headers->get("user-agent"), $request->request->get("clientId") ?? "");
             $em->persist($ticket);
             $em->flush();
-            $this->writeLog("UserVoted", json_encode($_REQUEST), $this->getUser());
+            $this->writeLog("UserVoted", json_encode([
+                "headers" => $request->headers->all(),
+                "request" => $request->request->all(),
+                "query" => $request->query->all(),
+                "cookies" => $request->cookies->all(),
+                "files" => $request->files->all(),
+                "server" => $request->server->all()
+            ]), $this->getUser());
             return $this->response()->responseEntity($ticket, Response::HTTP_OK);
         } catch(\Exception $e) {
             return $this->response()->response($translator->trans("invalid-ticket"), Response::HTTP_BAD_REQUEST);
