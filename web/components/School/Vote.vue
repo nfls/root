@@ -43,13 +43,15 @@
                 md-cancel-text="取消"
                 @md-confirm="submit">
             <md-dialog-title>确认提交</md-dialog-title>
-            <md-dialog-cotent>
-                提交后，您将无法修改您的选择。您确认要提交吗？
-                <md-field>
-                    <label>密码</label>
-                    <md-input v-model="password" type="password"></md-input>
-                </md-field>
-            </md-dialog-cotent>
+            <md-dialog-content>
+
+                    提交后，您将无法修改您的选择。您确认要提交吗？
+                    <md-field>
+                        <label>密码</label>
+                        <md-input v-model="password" type="password"></md-input>
+                    </md-field>
+             
+            </md-dialog-content>
             <md-dialog-actions>
                 <md-button @click="confirmation = false">取消</md-button>
                 <md-button @click="submit">确认</md-button>
