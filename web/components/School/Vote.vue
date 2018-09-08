@@ -35,13 +35,26 @@
                 </md-card-actions>
             </md-card>
         </div>
-        <md-dialog-confirm
+        <md-dialog
                 :md-active.sync="confirmation"
-                md-title="确认提交"
-                md-content="提交后，您将无法修改您的选择。您确认要提交吗？"
+                md-title=""
+                md-content=""
                 md-confirm-text="确认"
                 md-cancel-text="取消"
-                @md-confirm="submit" />
+                @md-confirm="submit">
+            <md-dialog-title>确认提交</md-dialog-title>
+            <md-dialog-cotent>
+                提交后，您将无法修改您的选择。您确认要提交吗？
+                <md-field>
+                    <label>密码</label>
+                    <md-input v-model="password" type="password"></md-input>
+                </md-field>
+            </md-dialog-cotent>
+            <md-dialog-actions>
+                <md-button @click="confirmation = false">取消</md-button>
+                <md-button @click="submit">确认</md-button>
+            </md-dialog-actions>
+        </md-dialog>
         <md-dialog-alert
                 :md-active.sync="error"
                 :md-content="message"
@@ -84,7 +97,8 @@
             result: false,
             code: "",
             query: "",
-            loading: true
+            loading: true,
+            password: ""
         }),
         methods: {
             list() {
@@ -110,9 +124,11 @@
                 this.confirmation = true
             },
             submit() {
+                this.confirmation = false
                 this.axios.post("/school/vote/vote", {
                     id: this.id,
-                    choices: this.choices
+                    choices: this.choices,
+                    password: this.password
                 }).then((response) => {
                     if(response.data["code"] === 200){
                         this.result = true
