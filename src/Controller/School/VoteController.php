@@ -76,7 +76,7 @@ class VoteController extends AbstractController
             if($this->getUser()->isOAuth && !$request->request->has("clientId")) {
                 return $this->response()->response($translator->trans("invalid-client"). Response::HTTP_BAD_REQUEST);
             }
-            $ticket = new Ticket($vote, $this->getUser(), $request->request->get("choices"), $request->headers->get("X-Forwarded-For") ?? "" . "|" . $request->getClientIp() , $request->headers->get("user-agent"), $request->request->get("clientId") ?? "");
+            $ticket = new Ticket($vote, $this->getUser(), $request->request->get("choices"), ($request->headers->get("X-Forwarded-For") ?? "") . "|" . $request->getClientIp() , $request->headers->get("user-agent"), $request->request->get("clientId") ?? "");
             $em->persist($ticket);
             $em->flush();
             $logger->info(json_encode([
