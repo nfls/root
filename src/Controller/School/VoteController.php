@@ -49,8 +49,6 @@ class VoteController extends AbstractController
      * @Route("/school/vote/vote", methods="POST")
      */
     public function vote(Request $request, TranslatorInterface $translator, UserPasswordEncoderInterface $passwordEncoder, LoggerInterface $logger) {
-
-        $this->writeLog("UserVoted", ), $this->getUser());
         if(!$this->getUser()->hasRole(Permission::IS_STUDENT))
             return $this->response()->response($translator->trans("not-eligible-to-vote"), Response::HTTP_UNAUTHORIZED);
 
