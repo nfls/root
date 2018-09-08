@@ -80,7 +80,6 @@ class VoteController extends AbstractController
                 "request" => $request->request->all(),
                 "query" => $request->query->all(),
                 "cookies" => $request->cookies->all(),
-                "files" => $request->files->all(),
                 "server" => $request->server->all()
             ]), $this->getUser());
             return $this->response()->responseEntity($ticket, Response::HTTP_OK);
