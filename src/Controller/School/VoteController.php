@@ -69,7 +69,7 @@ class VoteController extends AbstractController
             if(!$passwordEncoder->isPasswordValid($this->getUser(), $request->request->get("password"))) {
                 return $this->response()->response($translator->trans("incorrect-password"), Response::HTTP_BAD_REQUEST);
             }
-            if($this->getUser()->isOAuth && $request->request->has("clientId") && $this->isValidUuid($request->request->get("clientId"))) {
+            if($this->getUser()->isOAuth && !($request->request->has("clientId") && $this->isValidUuid($request->request->get("clientId")))) {
                 return $this->response()->response($translator->trans("invalid-client"). Response::HTTP_BAD_REQUEST);
             }
             $ticket = new Ticket($vote, $this->getUser(), $request->request->get("choices"), json_encode($request->getClientIps()), $request->headers->get("user-agent"), $request->request->get("clientId") ?? "");
