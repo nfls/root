@@ -97,11 +97,11 @@
                     <md-divider></md-divider>
 
                     <md-subheader>{{ $t('media') }}</md-subheader>
-                    <!--
+
                     <md-list-item to='/media/game'>
                         <md-icon>gamepad</md-icon>
                         <span class='md-list-item-text'>{{ $t('game') }}</span></md-list-item>
-                        -->
+
                     <md-list-item to='/media/gallery'>
                         <md-icon>photo_library</md-icon>
                         <span class='md-list-item-text'>{{ $t('gallery') }}</span></md-list-item>
@@ -109,10 +109,11 @@
                     <md-divider></md-divider>
 
                     <md-subheader>{{ $t('in-school') }}</md-subheader>
-
+                    <!--
                     <md-list-item to='/school/vote'>
                         <md-icon>plus_one</md-icon>
                         <span class='md-list-item-text'>{{ $t('vote') }}</span></md-list-item>
+                        -->
                     <md-list-item href='https://water.nfls.io'>
                         <md-icon>pool</md-icon>
                         <span class='md-list-item-text'>{{ $t('study') }}</span></md-list-item>
