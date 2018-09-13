@@ -50,7 +50,7 @@
                         <label>密码</label>
                         <md-input v-model="password" type="password"></md-input>
                     </md-field>
-             
+
             </md-dialog-content>
             <md-dialog-actions>
                 <md-button @click="confirmation = false">取消</md-button>
