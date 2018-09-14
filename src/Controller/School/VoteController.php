@@ -28,11 +28,18 @@ class VoteController extends AbstractController
      */
     public function list() {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
-        return $this->response()->responseJsonEntity($this
-            ->getDoctrine()
-            ->getManager()
-            ->getRepository(Vote::class)
-            ->findAll());
+        if($this->getUser()->hasRole(Permission::IS_ADMIN))
+            return $this->response()->responseJsonEntity($this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository(Vote::class)
+                ->findAll());
+        else
+            return $this->response()->responseJsonEntity($this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository(Vote::class)
+                ->findByEnabled(true));
     }
 
     /**

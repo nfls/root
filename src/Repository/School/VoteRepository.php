@@ -19,4 +19,8 @@ class VoteRepository extends ServiceEntityRepository
         parent::__construct($registry, Vote::class);
     }
 
+    public function findByEnabled(bool $enabled) {
+        return $this->findBy(["enabled"=>$enabled],["time"=>"desc"]);
+    }
+
 }
