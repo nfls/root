@@ -129,6 +129,13 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         }
     }
 
+    public function findUserWithCard() {
+        return $this->createQueryBuilder("u")
+            ->where("u.card IS NOT NULL")
+            ->getQuery()
+            ->getResult();
+    }
+
     private function addOptionalWhere(QueryBuilder &$query, $key, $value, $first) {
         if(is_null($value) || $value == "")
             return $first;

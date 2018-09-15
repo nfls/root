@@ -15,6 +15,7 @@ use App\Service\NotificationService;
 use App\Type\AliyunTemplateType;
 use App\Type\CodeActionType;
 use GuzzleHttp\Client;
+use function GuzzleHttp\Psr7\str;
 use OTPHP\OTP;
 use OTPHP\TOTP;
 use ParagonIE\ConstantTime\Base32;
@@ -499,20 +500,51 @@ class UserController extends AbstractController
                 ]);
             }
         } else if($request->isMethod("post")) {
-            $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($request->request->get("id"));
-            if(!is_null($user)) {
-                /** @var User $user */
-                $token = Base32::encodeUpper(hash_hmac("sha256", $user->getCard(), $_ENV["APP_SECRET"]));
-                $otp = TOTP::create($token, 15, "sha1", 8);
-                $result = $otp->verify($request->request->get("digit"));
-                if($result)
-                    return $this->response()->response(true);
-                else
-                    return $this->response()->response(false);
-            }
+            $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findUserWithCard();
+            return $this->response()->responseRawEntity(array_values(array_map(function($user){
+                /** @var $user User */
+                return [
+                    "id" => $user->getId(),
+                    "username" => $user->getUsername(),
+                    "chineseName" => $user->getValidAuth()->getChineseName(),
+                    "englishName" => $user->getValidAuth()->getEnglishName(),
+                    "class" => $this->getStudentClassName($user->getValidAuth()),
+                    "code" => Base32::encodeUpper(hash_hmac("sha256", $user->getCard(), $_ENV["APP_SECRET"]))
+                ];
+            }, array_filter($users, function($user){
+                /** @var $user User */
+                return !is_null($user->getValidAuth());
+            }))));
         }
 
-        return $this->response()->response(null);
+        //return $this->response()->response(null);
+    }
+
+    private function getStudentClassName(Alumni $alumni) {
+        $name = "";
+        switch($alumni->getSeniorSchool()) {
+            case 2:
+                $name = "IB";
+                break;
+            case 3:
+                $name = "AL";
+                break;
+            default:
+                return "";
+        }
+        switch ($alumni->getSeniorRegistration()) {
+            case 2021:
+                $name = $name."高一";
+                break;
+            case 2020:
+                $name = $name."高二";
+                break;
+            case 2019:
+                $name = $name."高三";
+                break;
+        }
+        $name = $name." ".(string)$alumni->getSeniorClass()."班";
+        return $name;
     }
 
     private function verifyWeChat($code) {
