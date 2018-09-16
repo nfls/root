@@ -309,7 +309,7 @@ class NotificationService
             $ticket->getUser()),
             "通知",
             "您的出门证已启用",
-            $ticket->getChineseName()."，您的出门证已启用。请更新App至最新版本。出门时，请打开App，将“出门”模块内的条形码扫描后，即可出门。",
+            $ticket->getChineseName()."，您的出门证已启用。请更新App至最新版本。中午出门时，请打开App，扫描“出门”模块内的条形码后，即可出门。",
             0,
             null,
             null);
