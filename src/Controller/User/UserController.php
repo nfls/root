@@ -21,6 +21,7 @@ use OTPHP\TOTP;
 use ParagonIE\ConstantTime\Base32;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -500,21 +501,51 @@ class UserController extends AbstractController
                 ]);
             }
         } else if($request->isMethod("post")) {
-            $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findUserWithCard();
-            return $this->response()->responseRawEntity(array_values(array_map(function($user){
-                /** @var $user User */
-                return [
-                    "id" => $user->getId(),
-                    "username" => $user->getUsername(),
-                    "chineseName" => $user->getValidAuth()->getChineseName(),
-                    "englishName" => $user->getValidAuth()->getEnglishName(),
-                    "class" => $this->getStudentClassName($user->getValidAuth()),
-                    "code" => Base32::encodeUpper(hash_hmac("sha256", $user->getCard(), $_ENV["APP_SECRET"]))
-                ];
-            }, array_filter($users, function($user){
-                /** @var $user User */
-                return !is_null($user->getValidAuth());
-            }))));
+            if($request->request->get("key") != $_ENV["APP_SECRET"])
+                throw $this->createAccessDeniedException();
+            switch($request->request->get("action")) {
+                case "fetch":
+                    $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findUserWithCard();
+                    return $this->response()->responseRawEntity(array_values(array_map(function($user){
+                        /** @var $user User */
+                        return [
+                            "id" => $user->getId(),
+                            "username" => $user->getUsername(),
+                            "chineseName" => $user->getValidAuth()->getChineseName(),
+                            "englishName" => $user->getValidAuth()->getEnglishName(),
+                            "class" => $this->getStudentClassName($user->getValidAuth()),
+                            "code" => Base32::encodeUpper(hash_hmac("sha256", $user->getCard(), $_ENV["APP_SECRET"]))
+                        ];
+                    }, array_filter($users, function($user){/** @var $user User */return !is_null($user->getValidAuth());}))));
+                case "query":
+                    $name = $request->request->get("name");
+                    $alumni = $this->getDoctrine()->getManager()->getRepository(Alumni::class)->findBy(["chineseName"=>$name, "status"=>Alumni::STATUS_PASSED], ["submitTime"=>"desc"]);
+                    return $this->response()->response(array_map(function($alumni){
+                        /** @var Alumni $alumni */
+                        return [
+                            "id" => $alumni->getId()->toString(),
+                            "chineseName" => $alumni->getChineseName(),
+                            "class" => $this->getStudentClassName($alumni),
+                            "time" => $alumni->getSubmitTime()->format(DATE_ISO8601)
+                        ];
+                    }, $alumni));
+                case "enable":
+                    /** @var Alumni $alumni */
+                    $alumni = $this->getDoctrine()->getManager()->getRepository(Alumni::class)->find($request->request->get("id"));
+                    /** @var UploadedFile $image */
+                    $image = $request->files->get("image");
+                    $name = bin2hex(random_bytes(8)).".".$image->guessExtension();
+                    $image->move("card/", $name);
+                    $alumni->getUser()->setCard($name);
+                    $this->getDoctrine()->getManager()->persist($alumni->getUser());
+                    $this->getDoctrine()->getManager()->flush();
+                    return $this->response()->response("成功。");
+                case "upload":
+                    /** @var UploadedFile $database */
+                    $database = $request->files->get("database");
+                    return $this->response()->response(null);
+            }
+
         }
 
         //return $this->response()->response(null);
