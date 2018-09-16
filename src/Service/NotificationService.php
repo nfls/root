@@ -303,6 +303,18 @@ class NotificationService
         );
     }
 
+    public function cardEnabled(Alumni $ticket) {
+        $this->SMSService->send($ticket->getUser()->getPhone(), AliyunTemplateType::CARD, ["name"=>$ticket->getChineseName()]);
+        $this->APNService->bulk($this->getDevices(
+            $ticket->getUser()),
+            "通知",
+            "您的出门证已启用",
+            $ticket->getChineseName()."，您的出门证已启用。请更新App至最新版本。出门时，请打开App，将“出门”模块内的条形码扫描后，即可出门。",
+            0,
+            null,
+            null);
+    }
+
     /**
      * @deprecated
      */

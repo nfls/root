@@ -490,7 +490,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/card")
      */
-    public function card(Request $request) {
+    public function card(Request $request, NotificationService $service) {
 
         if($request->isMethod("get")) {
             $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
@@ -539,6 +539,7 @@ class UserController extends AbstractController
                     $alumni->getUser()->setCard($name);
                     $this->getDoctrine()->getManager()->persist($alumni->getUser());
                     $this->getDoctrine()->getManager()->flush();
+                    $service->cardEnabled($alumni);
                     return $this->response()->response("成功。");
                 case "upload":
                     /** @var UploadedFile $database */

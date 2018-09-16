@@ -19,4 +19,5 @@ class AliyunTemplateType
     const MESSAGE = "SMS_125028504";
     const NOTICE = "SMS_125018518";
     const DEADLINE = "SMS_125028511";
+    const CARD = "SMS_144852991";
 }
