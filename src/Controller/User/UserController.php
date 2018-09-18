@@ -40,6 +40,9 @@ class UserController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $user = new User();
         $username = $request->request->get("username");
+        if(!is_null($this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(["username"=>$username]))){
+            return $this->response()->response($translator->trans("already-used-username"), Response::HTTP_BAD_REQUEST);
+        }
         if ($this->verifyUsername($username)) {
             $user->setUsername($username);
         } else {

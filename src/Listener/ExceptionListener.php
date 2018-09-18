@@ -25,12 +25,7 @@ class ExceptionListener
                     "data" => $exception->getMessage()
                 ),$exception->getStatusCode());
             }
-        }else{
-            $response = new JsonResponse(array(
-                "code" => $exception->getCode(),
-                "message" => $exception->getMessage()
-            ),Response::HTTP_INTERNAL_SERVER_ERROR);
+            $event->setResponse($response);
         }
-        $event->setResponse($response);
     }
 }

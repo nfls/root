@@ -344,7 +344,7 @@ class NotificationService
     }
 
     private function getRandomString() {
-        return base64_encode(random_bytes(16));
+        return bin2hex(random_bytes(16));
     }
 
     private function getRandomCode() {
