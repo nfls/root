@@ -308,6 +308,9 @@ class UserController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         $username = $request->request->get("username");
+        if(!is_null($this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy(["username"=>$username]))){
+            return $this->response()->response($translator->trans("already-used-username"), Response::HTTP_BAD_REQUEST);
+        }
         if ($this->verifyUsername($username)) {
             if ($this->getUser()->getPoint() >= 2) {
                 $this->getUser()->minusPoints(2);
