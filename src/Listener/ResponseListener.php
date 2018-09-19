@@ -20,7 +20,7 @@ class ResponseListener
         $response = $filterResponseEvent->getResponse();
         $request = $filterResponseEvent->getRequest();
         $client = $request->headers->get("Client");
-        if($client === "weChat" || $client === "iOS") {
+        if($client === "weChat" || $client === "iOS" || $client === "Android") {
             if($response instanceof RedirectResponse) {
                 $filterResponseEvent->setResponse(JsonResponse::create(["data"=>$response->getTargetUrl(), "code"=>Response::HTTP_TEMPORARY_REDIRECT]));
             } else if($response->getStatusCode() === 302) {
