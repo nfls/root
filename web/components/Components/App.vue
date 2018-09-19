@@ -272,7 +272,7 @@
                             this.dropEnabled = true
                         var path = this.$route.fullPath
                         if (path === "/user/login" || path === "/user/register" || path === "user/reset")
-                            this.$router.push("/dashboard")
+                            this.$router.go(-1)
                     } else {
                         this.loggedIn = false
                     }

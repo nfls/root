@@ -61,7 +61,7 @@
     export default {
         name: 'Login',
         mixins: [validationMixin],
-        props: ['gResponse'],
+        props: ['gResponse', "isLoggedIn"],
         data: () => ({
             form: {
                 username: null,
@@ -131,6 +131,13 @@
             gResponse: {
                 handler: function (val, newVal) {
                     this.ct();
+                }
+            },
+            isLoggedIn: {
+                handler(val, newVal) {
+                    if(newVal) {
+                        this.router.go(-1)
+                    }
                 }
             }
         }

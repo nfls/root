@@ -1,6 +1,15 @@
 <i18n src="../translation/frontend/Homepage.json"></i18n>
 <template>
     <div>
+        <md-card v-if="photos.length > 0">
+            <md-card-content>
+                <el-carousel height="200px">
+                    <el-carousel-item v-for="photo in photos" :key="photo">
+                        <a :href="photo.url"><img class="slides" v-lazy="photo.src"></a>
+                    </el-carousel-item>
+                </el-carousel>
+            </md-card-content>
+        </md-card>
         <md-card style="text-align:left;">
             <md-card-content>
                 <vue-markdown v-if="loaded">{{announcement}}</vue-markdown>
@@ -58,16 +67,18 @@
         },
         props: ["isAdmin", "isLoggedIn", "isVerified"],
         data: () => ({
-            wiki: null,
-            forum: null,
             announcement: null,
-            loaded: false
+            loaded: false,
+            photos: []
         }),
         mounted: function () {
             this.$emit("changeTitle", this.$t("title"))
             this.axios.get("/message/announcement").then((response) => {
                 this.announcement = response.data["data"]
                 this.loaded = true
+            })
+            this.axios.get("/index/photos").then((response)=>{
+                this.photos = response.data["data"]
             })
         }
     }
@@ -76,5 +87,12 @@
 <style scoped lang="scss">
     .md-card {
         margin: 10px;
+    }
+
+    .slides {
+        max-width: 100%;
+        max-height: 100%;
+        margin: auto;
+        vertical-align: middle;
     }
 </style>

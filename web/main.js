@@ -10,7 +10,6 @@ import VueAxios from 'vue-axios'
 import VuePreview from 'vue-preview'
 import 'vue-material/dist/vue-material.css'
 import 'vue-material/dist/theme/default.css'
-
 import VueMarkdown from 'vue-markdown'
 import VueAnalytics from 'vue-analytics'
 import Raven from 'raven-js'
@@ -30,6 +29,10 @@ import 'mavon-editor/dist/css/index.css'
 import VueVideoPlayer from 'vue-video-player'
 import 'video.js/dist/video-js.css'
 import 'videojs-contrib-hls'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+
+Vue.use(ElementUI)
 Vue.use(VueVideoPlayer)
 Vue.use(mavonEditor)
 Vue.use(VueLocalForage)

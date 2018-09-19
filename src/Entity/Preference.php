@@ -14,6 +14,7 @@ class Preference
     const IOS_ANNOUNCEMENT = "app.ios.announcement";
     const ABOUT_DEVS = "about.devs";
     const ALUMNI_HEADER = "alumni.auth.header";
+    const PHOTOS = "index.photos";
     //const ALL = [self::SCHOOL_PASTPAPER_HEADER, self::ABOUT_DEVS];
     /**
      * @var string

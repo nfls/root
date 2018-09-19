@@ -45,4 +45,12 @@ class PageController extends AbstractController
     {
         return $this->response()->response($this->getDoctrine()->getRepository(Preference::class)->get(Preference::DASHBOARD_ANNOUNCEMENT));
     }
+
+    /**
+     * @Route("/index/photos", methods="GET")
+     */
+    public function getPhotos(Request $request)
+    {
+        return $this->response()->response($this->getDoctrine()->getRepository(Preference::class)->get(Preference::PHOTOS));
+    }
 }
