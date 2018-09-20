@@ -3,9 +3,9 @@
     <div>
         <md-card v-if="photos.length > 0 && webpSupported">
             <md-card-content>
-                <el-carousel height="200px">
+                <el-carousel height="300px" type="card">
                     <el-carousel-item v-for="photo in photos" :key="photo">
-                        <a :href="photo.url"><img class="slides" v-lazy="photo.src"></a>
+                        <a :href="photo.url"><img class="slides" v-bind:src="photo.src"></a>
                     </el-carousel-item>
                 </el-carousel>
             </md-card-content>
@@ -93,7 +93,7 @@
                         id: id
                     }
                 }).then((response) => {
-                    this.photos = this.shuffle(response.data["data"]["photos"].map((object)=>{
+                    this.photos = this.shuffle(response.data["data"]["photos"].filter(item => item.osrc != null).map((object)=>{
                         return {
                             "src": "/storage/photos/hd/" + object.src,
                             "url": "/#/media/gallery/" + id
