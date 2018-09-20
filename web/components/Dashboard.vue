@@ -95,7 +95,7 @@
                 }).then((response) => {
                     this.photos = this.shuffle(response.data["data"]["photos"].map((object)=>{
                         return {
-                            "src": "/storage/photos/hd/" + val.src,
+                            "src": "/storage/photos/hd/" + object.src,
                             "url": "/#/media/gallery/" + id
                         }
                     })).slice(0,8)
