@@ -1,7 +1,7 @@
 <i18n src="../translation/frontend/Homepage.json"></i18n>
 <template>
     <div>
-        <md-card v-if="photos.length > 0">
+        <md-card v-if="photos.length > 0 && webpSupported">
             <md-card-content>
                 <el-carousel height="200px">
                     <el-carousel-item v-for="photo in photos" :key="photo">
@@ -65,7 +65,7 @@
         components: {
             VueMarkdown
         },
-        props: ["isAdmin", "isLoggedIn", "isVerified"],
+        props: ["isAdmin", "isLoggedIn", "isVerified", "webpSupported"],
         data: () => ({
             announcement: null,
             loaded: false,
@@ -78,8 +78,31 @@
                 this.loaded = true
             })
             this.axios.get("/index/photos").then((response)=>{
-                this.photos = response.data["data"]
+                let photos = response.data["data"]
+                if(Array.isArray(photos)) {
+                    this.photos = photos
+                } else {
+                    this.loadImages(response.data["data"]["id"])
+                }
             })
+        },
+        methods: {
+            loadImages(id) {
+                this.axios.get("/media/gallery/detail", {
+                    params: {
+                        id: id
+                    }
+                }).then((response) => {
+                    this.photos = response.data["data"]["photos"].map((object)=>{
+                        return {
+                            "src": "/storage/photos/hd/" + val.src,
+                            "url": "/#/media/gallery/" + id
+                        }
+                    })
+                }).catch((error) => {
+                    this.$emit("generalError",error)
+                })
+            }
         }
     }
 </script>

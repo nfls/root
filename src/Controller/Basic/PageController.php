@@ -17,6 +17,7 @@ class PageController extends AbstractController
     public function index(Request $request)
     {
         return $this->render("index.html.twig");
+        /*
         if ($_ENV["APP_ENV"] == "dev") {
 
         } else {
@@ -35,6 +36,7 @@ class PageController extends AbstractController
                 return $this->render("index.html.twig");
         }
         return new RedirectResponse("https://outdated.nfls.io");
+        */
 
     }
 

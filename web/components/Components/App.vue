@@ -39,10 +39,12 @@
                                     <md-icon>autorenew</md-icon>
                                     <span class='md-list-item-text'>{{ $t('recover-admin') }}</span></md-list-item>
                                 <md-divider></md-divider>
+                                <!--
                                 <md-list-item @click="lang">>
                                     <md-icon>translate</md-icon>
                                     <span class='md-list-item-text'>{{ language }}</span></md-list-item>
                                 <md-divider></md-divider>
+                                -->
                                 <md-list-item @click="logout">
                                     <md-icon>exit_to_app</md-icon>
                                     <span class='md-list-item-text'>{{ $t('logout') }}</span></md-list-item>

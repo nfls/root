@@ -236,7 +236,9 @@
                     } else {
                         this.active = true
                     }
-
+                } else {
+                    this.error = true
+                    this.errors = this.$t("validation-error")
                 }
 
             }, submit() {
