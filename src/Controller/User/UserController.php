@@ -554,8 +554,7 @@ class UserController extends AbstractController
             }
 
         }
-
-        //return $this->response()->response(null);
+        return $this->response()->response(null);
     }
 
     private function getStudentClassName(Alumni $alumni) {
