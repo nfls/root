@@ -87,7 +87,7 @@ class Ticket
         $this->vote = $vote;
         $this->user = $user;
         $this->choices = $choices;
-        $this->code = base64_encode(random_bytes(8));
+        $this->code = bin2hex(random_bytes(32));
         $this->time = new \DateTime();
         $this->ip = $ip;
         $this->userAgent = $userAgent;
