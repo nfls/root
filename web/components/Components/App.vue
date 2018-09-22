@@ -120,7 +120,7 @@
                     <md-list-item href='https://water.nfls.io'>
                         <md-icon>pool</md-icon>
                         <span class='md-list-item-text'>{{ $t('study') }}</span></md-list-item>
-                    
+
                     <div id="admin" v-if="admin">
                         <md-divider></md-divider>
                         <md-subheader>{{ $t('admin') }}</md-subheader>

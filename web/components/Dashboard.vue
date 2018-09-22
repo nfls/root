@@ -2,13 +2,21 @@
 <template>
     <div>
         <md-card v-if="photos.length > 0 && webpSupported">
+            <md-card-header v-if="photos.title">
+                <div class="md-title">{{photos.title}}</div>
+            </md-card-header>
             <md-card-content>
                 <el-carousel height="300px" type="card">
                     <el-carousel-item v-for="photo in photos" :key="photo">
                         <a :href="photo.url"><img class="slides" v-bind:src="photo.src"></a>
                     </el-carousel-item>
                 </el-carousel>
+                <div>
+                    <span class="md-caption">{{$t("click-to-view-more")}}</span>
+                </div>
             </md-card-content>
+
+
         </md-card>
         <md-card style="text-align:left;">
             <md-card-content>
@@ -69,7 +77,8 @@
         data: () => ({
             announcement: null,
             loaded: false,
-            photos: []
+            photos: [],
+            title: null
         }),
         mounted: function () {
             this.$emit("changeTitle", this.$t("title"))
@@ -99,6 +108,7 @@
                             "url": "/#/media/gallery/" + id
                         }
                     })).slice(0,8)
+                    this.title = response.data["data"]["title"]
                 }).catch((error) => {
                     this.$emit("generalError",error)
                 })
