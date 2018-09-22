@@ -399,6 +399,7 @@ class UserController extends AbstractController
      * @Route("/user/privacy")
      */
     public function privacy(Request $request, TranslatorInterface $translator) {
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
         if($request->isMethod("POST")) {
             $privacy = $request->request->getInt("privacy");
             if ($privacy > (PrivacyLevel::ONLY_ME) || $privacy < (PrivacyLevel::SAME_SCHOOL))
