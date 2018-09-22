@@ -2,8 +2,8 @@
 <template>
     <div>
         <md-card v-if="photos.length > 0 && webpSupported">
-            <md-card-header v-if="photos.title">
-                <div class="md-title">{{photos.title}}</div>
+            <md-card-header v-if="title">
+                <div class="md-title">{{title}}</div>
             </md-card-header>
             <md-card-content>
                 <el-carousel height="300px" type="card">
