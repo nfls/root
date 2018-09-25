@@ -136,7 +136,11 @@
             isLoggedIn: {
                 handler(val, newVal) {
                     if(newVal) {
-                        this.router.go(-1)
+                        let uri = this.$route.query.redirect
+                        if (uri)
+                            window.location.href = uri
+                        else
+                            this.router.go(-1)
                     }
                 }
             }
