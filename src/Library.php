@@ -17,7 +17,8 @@ class Library
         return
             $request->headers->has("client") ||
             $_SERVER['APP_ENV'] === "dev" ||
-            ($request->headers->has("referer") && parse_url($request->headers->get("referer"))["host"] === "nfls.io");
+            ($request->headers->has("referer") && parse_url($request->headers->get("referer"))["host"] === "nfls.io") ||
+            $request->getPathInfo() == "/oauth/authorize";
 
     }
 }
