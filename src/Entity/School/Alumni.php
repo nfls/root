@@ -73,6 +73,7 @@ class Alumni
     /**
      * @var \DateTime|null
      * @Assert\Date(message="alumni-auth-error-birthday")
+     * @Assert\NotBlank(message="alumni-auth-error-birthday")
      * @ORM\Column(type="date", nullable=true)
      */
     private $birthday;
