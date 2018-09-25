@@ -13,7 +13,7 @@
                     </md-field>
                 </div>
                 <div style="text-align: left;">
-                    <mavon-editor v-model="content" v-if="type == 'markdown'"></mavon-editor>
+                    <mavon-editor v-model="content" v-if="type == 'markdown'" ref=md @imgAdd="imgAdd"></mavon-editor>
                     <vue-json-editor v-model="content" v-if="type == 'json'"></vue-json-editor>
                 </div>
             </md-card-content>
@@ -51,6 +51,13 @@
             }, update() {
                 this.axios.get("/admin/preference").then((response) => {
                     this.info = response.data["data"]
+                })
+            }, imgAdd(pos, file){
+                console.log("Called")
+                let formdata = new FormData();
+                formdata.append('file', file, file.name);
+                this.axios.post("/admin/upload",formData).then((response) => {
+                    $vm.$img2Url(pos, response.data["data"]);
                 })
             }
         },

@@ -44,7 +44,7 @@ class Chat
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=1024)
+     * @ORM\Column(type="text")
      */
     private $content;
 

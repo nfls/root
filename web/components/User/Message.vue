@@ -27,7 +27,7 @@
                     <label>{{ $t('receiver') }}</label>
                     <md-input v-model="receiver" :disabled="sending"></md-input>
                 </md-field>
-                <mavon-editor v-model="content" :toolbars="toobars"></mavon-editor>
+                <mavon-editor v-model="content" :toolbars="toobars" :subfield="false"></mavon-editor>
                 <md-progress-bar md-mode="indeterminate" v-if="sending"/>
             </md-dialog-content>
             <md-dialog-actions>
