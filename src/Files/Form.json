@@ -90,7 +90,7 @@
   },
   {
     "key": "birthday",
-    "type": "date",
+    "type": "input",
     "validate": {
       "required": true
     }

@@ -149,8 +149,9 @@ class AlumniController extends AbstractController
         $form->setUserStatus($request->request->get("userStatus"));
         $form->setChineseName($request->request->get("chineseName"));
         $form->setEnglishName($request->request->get("englishName"));
-        $birthday = \DateTime::createFromFormat("Y-m-d\TH:i:s\.000\Z", $request->request->get("birthday"));
-        $birthday->add(new \DateInterval("PT11H"));
+        $birthday = \DateTime::createFromFormat("Y/m/d", substr($request->request->get("birthday"), 0, 10));
+        if(!$birthday)
+            $birthday = null;
         $form->setBirthday($birthday);
         $form->setGender($request->request->get("gender"));
         $form->setJuniorSchool($request->request->get("juniorSchool"));

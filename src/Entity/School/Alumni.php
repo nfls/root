@@ -292,9 +292,14 @@ class Alumni
     /**
      * @return \DateTime|null
      */
-    public function getBirthday(): ?\DateTime
+    public function getBirthday(): ?string
     {
-        return $this->birthday;
+        if(!is_null($this->birthday)) {
+            return $this->birthday->format("Y/m/d");
+        } else {
+            return null;
+        }
+
     }
 
     /**
