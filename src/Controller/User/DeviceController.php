@@ -46,7 +46,7 @@ class DeviceController extends AbstractController
             throw new \InvalidArgumentException("Invalid token.");
         $em = $this->getDoctrine()->getManager();
         /** @var Device $device */
-        $device = $em->getRepository(Device::class)->findOneByUserAndToken($this->getUser(), $token) ?? new Device();
+        $device = $em->getRepository(Device::class)->findOneByToken($token) ?? new Device();
         $device->setUser($this->getUser());
         $device->setToken($token);
         $device->setModel($request->request->get("model"));

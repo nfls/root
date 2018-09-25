@@ -31,7 +31,7 @@ class Device
     /**
      * @var string
      *
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", unique=true)
      */
     private $token;
 
