@@ -24,7 +24,7 @@
             </md-card-header>
             <md-card-content>
                 <p align="left">
-                    <vue-markdown v-if="header">{{header}}</vue-markdown>
+                    <markdown v-if="header" :markdown="header"></markdown>
                 </p>
                 <form novalidate class="md-layout-row md-gutter" @submit.prevent="save">
                     <div class="md-flex" v-for="item in formItems" :key="item.key">
@@ -120,6 +120,7 @@
         numeric
     } from 'vuelidate/lib/validators'
     import VueMarkdown from 'vue-markdown'
+    import Markdown from "../Components/Markdown"
 
     export default {
         name: 'Form',
@@ -145,6 +146,7 @@
             header: null
         }),
         components: {
+            Markdown,
             VueMarkdown
         },
         validations() {

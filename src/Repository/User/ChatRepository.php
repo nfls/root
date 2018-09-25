@@ -24,6 +24,7 @@ class ChatRepository extends ServiceEntityRepository
         return $this->createQueryBuilder("u")
             ->where("u.sender = :user")
             ->orWhere("u.receiver = :user")
+            ->orderBy("u.time", "desc")
             ->setParameter("user", $user)
             ->setFirstResult(($page - 1)*20)
             ->setMaxResults(20)

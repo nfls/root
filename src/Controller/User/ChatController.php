@@ -64,7 +64,7 @@ class ChatController extends AbstractController
         $chat->setSender($this->getUser());
         $chat->setReceiver($user);
         if($chat->getReceiver() === $chat->getSender())
-            return $this->response()->response($translator->trans("connot-send-to-itself"),Response::HTTP_FORBIDDEN);
+            return $this->response()->response($translator->trans("cannot-send-to-itself"),Response::HTTP_FORBIDDEN);
         $chat->setContent($request->request->get("content"));
         $em = $this->getDoctrine()->getManager();
         $em->persist($chat);

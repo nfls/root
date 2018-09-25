@@ -30,6 +30,8 @@
     "js-cookie": "^2.2.0",
     "jszip": "^3.1.5",
     "luxon": "^0.4.0",
+    "markdown-it": "^8.4.2",
+    "markdown-it-sanitizer": "^0.4.3",
     "mavon-editor": "^2.6.15",
     "moment-timezone": "^0.5.14",
     "ora": "^1.4.0",

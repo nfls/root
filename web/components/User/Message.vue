@@ -7,7 +7,7 @@
         <div>
             <md-card v-for="chat in list" :key="chat.id">
                 <md-card-content>
-                    <vue-markdown>{{chat.content}}</vue-markdown>
+                    <markdown :markdown="chat.content"></markdown>
                     <md-divider></md-divider>
                     <span class="md-caption">
                         <span v-if="chat.canReply">From:<span v-html="chat.sender.htmlUsername"></span></span>
@@ -21,13 +21,13 @@
             </md-card>
         </div>
 
-        <md-dialog :md-active.sync="showDialog">
+        <md-dialog :md-active.sync="showDialog" :md-click-outside-to-close="false">
             <md-dialog-content>
                 <md-field>
                     <label>{{ $t('receiver') }}</label>
                     <md-input v-model="receiver" :disabled="sending"></md-input>
                 </md-field>
-                <mavon-editor v-model="content"></mavon-editor>
+                <mavon-editor v-model="content" :toolbars="toobars"></mavon-editor>
                 <md-progress-bar md-mode="indeterminate" v-if="sending"/>
             </md-dialog-content>
             <md-dialog-actions>
@@ -47,11 +47,13 @@
 <script>
     import VueMarkdown from 'vue-markdown'
     import infiniteScroll from 'vue-infinite-scroll'
+    import Markdown from "../Components/Markdown"
 
     export default {
         name: "Message",
         props: ["admin", "loggedIn", "verified", "gResponse"],
         components: {
+            Markdown,
             VueMarkdown
         },
         directives: {infiniteScroll},
@@ -62,7 +64,22 @@
             list: [],
             active: null,
             showDialog: false,
-            sending: false
+            sending: false,
+            toobars: {
+                bold: true, // 粗体
+                italic: true, // 斜体
+                header: true, // 标题
+                underline: true, // 下划线
+                strikethrough: true, // 中划线
+                mark: true, // 标记
+                superscript: true, // 上角标
+                subscript: true, // 下角标
+                quote: true, // 引用
+                ol: true, // 有序列表
+                ul: true, // 无序列表
+                link: true, // 链接
+                help: true, // 帮助
+            }
         }),
         mounted: function () {
             this.load()

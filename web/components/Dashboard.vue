@@ -20,7 +20,7 @@
         </md-card>
         <md-card style="text-align:left;">
             <md-card-content>
-                <vue-markdown v-if="loaded">{{announcement}}</vue-markdown>
+                <markdown v-if="loaded" :markdown="announcement"></markdown>
             </md-card-content>
         </md-card>
         <!--
@@ -67,10 +67,12 @@
 
 <script>
     import VueMarkdown from 'vue-markdown'
+    import Markdown from "./Components/Markdown"
 
     export default {
         name: "Dashboard",
         components: {
+            Markdown,
             VueMarkdown
         },
         props: ["isAdmin", "isLoggedIn", "isVerified", "webpSupported"],
