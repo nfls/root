@@ -39,7 +39,7 @@
                     <md-list-item>
                         <div class="md-list-item-text">
                             <span>{{ $t('jointime') }}</span>
-                            <span>{{info.joinTime}}</span>
+                            <span>{{info.joinTime | moment("lll")}}</span>
                         </div>
                     </md-list-item>
                     <md-divider></md-divider>
@@ -145,7 +145,6 @@
                 this.axios.get('/user/current').then((response) => {
                     if (response.data['code'] === 200) {
                         this.info = response.data["data"]
-                        this.info.joinTime = this.$moment(this.joinTime).format("lll")
                         if (this.info.email === null)
                             this.info.email = this.$t("not-binded")
                         if (this.info.phone === null)

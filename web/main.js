@@ -45,7 +45,6 @@ Vue.use(VueAxios, axios)
 Vue.use(VueMaterial)
 Vue.use(require('vue-moment'))
 Vue.use(moment)
-Vue.use(VueMarkdown)
 Vue.use(VueAnalytics, {
     id: 'UA-113518783-1',
     router,
