@@ -66,9 +66,9 @@ class NotificationService
                     $this->cacheService->codeWrite($email, $code, $action);
                     return $this->mailService->send(
                         "no-reply@nfls.io",
-                        "NFLS.IO/南外人",
+                        "NFLSIO",
                         $email,
-                        "【NFLS.IO/南外人】账户注册 Account Registering",
+                        "【NFLSIO】账户注册 Account Registering",
                         $this->mailRenderer->renderCodePage(
                             "注册新账户",
                             "registering a new account",
@@ -90,9 +90,9 @@ class NotificationService
                     $this->cacheService->codeWrite($email, $code, $action);
                     return $this->mailService->send(
                         "no-reply@nfls.io",
-                        "NFLS.IO/南外人",
+                        "NFLSIO",
                         $email,
-                        "【NFLS.IO/南外人】重置密码 Password Resetting",
+                        "【NFLSIO】重置密码 Password Resetting",
                         $this->mailRenderer->renderCodePage(
                             "重置账户密码",
                             "resetting your password",
@@ -113,9 +113,9 @@ class NotificationService
                     $this->cacheService->codeWrite($email, $code, $action);
                     return $this->mailService->send(
                         "no-reply@nfls.io",
-                        "NFLS.IO/南外人",
+                        "NFLSIO",
                         $email,
-                        "【NFLS.IO/南外人】邮箱绑定 Email Binding",
+                        "【NFLSIO】邮箱绑定 Email Binding",
                         $this->mailRenderer->renderCodePage(
                             "绑定当前邮箱",
                             "binding this email with your account",
@@ -164,9 +164,9 @@ class NotificationService
         }
         $this->mailService->send(
             "alumni@nfls.io",
-            "南外人实名认证系统",
+            "NFLSIO 实名认证系统",
             $user->getEmail(),
-            "【NFLS.IO/南外人】实名认证 Verification",
+            "【NFLSIO】实名认证 Verification",
             $this->mailRenderer->renderRealnameSucceeded(
                 $statusCN,
                 $statusEN,
@@ -189,9 +189,9 @@ class NotificationService
     public function realnameFailed(User $user) {
         $this->mailService->send(
             "alumni@nfls.io",
-            "南外人实名认证系统",
+            "NFLSIO 实名认证系统",
             $user->getEmail(),
-            "【NFLS.IO/南外人】实名认证 Verification",
+            "【NFLSIO】实名认证 Verification",
             $this->mailRenderer->renderRealnameFailed());
         $this->APNService->bulk(
             $this->getDevices($user),
@@ -210,9 +210,9 @@ class NotificationService
     public function notifyNewMessage(Chat $chat) {
         $this->mailService->send(
             "message@nfls.io",
-            "南外人私信",
+            "NFLSIO 私信",
             $chat->getReceiver()->getEmail(),
-            "【NFLS.IO/南外人】私信 PM",
+            "【NFLSIO】私信 PM",
             $this->mailRenderer->renderNewMessagePage($chat->getSender()->getUsername(), $chat->getContent())
         );
         $this->APNService->bulk(
@@ -240,9 +240,9 @@ class NotificationService
         }
         $this->mailService->bulk(
             "study@nfls.io",
-            "NFLS.IO Blackboard",
+            "NFLSIO Blackboard",
             $emails,
-            "【NFLS.IO/南外人】New Notice",
+            "【NFLSIO】New Notice",
             $this->mailRenderer->renderNoticePage($teacher->getValidAuth()->getEnglishName(), $class, $title, $content)
         );
         $this->SMSService->bulk(
@@ -277,9 +277,9 @@ class NotificationService
         }
         $this->mailService->bulk(
             "study@nfls.io",
-            "NFLS.IO Blackboard",
+            "NFLSIO Blackboard",
             $emails,
-            "【NFLS.IO/南外人】Deadline Reminder",
+            "【NFLSIO】Deadline Reminder",
             $this->mailRenderer->renderDeadlinePage($teacher->getValidAuth()->getEnglishName(), $title, $deadline, $content)
         );
         $this->SMSService->bulk(

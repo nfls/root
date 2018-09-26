@@ -85,7 +85,7 @@ EOD;
     function base($html)
     {
         return <<<EOD
-NFLSIO / 南外人
+NFLSIO
 
 
 $html
