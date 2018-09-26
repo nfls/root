@@ -34,7 +34,7 @@ class MailService extends CeleryEnabledService
                 $receiver,
                 $subject,
                 $content,
-                "text/html"
+                "text/plain charset=utf-8"
             ));
             return true;
         } catch (\Exception $e) {

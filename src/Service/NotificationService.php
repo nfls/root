@@ -218,7 +218,7 @@ class NotificationService
         $this->APNService->bulk(
             $this->getDevices($chat->getReceiver()),
             "来自 ".$chat->getSender()->getUsername()." 的新私信",
-            "New message from ".$chat->getSender()->getUsername(),
+            "New message from user ".$chat->getSender()->getUsername(),
             $chat->getContent(),
             null,
             null,

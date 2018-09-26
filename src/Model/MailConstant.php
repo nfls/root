@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Service\PlainTextParsedown;
 use Parsedown;
 
 class MailConstant
@@ -10,15 +11,10 @@ class MailConstant
     {
 
         $text = <<<EOD
-        <p>您好！您在进行$actionCN 的操作。其验证码是</p>
-        <code>$code</code>
-        <p>请将其完整复制粘贴至对应的输入栏内。如果您没有进行相关操作，请无视本邮件</p>
-        <p>&nbsp;</p>
-        <hr>
-        <p>Hello! Your verification code for $actionEN is</p>
-        <code>$code</code>
-        <p>Please completely copy and paste it into the correct field. If you did not perform such action, please ignore this email.</p>
-        <p>&nbsp;</p>
+您好！您在进行$actionCN 的操作。其验证码是：$code
+请将其完整复制粘贴至对应的输入栏内。如果您没有进行相关操作，请无视本邮件
+Hello! Your verification code for $actionEN is $code.
+Please completely copy and paste it into the correct field. If you did not perform such action, please ignore this email.
 EOD;
         return $this->base($text);
     }
@@ -26,9 +22,8 @@ EOD;
     function renderRealnameFailed()
     {
         $text = <<<EOD
-        <p>用户您好，您的实名认证申请已被退回，请登录查看详情。</p>
-        <p>Hello, your request to become a verified use has been rejected. Login to see more details</p> 
-        <p>&nbsp;</p>
+用户您好，您的实名认证申请已被退回，请登录查看详情。
+Hello, your request to become a verified use has been rejected. Login to see more details
 EOD;
         return $this->base($text);
     }
@@ -36,47 +31,47 @@ EOD;
     function renderRealnameSucceeded(string $statusCN,string $statusEN, string $timeCN, string $timeEN)
     {
         $text = <<<EOD
-        <p>用户您好，您的实名认证已通过审核，当前身份为$statusCN ，有效期至$timeCN 。</p>
-        <p>Hello, now you are verified. Your identity is $statusEN with expire date on $timeEN .</p> 
-        <p>&nbsp;</p>
+用户您好，您的实名认证已通过审核，当前身份为$statusCN ，有效期至$timeCN 。
+Hello, now you are verified. Your identity is $statusEN with expire date on $timeEN.
 EOD;
         return $this->base($text);
     }
 
     function renderNoticePage(string $teacher, string $class, string $title, string $notice)
     {
-        $parser = new Parsedown();
+        $parser = new PlainTextParsedown();
         $notice = $parser->parse($notice);
         $text = <<<EOD
-        <p><strong>$teacher</strong> posted a new note <strong>$title</strong> on the blackboard for group <strong>$class</strong>. There may be attachments, so please login in to see more details.</p>
-        $notice
-        <p>&nbsp;</p>
+$teacher posted a new note $title on the blackboard for group $class. There may be attachments, so please login in to see more details.
+ 
+$notice
+
 EOD;
         return $this->base($text);
     }
 
     function renderDeadlinePage(string $teacher, string $title, string $time, string $notice)
     {
-        $parser = new Parsedown();
+        $parser = new PlainTextParsedown();
         $notice = $parser->parse($notice);
         $text = <<<EOD
-        <p><strong>$teacher</strong> wants to remind you that the deadline for <strong>$title</strong> is <strong>$time</strong>.</p>
-        $notice
-        <p>Please schedule your time wisely, and we hope that you can finish all the work in time.</p>
-        <p>&nbsp;</p>
+$teacher wants to remind you that the deadline for $title is $time.
+ 
+$notice
+
 EOD;
         return $this->base($text);
     }
 
     function renderNewMessagePage(string $sender, string $content)
     {
-        $paser = new Parsedown();
+        $paser = new PlainTextParsedown();
         $content = $paser->parse($content);
         $text = <<<EOD
-        <p>您收到了来自 <strong>$sender</strong>的一封新私信。</p>
-        <p>You have received a PM from <strong>$sender</strong>.</p>
-        $content
-        <p>&nbsp;</p>
+您收到了来自用户 $sender 的一封新私信。
+You have received a PM from user $sender.
+
+$content
 EOD;
         return $this->base($text);
     }
@@ -84,10 +79,13 @@ EOD;
     function base($html)
     {
         return <<<EOD
-        <h1>NFLSIO / 南外人 </h1>
-        $html
-        <hr>
-        <small>这篇邮件是由系统自动发送，请不要回复这封邮件。 <br>This email is sent by the system automatically. Please do not reply it.</small>
+NFLSIO / 南外人
+
+$html
+
+=========================
+这篇邮件是由系统自动发送，请不要回复这封邮件。 
+This email is sent by the system automatically. Please do not reply it.
 EOD;
     }
 }
