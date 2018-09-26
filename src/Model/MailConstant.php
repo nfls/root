@@ -12,9 +12,13 @@ class MailConstant
 
         $text = <<<EOD
 您好！您在进行$actionCN 的操作。其验证码是：$code
+
 请将其完整复制粘贴至对应的输入栏内。如果您没有进行相关操作，请无视本邮件
+
 Hello! Your verification code for $actionEN is $code.
+
 Please completely copy and paste it into the correct field. If you did not perform such action, please ignore this email.
+
 EOD;
         return $this->base($text);
     }
@@ -68,8 +72,10 @@ EOD;
         $paser = new PlainTextParsedown();
         $content = $paser->parse($content);
         $text = <<<EOD
-您收到了来自用户 $sender 的一封新私信。
-You have received a PM from user $sender.
+您收到了来自用户 $sender 的一封新私信：
+
+You have received a PM from user $sender:
+
 
 $content
 EOD;
@@ -81,11 +87,16 @@ EOD;
         return <<<EOD
 NFLSIO / 南外人
 
+
 $html
 
+
 =========================
+
 这篇邮件是由系统自动发送，请不要回复这封邮件。 
+
 This email is sent by the system automatically. Please do not reply it.
+
 EOD;
     }
 }
