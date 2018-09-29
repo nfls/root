@@ -480,13 +480,13 @@ class UserController extends AbstractController
     /**
      * @Route("/user/code", methods="POST")
      */
-    public function code(Request $request, NotificationService $service, TranslatorInterface $translator)
+    public function code(Request $request, NotificationService $service, TranslatorInterface $translator, CacheService $cacheService)
     {
-        if (!$this->verifyCaptcha($request->request->get("captcha")))
-            return $this->response()->response($translator->trans("incorrect-captcha"), Response::HTTP_UNAUTHORIZED);
         $type = $request->request->getInt("type");
         if($type == AliyunTemplateType::BIND)
             $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        if(!$cacheService->canSend($request->getClientIp(), $request->request->get("email") ?? $request->request->get("phone")))
+            return $this->response()->response($translator->trans("rate-limited"), Response::HTTP_FORBIDDEN);
         $error = $service->code($request->request->get("email"), $request->request->get("phone"), $type);
         if($error)
             return $this->response()->response(null);

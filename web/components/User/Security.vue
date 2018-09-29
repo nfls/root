@@ -112,7 +112,6 @@
         },
         mounted: function () {
             this.$emit("changeTitle", this.$t("security-title"))
-            this.$emit("prepareRecaptcha")
             this.incomplete = (this.$route.query.reason === 'incomplete')
         },
         methods: {
@@ -157,19 +156,18 @@
             },
             sendEmail() {
                 this.task = "email"
-                grecaptcha.execute()
+                this.send()
             },
             sendSMS() {
                 this.task = "sms"
-                grecaptcha.execute()
+                this.send()
             },
-            ct() {
+            send() {
                 switch (this.task) {
                     case "email":
                         this.axios.post("/user/code", {
                             "type": 3,
-                            "email": this.form.newEmail,
-                            "captcha": grecaptcha.getResponse()
+                            "email": this.form.newEmail
                         }).then((response) => {
                             if (response.data["code"] === 200) {
                                 this.showMsg(this.$t("send-succeeded"))
@@ -197,17 +195,9 @@
 
                 }
                 this.task = ""
-                grecaptcha.reset()
             },
             showMsg(msg) {
                 this.$emit("showMsg", msg)
-            }
-        },
-        watch: {
-            gResponse: {
-                handler: function (val, newVal) {
-                    this.ct();
-                }
             }
         }
     }

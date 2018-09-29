@@ -41,7 +41,7 @@
                                 </md-field>
                             </div>
                             <div class="md-flex md-flex-small-100">
-                                <md-button class="md-raised" @click="sendEmail">{{$t('send')}}</md-button>
+                                <md-button class="md-raised" @click="sendEmail" :disabled="sending">{{$t('send')}}</md-button>
                             </div>
                         </div>
                         <div class="md-flex md-flex-small-100">
@@ -173,13 +173,12 @@
                     }
                 }
             },
-            ct() {
+            send() {
                 this.sending = true
                 this.axios.post("/user/code", {
                     "type": 1,
                     "email": this.form.email,
-                    "phone": this.form.phone,
-                    "captcha": grecaptcha.getResponse()
+                    "phone": this.form.phone
                 }).then((response) => {
                     this.sending = false
                     if (response.data["code"] === 200) {
@@ -191,7 +190,6 @@
                     this.sending = false
                     this.$emit("generalError",error)
                 })
-                grecaptcha.reset()
             },
             register() {
                 this.validateItems = {
@@ -249,7 +247,7 @@
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
                     this.form.email = null
-                    grecaptcha.execute()
+                    this.send()
                 }
             },
             sendEmail() {
@@ -262,7 +260,7 @@
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
                     this.form.phone = null
-                    grecaptcha.execute()
+                    this.send()
                 }
             },
             showMsg(msg) {
@@ -271,14 +269,6 @@
         },
         mounted: function () {
             this.$emit("changeTitle", this.$t("register-title"))
-            this.$emit("prepareRecaptcha")
-        },
-        watch: {
-            gResponse: {
-                handler: function (val, newVal) {
-                    this.ct();
-                }
-            }
         }
     }
 </script>

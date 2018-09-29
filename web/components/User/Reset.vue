@@ -150,13 +150,12 @@
                     }
                 }
             },
-            ct() {
+            send() {
                 this.sending = true
                 this.axios.post("/user/code", {
                     "type": 2,
                     "phone": this.form.phone,
-                    "email": this.form.email,
-                    "captcha": grecaptcha.getResponse()
+                    "email": this.form.email
                 }).then((response) => {
                     this.sending = false
                     if (response.data["code"] === 200) {
@@ -168,7 +167,6 @@
                     this.sending = false
                     this.$emit("generalError",error)
                 })
-                grecaptcha.reset()
             },
             reset() {
                 this.validateItems = {
@@ -218,7 +216,7 @@
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
                     this.form.email = null
-                    grecaptcha.execute()
+                    this.send()
                 }
             },
             sendEmail() {
@@ -231,7 +229,7 @@
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
                     this.form.phone = null
-                    grecaptcha.execute()
+                    this.send()
                 }
             },
             showMsg(msg) {
@@ -240,14 +238,6 @@
         },
         mounted: function () {
             this.$emit("changeTitle", this.$t("reset-title"))
-            this.$emit("prepareRecaptcha")
-        },
-        watch: {
-            gResponse: {
-                handler: function (val, newVal) {
-                    this.ct();
-                }
-            }
         }
     }
 </script>

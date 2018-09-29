@@ -81,7 +81,6 @@ class NotificationService
                         $phone,
                         AliyunTemplateType::REGISTER,
                         ["code" => $code]);
-
                 }
                 return false;
             case CodeActionType::RESET:

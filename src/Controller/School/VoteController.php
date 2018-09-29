@@ -21,6 +21,10 @@ use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * Class VoteController
+ * @deprecated No longer used.
+ */
 class VoteController extends AbstractController
 {
     /**

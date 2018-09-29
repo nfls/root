@@ -45,6 +45,24 @@ class CacheService
         }
     }
 
+    public function canSend(string $ip, string $target) {
+        $current = (int)$this->client->get($this->getIdentifierForCode($ip));
+        if($current > 5)
+            return false;
+        $current ++;
+        $this->client->set($this->getIdentifierForCode($ip), $current);
+        $this->client->expire($this->getIdentifierForCode($ip), 1800);
+
+        $current = (int)$this->client->get($this->getIdentifierForCode($target));
+        if($current > 3)
+            return false;
+        $current ++;
+        $this->client->set($this->getIdentifierForCode($target), $current);
+        $this->client->expire($this->getIdentifierForCode($target), 1800);
+
+        return true;
+    }
+
     public function rateWrite(User $user) {
         $current = (int)$this->client->get($this->getIdentifierForRate($user));
         $current ++;
@@ -82,6 +100,10 @@ class CacheService
 
     private function getIdentifierForAntiSpider(User $user){
         return "antispider.".(string)$user->getId();
+    }
+
+    private function getIdentifierForCode(string $target){
+        return "code.".$target;
     }
 
     private function getIdentifierForRate(User $user) {
