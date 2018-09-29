@@ -54,12 +54,11 @@ class CacheService
         $this->client->expire($this->getIdentifierForCode($ip), 1800);
 
         $current = (int)$this->client->get($this->getIdentifierForCode($target));
-        if($current > 3)
+        if($current > 1)
             return false;
         $current ++;
         $this->client->set($this->getIdentifierForCode($target), $current);
-        $this->client->expire($this->getIdentifierForCode($target), 1800);
-
+        $this->client->expire($this->getIdentifierForCode($target), 60);
         return true;
     }
 
