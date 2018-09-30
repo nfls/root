@@ -147,9 +147,11 @@
                         <md-list-item to="/admin/notification">
                             <md-icon>notification_important</md-icon>
                             <span class='md-list-item-text'>{{ $t('notification') }}</span></md-list-item>
+                        <!--
                         <md-list-item to="/admin/vote">
                             <md-icon>data_usage</md-icon>
                             <span class='md-list-item-text'>{{ $t('vote') }}</span></md-list-item>
+                            -->
                     </div>
                 </md-list>
 
