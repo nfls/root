@@ -26,54 +26,72 @@
                 <p align="left">
                     <markdown v-if="header" :markdown="header"></markdown>
                 </p>
-                <form novalidate class="md-layout-row md-gutter" @submit.prevent="save">
-                    <div class="md-flex" v-for="item in formItems" :key="item.key">
-                        <div v-if="hide[item.key]">
-                            <md-field v-if="item.type === 'select'" :class="getValidationClass(item.key)">
-                                <label :for="item.key">{{ $t('form-' + item.key) }}</label>
-                                <md-select :name="item.key" :id="item.key" v-model="form[item.key]"
-                                           :disabled="isDisabled">
-                                    <md-option v-for="value in item.values" :key="value.value" :value="value.value">
-                                        {{ $t('form-' + item.key + '-' + value.value) }}
-                                    </md-option>
-                                </md-select>
+                <el-form ref="form" :model="form" label-width="120px" label-position="left">
+                    <el-form-item v-for="item in formItems" :key="item.key" :label="(item.type !== 'divider') ? $t('form-' + item.key):''"  v-if="hide[item.key]">
+                            <el-select
+                                    v-if="item.type === 'select'"
+                                    :name="item.key"
+                                    :id="item.key"
+                                    v-model="form[item.key]"
+                                    :disabled="isDisabled">
+                                <el-option
+                                        v-for="value in item.values"
+                                        :key="value.value"
+                                        :value="value.value"
+                                        :label="$t('form-' + item.key + '-' + value.value)">
+                                </el-option>
+                                <!--
                                 <span class="md-error" v-if="!$v.form[item.key].required">{{ $t('required') }}</span>
-                            </md-field>
-                            <md-field v-else-if="item.type === 'input'" :class="getValidationClass(item.key)">
-                                <label :for="item.key">{{ $t('form-' + item.key) }}</label>
-                                <md-input :name="item.key" :id="item.key" :autocomplete="item.key"
-                                          v-model="form[item.key]" :disabled="isDisabled"></md-input>
+                                -->
+                            </el-select>
+                            <el-input
+                                    v-else-if="item.type === 'input'"
+                                    :name="item.key"
+                                    :id="item.key"
+                                    :autocomplete="item.key"
+                                    v-model="form[item.key]"
+                                    :disabled="isDisabled">
+                                <!--
+                                <md-input ></md-input>
+
                                 <span class="md-error" v-if="!$v.form[item.key].required">{{ $t('required') }}</span>
                                 <span class="md-error" v-else-if="!$v.form[item.key].minLength">{{ $t('incorrect') }}</span>
                                 <span class="md-error" v-else-if="!$v.form[item.key].maxLength">{{ $t('incorrect') }}</span>
                                 <span class="md-error" v-else-if="!$v.form[item.key].minValue">{{ $t('incorrect') }}</span>
                                 <span class="md-error" v-else-if="!$v.form[item.key].maxValue">{{ $t('incorrect') }}</span>
-                            </md-field>
-                            <md-field v-else-if="item.type === 'textarea'" :class="getValidationClass(item.key)">
-                                <label :for="item.key">{{ $t('form-' + item.key) }}</label>
-                                <md-textarea :name="item.key" :id="item.key" :autocomplete="item.key"
-                                             v-model="form[item.key]" :disabled="isDisabled"></md-textarea>
+                                -->
+                            </el-input>
+                            <el-input
+                                    type="textarea"
+                                    v-else-if="item.type === 'textarea'"
+                                    :name="item.key"
+                                    :id="item.key"
+                                    :autocomplete="item.key"
+                                    v-model="form[item.key]"
+                                    :disabled="isDisabled">
+                                <!--
+                                <md-textarea ></md-textarea>
                                 <span class="md-error" v-if="!$v.form[item.key].required">{{ $t('required') }}</span>
-                            </md-field>
-                            <md-field v-if="item.type === 'country'" :class="getValidationClass(item.key)">
-                                <label :for="item.key">{{ $t('form-' + item.key) }}</label>
-                                <md-select :name="item.key" :id="item.key" v-model="form[item.key]"
-                                           :disabled="isDisabled">
-                                    <md-option v-for="country in countries" :key="country.code" :value="country.code">
-                                        {{country.code}} - {{country.name}}
-                                    </md-option>
-                                </md-select>
+                                -->
+                            </el-input>
+                            <el-select v-if="item.type === 'country'" :name="item.key" :id="item.key" v-model="form[item.key]"
+                                       :disabled="isDisabled">
+                                <el-option v-for="country in countries" :key="country.code" :value="country.code" :label="country.code +  '-' + country.name">
+                                </el-option>
+                                <!--
                                 <span class="md-error" v-if="!$v.form[item.key].required">{{ $t('required') }}</span>
-                            </md-field>
-                            <md-datepicker format="MM/dd/yy" v-else-if="item.type == 'date'" :name="item.key"
-                                           :id="item.key" :autocomplete="item.key" :class="getValidationClass(item.key)"
+                                -->
+                            </el-select>
+                            <el-date-picker format="MM/dd/yy" v-else-if="item.type == 'date'" :name="item.key"
+                                           :id="item.key" :autocomplete="item.key"
                                            v-model="form[item.key]"/>
+                            <!--
                             <div v-else-if="item.type === 'divider'">
                                 <md-divider></md-divider>
                                 <md-content>{{ $t('form-' + item.key) }}</md-content>
                             </div>
-                        </div>
-                    </div>
+                            -->
+                    </el-form-item>
                     <div v-if="!isDisabled">
                         <div class="md-flex md-flex-small-100" v-if="changed">
                             <md-button type="save" class="md-raised md-primary" style="width:90%">{{ $t('submit') }}</md-button>
@@ -91,7 +109,8 @@
                         </md-button>
                     </div>
                     <md-progress-bar md-mode="indeterminate" v-if="sending"/>
-                </form>
+
+                </el-form>
             </md-card-content>
         </md-card>
         <md-dialog-confirm
@@ -110,26 +129,16 @@
 </template>
 
 <script>
-    import {validationMixin} from 'vuelidate'
-    import {
-        required,
-        minLength,
-        maxLength,
-        minValue,
-        maxValue,
-        numeric
-    } from 'vuelidate/lib/validators'
     import VueMarkdown from 'vue-markdown'
     import Markdown from "../Components/Markdown"
 
     export default {
         name: 'Form',
-        mixins: [validationMixin],
         props: ["admin", "verified", 'loggedIn'],
         data: () => ({
             formItems: [],
             validatorItems: [],
-            form: [],
+            form: {},
             hide: [],//反过来的。。。
             reviewDate: null,
             reactor: [],
@@ -165,18 +174,18 @@
                     id: this.$route.params["id"]
                 }
             }).then((response) => {
-                var formData = response.data["data"]
-                this.isDisabled = (formData.status != 0)
+                let formData = response.data["data"]
+                this.isDisabled = (formData.status !== 0)
                 this.status = formData.status
                 this.axios.get("/alumni/form").then((response) => {
-                    var objects = response.data["data"]
+                    let objects = response.data["data"]
                     this.hide = Object.keys(objects).reduce(function (previous, key) {
                         previous[objects[key].key] = true
                         return previous
                     }, {})
                     this.reactor = Object.keys(objects).reduce(function (previous, key) {
-                        if (objects[key].type == "select") {
-                            var values = objects[key].values
+                        if (objects[key].type === "select") {
+                            let values = objects[key].values
                             previous[objects[key].key] = Object.keys(values).reduce(function (prev, key) {
                                 if (values[key].hidden) {
                                     prev[values[key].value] = values[key].hidden
@@ -189,7 +198,7 @@
                         return previous
                     }, {})
                     this.form = Object.keys(objects).reduce(function (previous, key) {
-                        if (objects[key].type != "divider") {
+                        if (objects[key].type !== "divider") {
                             if (formData[objects[key].key] !== null)
                                 previous[objects[key].key] = String(formData[objects[key].key])
                             else
@@ -212,14 +221,7 @@
             this.$emit('changeTitle', this.$t('form-title'))
         },
         methods: {
-            getValidationClass(fieldName) {
-                const field = this.$v.form[fieldName]
-                if (field) {
-                    return {
-                        'md-invalid': field.$invalid && field.$dirty
-                    }
-                }
-            }, save() {
+             save() {
                 this.$v.$touch()
                 if (!this.$v.$invalid) {
                     if (this.changed) {
@@ -289,43 +291,37 @@
                 })
             }, getModel(key) {
                 return this.form[key]
-            }, getValidationClass(fieldName) {
-                const field = this.$v.form[fieldName]
-                if (field) {
-                    return {
-                        'md-invalid': field.$invalid && field.$dirty
-                    }
-                }
             }, refreshValidator(objects) {
-                var hide = this.hide
+                let hide = this.hide
                 this.validatorItems = Object.keys(objects).reduce(function (previous, key) {
-                    if (objects[key].type != "divider" && hide[objects[key].key]) {
-                        var validates = objects[key].validate
+                    if (objects[key].type !== "divider" && hide[objects[key].key]) {
+                        let validates = objects[key].validate
                         previous[objects[key].key] = Object.keys(validates).reduce(function (prev, key) {
                             switch (key) {
                                 case "required":
-                                    prev["required"] = required
+                                    prev["required"] = ""
                                     return prev
                                 case "minLength":
-                                    prev["minLength"] = minLength(validates[key])
+                                    prev["minLength"] = ""
                                     return prev
                                 case "maxLength":
-                                    prev["maxLength"] = maxLength(validates[key])
+                                    prev["maxLength"] = ""
                                     return prev
                                 case "minValue":
-                                    prev["minValue"] = minValue(validates[key])
+                                    prev["minValue"] = ""
                                     return prev
                                 case "maxValue":
-                                    prev["maxValue"] = maxValue(validates[key])
+                                    prev["maxValue"] = ""
                                     return prev
                                 case "numeric":
-                                    prev["numeric"] = numeric
+                                    prev["numeric"] = ""
                                     return prev
                             }
                         }, {});
                     }
                     return previous
                 }, {})
+                console.log(this.validatorItems)
             }, acceptWithLimit() {
                 this.axios.post("/admin/alumni/auth/update", {
                     id: this.$route.params["id"],
