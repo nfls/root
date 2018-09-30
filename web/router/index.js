@@ -12,7 +12,7 @@ import Game from '../components/Media/Game'
 import Gallery from '../components/Media/Gallery'
 import Album from '../components/Media/Album'
 import Live from '../components/Media/Live'
-import Vote from '../components/School/Vote'
+//import Vote from '../components/School/Vote'
 
 import Login from '../components/User/Login'
 import Register from '../components/User/Register'
@@ -25,7 +25,7 @@ import Public from '../components/User/Public'
 import Preference from '../components/Admin/Preference'
 import Upload from '../components/Admin/Upload'
 import Notification from '../components/Admin/Notification'
-import VoteAdmin from '../components/Admin/Vote'
+//import VoteAdmin from '../components/Admin/Vote'
 import Old from '../components/Admin/Old'
 import User from '../components/Admin/User'
 import Overview from '../components/Admin/Overview'
@@ -66,10 +66,10 @@ export default new Router({
                 }, {
                     path: '/media/live/:id',
                     component: Live
-                }, {
+                }/*, {
                     path: '/school/vote',
                     component: Vote
-                }, {
+                }*/, {
                     path: '/user/security',
                     component: Security
                 }, {
@@ -102,10 +102,10 @@ export default new Router({
                 }, {
                     path: '/admin/notification',
                     component: Notification
-                }, {
+                }/*, {
                     path: '/admin/vote',
                     component: VoteAdmin
-                }, {
+                }*/, {
                     path: '/admin/old',
                     component: Old
                 }, {
