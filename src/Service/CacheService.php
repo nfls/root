@@ -47,14 +47,14 @@ class CacheService
 
     public function canSend(string $ip, string $target) {
         $current = (int)$this->client->get($this->getIdentifierForCode($ip));
-        if($current > 5)
+        if($current >= 5)
             return false;
         $current ++;
         $this->client->set($this->getIdentifierForCode($ip), $current);
         $this->client->expire($this->getIdentifierForCode($ip), 1800);
 
         $current = (int)$this->client->get($this->getIdentifierForCode($target));
-        if($current > 1)
+        if($current >= 1)
             return false;
         $current ++;
         $this->client->set($this->getIdentifierForCode($target), $current);
