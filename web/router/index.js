@@ -40,7 +40,7 @@ export default new Router({
             component: App,
             children: [
                 {
-                    path: '/dashboard',
+                    path: '/',
                     component: Dashboard
                 }, {
                     path: '/alumni/auth',

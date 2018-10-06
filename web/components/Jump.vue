@@ -7,7 +7,7 @@
         name: "Jump",
         props: ["name"],
         mounted: function () {
-            this.$router.push("/dashboard")
+            this.$router.push("/")
         }
     }
 </script>

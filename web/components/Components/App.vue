@@ -84,7 +84,7 @@
                 </md-toolbar>
 
                 <md-list>
-                    <md-list-item to='/dashboard'>
+                    <md-list-item to='/'>
                         <md-icon>dashboard</md-icon>
                         <span class='md-list-item-text'>{{ $t('homepage') }}</span></md-list-item>
 
