@@ -392,7 +392,12 @@ class UserController extends AbstractController
      * @Route("/user/weChatLogout", methods="POST")
      */
     public function weChatLogout() {
-
+        $this->denyAccessUnlessGranted(Permission::IS_LOGIN);
+        $user = $this->getUser();
+        $this->getUser()->setWeChatToken(null);
+        $this->getDoctrine()->getManager()->persist($user);
+        $this->getDoctrine()->getManager()->flush();
+        return $this->response()->response(null);
     }
 
     /**
