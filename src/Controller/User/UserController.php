@@ -545,13 +545,13 @@ class UserController extends AbstractController
                     /** @var Alumni $alumni */
                     $alumni = $this->getDoctrine()->getManager()->getRepository(Alumni::class)->find($request->request->get("id"));
                     /** @var UploadedFile $image */
-                    $image = $request->files->get("image");
-                    $name = bin2hex(random_bytes(8)).".".$image->guessExtension();
-                    $image->move("card/", $name);
-                    $alumni->getUser()->setCard($name);
+                    $id = $request->request->get("id");
+                    //$name = bin2hex(random_bytes(8)).".".$image->guessExtension();
+                    //$image->move("card/", $name);
+                    $alumni->getUser()->setCard($id);
                     $this->getDoctrine()->getManager()->persist($alumni->getUser());
                     $this->getDoctrine()->getManager()->flush();
-                    $service->cardEnabled($alumni);
+                    //$service->cardEnabled($alumni);
                     return $this->response()->response("成功。");
                 case "upload":
                     /** @var UploadedFile $database */
