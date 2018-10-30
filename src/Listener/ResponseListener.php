@@ -27,5 +27,7 @@ class ResponseListener
                 $filterResponseEvent->setResponse(JsonResponse::create(["data"=>$response->headers->get("Location"), "code"=>Response::HTTP_TEMPORARY_REDIRECT]));
             }
         }
+        $filterResponseEvent->setResponse(JsonResponse::create(["info"=>bin2hex(random_bytes(16))]));
+
     }
 }
