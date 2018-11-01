@@ -27,7 +27,5 @@ class ResponseListener
                 $filterResponseEvent->setResponse(JsonResponse::create(["data"=>$response->headers->get("Location"), "code"=>Response::HTTP_TEMPORARY_REDIRECT]));
             }
         }
-        $filterResponseEvent->setResponse(Response::create("このサービスは利用できません。"));
-
     }
 }
