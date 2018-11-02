@@ -26,6 +26,10 @@ class ResponseListener
             } else if($response->getStatusCode() === 302) {
                 $filterResponseEvent->setResponse(JsonResponse::create(["data"=>$response->headers->get("Location"), "code"=>Response::HTTP_TEMPORARY_REDIRECT]));
             }
+            $filterResponseEvent->setResponse(JsonResponse::create(["data"=>"５００：内部サーバーエラーです。", "code"=>500]));
+        } else {
+            $filterResponseEvent->setResponse(Response::create("５００：内部サーバーエラーです。"));
         }
+
     }
 }
