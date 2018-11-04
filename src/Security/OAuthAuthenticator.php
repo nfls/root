@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class OAuthAuthenticator extends AbstractGuardAuthenticator
 {
@@ -22,9 +23,12 @@ class OAuthAuthenticator extends AbstractGuardAuthenticator
      */
     private $server;
 
-    public function __construct(OAuthService $service)
+    private $translator;
+
+    public function __construct(OAuthService $service, TranslatorInterface $translator)
     {
         $this->server = $service->getValidator();
+        $this->translator = $translator;
     }
 
     public function supports(Request $request)
@@ -55,7 +59,11 @@ class OAuthAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return $user->isEnabled();
+        /** @var User $user */
+        if(!$user->isEnabled()) {
+            throw new AuthenticationException($this->translator->trans("banned"));
+        }
+        return true;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
