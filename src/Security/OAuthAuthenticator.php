@@ -25,10 +25,9 @@ class OAuthAuthenticator extends AbstractGuardAuthenticator
 
     private $translator;
 
-    public function __construct(OAuthService $service, TranslatorInterface $translator)
+    public function __construct(OAuthService $service)
     {
         $this->server = $service->getValidator();
-        $this->translator = $translator;
     }
 
     public function supports(Request $request)
@@ -61,7 +60,7 @@ class OAuthAuthenticator extends AbstractGuardAuthenticator
     {
         /** @var User $user */
         if(!$user->isEnabled()) {
-            throw new AuthenticationException($this->translator->trans("banned"));
+            throw new AuthenticationException("账户被禁，原因：在公开场合发表令人不适的言论或图片。请不要尝试使用他人账户，否则会被连带处理。");
         }
         return true;
     }
