@@ -14,12 +14,12 @@ hyperframe==3.2.0
 idna==2.7
 kombu==4.2.1
 pycparser==2.18
-pycryptodome==3.6.4
+pycryptodome==3.6.6
 PyJWT==1.6.4
 python-http-client==3.1.0
 pytz==2018.5
 redis==2.10.6
-requests==2.19.1
+requests==2.20.0
 sendgrid==5.4.1
 six==1.11.0
 ujson==1.35
