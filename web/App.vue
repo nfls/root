@@ -21,12 +21,4 @@
 </style>
 
 <style lang="scss">
-    @import "~vue-material/dist/theme/engine"; // Import the theme engine
-
-    @include md-register-theme("default", (
-    primary: green, // The primary color of your application
-    accent: red // The accent or secondary color
-    ));
-
-    @import "~vue-material/dist/theme/all"; // Apply the theme
 </style>
