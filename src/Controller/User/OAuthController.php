@@ -96,23 +96,6 @@ class OAuthController extends AbstractController
     }
 
     /**
-     * @Route("oauth/uploadSts", methods="GET")
-     */
-    public function uploadSts(Request $request, AliyunOSS $oss)
-    {
-        return $this->response()->response($oss->getUploadToken($this->getUser()->getUsername()), 200);
-    }
-
-    /**
-     * @Route("oauth/uploadSignature", methods="GET")
-     */
-    public function uploadSignature(Request $request, AliyunOSS $oss)
-    {
-
-        return $this->response()->response($oss->getSignature());
-    }
-
-    /**
      * @Route("admin/basic/upload", methods="GET")
      */
     public function renderUploadPage()
