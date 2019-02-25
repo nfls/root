@@ -93,11 +93,11 @@
                         <md-icon>library_books</md-icon>
                         <span class='md-list-item-text'>{{ $t('wiki') }}</span></md-list-item>
                     -->
-
+<!--
                     <md-list-item to='/media/game'>
                         <md-icon>gamepad</md-icon>
                         <span class='md-list-item-text'>{{ $t('game') }}</span></md-list-item>
-
+-->
                     <md-list-item to='/media/gallery'>
                         <md-icon>photo_library</md-icon>
                         <span class='md-list-item-text'>{{ $t('gallery') }}</span></md-list-item>
@@ -114,7 +114,7 @@
                     <md-list-item to='/alumni/directory'>
                         <md-icon>info</md-icon>
                         <span class='md-list-item-text'>{{ $t('directory') }}</span></md-list-item>
-
+<!--
                     <md-list-item href='https://forum.nfls.io'>
                         <md-icon>forum</md-icon>
                         <span class='md-list-item-text'>{{ $t('forum') }}</span></md-list-item>
@@ -122,7 +122,7 @@
                     <md-list-item href='https://water.nfls.io'>
                         <md-icon>pool</md-icon>
                         <span class='md-list-item-text'>{{ $t('study') }}</span></md-list-item>
-
+-->
                     <div id="admin" v-if="admin">
                         <md-divider></md-divider>
                         <md-subheader>{{ $t('admin') }}</md-subheader>

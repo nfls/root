@@ -35,7 +35,7 @@ class GalleryController extends AbstractController
         }
 
         $repo = $this->getDoctrine()->getManager()->getRepository(Gallery::class);
-        return $this->response()->responseEntity([]/*$repo->getList($canViewPrivate, $canViewAll)*/);
+        return $this->response()->responseEntity($repo->getList($canViewPrivate, $canViewAll));
     }
 
     /**

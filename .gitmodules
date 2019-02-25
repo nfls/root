@@ -1,12 +1,3 @@
 [submodule "web/translation"]
 	path = web/translation
 	url = git@github.com:nfls/translations.git
-[submodule "public/game/fib"]
-	path = public/game/fib
-	url = git@github.com:nfls/fib.git
-[submodule "public/game/game-2048"]
-	path = public/game/2048
-	url = git@github.com:nfls/game-2048.git
-[submodule "public/game/carol"]
-	path = public/game/carol
-	url = git@github.com:nfls/game-christmas.git
